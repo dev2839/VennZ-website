@@ -139,13 +139,10 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
 
   const currentScreenTitle = allScreens.find((s) => s.path === currentPath)?.label || 'VennZ';
 
-  const navBg = isDark ? 'rgba(20, 8, 19, 0.94)' : 'rgba(239, 226, 238, 0.94)';
   const borderBottom = isDark ? 'rgba(250, 245, 238, 0.12)' : 'rgba(73, 40, 61, 0.08)';
   const textColor = isDark ? '#F3EEE9' : 'var(--color-espresso)';
   const activeColor = isDark ? '#F3EEE9' : 'var(--color-mulberry)';
   const inactiveColor = isDark ? 'rgba(243, 238, 233, 0.65)' : '#7A6A74';
-  const buttonBg = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(73, 40, 61, 0.05)';
-  const buttonBorder = isDark ? 'rgba(243, 238, 233, 0.2)' : 'rgba(73, 40, 61, 0.15)';
 
   return (
     <header
@@ -155,15 +152,12 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
         left: 0,
         right: 0,
         zIndex: 50,
-        backgroundColor: navBg,
-        backdropFilter: 'blur(16px)',
-        WebkitBackdropFilter: 'blur(16px)',
+        backgroundColor: 'transparent',
         border: 'none',
         borderTop: 'none',
         borderBottom: 'none',
         boxShadow: 'none',
         outline: 'none',
-        transition: 'background-color 0.25s ease',
       }}
     >
       <div
@@ -307,18 +301,19 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '7px',
-                padding: '7px 16px',
-                borderRadius: '9999px',
-                backgroundColor: buttonBg,
-                border: `1px solid ${buttonBorder}`,
+                gap: '6px',
+                padding: '6px 8px',
+                backgroundColor: 'transparent',
+                border: 'none',
                 color: textColor,
                 fontSize: '13.5px',
                 fontWeight: 500,
                 cursor: 'pointer',
                 fontFamily: 'var(--font-sans)',
-                transition: 'all 0.15s ease',
+                transition: 'opacity 0.15s ease',
               }}
+              onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.7')}
+              onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
               title="Jump directly to any application screen"
             >
               <span style={{ maxWidth: '160px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -420,22 +415,19 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
               aria-label="View notifications"
               style={{
                 position: 'relative',
-                width: '38px',
-                height: '38px',
-                borderRadius: '50%',
-                backgroundColor: notificationsOpen
-                  ? isDark
-                    ? 'rgba(255, 255, 255, 0.2)'
-                    : 'rgba(73, 40, 61, 0.12)'
-                  : buttonBg,
-                border: `1px solid ${buttonBorder}`,
+                width: '32px',
+                height: '32px',
+                backgroundColor: 'transparent',
+                border: 'none',
                 color: textColor,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 cursor: 'pointer',
-                transition: 'all 0.15s ease',
+                transition: 'opacity 0.15s ease',
               }}
+              onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.7')}
+              onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
@@ -446,14 +438,13 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                 <span
                   style={{
                     position: 'absolute',
-                    top: '7px',
-                    right: '7px',
-                    width: '7.5px',
-                    height: '7.5px',
+                    top: '3px',
+                    right: '3px',
+                    width: '7px',
+                    height: '7px',
                     borderRadius: '50%',
                     backgroundColor: '#C94A4A',
-                    border: `1.5px solid ${isDark ? '#080307' : '#FAF6F2'}`,
-                    boxShadow: '0 0 4px rgba(201, 74, 74, 0.6)',
+                    boxShadow: '0 0 5px rgba(201, 74, 74, 0.7)',
                   }}
                 />
               )}
@@ -588,18 +579,19 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
             aria-label={isDark ? 'Switch to Ivory theme' : 'Switch to Dark theme'}
             title={isDark ? 'Switch to Ivory theme' : 'Switch to Dark theme'}
             style={{
-              width: '38px',
-              height: '38px',
-              borderRadius: '50%',
-              backgroundColor: buttonBg,
-              border: `1px solid ${buttonBorder}`,
+              width: '32px',
+              height: '32px',
+              backgroundColor: 'transparent',
+              border: 'none',
               color: textColor,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
-              transition: 'all 0.15s ease',
+              transition: 'opacity 0.15s ease',
             }}
+            onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.7')}
+            onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
           >
             {isDark ? (
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -620,11 +612,10 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="show-on-mobile-only"
               style={{
-                width: '38px',
-                height: '38px',
-                borderRadius: '50%',
-                backgroundColor: buttonBg,
-                border: `1px solid ${buttonBorder}`,
+                width: '32px',
+                height: '32px',
+                backgroundColor: 'transparent',
+                border: 'none',
                 color: textColor,
                 display: 'none',
                 alignItems: 'center',
@@ -683,16 +674,19 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                 type="button"
                 onClick={() => onNavigate('/login')}
                 style={{
-                  padding: '7px 18px',
-                  borderRadius: '9999px',
-                  backgroundColor: 'var(--color-warm-porcelain)',
-                  color: 'var(--color-espresso)',
-                  fontSize: '12.5px',
+                  padding: '6px 10px',
+                  backgroundColor: 'transparent',
+                  color: textColor,
+                  fontSize: '13.5px',
                   fontWeight: 600,
                   border: 'none',
                   cursor: 'pointer',
                   letterSpacing: '0.04em',
+                  fontFamily: 'var(--font-sans)',
+                  transition: 'opacity 0.15s ease',
                 }}
+                onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.7')}
+                onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
               >
                 Log in
               </button>
@@ -705,8 +699,8 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
       {mobileMenuOpen && isMemberArea && (
         <div
           style={{
-            borderTop: `1px solid ${borderBottom}`,
-            backgroundColor: navBg,
+            backgroundColor: isDark ? 'rgba(20, 8, 19, 0.98)' : 'rgba(247, 238, 246, 0.98)',
+            backdropFilter: 'blur(16px)',
             padding: '12px 20px 18px',
             display: 'flex',
             flexDirection: 'column',
