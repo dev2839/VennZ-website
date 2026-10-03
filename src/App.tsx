@@ -572,6 +572,7 @@ export const App: React.FC = () => {
       {/* Intro Launch Animation */}
       {showIntro && (
         <IntroAnimation
+          appearanceMode={appearanceMode}
           onComplete={() => {
             setShowIntro(false);
             try {

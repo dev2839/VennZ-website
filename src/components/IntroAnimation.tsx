@@ -2,38 +2,82 @@ import React, { useEffect, useState } from 'react';
 
 interface IntroAnimationProps {
   onComplete: () => void;
-  /** Minimum display duration in ms before fading out */
-  minDuration?: number;
+  appearanceMode?: 'ivory' | 'after-dark';
+  /** Total animation duration before initiating fade exit */
+  durationMs?: number;
 }
+
+interface LetterItem {
+  id: string;
+  char: string;
+  src: string;
+  width: number; // proportional width
+  delay: number; // staggered entrance delay in ms
+  initialRotation: number;
+}
+
+const LETTERS: LetterItem[] = [
+  { id: 'v', char: 'V', src: '/letters/aligned_V.png', width: 286, delay: 200, initialRotation: -12 },
+  { id: 'e', char: 'e', src: '/letters/aligned_e.png', width: 113, delay: 550, initialRotation: 8 },
+  { id: 'n', char: 'n', src: '/letters/aligned_n.png', width: 112, delay: 900, initialRotation: -8 },
+  { id: 'z', char: 'Z', src: '/letters/aligned_Z.png', width: 151, delay: 1250, initialRotation: 14 },
+];
 
 export const IntroAnimation: React.FC<IntroAnimationProps> = ({
   onComplete,
-  minDuration = 2200,
+  appearanceMode = 'after-dark',
+  durationMs = 4200,
 }) => {
-  const [phase, setPhase] = useState<'entering' | 'holding' | 'exiting'>('entering');
+  const isDark = appearanceMode === 'after-dark';
+  const [phase, setPhase] = useState<'idle' | 'letters-entering' | 'unified-glow' | 'exiting'>('idle');
+  const [visibleLetters, setVisibleLetters] = useState<Set<string>>(new Set());
+
+  // Palette according to current theme
+  const bgColor = isDark ? '#080407' : '#FAF6F0';
+  const auraGlow = isDark
+    ? 'radial-gradient(circle, rgba(138, 48, 120, 0.42) 0%, rgba(73, 40, 61, 0.22) 42%, rgba(8, 4, 7, 0) 72%)'
+    : 'radial-gradient(circle, rgba(232, 169, 155, 0.55) 0%, rgba(179, 154, 174, 0.35) 45%, rgba(250, 246, 240, 0) 75%)';
+  const ringColor = isDark ? 'rgba(220, 180, 215, 0.16)' : 'rgba(73, 40, 61, 0.12)';
+  const shadowFilter = isDark
+    ? 'drop-shadow(0 20px 40px rgba(107, 45, 102, 0.55)) drop-shadow(0 0 50px rgba(183, 142, 184, 0.32))'
+    : 'drop-shadow(0 14px 32px rgba(73, 40, 61, 0.25)) drop-shadow(0 0 40px rgba(232, 169, 155, 0.35))';
 
   useEffect(() => {
-    // Phase 1 -> holding at 500ms
-    const holdTimer = setTimeout(() => {
-      setPhase('holding');
-    }, 600);
+    // 1. Start letter cascade immediately
+    const startTimer = setTimeout(() => {
+      setPhase('letters-entering');
+    }, 100);
 
-    // Phase 2 -> exiting at minDuration
+    // Stagger reveal each letter
+    const letterTimers = LETTERS.map((letter) => {
+      return setTimeout(() => {
+        setVisibleLetters((prev) => new Set(prev).add(letter.id));
+      }, letter.delay);
+    });
+
+    // 2. Lock into unified shimmer glow state after all letters land
+    const glowTimer = setTimeout(() => {
+      setPhase('unified-glow');
+    }, 2200);
+
+    // 3. Initiate smooth slow cinematic exit
     const exitTimer = setTimeout(() => {
       setPhase('exiting');
-    }, minDuration);
+    }, durationMs);
 
-    // Phase 3 -> complete callback
+    // 4. Complete callback after exit transition finishes
     const finishTimer = setTimeout(() => {
       onComplete();
-    }, minDuration + 650);
+    }, durationMs + 900);
 
     return () => {
-      clearTimeout(holdTimer);
+      clearTimeout(startTimer);
+      clearTimeout(glowTimer);
       clearTimeout(exitTimer);
       clearTimeout(finishTimer);
+      letterTimers.forEach(clearTimeout);
     };
-  }, [minDuration, onComplete]);
+  }, [durationMs, onComplete]);
 
   return (
     <div
@@ -42,182 +86,182 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({
         position: 'fixed',
         inset: 0,
         zIndex: 99999,
-        backgroundColor: '#0A060A',
+        backgroundColor: bgColor,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
         overflow: 'hidden',
-        transition: 'opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1)',
+        transition: 'opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1)',
         opacity: phase === 'exiting' ? 0 : 1,
-        transform: phase === 'exiting' ? 'scale(1.04)' : 'scale(1)',
+        transform: phase === 'exiting' ? 'scale(1.06)' : 'scale(1)',
         pointerEvents: phase === 'exiting' ? 'none' : 'auto',
       }}
     >
-      {/* Background radial luxury aura */}
+      {/* Dynamic atmospheric ambient glow */}
       <div
         style={{
           position: 'absolute',
-          width: '600px',
-          height: '600px',
+          width: 'min(90vw, 820px)',
+          height: 'min(90vw, 820px)',
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(107, 45, 102, 0.35) 0%, rgba(73, 40, 61, 0.15) 45%, rgba(10, 6, 10, 0) 75%)',
-          filter: 'blur(50px)',
-          transform: phase === 'entering' ? 'scale(0.6)' : 'scale(1.2)',
-          transition: 'transform 2s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.8s ease',
-          opacity: phase === 'exiting' ? 0 : 0.85,
+          background: auraGlow,
+          filter: 'blur(70px)',
+          transform: phase === 'idle' ? 'scale(0.5)' : phase === 'exiting' ? 'scale(1.4)' : 'scale(1.15)',
+          transition: 'transform 3.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 2.8s ease',
+          opacity: phase === 'exiting' ? 0 : 0.9,
           pointerEvents: 'none',
         }}
       />
 
-      {/* Ambient micro sparkle particles / rings */}
+      {/* Elegant geometric orbital circles */}
       <div
         style={{
           position: 'absolute',
-          width: '320px',
-          height: '320px',
+          width: '560px',
+          height: '560px',
           borderRadius: '50%',
-          border: '1px solid rgba(220, 180, 215, 0.12)',
-          transform: phase === 'entering' ? 'scale(0.8) rotate(0deg)' : 'scale(1.15) rotate(45deg)',
-          transition: 'transform 2.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.5s ease',
-          opacity: phase === 'exiting' ? 0 : 0.6,
+          border: `1.5px solid ${ringColor}`,
+          transform: phase === 'idle' ? 'scale(0.8) rotate(0deg)' : 'scale(1.12) rotate(60deg)',
+          transition: 'transform 4s cubic-bezier(0.16, 1, 0.3, 1), opacity 2s ease',
+          opacity: phase === 'exiting' ? 0 : 0.65,
           pointerEvents: 'none',
         }}
       />
       <div
         style={{
           position: 'absolute',
-          width: '460px',
-          height: '460px',
+          width: '740px',
+          height: '740px',
           borderRadius: '50%',
-          border: '1px dashed rgba(243, 238, 233, 0.08)',
-          transform: phase === 'entering' ? 'scale(0.9) rotate(0deg)' : 'scale(1.1) rotate(-30deg)',
-          transition: 'transform 2.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.5s ease',
-          opacity: phase === 'exiting' ? 0 : 0.4,
+          border: `1px dashed ${ringColor}`,
+          transform: phase === 'idle' ? 'scale(0.85) rotate(0deg)' : 'scale(1.08) rotate(-45deg)',
+          transition: 'transform 4.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 2s ease',
+          opacity: phase === 'exiting' ? 0 : 0.45,
           pointerEvents: 'none',
         }}
       />
 
-      {/* Main Logo Container */}
+      {/* Main Logo Container - Big & prominent (NO extra subtitles, only VennZ) */}
       <div
         style={{
           position: 'relative',
           display: 'flex',
-          flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          maxWidth: '85vw',
+          width: '92vw',
+          maxWidth: '680px', // prominently large
+          filter: shadowFilter,
+          transition: 'transform 1.8s cubic-bezier(0.16, 1, 0.3, 1)',
+          transform:
+            phase === 'unified-glow'
+              ? 'scale(1.03)'
+              : phase === 'exiting'
+              ? 'scale(1.08)'
+              : 'scale(1)',
         }}
       >
-        {/* Shimmer light sweep wrapper */}
+        {/* Shimmer light sweep on top */}
         <div
           style={{
             position: 'relative',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%',
             overflow: 'hidden',
-            borderRadius: '16px',
-            padding: '16px 28px',
-            transform:
-              phase === 'entering'
-                ? 'scale(0.86) translateY(14px)'
-                : phase === 'holding'
-                ? 'scale(1) translateY(0)'
-                : 'scale(1.02) translateY(-4px)',
-            opacity: phase === 'entering' ? 0 : 1,
-            transition: 'transform 1.1s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
-            filter: 'drop-shadow(0 14px 32px rgba(107, 45, 102, 0.45)) drop-shadow(0 0 45px rgba(183, 142, 184, 0.25))',
+            padding: '24px 0',
           }}
         >
-          {/* High-res transparent logo image */}
-          <img
-            src="/vennz-logo.png"
-            alt="VennZ"
-            style={{
-              display: 'block',
-              maxHeight: '84px',
-              maxWidth: '320px',
-              width: 'auto',
-              height: 'auto',
-              objectFit: 'contain',
-            }}
-          />
-
-          {/* Luxury Shimmer Sweep Line */}
+          {/* Individual letter reveal stream */}
           <div
-            className="intro-shimmer-sweep"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '100%',
+              gap: '0px',
+            }}
+          >
+            {LETTERS.map((letter) => {
+              const isVisible = visibleLetters.has(letter.id);
+              return (
+                <div
+                  key={letter.id}
+                  style={{
+                    flex: letter.width,
+                    maxWidth: `${(letter.width / 662) * 100}%`,
+                    position: 'relative',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    transform: isVisible
+                      ? 'translateY(0) scale(1) rotate(0deg)'
+                      : `translateY(45px) scale(0.65) rotate(${letter.initialRotation}deg)`,
+                    opacity: isVisible ? 1 : 0,
+                    filter: isVisible ? 'blur(0px)' : 'blur(8px)',
+                    transition:
+                      'transform 1.1s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), filter 0.85s cubic-bezier(0.16, 1, 0.3, 1)',
+                  }}
+                >
+                  <img
+                    src={letter.src}
+                    alt={letter.char}
+                    style={{
+                      width: '100%',
+                      height: 'auto',
+                      display: 'block',
+                      objectFit: 'contain',
+                      userSelect: 'none',
+                    }}
+                  />
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Luxury Shimmer Sweep Line across the letters */}
+          <div
             style={{
               position: 'absolute',
               top: 0,
-              left: 0,
-              right: 0,
               bottom: 0,
+              width: '45%',
               background:
-                'linear-gradient(105deg, transparent 20%, rgba(255, 255, 255, 0.45) 45%, rgba(255, 255, 255, 0.8) 50%, rgba(255, 255, 255, 0.45) 55%, transparent 80%)',
+                'linear-gradient(105deg, transparent 0%, rgba(255, 255, 255, 0.15) 30%, rgba(255, 255, 255, 0.75) 50%, rgba(255, 255, 255, 0.15) 70%, transparent 100%)',
               pointerEvents: 'none',
-              transform: phase === 'entering' ? 'translateX(-120%)' : 'translateX(140%)',
-              transition: 'transform 1.5s cubic-bezier(0.19, 1, 0.22, 1) 0.3s',
-            }}
-          />
-        </div>
-
-        {/* Elegant Subtitle Reveal */}
-        <div
-          style={{
-            marginTop: '16px',
-            fontFamily: 'var(--font-sans)',
-            fontSize: '13px',
-            fontWeight: 500,
-            letterSpacing: '0.32em',
-            textTransform: 'uppercase',
-            color: 'rgba(243, 238, 233, 0.82)',
-            transform: phase === 'entering' ? 'translateY(8px)' : 'translateY(0)',
-            opacity: phase === 'entering' ? 0 : 1,
-            transition: 'transform 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.4s, opacity 1s cubic-bezier(0.16, 1, 0.3, 1) 0.4s',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px',
-          }}
-        >
-          <span
-            style={{
-              display: 'inline-block',
-              width: '24px',
-              height: '1px',
-              backgroundColor: 'rgba(220, 180, 215, 0.4)',
-            }}
-          />
-          <span>CURATED CONNECTIONS</span>
-          <span
-            style={{
-              display: 'inline-block',
-              width: '24px',
-              height: '1px',
-              backgroundColor: 'rgba(220, 180, 215, 0.4)',
+              transform: phase === 'unified-glow' ? 'translateX(260%)' : 'translateX(-160%)',
+              transition: 'transform 2.2s cubic-bezier(0.16, 1, 0.3, 1)',
             }}
           />
         </div>
       </div>
 
-      {/* Subtle Skip button in corner for accessibility / power users */}
+      {/* Discreet Skip Button */}
       <button
         type="button"
         onClick={onComplete}
         style={{
           position: 'absolute',
-          bottom: '28px',
+          bottom: '36px',
           background: 'transparent',
           border: 'none',
-          color: 'rgba(243, 238, 233, 0.4)',
+          color: isDark ? 'rgba(243, 238, 233, 0.35)' : 'rgba(73, 40, 61, 0.45)',
           fontSize: '11px',
-          letterSpacing: '0.14em',
+          letterSpacing: '0.18em',
           textTransform: 'uppercase',
           cursor: 'pointer',
           padding: '8px 16px',
           borderRadius: '999px',
           transition: 'color 0.2s ease, opacity 0.2s ease',
-          opacity: phase === 'entering' ? 0 : 1,
+          opacity: phase === 'idle' ? 0 : 1,
         }}
-        onMouseEnter={(e) => (e.currentTarget.style.color = 'rgba(243, 238, 233, 0.85)')}
-        onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(243, 238, 233, 0.4)')}
+        onMouseEnter={(e) =>
+          (e.currentTarget.style.color = isDark ? 'rgba(243, 238, 233, 0.85)' : 'var(--color-mulberry)')
+        }
+        onMouseLeave={(e) =>
+          (e.currentTarget.style.color = isDark ? 'rgba(243, 238, 233, 0.35)' : 'rgba(73, 40, 61, 0.45)')
+        }
       >
         Skip
       </button>
