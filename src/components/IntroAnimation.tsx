@@ -9,28 +9,36 @@ interface IntroAnimationProps {
 
 export const IntroAnimation: React.FC<IntroAnimationProps> = ({
   onComplete,
-  duration = 3400,
+  duration = 2100,
 }) => {
   const { appearanceMode } = useAuth();
   const isDark = appearanceMode === 'after-dark';
 
   // Phases:
   // 1. 'initial': pre-mount resting state
-  // 2. 'reveal': Venn diagram circles drift into confluence, logo lifts with rich 3D perspective
+  // 2. 'reveal': Venn diagram circles confluence into center, logo gently settles
   // 3. 'shimmer': specular light wave sweeps through the 3D logo
-  // 4. 'exiting': scale gently towards viewer with soft fade out
+  // 4. 'exiting': buttery smooth crossfade dissolve into the welcome page
   const [phase, setPhase] = useState<'initial' | 'reveal' | 'shimmer' | 'exiting'>('initial');
+
+  const handleSkip = () => {
+    if (phase === 'exiting') return;
+    setPhase('exiting');
+    setTimeout(() => {
+      onComplete();
+    }, 600);
+  };
 
   useEffect(() => {
     // Start reveal with elegant easing
     const startTimer = setTimeout(() => {
       setPhase('reveal');
-    }, 80);
+    }, 40);
 
     // Specular shimmer sweep across the 3D logo
     const shimmerTimer = setTimeout(() => {
       setPhase('shimmer');
-    }, 1100);
+    }, 700);
 
     // Exit transition
     const exitTimer = setTimeout(() => {
@@ -40,7 +48,7 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({
     // Unmount
     const finishTimer = setTimeout(() => {
       onComplete();
-    }, duration + 850);
+    }, duration + 650);
 
     return () => {
       clearTimeout(startTimer);
@@ -50,13 +58,10 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({
     };
   }, [duration, onComplete]);
 
-  // Color schemes:
-  // "shaded bg like top purple to bottom cream shade not so much purple our logo should be clearly visible"
-  // Light: Top muted plum/lavender mist (#E9DDE6) gently cascading down into warm rich cream (#FAF5EC)
-  // Dark: Deep twilight aubergine (#1E0C1B) gracefully shading down into nocturnal obsidian-mulberry (#0B070A)
+  // Color schemes matching the welcome page ambient palette exactly
   const bgGradient = isDark
-    ? 'linear-gradient(180deg, #220B20 0%, #150814 38%, #0C070B 72%, #080407 100%)'
-    : 'linear-gradient(180deg, #DECBD9 0%, #E9DEE7 26%, #F4ECE3 60%, #FAF5EE 100%)';
+    ? 'linear-gradient(180deg, #180917 0%, #140813 50%, #100610 100%)'
+    : 'linear-gradient(180deg, #FAF4F8 0%, #F5EEF4 45%, #FAF6F0 100%)';
 
   // Venn diagram circle styling (faint, geometric, interconnected)
   const vennStrokeA = isDark ? 'rgba(215, 175, 210, 0.22)' : 'rgba(107, 45, 102, 0.18)';
@@ -66,10 +71,10 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({
   const vennFillB = isDark ? 'rgba(73, 40, 61, 0.08)' : 'rgba(73, 40, 61, 0.04)';
 
   const ambientGlow = isDark
-    ? 'radial-gradient(circle at center, rgba(145, 45, 125, 0.38) 0%, rgba(68, 20, 60, 0.18) 42%, transparent 72%)'
-    : 'radial-gradient(circle at center, rgba(200, 145, 185, 0.35) 0%, rgba(225, 195, 215, 0.2) 42%, transparent 72%)';
+    ? 'radial-gradient(circle at center, rgba(145, 45, 125, 0.32) 0%, rgba(68, 20, 60, 0.15) 42%, transparent 72%)'
+    : 'radial-gradient(circle at center, rgba(200, 145, 185, 0.3) 0%, rgba(225, 195, 215, 0.18) 42%, transparent 72%)';
 
-  const skipColor = isDark ? 'rgba(243, 238, 233, 0.5)' : 'rgba(73, 40, 61, 0.55)';
+  const skipColor = isDark ? 'rgba(243, 238, 233, 0.55)' : 'rgba(73, 40, 61, 0.6)';
   const skipHover = isDark ? '#FFFFFF' : 'var(--color-mulberry)';
 
   return (
@@ -77,6 +82,7 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({
       role="dialog"
       aria-modal="true"
       aria-label="VennZ"
+      onClick={handleSkip}
       style={{
         position: 'fixed',
         inset: 0,
@@ -86,11 +92,11 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({
         alignItems: 'center',
         justifyContent: 'center',
         overflow: 'hidden',
-        transition: 'opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), transform 0.85s cubic-bezier(0.16, 1, 0.3, 1)',
+        transition: 'opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1)',
         opacity: phase === 'exiting' ? 0 : 1,
-        transform: phase === 'exiting' ? 'scale(1.06)' : 'scale(1)',
         pointerEvents: phase === 'exiting' ? 'none' : 'auto',
         perspective: '1200px',
+        cursor: 'pointer',
       }}
     >
       {/* Subtle Atmospheric Light Vignette & Soft Radiance (Top purple to bottom cream enhancer) */}
@@ -114,9 +120,9 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({
           borderRadius: '50%',
           background: ambientGlow,
           filter: 'blur(70px)',
-          transform: phase === 'initial' ? 'scale(0.5)' : phase === 'exiting' ? 'scale(1.35)' : 'scale(1.08)',
-          transition: 'transform 3.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 2.5s ease',
-          opacity: phase === 'exiting' ? 0 : 1,
+          transform: phase === 'initial' ? 'scale(0.5)' : 'scale(1.05)',
+          transition: 'transform 2.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.8s ease',
+          opacity: phase === 'exiting' ? 0.3 : 1,
           pointerEvents: 'none',
         }}
       />
@@ -147,10 +153,8 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({
             transform:
               phase === 'initial'
                 ? 'translateX(-115px) scale(0.85)'
-                : phase === 'exiting'
-                ? 'translateX(-135px) scale(1.15)'
                 : 'translateX(-95px) scale(1)',
-            transition: 'transform 3.4s cubic-bezier(0.16, 1, 0.3, 1)',
+            transition: 'transform 2.2s cubic-bezier(0.16, 1, 0.3, 1)',
             backdropFilter: 'blur(1.5px)',
             boxShadow: isDark
               ? 'inset 0 0 45px rgba(107, 45, 102, 0.16)'
@@ -170,10 +174,8 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({
             transform:
               phase === 'initial'
                 ? 'translateX(115px) scale(0.85)'
-                : phase === 'exiting'
-                ? 'translateX(135px) scale(1.15)'
                 : 'translateX(95px) scale(1)',
-            transition: 'transform 3.4s cubic-bezier(0.16, 1, 0.3, 1)',
+            transition: 'transform 2.2s cubic-bezier(0.16, 1, 0.3, 1)',
             backdropFilter: 'blur(1.5px)',
             boxShadow: isDark
               ? 'inset 0 0 45px rgba(139, 44, 116, 0.16)'
@@ -195,10 +197,8 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({
             transform:
               phase === 'initial'
                 ? 'scale(0.7)'
-                : phase === 'exiting'
-                ? 'scale(1.2)'
                 : 'scale(1)',
-            transition: 'transform 3.2s cubic-bezier(0.16, 1, 0.3, 1)',
+            transition: 'transform 2.2s cubic-bezier(0.16, 1, 0.3, 1)',
           }}
         />
       </div>
@@ -227,13 +227,11 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({
             transformStyle: 'preserve-3d',
             transform:
               phase === 'initial'
-                ? 'perspective(1200px) rotateX(20deg) rotateY(-10deg) scale(0.82) translateZ(-40px) translateY(30px)'
-                : phase === 'exiting'
-                ? 'perspective(1200px) rotateX(-5deg) rotateY(3deg) scale(1.1) translateZ(60px) translateY(-8px)'
-                : 'perspective(1200px) rotateX(3deg) rotateY(0deg) scale(1) translateZ(16px) translateY(0)',
+                ? 'perspective(1200px) scale(0.92) translateY(14px)'
+                : 'perspective(1200px) scale(1) translateY(0)',
             opacity: phase === 'initial' ? 0 : 1,
             transition:
-              'transform 2.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.3s cubic-bezier(0.16, 1, 0.3, 1)',
+              'transform 1.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s ease',
           }}
         >
           {/* Deep 3D Realistic Cast Ground Shadow underneath the 3D lettering */}
@@ -251,11 +249,9 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({
               filter: 'blur(18px)',
               transform:
                 phase === 'initial'
-                  ? 'scale(0.65) translateY(14px)'
-                  : phase === 'exiting'
-                  ? 'scale(1.22) translateY(8px)'
+                  ? 'scale(0.8) translateY(8px)'
                   : 'scale(1) translateY(0)',
-              transition: 'transform 2.2s cubic-bezier(0.16, 1, 0.3, 1)',
+              transition: 'transform 1.4s cubic-bezier(0.22, 1, 0.36, 1)',
               pointerEvents: 'none',
               zIndex: 1,
             }}
@@ -268,28 +264,16 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({
               zIndex: 2,
               filter: isDark
                 ? [
-                    // Top rim highlight for 3D bevel
-                    'drop-shadow(0 -1.5px 1px rgba(255, 220, 250, 0.45))',
-                    // Primary 3D extrusion step
-                    'drop-shadow(0 4px 6px rgba(20, 5, 18, 0.85))',
-                    // Secondary depth drop
-                    'drop-shadow(0 14px 22px rgba(0, 0, 0, 0.85))',
-                    // Ambient plum glow
-                    'drop-shadow(0 28px 46px rgba(139, 44, 116, 0.55))',
-                    'drop-shadow(0 0 36px rgba(215, 175, 210, 0.3))',
+                    'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.9))',
+                    'drop-shadow(0 14px 28px rgba(0, 0, 0, 0.85))',
+                    'drop-shadow(0 26px 45px rgba(25, 5, 22, 0.6))',
                   ].join(' ')
                 : [
-                    // Top rim highlight for crisp 3D bevel & outstanding visibility
-                    'drop-shadow(0 -2px 1.5px rgba(255, 255, 255, 0.95))',
-                    // Primary 3D extrusion edge
-                    'drop-shadow(0 3px 4px rgba(60, 18, 48, 0.45))',
-                    // Deep grounding shadow
-                    'drop-shadow(0 14px 20px rgba(60, 18, 48, 0.25))',
-                    // Atmospheric depth halo
-                    'drop-shadow(0 28px 40px rgba(107, 45, 102, 0.18))',
-                    'drop-shadow(0 0 28px rgba(199, 148, 185, 0.25))',
+                    'drop-shadow(0 3px 5px rgba(73, 40, 61, 0.35))',
+                    'drop-shadow(0 12px 22px rgba(73, 40, 61, 0.18))',
+                    'drop-shadow(0 0 20px rgba(183, 142, 184, 0.2))',
                   ].join(' '),
-              transition: 'filter 1.8s ease',
+              transition: 'filter 1.2s ease',
             }}
           >
             {/* VennZ Logo Image */}

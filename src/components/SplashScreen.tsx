@@ -228,21 +228,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
         }}
       />
 
-      {/* Top purple shade wash in light mode to provide an elegant visible purple tone */}
-      {!isDark && (
-        <div
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            height: '460px',
-            background: 'linear-gradient(180deg, rgba(214, 185, 216, 0.32) 0%, rgba(246, 238, 245, 0) 100%)',
-            pointerEvents: 'none',
-            zIndex: 0,
-          }}
-        />
-      )}
+
 
       {/* Slightly Faded Background Stars / Constellations on Welcome Page */}
       <div

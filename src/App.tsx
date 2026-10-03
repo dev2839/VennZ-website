@@ -123,7 +123,7 @@ export const App: React.FC = () => {
     } catch {
       // Ignore in environments without history API
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo(0, 0);
   };
 
   // Handlers for Page 1
