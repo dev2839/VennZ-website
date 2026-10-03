@@ -258,3 +258,37 @@ select:-webkit-autofill {
   animation: modalScaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+/* 3D Orbiting Venn Circles */
+@keyframes vennOrbit3DLeft {
+  0% {
+    transform: rotateY(0deg) rotateX(24deg) translateX(-110px) rotateZ(0deg);
+  }
+  50% {
+    transform: rotateY(180deg) rotateX(12deg) translateX(-70px) rotateZ(180deg);
+  }
+  100% {
+    transform: rotateY(360deg) rotateX(24deg) translateX(-110px) rotateZ(360deg);
+  }
+}
+
+@keyframes vennOrbit3DRight {
+  0% {
+    transform: rotateY(180deg) rotateX(-20deg) translateX(110px) rotateZ(180deg);
+  }
+  50% {
+    transform: rotateY(360deg) rotateX(-10deg) translateX(70px) rotateZ(360deg);
+  }
+  100% {
+    transform: rotateY(540deg) rotateX(-20deg) translateX(110px) rotateZ(540deg);
+  }
+}
+
+@keyframes vennFloat3D {
+  0%, 100% {
+    transform: perspective(1000px) rotateX(4deg) rotateY(-2deg) translateY(0px) translateZ(20px);
+  }
+  50% {
+    transform: perspective(1000px) rotateX(-3deg) rotateY(3deg) translateY(-8px) translateZ(35px);
+  }
+}
+
