@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StatusBar } from './StatusBar';
 import { SplashBranding } from './SplashBranding';
 import { SplashActions } from './SplashActions';
@@ -13,41 +13,79 @@ interface SplashScreenProps {
 }
 
 interface PillarItem {
+  id: string;
   title: string;
+  subtitle: string;
   description: string;
   icon: string;
   badge: string;
-  bgImage: string;
+  score: string;
+  category: string;
+  // Unique luxury purple tonal gradient shades
+  cardGradient: string;
+  glowColor: string;
 }
 
 const PILLARS: PillarItem[] = [
   {
+    id: 'pillar-curated',
     title: 'Curated Introductions',
-    description: 'Handpicked verified profiles aligned with your professional standards and ambitions.',
+    subtitle: 'Editorial Matchmaking',
+    description: 'Handpicked verified profiles aligned with your career ambitions, values, and lifestyle standards.',
     icon: '✦',
     badge: 'DAILY CURATION',
-    bgImage: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=700&auto=format&fit=crop&q=80',
+    score: '9.8 ★',
+    category: 'INTRODUCTIONS',
+    cardGradient: 'linear-gradient(150deg, #4A1D45 0%, #2E102B 55%, #180816 100%)',
+    glowColor: 'rgba(183, 142, 184, 0.45)',
   },
   {
+    id: 'pillar-verification',
     title: 'Rigorous Verification',
-    description: 'Biometric selfie verification and background vetting ensure real, authentic members.',
+    subtitle: 'Zero Anonymous Profiles',
+    description: 'Biometric selfie authentication and human review ensure genuine, trustworthy members.',
     icon: '🛡️',
-    badge: '100% VERIFIED',
-    bgImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=700&auto=format&fit=crop&q=80',
+    badge: 'VERIFIED CIRCLE',
+    score: '9.9 ★',
+    category: 'INTEGRITY',
+    cardGradient: 'linear-gradient(150deg, #5B2355 0%, #391435 55%, #1C091A 100%)',
+    glowColor: 'rgba(215, 175, 210, 0.45)',
   },
   {
+    id: 'pillar-elevate',
     title: 'Elevate Concierge',
-    description: 'Private styling, executive photography, and personalized relationship coaching.',
+    subtitle: 'Personal Advisory',
+    description: 'Private styling, executive photography, and personalized relationship advisory arranged for you.',
     icon: '👑',
-    badge: 'MEMBERS ONLY',
-    bgImage: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=700&auto=format&fit=crop&q=80',
+    badge: 'CONCIERGE DESK',
+    score: '9.6 ★',
+    category: 'PREMIUM SERVICE',
+    cardGradient: 'linear-gradient(150deg, #3C1637 0%, #260C23 55%, #140512 100%)',
+    glowColor: 'rgba(232, 169, 155, 0.45)',
   },
   {
+    id: 'pillar-mixers',
     title: 'Private Mixers',
-    description: 'Curated in-person gatherings in premier venues across Mumbai, Delhi, Bengaluru & Pune.',
+    subtitle: 'Offline Gatherings',
+    description: 'Curated intimate cocktail evenings and private dinners in premier venues across major cities.',
     icon: '🍸',
     badge: 'SECRET VENUES',
-    bgImage: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=700&auto=format&fit=crop&q=80',
+    score: '9.7 ★',
+    category: 'MEMBERS GATHERINGS',
+    cardGradient: 'linear-gradient(150deg, #63265D 0%, #3F173C 55%, #1F0A1D 100%)',
+    glowColor: 'rgba(200, 135, 185, 0.45)',
+  },
+  {
+    id: 'pillar-community',
+    title: 'High-Standard Culture',
+    subtitle: 'Mutual Respect',
+    description: 'An invitation-only ecosystem where integrity, truthful self-presentation, and ambition connect.',
+    icon: '✨',
+    badge: 'EXCLUSIVE ECOSYSTEM',
+    score: '9.9 ★',
+    category: 'COMMUNITY',
+    cardGradient: 'linear-gradient(150deg, #44173F 0%, #2A0D27 55%, #160614 100%)',
+    glowColor: 'rgba(195, 150, 180, 0.45)',
   },
 ];
 
@@ -61,11 +99,9 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
   const { appearanceMode } = useAuth();
   const isDark = appearanceMode === 'after-dark';
 
-  // Dynamic scroll shrink state: "when user slide down the text should look small while sliding above make the image correct"
+  // Active highlighted card index for the 3D coverflow carousel
+  const [activeIndex, setActiveIndex] = useState(2); // Center card active by default
   const [scrollY, setScrollY] = useState(0);
-  const sliderRef = useRef<HTMLDivElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -75,24 +111,9 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const updateScrollButtons = () => {
-    if (sliderRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = sliderRef.current;
-      setCanScrollLeft(scrollLeft > 10);
-      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
-    }
-  };
-
-  const handleSlide = (direction: 'left' | 'right') => {
-    if (sliderRef.current) {
-      const offset = direction === 'left' ? -320 : 320;
-      sliderRef.current.scrollBy({ left: offset, behavior: 'smooth' });
-    }
-  };
-
   // Compute smooth dynamic scroll scale: shrinks slightly as user scrolls down, enlarges back on top
-  const headerScale = Math.max(0.88, 1 - scrollY * 0.0007);
-  const headerOpacity = Math.max(0.7, 1 - scrollY * 0.001);
+  const headerScale = Math.max(0.86, 1 - scrollY * 0.0008);
+  const headerOpacity = Math.max(0.72, 1 - scrollY * 0.001);
 
   return (
     <div
@@ -104,18 +125,68 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
         flexDirection: 'column',
         justifyContent: 'space-between',
         overflowX: 'hidden',
-        // Trending ambient shading: Light = warm cream with soft purple mist; Dark = rich midnight purple
         backgroundColor: isDark ? '#140813' : '#FAF6F0',
         transition: 'background-color 0.3s ease',
       }}
     >
-      {/* Trending Ambient Gradient Mesh Background with subtle purple hue */}
+      {/* --- TOP MINIMAL BRANDING IMAGE / ELEMENTS BANNER --- */}
+      <div
+        style={{
+          position: 'relative',
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          paddingTop: '24px',
+          zIndex: 1,
+        }}
+      >
+        {/* Minimal Editorial Aesthetic Header Line Accent */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '14px',
+            marginBottom: '12px',
+            opacity: 0.85,
+          }}
+        >
+          <span
+            style={{
+              width: '40px',
+              height: '1px',
+              backgroundColor: isDark ? 'rgba(215, 175, 210, 0.4)' : 'rgba(73, 40, 61, 0.3)',
+            }}
+          />
+          <span
+            style={{
+              fontFamily: 'var(--font-sans)',
+              fontSize: '11px',
+              fontWeight: 700,
+              letterSpacing: '0.24em',
+              textTransform: 'uppercase',
+              color: isDark ? '#D7AFD2' : 'var(--color-mulberry)',
+            }}
+          >
+            THE INNER CIRCLE EXPERIENCE
+          </span>
+          <span
+            style={{
+              width: '40px',
+              height: '1px',
+              backgroundColor: isDark ? 'rgba(215, 175, 210, 0.4)' : 'rgba(73, 40, 61, 0.3)',
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Trending Ambient Gradient Mesh Background with purple glow */}
       <div
         style={{
           position: 'absolute',
           inset: 0,
           background: isDark
-            ? 'radial-gradient(ellipse at 50% 12%, rgba(107, 45, 102, 0.32) 0%, rgba(35, 12, 33, 0.6) 42%, rgba(20, 8, 19, 1) 100%)'
+            ? 'radial-gradient(ellipse at 50% 12%, rgba(107, 45, 102, 0.38) 0%, rgba(35, 12, 33, 0.6) 42%, rgba(20, 8, 19, 1) 100%)'
             : 'radial-gradient(ellipse at 50% 10%, rgba(222, 203, 217, 0.45) 0%, rgba(244, 236, 227, 0.65) 50%, rgba(250, 246, 240, 1) 100%)',
           pointerEvents: 'none',
           zIndex: 0,
@@ -147,7 +218,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
             borderRadius: '50%',
             transform: 'translateX(-80px)',
             background: isDark
-              ? 'radial-gradient(circle, rgba(139, 44, 116, 0.18) 0%, transparent 70%)'
+              ? 'radial-gradient(circle, rgba(139, 44, 116, 0.22) 0%, transparent 70%)'
               : 'radial-gradient(circle, rgba(183, 142, 184, 0.22) 0%, transparent 70%)',
             filter: 'blur(35px)',
           }}
@@ -160,7 +231,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
             borderRadius: '50%',
             transform: 'translateX(80px)',
             background: isDark
-              ? 'radial-gradient(circle, rgba(107, 45, 102, 0.2) 0%, transparent 70%)'
+              ? 'radial-gradient(circle, rgba(107, 45, 102, 0.22) 0%, transparent 70%)'
               : 'radial-gradient(circle, rgba(232, 169, 155, 0.25) 0%, transparent 70%)',
             filter: 'blur(35px)',
           }}
@@ -180,9 +251,9 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
           position: 'relative',
           zIndex: 10,
           width: '100%',
-          maxWidth: '1320px',
+          maxWidth: '1360px',
           margin: '0 auto',
-          padding: '48px 24px 40px',
+          padding: '24px 20px 48px',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -191,10 +262,10 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
           boxSizing: 'border-box',
         }}
       >
-        {/* Editorial Branding Lockup with Smooth Dynamic Scroll Zoom */}
+        {/* Editorial Branding Lockup with VennZ in More Center and Dynamic Scroll Zoom */}
         <div
           style={{
-            marginBottom: '28px',
+            marginBottom: '32px',
             textAlign: 'center',
             transform: `scale(${headerScale})`,
             opacity: headerOpacity,
@@ -202,272 +273,370 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
             transition: 'transform 0.15s ease-out, opacity 0.15s ease-out',
             width: '100%',
             display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
             justifyContent: 'center',
           }}
         >
           <SplashBranding />
         </div>
 
-        {/* Action Suite */}
-        <div style={{ width: '100%', maxWidth: '440px', marginBottom: '56px' }}>
+        {/* Action Suite (CTA: Get Started with Purple & Cream Shade) */}
+        <div style={{ width: '100%', maxWidth: '440px', marginBottom: '48px' }}>
           <SplashActions onGetStarted={onGetStarted} onLogin={onLogin} />
+        </div>
 
+        {/* --- 3D COVERFLOW NETFLIX CARDS (Matching user reference layout) --- */}
+        <div
+          style={{
+            width: '100%',
+            maxWidth: '1280px',
+            marginTop: '20px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            perspective: '1200px',
+          }}
+        >
+          {/* Section Header */}
+          <div
+            style={{
+              textAlign: 'center',
+              marginBottom: '28px',
+              padding: '0 16px',
+            }}
+          >
+            <span
+              style={{
+                fontSize: '11px',
+                fontWeight: 700,
+                letterSpacing: '0.22em',
+                textTransform: 'uppercase',
+                color: isDark ? '#D7AFD2' : 'var(--color-mulberry)',
+              }}
+            >
+              CURATED EXCELLENCE
+            </span>
+            <h3
+              style={{
+                fontFamily: 'var(--font-serif)',
+                fontSize: 'clamp(22px, 3vw, 30px)',
+                fontWeight: 500,
+                color: isDark ? 'var(--color-warm-porcelain)' : 'var(--color-mulberry)',
+                margin: '6px 0 0 0',
+              }}
+            >
+              Explore the VennZ Standard
+            </h3>
+          </div>
+
+          {/* 3D Curved / Staged Card Stage */}
+          <div
+            style={{
+              position: 'relative',
+              width: '100%',
+              minHeight: '380px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              overflow: 'visible',
+              padding: '20px 0',
+            }}
+          >
+            {PILLARS.map((pillar, idx) => {
+              // Calculate relative distance from the center active card
+              const offset = idx - activeIndex;
+              const isActive = offset === 0;
+
+              // 3D positioning matching user reference:
+              // Active: scale(1.08), zIndex 10, center translate, zero rotation, fully opaque, vibrant purple glow
+              // Outer cards: scaled down (0.82), rotated on Y-axis (20deg / -20deg), translated outwards, blended into purple background
+              const translateX = offset * 210; // spread spacing
+              const translateZ = isActive ? 80 : -70 * Math.abs(offset);
+              const rotateY = offset * -18; // curved amphitheater tilt
+              const scale = isActive ? 1.08 : Math.max(0.76, 0.88 - Math.abs(offset) * 0.08);
+              const opacity = isActive ? 1 : Math.max(0.38, 0.78 - Math.abs(offset) * 0.22);
+              const zIndex = 10 - Math.abs(offset);
+
+              return (
+                <div
+                  key={pillar.id}
+                  onClick={() => setActiveIndex(idx)}
+                  style={{
+                    position: 'absolute',
+                    width: 'clamp(230px, 24vw, 290px)',
+                    height: '350px',
+                    borderRadius: '24px',
+                    background: pillar.cardGradient,
+                    border: isActive
+                      ? '1.5px solid rgba(235, 215, 230, 0.45)'
+                      : '1px solid rgba(215, 175, 210, 0.15)',
+                    boxShadow: isActive
+                      ? `0 24px 50px rgba(0, 0, 0, 0.65), 0 0 35px ${pillar.glowColor}`
+                      : '0 12px 28px rgba(0, 0, 0, 0.45)',
+                    transform: `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`,
+                    opacity,
+                    zIndex,
+                    cursor: 'pointer',
+                    userSelect: 'none',
+                    transition:
+                      'transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease, box-shadow 0.45s ease, border-color 0.4s ease',
+                    transformStyle: 'preserve-3d',
+                    overflow: 'hidden',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    padding: '24px 22px',
+                    boxSizing: 'border-box',
+                  }}
+                >
+                  {/* Subtle Specular Top Rim Reflection */}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: '15%',
+                      right: '15%',
+                      height: '1px',
+                      background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent)',
+                      pointerEvents: 'none',
+                    }}
+                  />
+
+                  {/* Top Bar: Category badge & Score pill (Matching reference format) */}
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      position: 'relative',
+                      zIndex: 2,
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontSize: '10.5px',
+                        fontWeight: 700,
+                        letterSpacing: '0.14em',
+                        textTransform: 'uppercase',
+                        padding: '4px 10px',
+                        borderRadius: '999px',
+                        backgroundColor: 'rgba(255, 255, 255, 0.14)',
+                        backdropFilter: 'blur(8px)',
+                        color: '#F4ECE3',
+                      }}
+                    >
+                      {pillar.badge}
+                    </span>
+
+                    <span
+                      style={{
+                        fontFamily: 'var(--font-sans)',
+                        fontSize: '13px',
+                        fontWeight: 700,
+                        color: '#FFFFFF',
+                        letterSpacing: '0.04em',
+                        backgroundColor: 'rgba(0, 0, 0, 0.28)',
+                        padding: '4px 8px',
+                        borderRadius: '8px',
+                      }}
+                    >
+                      {pillar.score}
+                    </span>
+                  </div>
+
+                  {/* Center Emblem / Icon with 3D float */}
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flex: 1,
+                      position: 'relative',
+                      zIndex: 2,
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: '58px',
+                        height: '58px',
+                        borderRadius: '50%',
+                        backgroundColor: 'rgba(255, 255, 255, 0.12)',
+                        backdropFilter: 'blur(10px)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '24px',
+                        color: '#FFFFFF',
+                        boxShadow: '0 8px 20px rgba(0, 0, 0, 0.35)',
+                        border: '1px solid rgba(255, 255, 255, 0.18)',
+                        marginBottom: '10px',
+                      }}
+                    >
+                      {pillar.icon}
+                    </div>
+                    <span
+                      style={{
+                        fontSize: '11px',
+                        fontWeight: 600,
+                        letterSpacing: '0.16em',
+                        textTransform: 'uppercase',
+                        color: 'rgba(243, 238, 233, 0.72)',
+                      }}
+                    >
+                      {pillar.category}
+                    </span>
+                  </div>
+
+                  {/* Bottom Card Title and Description */}
+                  <div style={{ position: 'relative', zIndex: 2 }}>
+                    <h4
+                      style={{
+                        fontFamily: 'var(--font-serif)',
+                        fontSize: '20px',
+                        fontWeight: 600,
+                        color: '#FFFFFF',
+                        margin: '0 0 6px 0',
+                        letterSpacing: '0.01em',
+                        lineHeight: '1.2',
+                      }}
+                    >
+                      {pillar.title}
+                    </h4>
+                    <p
+                      style={{
+                        fontFamily: 'var(--font-sans)',
+                        fontSize: '12px',
+                        lineHeight: '1.45',
+                        color: 'rgba(243, 238, 233, 0.85)',
+                        margin: 0,
+                      }}
+                    >
+                      {pillar.description}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Navigation Dots and Slide Trigger Controls */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '12px',
+              marginTop: '28px',
+            }}
+          >
+            <button
+              type="button"
+              aria-label="Previous card"
+              onClick={() => setActiveIndex((prev) => Math.max(0, prev - 1))}
+              disabled={activeIndex === 0}
+              style={{
+                width: '36px',
+                height: '36px',
+                borderRadius: '50%',
+                border: isDark ? '1px solid rgba(243, 238, 233, 0.2)' : '1px solid rgba(73, 40, 61, 0.2)',
+                backgroundColor: isDark ? 'rgba(32, 14, 30, 0.85)' : '#FFFFFF',
+                color: isDark ? '#FFFFFF' : 'var(--color-mulberry)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: activeIndex === 0 ? 'default' : 'pointer',
+                opacity: activeIndex === 0 ? 0.35 : 1,
+                fontSize: '18px',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              ‹
+            </button>
+
+            {PILLARS.map((_, idx) => (
+              <div
+                key={idx}
+                onClick={() => setActiveIndex(idx)}
+                style={{
+                  width: activeIndex === idx ? '26px' : '8px',
+                  height: '8px',
+                  borderRadius: '999px',
+                  backgroundColor:
+                    activeIndex === idx
+                      ? isDark
+                        ? '#EADDCF'
+                        : 'var(--color-mulberry)'
+                      : isDark
+                      ? 'rgba(215, 175, 210, 0.3)'
+                      : 'rgba(73, 40, 61, 0.25)',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                }}
+              />
+            ))}
+
+            <button
+              type="button"
+              aria-label="Next card"
+              onClick={() => setActiveIndex((prev) => Math.min(PILLARS.length - 1, prev + 1))}
+              disabled={activeIndex === PILLARS.length - 1}
+              style={{
+                width: '36px',
+                height: '36px',
+                borderRadius: '50%',
+                border: isDark ? '1px solid rgba(243, 238, 233, 0.2)' : '1px solid rgba(73, 40, 61, 0.2)',
+                backgroundColor: isDark ? 'rgba(32, 14, 30, 0.85)' : '#FFFFFF',
+                color: isDark ? '#FFFFFF' : 'var(--color-mulberry)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: activeIndex === PILLARS.length - 1 ? 'default' : 'pointer',
+                opacity: activeIndex === PILLARS.length - 1 ? 0.35 : 1,
+                fontSize: '18px',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              ›
+            </button>
+          </div>
+
+          {/* --- LEARN HOW VENNZ WORKS BUTTON PLACED STRICTLY BELOW CARDS --- */}
           {onLearnHowItWorks && (
-            <div style={{ textAlign: 'center', marginTop: '18px' }}>
+            <div style={{ textAlign: 'center', marginTop: '36px', marginBottom: '16px' }}>
               <button
                 type="button"
                 onClick={onLearnHowItWorks}
                 style={{
-                  background: 'transparent',
-                  border: 'none',
-                  color: isDark ? 'rgba(243, 238, 233, 0.85)' : 'var(--color-mulberry)',
+                  background: isDark ? 'rgba(40, 18, 38, 0.65)' : 'rgba(255, 255, 255, 0.85)',
+                  border: isDark ? '1px solid rgba(215, 175, 210, 0.25)' : '1px solid rgba(73, 40, 61, 0.18)',
+                  color: isDark ? '#FAF5EE' : 'var(--color-mulberry)',
+                  padding: '12px 28px',
+                  borderRadius: '999px',
                   fontSize: '14.5px',
                   fontFamily: 'var(--font-sans)',
                   fontWeight: 600,
-                  letterSpacing: '0.02em',
+                  letterSpacing: '0.03em',
                   cursor: 'pointer',
-                  textDecoration: 'underline',
-                  textUnderlineOffset: '4px',
-                  transition: 'opacity 0.15s ease',
+                  boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)',
+                  transition: 'all 0.2s ease',
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.75')}
-                onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.borderColor = isDark ? '#EADDCF' : 'var(--color-mulberry)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.borderColor = isDark
+                    ? 'rgba(215, 175, 210, 0.25)'
+                    : 'rgba(73, 40, 61, 0.18)';
+                }}
               >
                 Learn How VennZ Works →
               </button>
             </div>
           )}
-        </div>
-
-        {/* --- NETFLIX-STYLE SLIDING CARDS SECTION --- */}
-        <div
-          style={{
-            width: '100%',
-            maxWidth: '1240px',
-            marginTop: 'auto',
-            paddingTop: '20px',
-          }}
-        >
-          {/* Section Header with Slider Navigation Controls */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              marginBottom: '16px',
-              padding: '0 8px',
-            }}
-          >
-            <div>
-              <span
-                style={{
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  letterSpacing: '0.18em',
-                  textTransform: 'uppercase',
-                  color: isDark ? '#D7AFD2' : 'var(--color-mulberry)',
-                }}
-              >
-                DISCOVER THE EXPERIENCE
-              </span>
-              <h3
-                style={{
-                  fontFamily: 'var(--font-serif)',
-                  fontSize: 'clamp(20px, 2.5vw, 26px)',
-                  fontWeight: 500,
-                  color: isDark ? 'var(--color-warm-porcelain)' : 'var(--color-mulberry)',
-                  margin: '4px 0 0 0',
-                }}
-              >
-                Why Ambitious Singles Choose VennZ
-              </h3>
-            </div>
-
-            {/* Netflix-style Slider Arrows */}
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <button
-                type="button"
-                aria-label="Previous card"
-                onClick={() => handleSlide('left')}
-                disabled={!canScrollLeft}
-                style={{
-                  width: '38px',
-                  height: '38px',
-                  borderRadius: '50%',
-                  border: isDark ? '1px solid rgba(243, 238, 233, 0.2)' : '1px solid rgba(73, 40, 61, 0.2)',
-                  backgroundColor: isDark ? 'rgba(32, 14, 30, 0.85)' : '#FFFFFF',
-                  color: isDark ? '#FFFFFF' : 'var(--color-mulberry)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: canScrollLeft ? 'pointer' : 'default',
-                  opacity: canScrollLeft ? 1 : 0.4,
-                  transition: 'opacity 0.2s ease, transform 0.15s ease',
-                  boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)',
-                }}
-              >
-                ‹
-              </button>
-              <button
-                type="button"
-                aria-label="Next card"
-                onClick={() => handleSlide('right')}
-                disabled={!canScrollRight}
-                style={{
-                  width: '38px',
-                  height: '38px',
-                  borderRadius: '50%',
-                  border: isDark ? '1px solid rgba(243, 238, 233, 0.2)' : '1px solid rgba(73, 40, 61, 0.2)',
-                  backgroundColor: isDark ? 'rgba(32, 14, 30, 0.85)' : '#FFFFFF',
-                  color: isDark ? '#FFFFFF' : 'var(--color-mulberry)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: canScrollRight ? 'pointer' : 'default',
-                  opacity: canScrollRight ? 1 : 0.4,
-                  transition: 'opacity 0.2s ease, transform 0.15s ease',
-                  boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)',
-                }}
-              >
-                ›
-              </button>
-            </div>
-          </div>
-
-          {/* Horizontal Netflix Slider Track */}
-          <div
-            ref={sliderRef}
-            onScroll={updateScrollButtons}
-            className="netflix-slider-track"
-          >
-            {PILLARS.map((pillar, idx) => (
-              <div
-                key={idx}
-                className="netflix-card"
-                style={{
-                  height: '340px',
-                  backgroundColor: isDark ? '#1C0D1A' : '#FFFFFF',
-                  border: isDark ? '1px solid rgba(215, 175, 210, 0.22)' : '1px solid rgba(73, 40, 61, 0.12)',
-                  boxShadow: isDark
-                    ? '0 12px 30px rgba(0, 0, 0, 0.5), 0 0 24px rgba(107, 45, 102, 0.25)'
-                    : '0 12px 32px rgba(73, 40, 61, 0.1)',
-                }}
-              >
-                {/* Background Editorial Image */}
-                <img
-                  src={pillar.bgImage}
-                  alt={pillar.title}
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    objectPosition: 'center top',
-                    transition: 'transform 0.45s ease',
-                  }}
-                />
-
-                {/* Cinematic Gradient Overlay */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    background: isDark
-                      ? 'linear-gradient(180deg, rgba(20, 8, 19, 0.1) 0%, rgba(20, 8, 19, 0.5) 45%, rgba(16, 6, 15, 0.94) 100%)'
-                      : 'linear-gradient(180deg, rgba(40, 15, 34, 0.05) 0%, rgba(40, 15, 34, 0.45) 45%, rgba(25, 8, 21, 0.92) 100%)',
-                    zIndex: 2,
-                  }}
-                />
-
-                {/* Top Badge & Icon */}
-                <div
-                  style={{
-                    position: 'relative',
-                    zIndex: 3,
-                    padding: '18px 18px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: '10.5px',
-                      fontWeight: 700,
-                      letterSpacing: '0.14em',
-                      textTransform: 'uppercase',
-                      padding: '4px 10px',
-                      borderRadius: '999px',
-                      backgroundColor: 'rgba(255, 255, 255, 0.25)',
-                      backdropFilter: 'blur(8px)',
-                      color: '#FFFFFF',
-                      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.25)',
-                    }}
-                  >
-                    {pillar.badge}
-                  </span>
-                  <div
-                    style={{
-                      width: '34px',
-                      height: '34px',
-                      borderRadius: '50%',
-                      backgroundColor: 'rgba(255, 255, 255, 0.25)',
-                      backdropFilter: 'blur(8px)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: '16px',
-                      color: '#FFFFFF',
-                    }}
-                  >
-                    {pillar.icon}
-                  </div>
-                </div>
-
-                {/* Bottom Card Content */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    zIndex: 3,
-                    padding: '22px 20px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '8px',
-                  }}
-                >
-                  <h4
-                    style={{
-                      fontFamily: 'var(--font-serif)',
-                      fontSize: '21px',
-                      fontWeight: 600,
-                      color: '#FFFFFF',
-                      margin: 0,
-                      letterSpacing: '0.01em',
-                      textShadow: '0 2px 8px rgba(0, 0, 0, 0.6)',
-                    }}
-                  >
-                    {pillar.title}
-                  </h4>
-                  <p
-                    style={{
-                      fontFamily: 'var(--font-sans)',
-                      fontSize: '13px',
-                      lineHeight: '1.45',
-                      color: 'rgba(243, 238, 233, 0.92)',
-                      margin: 0,
-                      textShadow: '0 1px 4px rgba(0, 0, 0, 0.8)',
-                    }}
-                  >
-                    {pillar.description}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
 

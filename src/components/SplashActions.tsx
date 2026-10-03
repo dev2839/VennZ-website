@@ -9,7 +9,6 @@ interface SplashActionsProps {
 
 export const SplashActions: React.FC<SplashActionsProps> = ({
   onGetStarted,
-  onLogin,
   className = '',
 }) => {
   const { appearanceMode } = useAuth();
@@ -30,23 +29,24 @@ export const SplashActions: React.FC<SplashActionsProps> = ({
       {/* Editorial Hook: "Not just a dating app. A community." */}
       <div
         style={{
-          marginBottom: '20px',
+          marginBottom: '24px',
           textAlign: 'center',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
         }}
       >
-        {/* Line 1: Not just a dating app. */}
+        {/* Line 1: Not just a dating app. (Made smaller per user request) */}
         <p
           style={{
             fontFamily: 'var(--font-sans)',
-            fontSize: 'clamp(18px, 2.5vw, 22px)',
-            fontWeight: 400,
-            color: isDark ? 'rgba(243, 238, 233, 0.95)' : '#6B5765',
-            letterSpacing: '0.02em',
+            fontSize: '13.5px',
+            fontWeight: 500,
+            textTransform: 'uppercase',
+            letterSpacing: '0.14em',
+            color: isDark ? 'rgba(215, 175, 210, 0.85)' : '#7A5B72',
             margin: '0 0 4px 0',
-            textShadow: isDark ? '0 2px 10px rgba(0, 0, 0, 0.8)' : 'none',
+            textShadow: isDark ? '0 1px 6px rgba(0, 0, 0, 0.6)' : 'none',
           }}
         >
           Not just a dating app.
@@ -56,7 +56,7 @@ export const SplashActions: React.FC<SplashActionsProps> = ({
         <p
           style={{
             fontFamily: 'var(--font-script)',
-            fontSize: 'clamp(46px, 6.2vw, 60px)',
+            fontSize: 'clamp(44px, 5.8vw, 56px)',
             lineHeight: 1.15,
             color: isDark ? '#FFFFFF' : 'var(--color-mulberry)',
             margin: 0,
@@ -68,29 +68,33 @@ export const SplashActions: React.FC<SplashActionsProps> = ({
         </p>
       </div>
 
-      {/* Primary CTA: Get Started */}
+      {/* Primary CTA: Get Started with rich Purple and Cream shade background */}
       <button
         type="button"
         onClick={onGetStarted}
         style={{
           width: '100%',
           maxWidth: '360px',
-          height: '58px',
-          backgroundColor: '#E8A99B',
-          color: '#272124',
+          height: '56px',
+          background: isDark
+            ? 'linear-gradient(135deg, #6B2D66 0%, #49283D 45%, #EADDCF 140%)'
+            : 'linear-gradient(135deg, #49283D 0%, #683256 50%, #F5ECE0 135%)',
+          color: '#FAF5EE',
           fontFamily: 'var(--font-sans)',
-          fontSize: '17.5px',
+          fontSize: '16.5px',
           fontWeight: 600,
           borderRadius: '9999px',
-          border: 'none',
+          border: isDark ? '1px solid rgba(235, 215, 230, 0.3)' : '1px solid rgba(73, 40, 61, 0.25)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: '8px',
+          gap: '10px',
           cursor: 'pointer',
-          boxShadow: '0 8px 26px rgba(0, 0, 0, 0.45)',
-          transition: 'transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease',
-          letterSpacing: '0.01em',
+          boxShadow: isDark
+            ? '0 10px 28px rgba(0, 0, 0, 0.5), 0 0 20px rgba(107, 45, 102, 0.35)'
+            : '0 10px 24px rgba(73, 40, 61, 0.22)',
+          transition: 'transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease',
+          letterSpacing: '0.02em',
         }}
         onMouseDown={(e) => {
           e.currentTarget.style.transform = 'scale(0.98)';
@@ -99,11 +103,12 @@ export const SplashActions: React.FC<SplashActionsProps> = ({
           e.currentTarget.style.transform = 'scale(1)';
         }}
         onMouseEnter={(e) => {
-          e.currentTarget.style.backgroundColor = '#F0B6A9';
+          e.currentTarget.style.filter = 'brightness(1.08)';
+          e.currentTarget.style.transform = 'translateY(-2px)';
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.backgroundColor = '#E8A99B';
-          e.currentTarget.style.transform = 'scale(1)';
+          e.currentTarget.style.filter = 'none';
+          e.currentTarget.style.transform = 'translateY(0)';
         }}
       >
         <span>Get Started</span>
@@ -122,48 +127,6 @@ export const SplashActions: React.FC<SplashActionsProps> = ({
           <path d="m12 5 7 7-7 7" />
         </svg>
       </button>
-
-      {/* Secondary Action: Already a member? Log in */}
-      <div
-        style={{
-          marginTop: '20px',
-          fontFamily: 'var(--font-sans)',
-          fontSize: '16px',
-          color: isDark ? 'rgba(243, 238, 233, 0.92)' : '#7A6874',
-          textShadow: isDark ? '0 1px 6px rgba(0, 0, 0, 0.6)' : 'none',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '6px',
-        }}
-      >
-        <span>Already a member?</span>
-        <button
-          type="button"
-          onClick={onLogin}
-          style={{
-            background: 'transparent',
-            border: 'none',
-            color: isDark ? '#FFFFFF' : 'var(--color-mulberry)',
-            fontFamily: 'var(--font-sans)',
-            fontSize: '16px',
-            fontWeight: 700,
-            cursor: 'pointer',
-            padding: 0,
-            textDecoration: 'underline',
-            textUnderlineOffset: '3px',
-            textDecorationColor: isDark ? 'rgba(243, 238, 233, 0.8)' : 'var(--color-mulberry)',
-            transition: 'opacity 0.15s ease',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.opacity = '0.75';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.opacity = '1';
-          }}
-        >
-          Log in
-        </button>
-      </div>
     </div>
   );
 };

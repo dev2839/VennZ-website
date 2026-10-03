@@ -94,22 +94,21 @@ export const SplashBranding: React.FC<SplashBrandingProps> = ({ className = '' }
         </div>
       </div>
 
-      {/* Tagline: Real people. Meaningful connections. (Bigger and responsive) */}
+      {/* Tagline: Real people. Meaningful connections. (Strictly in one line) */}
       <p
         style={{
           fontFamily: 'var(--font-sans)',
-          fontSize: 'clamp(20px, 3.2vw, 26px)',
+          fontSize: 'clamp(18px, 2.8vw, 24px)',
           lineHeight: '1.4',
           fontWeight: 500,
-          letterSpacing: '0.015em',
+          letterSpacing: '0.02em',
           color: isDark ? 'rgba(243, 238, 233, 0.96)' : 'var(--color-mulberry)',
-          marginTop: '18px',
+          marginTop: '16px',
+          whiteSpace: 'nowrap',
           textShadow: isDark ? '0 1px 8px rgba(0, 0, 0, 0.6)' : 'none',
         }}
       >
-        Real people. Meaningful
-        <br />
-        connections.
+        Real people. Meaningful connections.
       </p>
     </div>
   );
