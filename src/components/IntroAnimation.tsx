@@ -16,9 +16,9 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({
 
   // Phases:
   // 1. 'initial': pre-mount resting state
-  // 2. 'reveal': background shade settles, 3D Venn rings begin orbiting, logo rises
-  // 3. 'shimmer': specular light beam sweeps across 3D logo
-  // 4. 'exiting': scale towards user and smoothly fade out
+  // 2. 'reveal': shaded canvas appears, interconnected Venn diagram stabilizes & spins in place in 3D
+  // 3. 'shimmer': specular beam sweeps across 3D logo
+  // 4. 'exiting': scale gently towards user and smoothly fade out
   const [phase, setPhase] = useState<'initial' | 'reveal' | 'shimmer' | 'exiting'>('initial');
 
   useEffect(() => {
@@ -46,20 +46,20 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({
     };
   }, [duration, onComplete]);
 
-  // Dynamic Shaded Background:
-  // Requested: "shaded bg like top purple to botton cream shade not so much purple our logo should be clearly visible"
-  // For Light theme: Soft subtle lavender-purple at top (#EDE0EB -> #F3EAE3 -> #FBF7F0 rich warm cream at bottom)
-  // For Dark theme: Nocturnal aubergine-purple at top (#1F0B1C -> #130712 -> #080407 deep obsidian at bottom)
+  // Shaded background: top purple to bottom cream shade
+  // "shaded bg like top purple to botton cream shade not so much purple our logo should be clearly visible"
   const backgroundGradient = isDark
-    ? 'linear-gradient(180deg, #220A1E 0%, #170716 35%, #0F050E 70%, #070306 100%)'
-    : 'linear-gradient(180deg, #E8D6E5 0%, #EFE3EC 18%, #F7EDE5 45%, #FAF4EC 75%, #FBF8F2 100%)';
+    ? 'linear-gradient(180deg, #240A20 0%, #170716 35%, #0F050E 70%, #070306 100%)'
+    : 'linear-gradient(180deg, #E6D3E3 0%, #EFE1EC 20%, #F6ECE4 50%, #FAF3EB 75%, #FBF8F2 100%)';
 
-  // 3D Venn Ring Colors
-  const vennRingStrokeA = isDark ? 'rgba(235, 185, 230, 0.45)' : 'rgba(139, 44, 116, 0.38)';
+  // 3D Venn Ring Colors (distinctive Venn diagram intersection)
+  const vennRingStrokeA = isDark ? 'rgba(235, 185, 230, 0.42)' : 'rgba(139, 44, 116, 0.35)';
   const vennRingFillA = isDark ? 'rgba(139, 44, 116, 0.08)' : 'rgba(139, 44, 116, 0.04)';
 
-  const vennRingStrokeB = isDark ? 'rgba(215, 160, 220, 0.38)' : 'rgba(107, 45, 102, 0.32)';
+  const vennRingStrokeB = isDark ? 'rgba(215, 160, 220, 0.38)' : 'rgba(107, 45, 102, 0.3)';
   const vennRingFillB = isDark ? 'rgba(107, 45, 102, 0.08)' : 'rgba(107, 45, 102, 0.04)';
+
+  const vennIntersectionFill = isDark ? 'rgba(235, 185, 230, 0.16)' : 'rgba(139, 44, 116, 0.11)';
 
   const skipColor = isDark ? 'rgba(243, 238, 233, 0.55)' : 'rgba(73, 40, 61, 0.55)';
   const skipHover = isDark ? '#FFFFFF' : 'var(--color-mulberry)';
@@ -103,12 +103,12 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({
         }}
       />
 
-      {/* --- 3D ROTATING VENN DIAGRAM RINGS --- */}
+      {/* --- 3D IN-PLACE ROTATING VENN DIAGRAM (FIXED VENNZ INTERSECTION) --- */}
       <div
         style={{
           position: 'absolute',
-          width: 'min(820px, 92vw)',
-          height: 'min(540px, 65vh)',
+          width: 'min(760px, 92vw)',
+          height: 'min(520px, 62vh)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -116,79 +116,124 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({
           pointerEvents: 'none',
           opacity: phase === 'initial' ? 0 : phase === 'exiting' ? 0 : 1,
           transition: 'opacity 1.8s cubic-bezier(0.16, 1, 0.3, 1)',
+          animation: 'vennSystem3DTilt 9s ease-in-out infinite',
         }}
       >
-        {/* Left 3D Orbiting Venn Circle */}
+        {/* LEFT VENN CIRCLE (Fixed in place at -90px, spins in place in 3D) */}
         <div
           style={{
             position: 'absolute',
-            width: 'clamp(280px, 44vw, 460px)',
-            height: 'clamp(280px, 44vw, 460px)',
-            borderRadius: '50%',
-            border: `2px solid ${vennRingStrokeA}`,
-            backgroundColor: vennRingFillA,
-            boxShadow: isDark
-              ? '0 0 35px rgba(168, 58, 142, 0.28), inset 0 0 30px rgba(168, 58, 142, 0.18)'
-              : '0 8px 30px rgba(139, 44, 116, 0.16), inset 0 0 30px rgba(220, 160, 205, 0.25)',
+            left: 'calc(50% - clamp(240px, 36vw, 360px) / 2 - 95px)',
+            width: 'clamp(240px, 36vw, 360px)',
+            height: 'clamp(240px, 36vw, 360px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
             transformStyle: 'preserve-3d',
-            animation: 'vennOrbit3DLeft 14s linear infinite',
           }}
         >
-          {/* Subtle 3D Ring Highlight Edge */}
           <div
             style={{
-              position: 'absolute',
-              inset: '-2px',
+              width: '100%',
+              height: '100%',
               borderRadius: '50%',
-              borderTop: isDark ? '2.5px solid rgba(255, 230, 250, 0.85)' : '2.5px solid rgba(255, 255, 255, 0.95)',
-              borderBottom: 'transparent',
-              borderLeft: 'transparent',
-              borderRight: 'transparent',
-              filter: 'blur(0.5px)',
+              border: `2px solid ${vennRingStrokeA}`,
+              backgroundColor: vennRingFillA,
+              boxShadow: isDark
+                ? '0 0 30px rgba(168, 58, 142, 0.25), inset 0 0 25px rgba(168, 58, 142, 0.18)'
+                : '0 8px 25px rgba(139, 44, 116, 0.14), inset 0 0 25px rgba(220, 160, 205, 0.22)',
+              transformStyle: 'preserve-3d',
+              animation: 'vennRingSpin3DLeft 12s linear infinite',
+              position: 'relative',
             }}
-          />
+          >
+            {/* Bevel Rim Light Edge */}
+            <div
+              style={{
+                position: 'absolute',
+                inset: '-2px',
+                borderRadius: '50%',
+                borderTop: isDark ? '2.5px solid rgba(255, 230, 250, 0.85)' : '2.5px solid rgba(255, 255, 255, 0.95)',
+                borderBottom: 'transparent',
+                borderLeft: 'transparent',
+                borderRight: 'transparent',
+                filter: 'blur(0.5px)',
+              }}
+            />
+          </div>
         </div>
 
-        {/* Right 3D Orbiting Venn Circle */}
+        {/* RIGHT VENN CIRCLE (Fixed in place at +90px, spins in place in 3D) */}
         <div
           style={{
             position: 'absolute',
-            width: 'clamp(280px, 44vw, 460px)',
-            height: 'clamp(280px, 44vw, 460px)',
-            borderRadius: '50%',
-            border: `2px solid ${vennRingStrokeB}`,
-            backgroundColor: vennRingFillB,
-            boxShadow: isDark
-              ? '0 0 35px rgba(139, 44, 116, 0.28), inset 0 0 30px rgba(139, 44, 116, 0.18)'
-              : '0 8px 30px rgba(107, 45, 102, 0.16), inset 0 0 30px rgba(220, 160, 205, 0.25)',
+            left: 'calc(50% - clamp(240px, 36vw, 360px) / 2 + 95px)',
+            width: 'clamp(240px, 36vw, 360px)',
+            height: 'clamp(240px, 36vw, 360px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
             transformStyle: 'preserve-3d',
-            animation: 'vennOrbit3DRight 14s linear infinite',
           }}
         >
-          {/* Subtle 3D Ring Highlight Edge */}
           <div
             style={{
-              position: 'absolute',
-              inset: '-2px',
+              width: '100%',
+              height: '100%',
               borderRadius: '50%',
-              borderBottom: isDark ? '2.5px solid rgba(255, 230, 250, 0.85)' : '2.5px solid rgba(255, 255, 255, 0.95)',
-              borderTop: 'transparent',
-              borderLeft: 'transparent',
-              borderRight: 'transparent',
-              filter: 'blur(0.5px)',
+              border: `2px solid ${vennRingStrokeB}`,
+              backgroundColor: vennRingFillB,
+              boxShadow: isDark
+                ? '0 0 30px rgba(139, 44, 116, 0.25), inset 0 0 25px rgba(139, 44, 116, 0.18)'
+                : '0 8px 25px rgba(107, 45, 102, 0.14), inset 0 0 25px rgba(220, 160, 205, 0.22)',
+              transformStyle: 'preserve-3d',
+              animation: 'vennRingSpin3DRight 12s linear infinite',
+              position: 'relative',
             }}
-          />
+          >
+            {/* Bevel Rim Light Edge */}
+            <div
+              style={{
+                position: 'absolute',
+                inset: '-2px',
+                borderRadius: '50%',
+                borderBottom: isDark ? '2.5px solid rgba(255, 230, 250, 0.85)' : '2.5px solid rgba(255, 255, 255, 0.95)',
+                borderTop: 'transparent',
+                borderLeft: 'transparent',
+                borderRight: 'transparent',
+                filter: 'blur(0.5px)',
+              }}
+            />
+          </div>
         </div>
 
-        {/* Delicate Golden-Ratio Equator Ring */}
+        {/* DISTINCT CENTRAL VENN INTERSECTION LENS */}
+        {/* Clearly illustrates the Venn intersection in place right behind VennZ */}
         <div
           style={{
             position: 'absolute',
-            width: 'clamp(340px, 52vw, 560px)',
-            height: 'clamp(340px, 52vw, 560px)',
+            width: 'clamp(115px, 18vw, 170px)',
+            height: 'clamp(185px, 28vw, 275px)',
             borderRadius: '50%',
-            border: isDark ? '1px dashed rgba(243, 238, 233, 0.15)' : '1px dashed rgba(107, 45, 102, 0.16)',
-            transform: 'rotateX(72deg)',
+            backgroundColor: vennIntersectionFill,
+            border: isDark ? '1px solid rgba(255, 230, 250, 0.35)' : '1px solid rgba(139, 44, 116, 0.3)',
+            boxShadow: isDark
+              ? '0 0 35px rgba(215, 160, 220, 0.35), inset 0 0 25px rgba(215, 160, 220, 0.25)'
+              : '0 0 30px rgba(139, 44, 116, 0.22), inset 0 0 20px rgba(139, 44, 116, 0.18)',
+            transform: 'translateZ(10px)',
+            pointerEvents: 'none',
+          }}
+        />
+
+        {/* Minimal Orbital Axis Line */}
+        <div
+          style={{
+            position: 'absolute',
+            width: 'clamp(320px, 48vw, 520px)',
+            height: 'clamp(320px, 48vw, 520px)',
+            borderRadius: '50%',
+            border: isDark ? '1px dashed rgba(243, 238, 233, 0.14)' : '1px dashed rgba(107, 45, 102, 0.15)',
+            transform: 'rotateX(75deg)',
             pointerEvents: 'none',
           }}
         />

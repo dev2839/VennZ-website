@@ -258,37 +258,48 @@ select:-webkit-autofill {
   animation: modalScaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* 3D Orbiting Venn Circles */
-@keyframes vennOrbit3DLeft {
+/* 3D Spin in place for Venn Diagram Rings */
+@keyframes vennRingSpin3DLeft {
   0% {
-    transform: rotateY(0deg) rotateX(24deg) translateX(-110px) rotateZ(0deg);
+    transform: rotateY(0deg) rotateX(25deg) rotateZ(0deg);
   }
   50% {
-    transform: rotateY(180deg) rotateX(12deg) translateX(-70px) rotateZ(180deg);
+    transform: rotateY(180deg) rotateX(-20deg) rotateZ(180deg);
   }
   100% {
-    transform: rotateY(360deg) rotateX(24deg) translateX(-110px) rotateZ(360deg);
+    transform: rotateY(360deg) rotateX(25deg) rotateZ(360deg);
   }
 }
 
-@keyframes vennOrbit3DRight {
+@keyframes vennRingSpin3DRight {
   0% {
-    transform: rotateY(180deg) rotateX(-20deg) translateX(110px) rotateZ(180deg);
+    transform: rotateY(360deg) rotateX(-25deg) rotateZ(360deg);
   }
   50% {
-    transform: rotateY(360deg) rotateX(-10deg) translateX(70px) rotateZ(360deg);
+    transform: rotateY(180deg) rotateX(20deg) rotateZ(180deg);
   }
   100% {
-    transform: rotateY(540deg) rotateX(-20deg) translateX(110px) rotateZ(540deg);
+    transform: rotateY(0deg) rotateX(-25deg) rotateZ(0deg);
+  }
+}
+
+/* Subtle overall 3D pitch/tilt of the Venn system */
+@keyframes vennSystem3DTilt {
+  0%, 100% {
+    transform: perspective(1200px) rotateX(15deg) rotateY(-8deg);
+  }
+  50% {
+    transform: perspective(1200px) rotateX(8deg) rotateY(10deg);
   }
 }
 
 @keyframes vennFloat3D {
   0%, 100% {
-    transform: perspective(1000px) rotateX(4deg) rotateY(-2deg) translateY(0px) translateZ(20px);
+    transform: perspective(1000px) rotateX(3deg) rotateY(-2deg) translateY(0px) translateZ(24px);
   }
   50% {
-    transform: perspective(1000px) rotateX(-3deg) rotateY(3deg) translateY(-8px) translateZ(35px);
+    transform: perspective(1000px) rotateX(-2deg) rotateY(2deg) translateY(-6px) translateZ(36px);
   }
 }
+
 
