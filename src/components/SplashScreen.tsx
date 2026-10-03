@@ -211,18 +211,22 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
         display: 'flex',
         flexDirection: 'column',
         overflowX: 'hidden',
-        backgroundColor: isDark ? '#100812' : '#F6EEF5',
+        backgroundColor: isDark ? '#100812' : '#ECE0EB',
         transition: 'background-color 0.3s ease',
       }}
     >
-      {/* Dynamic Ambient Gradient Mesh Background (softer purple in dark mode, visible purple shade in light mode) */}
+      {/* Dynamic Ambient Gradient Mesh Background (softer purple in dark mode, rich visible purple shade in light mode) */}
       <div
         style={{
           position: 'absolute',
           inset: 0,
           background: isDark
             ? 'radial-gradient(ellipse at 50% 16%, rgba(70, 26, 65, 0.28) 0%, rgba(28, 11, 26, 0.45) 45%, rgba(16, 8, 18, 1) 95%)'
-            : 'radial-gradient(ellipse at 50% 12%, rgba(206, 175, 208, 0.45) 0%, rgba(230, 210, 228, 0.35) 45%, rgba(246, 238, 245, 0.95) 100%)',
+            : [
+                'radial-gradient(ellipse at 50% 14%, rgba(186, 132, 190, 0.52) 0%, rgba(212, 168, 214, 0.4) 38%, rgba(234, 206, 232, 0.25) 65%, transparent 100%)',
+                'radial-gradient(ellipse at 50% 70%, rgba(172, 114, 176, 0.38) 0%, rgba(206, 160, 208, 0.28) 45%, transparent 80%)',
+                'linear-gradient(180deg, #EFE0EE 0%, #E8D4E6 42%, #EFE1EE 100%)',
+              ].join(', '),
           pointerEvents: 'none',
           zIndex: 0,
         }}

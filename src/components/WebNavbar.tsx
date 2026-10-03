@@ -139,7 +139,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
 
   const currentScreenTitle = allScreens.find((s) => s.path === currentPath)?.label || 'VennZ';
 
-  const navBg = isDark ? 'rgba(20, 8, 19, 0.94)' : 'rgba(250, 246, 242, 0.94)';
+  const navBg = isDark ? 'rgba(20, 8, 19, 0.94)' : 'rgba(239, 226, 238, 0.94)';
   const borderBottom = isDark ? 'rgba(250, 245, 238, 0.12)' : 'rgba(73, 40, 61, 0.08)';
   const textColor = isDark ? '#F3EEE9' : 'var(--color-espresso)';
   const activeColor = isDark ? '#F3EEE9' : 'var(--color-mulberry)';

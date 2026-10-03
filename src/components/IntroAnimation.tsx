@@ -61,7 +61,7 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({
   // Color schemes matching the welcome page ambient palette exactly
   const bgGradient = isDark
     ? 'linear-gradient(180deg, #180917 0%, #140813 50%, #100610 100%)'
-    : 'linear-gradient(180deg, #FAF4F8 0%, #F5EEF4 45%, #FAF6F0 100%)';
+    : 'linear-gradient(180deg, #EAD6E8 0%, #EFE1ED 45%, #ECE0EB 100%)';
 
   // Venn diagram circle styling (faint, geometric, interconnected)
   const vennStrokeA = isDark ? 'rgba(215, 175, 210, 0.22)' : 'rgba(107, 45, 102, 0.18)';
