@@ -201,19 +201,6 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({
             transition: 'transform 3.2s cubic-bezier(0.16, 1, 0.3, 1)',
           }}
         />
-
-        {/* Delicate Thin Concentric Coordinate Crosshairs / Orbitals */}
-        <div
-          style={{
-            position: 'absolute',
-            width: 'clamp(340px, 52vw, 560px)',
-            height: 'clamp(340px, 52vw, 560px)',
-            borderRadius: '50%',
-            border: isDark ? '1px dashed rgba(243, 238, 233, 0.1)' : '1px dashed rgba(73, 40, 61, 0.12)',
-            transform: phase === 'initial' ? 'rotate(0deg) scale(0.8)' : 'rotate(35deg) scale(1.05)',
-            transition: 'transform 4s cubic-bezier(0.16, 1, 0.3, 1)',
-          }}
-        />
       </div>
 
       {/* --- MAIN HERO: 3D EMBOSSED PERSPECTIVE VENNZ LOGO --- */}
