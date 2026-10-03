@@ -562,7 +562,7 @@ export const App: React.FC = () => {
         width: '100%',
         display: 'flex',
         flexDirection: 'column',
-        backgroundColor: isDark ? '#080507' : '#FAF6F0',
+        backgroundColor: isDark ? '#140813' : '#FAF6F0',
         color: isDark ? '#F3EEE9' : '#120D10',
         fontFamily: 'var(--font-sans)',
         position: 'relative',
@@ -572,7 +572,6 @@ export const App: React.FC = () => {
       {/* Intro Launch Animation */}
       {showIntro && (
         <IntroAnimation
-          appearanceMode={appearanceMode}
           onComplete={() => {
             setShowIntro(false);
             try {

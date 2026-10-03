@@ -139,8 +139,8 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
 
   const currentScreenTitle = allScreens.find((s) => s.path === currentPath)?.label || 'VennZ';
 
-  const navBg = isDark ? 'rgba(8, 3, 7, 0.92)' : 'rgba(250, 246, 242, 0.94)';
-  const borderBottom = isDark ? 'rgba(243, 238, 233, 0.12)' : 'rgba(73, 40, 61, 0.1)';
+  const navBg = isDark ? 'rgba(20, 8, 19, 0.94)' : 'rgba(250, 246, 242, 0.94)';
+  const borderBottom = isDark ? 'rgba(215, 175, 210, 0.14)' : 'rgba(73, 40, 61, 0.1)';
   const textColor = isDark ? '#F3EEE9' : 'var(--color-espresso)';
   const activeColor = isDark ? '#F3EEE9' : 'var(--color-mulberry)';
   const inactiveColor = isDark ? 'rgba(243, 238, 233, 0.65)' : '#7A6A74';
@@ -195,25 +195,29 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                 width: 'auto',
                 maxWidth: '130px',
                 objectFit: 'contain',
-                filter: isDark ? 'brightness(1.15) drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4))' : 'drop-shadow(0 1px 4px rgba(0, 0, 0, 0.15))',
+                filter: isDark
+                  ? 'drop-shadow(0 -1px 0.5px rgba(255, 230, 255, 0.4)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.7)) drop-shadow(0 4px 12px rgba(139, 44, 116, 0.45))'
+                  : 'drop-shadow(0 1px 3px rgba(73, 40, 61, 0.2))',
               }}
             />
 
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <span
-                style={{
-                  fontFamily: 'var(--font-sans)',
-                  fontSize: '10.5px',
-                  fontWeight: 600,
-                  letterSpacing: '0.18em',
-                  textTransform: 'uppercase',
-                  color: isDark ? 'rgba(243, 238, 233, 0.7)' : '#7A6B74',
-                  marginTop: '1px',
-                }}
-              >
-                {isMemberArea ? 'MEMBER PORTAL' : 'PRIVATE MEMBERS CLUB'}
-              </span>
-            </div>
+            {isMemberArea && (
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span
+                  style={{
+                    fontFamily: 'var(--font-sans)',
+                    fontSize: '10.5px',
+                    fontWeight: 600,
+                    letterSpacing: '0.18em',
+                    textTransform: 'uppercase',
+                    color: isDark ? 'rgba(243, 238, 233, 0.7)' : '#7A6B74',
+                    marginTop: '1px',
+                  }}
+                >
+                  MEMBER PORTAL
+                </span>
+              </div>
+            )}
           </div>
         </div>
 

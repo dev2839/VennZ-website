@@ -41,11 +41,11 @@ export const SplashActions: React.FC<SplashActionsProps> = ({
         <p
           style={{
             fontFamily: 'var(--font-sans)',
-            fontSize: '17px',
+            fontSize: 'clamp(18px, 2.5vw, 22px)',
             fontWeight: 400,
             color: isDark ? 'rgba(243, 238, 233, 0.95)' : '#6B5765',
             letterSpacing: '0.02em',
-            margin: '0 0 2px 0',
+            margin: '0 0 4px 0',
             textShadow: isDark ? '0 2px 10px rgba(0, 0, 0, 0.8)' : 'none',
           }}
         >
@@ -56,7 +56,7 @@ export const SplashActions: React.FC<SplashActionsProps> = ({
         <p
           style={{
             fontFamily: 'var(--font-script)',
-            fontSize: '44px',
+            fontSize: 'clamp(46px, 6.2vw, 60px)',
             lineHeight: 1.15,
             color: isDark ? '#FFFFFF' : 'var(--color-mulberry)',
             margin: 0,

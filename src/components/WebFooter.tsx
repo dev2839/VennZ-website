@@ -9,8 +9,8 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
   const { appearanceMode } = useAuth();
   const isDark = appearanceMode === 'after-dark';
 
-  const footerBg = isDark ? '#050205' : '#F4EEE7';
-  const borderTop = isDark ? 'rgba(243, 238, 233, 0.08)' : 'rgba(73, 40, 61, 0.08)';
+  const footerBg = isDark ? '#110610' : '#F4EEE7';
+  const borderTop = isDark ? 'rgba(215, 175, 210, 0.12)' : 'rgba(73, 40, 61, 0.08)';
   const textColor = isDark ? 'rgba(243, 238, 233, 0.6)' : '#7A6B74';
   const headingColor = isDark ? '#F3EEE9' : 'var(--color-mulberry)';
 
@@ -143,13 +143,9 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
           >
             Membership
           </h5>
-          <p style={{ fontSize: '14.5px', lineHeight: 1.6, color: textColor, margin: '0 0 10px' }}>
+          <p style={{ fontSize: '14.5px', lineHeight: 1.6, color: textColor, margin: '0' }}>
             Membership is strictly by application review or peer referral. All members are verified with live biometric confirmation.
           </p>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '12.5px', color: 'var(--color-peach-blush)' }}>
-            <span>●</span>
-            <span>256-bit Encrypted Identity Verification</span>
-          </div>
         </div>
       </div>
 
