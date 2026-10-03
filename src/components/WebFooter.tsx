@@ -17,12 +17,12 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
   return (
     <footer
       style={{
+        flex: 1,
         width: '100%',
         backgroundColor: footerBg,
         borderTop: `1px solid ${borderTop}`,
         padding: '48px 24px 36px',
         boxSizing: 'border-box',
-        marginTop: 'auto',
         fontFamily: 'var(--font-sans)',
         transition: 'background-color 0.25s ease, border-color 0.25s ease',
       }}

@@ -551,6 +551,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                         src={photoUrl}
                         alt={`${currentProfile.firstName}'s photo ${pIdx + 1}`}
                         draggable={false}
+                        className="ken-burns-img"
                         style={{
                           width: '100%',
                           height: '100%',
@@ -558,6 +559,18 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                           display: 'block',
                           pointerEvents: 'none',
                           userSelect: 'none',
+                        }}
+                      />
+                      {/* Gradient Overlay for Text Readability */}
+                      <div
+                        style={{
+                          position: 'absolute',
+                          bottom: 0,
+                          left: 0,
+                          width: '100%',
+                          height: '60%',
+                          background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 50%, transparent 100%)',
+                          pointerEvents: 'none',
                         }}
                       />
                     </div>
@@ -703,16 +716,23 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                 ))}
               </div>
 
-              {/* Profile Details Layout matching Reference media_1788925390608.png */}
-              <div style={{ padding: '0 18px 4px 18px' }}>
+              {/* Overlay Profile Details */}
+              <div style={{
+                position: 'absolute',
+                bottom: '24px',
+                left: '20px',
+                right: '20px',
+                zIndex: 10,
+                pointerEvents: 'none',
+              }}>
                 {/* Row 1: Name, Age and VERIFIED Pill */}
                 <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '2px' }}>
                   <h2
                     style={{
                       fontFamily: 'var(--font-serif)',
-                      fontSize: '28px',
+                      fontSize: '32px',
                       fontWeight: 400,
-                      color: themeMulberry,
+                      color: '#FFFFFF',
                       margin: 0,
                       letterSpacing: '-0.01em',
                     }}
@@ -727,7 +747,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                         fontWeight: 700,
                         letterSpacing: '0.1em',
                         textTransform: 'uppercase',
-                        color: isDark ? '#66BB6A' : '#2E7D32',
+                        color: '#66BB6A',
                       }}
                     >
                       VERIFIED
@@ -742,7 +762,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                     fontWeight: 700,
                     letterSpacing: '0.1em',
                     textTransform: 'uppercase',
-                    color: themeMuted,
+                    color: 'rgba(255, 255, 255, 0.85)',
                     marginBottom: '4px',
                   }}
                 >
@@ -755,95 +775,72 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                     fontSize: '15px',
                     fontFamily: 'var(--font-serif)',
                     fontWeight: 600,
-                    color: isDark ? '#E5D8DF' : '#272124',
+                    color: 'rgba(255, 255, 255, 0.95)',
                     lineHeight: '1.3',
                   }}
                 >
                   {currentProfile.designation} · {currentProfile.company}
                 </div>
               </div>
-            </div>
 
-            {/* PASS / SEND REQUEST BUTTONS */}
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                marginTop: '16px',
-                marginBottom: '12px',
-              }}
-            >
-              {/* Button 1: PASS */}
-              <button
-                type="button"
-                onClick={handlePass}
+              {/* Floating Action Buttons */}
+              <div
                 style={{
-                  flex: 1,
-                  height: '48px',
-                  borderRadius: '24px',
-                  backgroundColor: isDark ? 'rgba(73, 40, 61, 0.6)' : 'rgba(255, 255, 255, 0.85)',
-                  backdropFilter: 'blur(8px)',
-                  color: themeMulberry,
-                  border: isDark ? '1.5px solid rgba(243, 238, 233, 0.35)' : '1.5px solid rgba(73, 40, 61, 0.35)',
-                  fontSize: '12.5px',
-                  fontWeight: 700,
-                  letterSpacing: '0.09em',
-                  textTransform: 'uppercase',
-                  cursor: 'pointer',
+                  position: 'absolute',
+                  bottom: '24px',
+                  right: '20px',
                   display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '6px',
-                  boxShadow: isDark ? '0 3px 12px rgba(0, 0, 0, 0.25)' : '0 3px 12px rgba(73, 40, 61, 0.05)',
-                  transition: 'background-color 0.15s ease, transform 0.1s ease',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = isDark ? 'rgba(92, 51, 78, 0.8)' : 'rgba(255, 255, 255, 1)';
-                  e.currentTarget.style.transform = 'translateY(-1px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = isDark ? 'rgba(73, 40, 61, 0.6)' : 'rgba(255, 255, 255, 0.85)';
-                  e.currentTarget.style.transform = 'translateY(0)';
+                  flexDirection: 'column',
+                  gap: '12px',
+                  zIndex: 20,
                 }}
               >
-                <span>PASS</span>
-              </button>
-
-              {/* Button 2: SEND REQUEST */}
-              <button
-                type="button"
-                onClick={handleSendRequest}
-                style={{
-                  flex: 1.25,
-                  height: '48px',
-                  borderRadius: '24px',
-                  backgroundColor: isDark ? '#F3EEE9' : 'var(--color-mulberry)',
-                  color: isDark ? '#050104' : '#FFFFFF',
-                  border: 'none',
-                  fontSize: '12.5px',
-                  fontWeight: 700,
-                  letterSpacing: '0.09em',
-                  textTransform: 'uppercase',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '6px',
-                  boxShadow: isDark ? '0 6px 18px rgba(0, 0, 0, 0.35)' : '0 6px 18px rgba(73, 40, 61, 0.28)',
-                  transition: 'background-color 0.15s ease, transform 0.1s ease',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = isDark ? '#E5DED7' : '#3B1F31';
-                  e.currentTarget.style.transform = 'translateY(-1px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = isDark ? '#F3EEE9' : 'var(--color-mulberry)';
-                  e.currentTarget.style.transform = 'translateY(0)';
-                }}
-              >
-                <span>SEND REQUEST</span>
-              </button>
+                <button
+                  type="button"
+                  className="btn-tactile"
+                  onClick={handlePass}
+                  style={{
+                    width: '48px',
+                    height: '48px',
+                    borderRadius: '50%',
+                    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                    backdropFilter: 'blur(12px)',
+                    color: '#FFFFFF',
+                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+                  }}
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M18 6L6 18M6 6l12 12" />
+                  </svg>
+                </button>
+                <button
+                  type="button"
+                  className="btn-tactile"
+                  onClick={handleSendRequest}
+                  style={{
+                    width: '48px',
+                    height: '48px',
+                    borderRadius: '50%',
+                    backgroundColor: 'var(--color-peach-blush)',
+                    color: '#000',
+                    border: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 12px rgba(232, 169, 155, 0.4)',
+                  }}
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                  </svg>
+                </button>
+              </div>
             </div>
 
             {/* Instruction Microcopy */}

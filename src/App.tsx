@@ -564,13 +564,13 @@ export const App: React.FC = () => {
 
       {/* Main Responsive Web Content Area */}
       <main
+        key={currentPath}
+        className="page-transition-enter"
         style={{
-          flex: 1,
           width: '100%',
           display: 'flex',
           flexDirection: 'column',
           position: 'relative',
-          minHeight: 'calc(100vh - 68px)',
           boxSizing: 'border-box',
         }}
       >
@@ -599,6 +599,7 @@ export const App: React.FC = () => {
           onClick={() => setLearnModalOpen(false)}
         >
           <div
+            className="modal-content-animated"
             style={{
               width: '100%',
               maxWidth: '420px',
@@ -655,6 +656,7 @@ export const App: React.FC = () => {
 
             <button
               type="button"
+              className="btn-tactile"
               onClick={() => {
                 setLearnModalOpen(false);
                 navigate('/join');
