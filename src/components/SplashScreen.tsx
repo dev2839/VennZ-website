@@ -34,7 +34,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
       {/* Cinematic Mediterranean Sunset Background */}
       <img
         src="/welcome-bg.jpg"
-        alt="The Inner Circle Mediterranean sunset coastal terrace"
+        alt="VennZ Mediterranean sunset coastal terrace"
         style={{
           position: 'absolute',
           top: 0,
@@ -115,7 +115,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
                 onMouseEnter={(e) => (e.currentTarget.style.color = '#FFFFFF')}
                 onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(243, 238, 233, 0.85)')}
               >
-                Learn How The Inner Circle Works →
+                Learn How VennZ Works →
               </button>
             </div>
           )}

@@ -127,7 +127,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
       {/* Clean Foliage Bokeh Background Asset */}
       <img
         src="/auth-bg.png"
-        alt="The Inner Circle foliage twilight background"
+        alt="VennZ foliage twilight background"
         style={{
           position: 'absolute',
           top: 0,

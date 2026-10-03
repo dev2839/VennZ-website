@@ -216,7 +216,7 @@ export const Page7StandardsScreen: React.FC<Page7StandardsScreenProps> = ({
               margin: '0 0 24px 0',
             }}
           >
-            The Inner Circle is built for genuine and respectful connections.
+            VennZ is built for genuine and respectful connections.
           </p>
 
           {/* Numbered Standards List */}
@@ -551,7 +551,7 @@ export const Page7StandardsScreen: React.FC<Page7StandardsScreenProps> = ({
               }}
             >
               {activeModal === 'Terms and Conditions' &&
-                'By submitting your application to The Inner Circle, you agree to uphold our community integrity standards, respectful communications, and truthful representation.'}
+                'By submitting your application to VennZ, you agree to uphold our community integrity standards, respectful communications, and truthful representation.'}
               {activeModal === 'Privacy Policy' &&
                 'Your privacy is our utmost priority. Profile verification credentials are never stored or displayed publicly, and all private data is guarded under high-grade TLS encryption.'}
               {activeModal === 'Community Guidelines' &&

@@ -13,7 +13,7 @@ export const INITIAL_MIXER_EVENTS: MixerEvent[] = [
     venue: 'Venue to be announced',
     isVenueAnnounced: false,
     description:
-      'An intimate evening for Inner Circle members to step away from the app and meet in person. Expect good conversation, relaxed drinks, curated music and a carefully selected room of like-minded individuals.',
+      'An intimate evening for VennZ members to step away from the app and meet in person. Expect good conversation, relaxed drinks, curated music and a carefully selected room of like-minded individuals.',
     whatToExpect: [
       'Curated member crowd',
       'Hosted social setting',

@@ -167,7 +167,7 @@ export const Page3OtpScreen: React.FC<Page3OtpScreenProps> = ({
       {/* Background: Same as Second Page with subtle blur */}
       <img
         src="/auth-bg.png"
-        alt="The Inner Circle foliage twilight background"
+        alt="VennZ foliage twilight background"
         style={{
           position: 'absolute',
           top: 0,

@@ -20,9 +20,9 @@ export const LightboxProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   ) => {
     const normalized: LightboxImage[] = newImages.map((img) => {
       if (typeof img === 'string') {
-        return { src: img, title: title || 'The Inner Circle' };
+        return { src: img, title: title || 'VennZ' };
       }
-      return { ...img, title: img.title || title || 'The Inner Circle' };
+      return { ...img, title: img.title || title || 'VennZ' };
     });
 
     setImages(normalized);

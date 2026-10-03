@@ -137,7 +137,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
     { path: '/member/mixers' as RoutePath, label: '18. Private Mixers' },
   ];
 
-  const currentScreenTitle = allScreens.find((s) => s.path === currentPath)?.label || 'The Inner Circle';
+  const currentScreenTitle = allScreens.find((s) => s.path === currentPath)?.label || 'VennZ';
 
   const navBg = isDark ? 'rgba(8, 3, 7, 0.92)' : 'rgba(250, 246, 242, 0.94)';
   const borderBottom = isDark ? 'rgba(243, 238, 233, 0.12)' : 'rgba(73, 40, 61, 0.1)';
@@ -186,49 +186,28 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
               userSelect: 'none',
             }}
           >
-            {/* IC Monogram Badge */}
-            <div
+            {/* VennZ Logo */}
+            <img
+              src="/vennz-logo.png"
+              alt="VennZ"
               style={{
-                width: '34px',
                 height: '34px',
-                borderRadius: '50%',
-                backgroundColor: isDark ? '#FFFFFF' : 'var(--color-mulberry)',
-                color: isDark ? 'var(--color-mulberry)' : '#FFFFFF',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '12px',
-                fontWeight: 600,
-                letterSpacing: '0.04em',
-                fontFamily: 'var(--font-serif)',
-                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
+                width: 'auto',
+                maxWidth: '130px',
+                objectFit: 'contain',
+                filter: isDark ? 'brightness(1.15) drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4))' : 'drop-shadow(0 1px 4px rgba(0, 0, 0, 0.15))',
               }}
-            >
-              IC
-            </div>
+            />
 
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <span
                 style={{
-                  fontFamily: 'var(--font-serif)',
-                  fontSize: '21px',
-                  fontWeight: 500,
-                  letterSpacing: '0.12em',
-                  textTransform: 'uppercase',
-                  color: isDark ? '#FFFFFF' : 'var(--color-mulberry)',
-                  lineHeight: '1.15',
-                }}
-              >
-                The Inner Circle
-              </span>
-              <span
-                style={{
                   fontFamily: 'var(--font-sans)',
-                  fontSize: '11px',
-                  fontWeight: 500,
-                  letterSpacing: '0.16em',
+                  fontSize: '10.5px',
+                  fontWeight: 600,
+                  letterSpacing: '0.18em',
                   textTransform: 'uppercase',
-                  color: isDark ? 'rgba(243, 238, 233, 0.65)' : '#8A7A84',
+                  color: isDark ? 'rgba(243, 238, 233, 0.7)' : '#7A6B74',
                   marginTop: '1px',
                 }}
               >

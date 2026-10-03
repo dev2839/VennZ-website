@@ -179,7 +179,7 @@ export const Page10OverviewScreen: React.FC<Page10OverviewScreenProps> = ({
                 color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
               }}
             >
-              WELCOME TO THE INNER CIRCLE
+              WELCOME TO VENNZ
             </span>
           </div>
 
@@ -208,7 +208,7 @@ export const Page10OverviewScreen: React.FC<Page10OverviewScreenProps> = ({
             }}
           >
             {isComplimentary
-              ? 'Experience meaningful connections, curated introductions and the Inner Circle community — completely complimentary for 24 hours.'
+              ? 'Experience meaningful connections, curated introductions and the VennZ community — completely complimentary for 24 hours.'
               : 'Your membership is active with unlimited access to verified, hand-reviewed members, private mixers, and priority events.'}
           </p>
 

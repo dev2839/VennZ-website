@@ -1240,7 +1240,7 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
                 margin: 0,
               }}
             >
-              Your application to The Inner Circle has been received and is now hand-reviewed by our membership committee.
+              Your application to VennZ has been received and is now hand-reviewed by our membership committee.
             </p>
 
             {/* Action Confirmation Button */}

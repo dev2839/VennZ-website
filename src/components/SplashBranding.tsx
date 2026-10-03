@@ -17,40 +17,21 @@ export const SplashBranding: React.FC<SplashBrandingProps> = ({ className = '' }
         padding: '0 20px',
       }}
     >
-      {/* "THE" */}
-      <div
-        style={{
-          fontFamily: 'var(--font-serif)',
-          fontSize: '16px',
-          letterSpacing: '0.45em',
-          textTransform: 'uppercase',
-          fontWeight: 400,
-          color: '#FFFFFF',
-          opacity: 0.95,
-          paddingLeft: '0.45em', // optical center alignment for tracked text
-          textShadow: '0 2px 10px rgba(0, 0, 0, 0.6)',
-        }}
-      >
-        THE
+      {/* VennZ Brand Logo */}
+      <div style={{ marginBottom: '14px', display: 'flex', justifyContent: 'center' }}>
+        <img
+          src="/vennz-logo.png"
+          alt="VennZ"
+          style={{
+            maxHeight: '76px',
+            maxWidth: '280px',
+            width: 'auto',
+            height: 'auto',
+            objectFit: 'contain',
+            filter: 'drop-shadow(0 6px 16px rgba(0, 0, 0, 0.4))',
+          }}
+        />
       </div>
-
-      {/* "INNER CIRCLE" */}
-      <h1
-        style={{
-          fontFamily: 'var(--font-serif)',
-          fontSize: 'clamp(36px, 4.5vw, 54px)',
-          lineHeight: '1.18',
-          letterSpacing: '0.22em',
-          textTransform: 'uppercase',
-          fontWeight: 400,
-          marginTop: '8px',
-          color: '#FFFFFF',
-          paddingLeft: '0.22em', // optical center alignment for tracked text
-          textShadow: '0 2px 20px rgba(0, 0, 0, 0.7)',
-        }}
-      >
-        INNER CIRCLE
-      </h1>
 
       {/* Tagline: Real people. Meaningful connections. */}
       <p

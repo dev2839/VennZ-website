@@ -129,7 +129,7 @@ export const Page6SubmittedPlaceholder: React.FC<Page6SubmittedPlaceholderProps>
         </h1>
 
         <p style={{ fontSize: '14.5px', lineHeight: '1.5', color: '#5E4E58', margin: 0 }}>
-          Thank you, <strong>{profile.firstName || 'Member'}</strong>. Your application to The Inner Circle has been received and is now hand-reviewed by our membership committee.
+          Thank you, <strong>{profile.firstName || 'Member'}</strong>. Your application to VennZ has been received and is now hand-reviewed by our membership committee.
         </p>
 
         <div

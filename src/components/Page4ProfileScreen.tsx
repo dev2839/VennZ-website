@@ -181,7 +181,7 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
         } else {
           const age = calculateAge(iso);
           if (age < 18) {
-            setErrors((prev) => ({ ...prev, dateOfBirth: 'You must be 18 or older to join The Inner Circle.' }));
+            setErrors((prev) => ({ ...prev, dateOfBirth: 'You must be 18 or older to join VennZ.' }));
           } else {
             setErrors((prev) => ({ ...prev, dateOfBirth: '' }));
           }
@@ -208,7 +208,7 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
       setErrors((prev) => ({ ...prev, dateOfBirth: '' }));
       const age = calculateAge(isoVal);
       if (age < 18) {
-        setErrors((prev) => ({ ...prev, dateOfBirth: 'You must be 18 or older to join The Inner Circle.' }));
+        setErrors((prev) => ({ ...prev, dateOfBirth: 'You must be 18 or older to join VennZ.' }));
       }
     }
   };
@@ -242,7 +242,7 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
       } else {
         const age = calculateAge(dateOfBirth);
         if (age < 18) {
-          newErrors.dateOfBirth = 'You must be 18 or older to join The Inner Circle.';
+          newErrors.dateOfBirth = 'You must be 18 or older to join VennZ.';
         }
       }
     }
@@ -477,7 +477,7 @@ const compressImageFile = (file: File): Promise<string> => {
       {/* Clean Parchment Watercolor Foliage Background (with Cream flowers in Dark Mode) */}
       <img
         src={isDark ? '/profile-bg-dark.png' : '/profile-bg.jpg'}
-        alt="The Inner Circle Profile Setup Background"
+        alt="VennZ Profile Setup Background"
         style={{
           position: 'absolute',
           top: 0,

@@ -47,7 +47,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
       senderId: match.profileId,
       text: match.name === 'Meera'
         ? "Thank you for accepting — I'm Meera. How has your week been?"
-        : `Hello! Great to connect with you on Inner Circle.`,
+        : `Hello! Great to connect with you on VennZ.`,
       timestamp: match.matchedAt || Date.now(),
     },
   ];

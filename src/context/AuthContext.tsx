@@ -954,7 +954,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       const openingText = targetReq.name === 'Meera'
         ? "Thank you for accepting — I'm Meera. How has your week been?"
-        : `Hello! Happy to connect with you on Inner Circle.`;
+        : `Hello! Happy to connect with you on VennZ.`;
 
       const newMatch: MatchItem = {
         id: newMatchId,

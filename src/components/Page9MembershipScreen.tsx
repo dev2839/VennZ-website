@@ -226,7 +226,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
               letterSpacing: '-0.01em',
             }}
           >
-            Welcome to The Inner Circle.
+            Welcome to VennZ.
           </h1>
 
           <p
@@ -700,7 +700,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                   Payment Successful!
                 </h3>
                 <p style={{ fontSize: '13.5px', color: isDark ? '#BDB0B6' : '#6E5E68', margin: 0 }}>
-                  Welcome to The Inner Circle. Redirecting to Discover...
+                  Welcome to VennZ. Redirecting to Discover...
                 </p>
               </div>
             ) : isProcessing ? (

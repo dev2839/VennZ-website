@@ -1,4 +1,4 @@
-// Isolated OTP Service for Inner Circle Verification
+// Isolated OTP Service for VennZ Verification
 
 export const DEMO_OTP = '123456';
 

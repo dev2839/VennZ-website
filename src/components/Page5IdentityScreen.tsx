@@ -493,7 +493,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
               margin: '0 0 28px 0',
             }}
           >
-            The Inner Circle is built for genuine people. Every applicant verifies their identity before review.
+            VennZ is built for genuine people. Every applicant verifies their identity before review.
           </p>
 
           {/* ========================================================== */}

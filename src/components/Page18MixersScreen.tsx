@@ -341,7 +341,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                   margin: '0 0 24px 0',
                 }}
               >
-                Inner Circle Mixers and private member dinners are reserved exclusively for verified members. Upgrade to Full Membership to view private venues, RSVP to upcoming gatherings, and unlock preferred member pricing.
+                VennZ Mixers and private member dinners are reserved exclusively for verified members. Upgrade to Full Membership to view private venues, RSVP to upcoming gatherings, and unlock preferred member pricing.
               </p>
 
               {/* Event Highlights */}
@@ -489,7 +489,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                     maxWidth: '100%',
                   }}
                 >
-                  Private gatherings created for Inner Circle members to meet, connect and experience something beyond the screen.
+                  Private gatherings created for VennZ members to meet, connect and experience something beyond the screen.
                 </p>
               </div>
 
@@ -1923,7 +1923,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                     marginBottom: '4px',
                   }}
                 >
-                  THE INNER CIRCLE
+                  VENNZ
                 </div>
                 <h1
                   style={{
@@ -2043,7 +2043,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                         MEMBER
                       </div>
                       <div style={{ fontSize: '14px', fontWeight: 400, color: themeTextColor }}>
-                        {profile.firstName ? `${profile.firstName} (Member)` : 'Inner Circle Member'}
+                        {profile.firstName ? `${profile.firstName} (Member)` : 'VennZ Member'}
                       </div>
                     </div>
                     <div>

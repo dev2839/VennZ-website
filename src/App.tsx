@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { IntroAnimation } from './components/IntroAnimation';
 import { SplashScreen } from './components/SplashScreen';
 import { Page2AuthScreen } from './components/Page2AuthScreen';
 import { Page3OtpScreen } from './components/Page3OtpScreen';
@@ -84,6 +85,15 @@ export const App: React.FC = () => {
 
   const [learnModalOpen, setLearnModalOpen] = useState(false);
   const [isUpdatingPhotosMode, setIsUpdatingPhotosMode] = useState<boolean>(false);
+  const [showIntro, setShowIntro] = useState<boolean>(() => {
+    // Show intro on initial entry; if user has seen it in this session, skip unless on root landing
+    try {
+      const seen = sessionStorage.getItem('vennz_intro_seen');
+      return !seen;
+    } catch {
+      return true;
+    }
+  });
 
   // Sync with browser history popstate
   useEffect(() => {
@@ -559,6 +569,18 @@ export const App: React.FC = () => {
         transition: 'background-color 0.25s ease, color 0.25s ease',
       }}
     >
+      {/* Intro Launch Animation */}
+      {showIntro && (
+        <IntroAnimation
+          onComplete={() => {
+            setShowIntro(false);
+            try {
+              sessionStorage.setItem('vennz_intro_seen', 'true');
+            } catch {}
+          }}
+        />
+      )}
+
       {/* Universal Desktop & Mobile Web Navigation Bar */}
       <WebNavbar currentPath={currentPath} onNavigate={navigate} />
 
@@ -640,7 +662,7 @@ export const App: React.FC = () => {
                 marginBottom: '8px',
               }}
             >
-              How Inner Circle Works
+              How VennZ Works
             </h3>
 
             <p
@@ -651,7 +673,7 @@ export const App: React.FC = () => {
                 marginBottom: '24px',
               }}
             >
-              Inner Circle is an exclusive, vetted dating community with rigorous identity verification, career standards, curated introductions, and private mixer gatherings.
+              VennZ is an exclusive, vetted dating community with rigorous identity verification, career standards, curated introductions, and private mixer gatherings.
             </p>
 
             <button

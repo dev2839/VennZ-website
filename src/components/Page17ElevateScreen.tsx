@@ -469,7 +469,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                     maxWidth: '100%',
                   }}
                 >
-                  Private guidance for confidence, dating, personal presentation and more — curated around you by The Inner Circle team.
+                  Private guidance for confidence, dating, personal presentation and more — curated around you by VennZ team.
                 </p>
               </div>
 
@@ -867,7 +867,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                   padding: '0 8px',
                 }}
               >
-                All sessions are coordinated and overseen exclusively by The Inner Circle Elevate Team under strict confidentiality.
+                All sessions are coordinated and overseen exclusively by VennZ Elevate Team under strict confidentiality.
               </div>
 
               {/* CTA: REQUEST A CONSULTATION */}
@@ -1343,7 +1343,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
 
                 <div style={{ textAlign: 'center' }}>
                   <div style={{ fontFamily: 'var(--font-serif)', fontSize: '16px', fontWeight: 400, color: themeMulberry }}>
-                    The Inner Circle Elevate Team
+                    VennZ Elevate Team
                   </div>
                   <div style={{ fontSize: '10px', fontWeight: 400, letterSpacing: '0.12em', textTransform: 'uppercase', color: isDark ? '#81C784' : '#2E7D32' }}>
                     CONCIERGE DESK · ACTIVE
@@ -2175,7 +2175,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                 </div>
 
                 <div style={{ fontSize: '11px', fontWeight: 300, color: themeMuted, marginBottom: '18px' }}>
-                  Simulated payment for The Inner Circle member demo.
+                  Simulated payment for VennZ member demo.
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>

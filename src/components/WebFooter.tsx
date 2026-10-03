@@ -41,34 +41,17 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
         {/* Brand Column */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div
+            <img
+              src="/vennz-logo.png"
+              alt="VennZ"
               style={{
-                width: '28px',
-                height: '28px',
-                borderRadius: '50%',
-                backgroundColor: isDark ? '#FFFFFF' : 'var(--color-mulberry)',
-                color: isDark ? 'var(--color-mulberry)' : '#FFFFFF',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '10px',
-                fontWeight: 600,
-                fontFamily: 'var(--font-serif)',
+                height: '32px',
+                width: 'auto',
+                maxWidth: '120px',
+                objectFit: 'contain',
+                filter: isDark ? 'brightness(1.1)' : 'none',
               }}
-            >
-              IC
-            </div>
-            <span
-              style={{
-                fontFamily: 'var(--font-serif)',
-                fontSize: '20px',
-                letterSpacing: '0.12em',
-                textTransform: 'uppercase',
-                color: headingColor,
-              }}
-            >
-              The Inner Circle
-            </span>
+            />
           </div>
           <p style={{ fontSize: '14.5px', lineHeight: 1.6, color: textColor, margin: 0 }}>
             An exclusive, verified community connecting ambitious individuals through rigorous standards, intentional matchmaking, and private mixer gatherings.
@@ -184,7 +167,7 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
           color: textColor,
         }}
       >
-        <div>© {new Date().getFullYear()} The Inner Circle Club. All rights reserved.</div>
+        <div>© {new Date().getFullYear()} VennZ. All rights reserved.</div>
         <div style={{ display: 'flex', gap: '20px' }}>
           <span>Privacy Policy</span>
           <span>Terms of Service</span>

@@ -106,7 +106,7 @@ export const ImageLightbox: React.FC<ImageLightboxProps> = ({
               textTransform: 'uppercase',
             }}
           >
-            {currentImage.title || 'The Inner Circle'}
+            {currentImage.title || 'VennZ'}
           </span>
           {currentImage.subtitle && (
             <span

@@ -235,7 +235,7 @@ export const Page13YouScreen: React.FC<Page13YouScreenProps> = ({
         </div>
       )}
 
-      {/* TOP BAR: IC · The Inner Circle · MEMBER */}
+      {/* TOP BAR: IC · VennZ · MEMBER */}
       <MemberTopBar onConciergeClick={onNavigateHelp} />
 
       {/* SCROLLABLE CONTENT VIEWPORT */}
@@ -786,7 +786,7 @@ export const Page13YouScreen: React.FC<Page13YouScreenProps> = ({
                 margin: '0 0 16px 0',
               }}
             >
-              Report a member, raise a safety or billing concern, and Inner Circle team member replies within 24 hours.
+              Report a member, raise a safety or billing concern, and VennZ team member replies within 24 hours.
             </p>
 
             <button
