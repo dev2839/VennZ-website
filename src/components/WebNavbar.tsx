@@ -158,8 +158,8 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
         backgroundColor: navBg,
         backdropFilter: 'blur(16px)',
         WebkitBackdropFilter: 'blur(16px)',
-        borderBottom: `1px solid ${borderBottom}`,
-        transition: 'background-color 0.25s ease, border-color 0.25s ease',
+        borderBottom: 'none',
+        transition: 'background-color 0.25s ease',
       }}
     >
       <div
@@ -196,7 +196,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                 maxWidth: '130px',
                 objectFit: 'contain',
                 filter: isDark
-                  ? 'drop-shadow(0 -1px 0.5px rgba(255, 230, 255, 0.4)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.7)) drop-shadow(0 4px 12px rgba(139, 44, 116, 0.45))'
+                  ? 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.7)) drop-shadow(0 4px 12px rgba(139, 44, 116, 0.45))'
                   : 'drop-shadow(0 1px 3px rgba(73, 40, 61, 0.2))',
               }}
             />
