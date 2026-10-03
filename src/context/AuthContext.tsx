@@ -333,11 +333,44 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [state, setState] = useState<AuthState>(() => {
     try {
       const savedAppearance = localStorage.getItem('inner_circle_appearance_mode') as 'ivory' | 'after-dark' | null;
+      let parsed: any = null;
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
-        const parsed = JSON.parse(saved);
+        try {
+          parsed = JSON.parse(saved);
+        } catch {}
+      }
+
+      // Check resilient applicant backup key
+      let backup: any = null;
+      try {
+        const rawBackup =
+          sessionStorage.getItem('inner_circle_active_applicant_data') ||
+          localStorage.getItem('inner_circle_active_applicant_data');
+        if (rawBackup) {
+          backup = JSON.parse(rawBackup);
+        }
+      } catch {}
+
+      if (parsed || backup) {
+        const mergedState = {
+          ...defaultState,
+          ...(parsed || {}),
+          ...(backup || {}),
+          profile: {
+            ...defaultProfile,
+            ...(parsed?.profile || {}),
+            ...(backup?.profile || {}),
+          },
+        };
+
+        // Ensure selfie & identity verified flags and image are explicitly retained
+        if (backup?.isIdentityVerified !== undefined) mergedState.isIdentityVerified = backup.isIdentityVerified;
+        if (backup?.isSelfieVerified !== undefined) mergedState.isSelfieVerified = backup.isSelfieVerified;
+        if (backup?.selfieImage !== undefined) mergedState.selfieImage = backup.selfieImage;
+
         // Sanitize notifications so that only real notifications for actual app pages (MATCHES, CHAT, DISCOVER, YOU, ELEVATE, MIXERS) are loaded
-        const rawNotifs: AppNotification[] = Array.isArray(parsed.notifications) ? parsed.notifications : [];
+        const rawNotifs: AppNotification[] = Array.isArray(mergedState.notifications) ? mergedState.notifications : [];
         const sanitizedNotifs = rawNotifs.filter(
           (n) =>
             n &&
@@ -345,22 +378,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         );
 
         return {
-          ...defaultState,
-          ...parsed,
-          incomingRequests: parsed.incomingRequests !== undefined ? parsed.incomingRequests : INITIAL_INCOMING_REQUESTS,
-          sentRequests: parsed.sentRequests !== undefined ? parsed.sentRequests : INITIAL_SENT_REQUESTS,
+          ...mergedState,
+          incomingRequests: mergedState.incomingRequests !== undefined ? mergedState.incomingRequests : INITIAL_INCOMING_REQUESTS,
+          sentRequests: mergedState.sentRequests !== undefined ? mergedState.sentRequests : INITIAL_SENT_REQUESTS,
           notifications: sanitizedNotifs.length > 0 ? sanitizedNotifs : INITIAL_NOTIFICATIONS,
-          matches: parsed.matches !== undefined ? parsed.matches : [],
-          conversations: parsed.conversations !== undefined ? parsed.conversations : {},
-          blockedProfileIds: parsed.blockedProfileIds !== undefined ? parsed.blockedProfileIds : [],
-          elevateRequests: parsed.elevateRequests !== undefined ? parsed.elevateRequests : [],
-          elevateBookings: (parsed.elevateBookings && parsed.elevateBookings.length > 0) ? parsed.elevateBookings : INITIAL_ELEVATE_BOOKINGS,
-          elevateMessages: (parsed.elevateMessages && parsed.elevateMessages.length > 0) ? parsed.elevateMessages : INITIAL_ELEVATE_MESSAGES,
-          mixerEvents: (parsed.mixerEvents && parsed.mixerEvents.length > 0) ? parsed.mixerEvents : INITIAL_MIXER_EVENTS,
-          mixerBookings: (parsed.mixerBookings && parsed.mixerBookings.length > 0) ? parsed.mixerBookings : INITIAL_PAST_BOOKINGS,
-          mixerInterestedEventIds: Array.isArray(parsed.mixerInterestedEventIds) ? parsed.mixerInterestedEventIds : [],
-          appearanceMode: savedAppearance || parsed.appearanceMode || 'ivory',
-          profile: { ...defaultProfile, ...(parsed.profile || {}) },
+          matches: mergedState.matches !== undefined ? mergedState.matches : [],
+          conversations: mergedState.conversations !== undefined ? mergedState.conversations : {},
+          blockedProfileIds: mergedState.blockedProfileIds !== undefined ? mergedState.blockedProfileIds : [],
+          elevateRequests: mergedState.elevateRequests !== undefined ? mergedState.elevateRequests : [],
+          elevateBookings: (mergedState.elevateBookings && mergedState.elevateBookings.length > 0) ? mergedState.elevateBookings : INITIAL_ELEVATE_BOOKINGS,
+          elevateMessages: (mergedState.elevateMessages && mergedState.elevateMessages.length > 0) ? mergedState.elevateMessages : INITIAL_ELEVATE_MESSAGES,
+          mixerEvents: (mergedState.mixerEvents && mergedState.mixerEvents.length > 0) ? mergedState.mixerEvents : INITIAL_MIXER_EVENTS,
+          mixerBookings: (mergedState.mixerBookings && mergedState.mixerBookings.length > 0) ? mergedState.mixerBookings : INITIAL_PAST_BOOKINGS,
+          mixerInterestedEventIds: Array.isArray(mergedState.mixerInterestedEventIds) ? mergedState.mixerInterestedEventIds : [],
+          appearanceMode: savedAppearance || mergedState.appearanceMode || 'ivory',
         };
       }
       if (savedAppearance) {
@@ -407,16 +438,65 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     } catch {
       try {
-        // Fallback: If localStorage quota is exceeded, preserve state without heavy photos array
+        // Fallback 1: If localStorage quota is exceeded, preserve state with compressed photos & records
         const sanitized = {
           ...state,
-          profile: { ...state.profile, photos: (state.profile.photos || []).slice(0, 2) },
+          profile: { ...state.profile, photos: (state.profile.photos || []).slice(0, 3) },
           phoneRecords: {},
         };
         localStorage.setItem(STORAGE_KEY, JSON.stringify(sanitized));
       } catch {
-        // Ignore localStorage write errors safely
+        try {
+          // Fallback 2: Light state with essential details preserved
+          const minimal = {
+            ...state,
+            profile: { ...state.profile, photos: (state.profile.photos || []).slice(0, 1) },
+            selfieImage: state.selfieImage ? state.selfieImage.slice(0, 1000) : null,
+            phoneRecords: {},
+          };
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(minimal));
+        } catch {
+          // Ignore localStorage write errors safely
+        }
       }
+    }
+
+    // Always preserve textual profile and verification details in a lightweight independent backup key
+    try {
+      const textDetailsBackup = {
+        phoneNumber: state.phoneNumber,
+        countryCode: state.countryCode,
+        authMethod: state.authMethod,
+        isAuthenticated: state.isAuthenticated,
+        isPhoneVerified: state.isPhoneVerified,
+        isIdentityVerified: state.isIdentityVerified,
+        isSelfieVerified: state.isSelfieVerified,
+        selfieImage: state.selfieImage,
+        isApplicationSubmitted: state.isApplicationSubmitted,
+        isApplicationApproved: state.isApplicationApproved,
+        applicationDecision: state.applicationDecision,
+        membershipStatus: state.membershipStatus,
+        profile: {
+          firstName: state.profile.firstName,
+          dateOfBirth: state.profile.dateOfBirth,
+          city: state.profile.city,
+          genderIdentity: state.profile.genderIdentity,
+          selfDescribeGender: state.profile.selfDescribeGender,
+          datingPreference: state.profile.datingPreference,
+          currentStatus: state.profile.currentStatus,
+          designation: state.profile.designation,
+          company: state.profile.company,
+          invitationCode: state.profile.invitationCode,
+          introduction: state.profile.introduction,
+          linkedinUrl: state.profile.linkedinUrl,
+          instagramUsername: state.profile.instagramUsername,
+          photos: state.profile.photos || [],
+        },
+      };
+      sessionStorage.setItem('inner_circle_active_applicant_data', JSON.stringify(textDetailsBackup));
+      localStorage.setItem('inner_circle_active_applicant_data', JSON.stringify(textDetailsBackup));
+    } catch {
+      // Ignore
     }
   }, [state]);
 
@@ -541,18 +621,41 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const setIdentityVerified = (verified: boolean) => {
-    setState((prev) => ({
-      ...prev,
-      isIdentityVerified: verified,
-    }));
+    setState((prev) => {
+      const next = {
+        ...prev,
+        isIdentityVerified: verified,
+      };
+      if (prev.phoneNumber) {
+        const records = { ...(prev.phoneRecords || {}) };
+        records[prev.phoneNumber] = {
+          ...(records[prev.phoneNumber] || { profile: prev.profile }),
+          isIdentityVerified: verified,
+        };
+        next.phoneRecords = records;
+      }
+      return next;
+    });
   };
 
   const setSelfieVerified = (verified: boolean, selfieImage: string | null = null) => {
-    setState((prev) => ({
-      ...prev,
-      isSelfieVerified: verified,
-      selfieImage: selfieImage !== undefined ? selfieImage : prev.selfieImage,
-    }));
+    setState((prev) => {
+      const next = {
+        ...prev,
+        isSelfieVerified: verified,
+        selfieImage: selfieImage !== undefined ? selfieImage : prev.selfieImage,
+      };
+      if (prev.phoneNumber) {
+        const records = { ...(prev.phoneRecords || {}) };
+        records[prev.phoneNumber] = {
+          ...(records[prev.phoneNumber] || { profile: prev.profile }),
+          isSelfieVerified: verified,
+          selfieImage: selfieImage !== undefined ? selfieImage : prev.selfieImage,
+        };
+        next.phoneRecords = records;
+      }
+      return next;
+    });
   };
 
   const setApplicationSubmitted = (submitted: boolean) => {

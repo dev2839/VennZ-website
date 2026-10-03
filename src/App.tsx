@@ -44,31 +44,41 @@ export const App: React.FC = () => {
   const [membershipReturnPath, setMembershipReturnPath] = useState<RoutePath>('/join/waitlist');
   const [membershipViewMode, setMembershipViewMode] = useState<'all' | 'membership_only' | 'complimentary_only'>('all');
 
+  const VALID_PATHS: RoutePath[] = [
+    '/',
+    '/join',
+    '/login',
+    '/join/verify-code',
+    '/join/profile',
+    '/join/identity-verification',
+    '/join/context',
+    '/join/standards',
+    '/join/waitlist',
+    '/join/membership',
+    '/join/submitted',
+    '/overview',
+    '/discover',
+    '/member/profile',
+    '/member/you',
+    '/member/help',
+    '/member/matches',
+    '/member/chat',
+    '/member/elevate',
+    '/member/mixers',
+  ];
+
   const [currentPath, setCurrentPath] = useState<RoutePath>(() => {
     const path = window.location.pathname as RoutePath;
-    if (
-      path === '/join' ||
-      path === '/login' ||
-      path === '/join/verify-code' ||
-      path === '/join/profile' ||
-      path === '/join/identity-verification' ||
-      path === '/join/context' ||
-      path === '/join/standards' ||
-      path === '/join/waitlist' ||
-      path === '/join/membership' ||
-      path === '/join/submitted' ||
-      path === '/overview' ||
-      path === '/discover' ||
-      path === '/member/profile' ||
-      path === '/member/you' ||
-      path === '/member/help' ||
-      path === '/member/matches' ||
-      path === '/member/chat' ||
-      path === '/member/elevate' ||
-      path === '/member/mixers'
-    ) {
+    if (VALID_PATHS.includes(path) && path !== '/') {
       return path;
     }
+    try {
+      const savedPath = (sessionStorage.getItem('inner_circle_path') || localStorage.getItem('inner_circle_path')) as RoutePath;
+      if (savedPath && VALID_PATHS.includes(savedPath)) {
+        return savedPath;
+      }
+    } catch {}
+    if (path === '/') return '/';
     return '/';
   });
 
@@ -79,28 +89,12 @@ export const App: React.FC = () => {
   useEffect(() => {
     const handlePopState = () => {
       const path = window.location.pathname as RoutePath;
-      if (
-        path === '/join' ||
-        path === '/login' ||
-        path === '/join/verify-code' ||
-        path === '/join/profile' ||
-        path === '/join/identity-verification' ||
-        path === '/join/context' ||
-        path === '/join/standards' ||
-        path === '/join/waitlist' ||
-        path === '/join/membership' ||
-        path === '/join/submitted' ||
-        path === '/overview' ||
-        path === '/discover' ||
-        path === '/member/profile' ||
-        path === '/member/you' ||
-        path === '/member/help' ||
-        path === '/member/matches' ||
-        path === '/member/chat' ||
-        path === '/member/elevate' ||
-        path === '/member/mixers'
-      ) {
+      if (VALID_PATHS.includes(path)) {
         setCurrentPath(path);
+        try {
+          sessionStorage.setItem('inner_circle_path', path);
+          localStorage.setItem('inner_circle_path', path);
+        } catch {}
       } else {
         setCurrentPath('/');
       }
@@ -113,6 +107,8 @@ export const App: React.FC = () => {
   const navigate = (path: RoutePath) => {
     setCurrentPath(path);
     try {
+      sessionStorage.setItem('inner_circle_path', path);
+      localStorage.setItem('inner_circle_path', path);
       window.history.pushState({}, '', path);
     } catch {
       // Ignore in environments without history API

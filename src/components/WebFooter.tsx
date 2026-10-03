@@ -61,7 +61,7 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
             <span
               style={{
                 fontFamily: 'var(--font-serif)',
-                fontSize: '18px',
+                fontSize: '20px',
                 letterSpacing: '0.12em',
                 textTransform: 'uppercase',
                 color: headingColor,
@@ -70,7 +70,7 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
               The Inner Circle
             </span>
           </div>
-          <p style={{ fontSize: '13px', lineHeight: 1.6, color: textColor, margin: 0 }}>
+          <p style={{ fontSize: '14.5px', lineHeight: 1.6, color: textColor, margin: 0 }}>
             An exclusive, verified community connecting ambitious individuals through rigorous standards, intentional matchmaking, and private mixer gatherings.
           </p>
         </div>
@@ -80,7 +80,7 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
           <h5
             style={{
               fontFamily: 'var(--font-sans)',
-              fontSize: '11px',
+              fontSize: '13px',
               fontWeight: 600,
               letterSpacing: '0.14em',
               textTransform: 'uppercase',
@@ -92,7 +92,7 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
           </h5>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {['Curated Introductions', 'Identity Verification', 'Private Mixers', 'Elevate Concierge'].map((item) => (
-              <li key={item} style={{ fontSize: '13px', color: textColor }}>
+              <li key={item} style={{ fontSize: '14.5px', color: textColor }}>
                 {item}
               </li>
             ))}
@@ -104,7 +104,7 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
           <h5
             style={{
               fontFamily: 'var(--font-sans)',
-              fontSize: '11px',
+              fontSize: '13px',
               fontWeight: 600,
               letterSpacing: '0.14em',
               textTransform: 'uppercase',
@@ -129,7 +129,7 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
                     background: 'none',
                     border: 'none',
                     padding: 0,
-                    fontSize: '13px',
+                    fontSize: '14.5px',
                     color: textColor,
                     cursor: 'pointer',
                     textAlign: 'left',
@@ -150,7 +150,7 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
           <h5
             style={{
               fontFamily: 'var(--font-sans)',
-              fontSize: '11px',
+              fontSize: '13px',
               fontWeight: 600,
               letterSpacing: '0.14em',
               textTransform: 'uppercase',
@@ -160,10 +160,10 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
           >
             Membership
           </h5>
-          <p style={{ fontSize: '13px', lineHeight: 1.6, color: textColor, margin: '0 0 10px' }}>
+          <p style={{ fontSize: '14.5px', lineHeight: 1.6, color: textColor, margin: '0 0 10px' }}>
             Membership is strictly by application review or peer referral. All members are verified with live biometric confirmation.
           </p>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '11px', color: 'var(--color-peach-blush)' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '12.5px', color: 'var(--color-peach-blush)' }}>
             <span>●</span>
             <span>256-bit Encrypted Identity Verification</span>
           </div>
@@ -180,7 +180,7 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
           alignItems: 'center',
           justifyContent: 'space-between',
           gap: '14px',
-          fontSize: '12px',
+          fontSize: '13.5px',
           color: textColor,
         }}
       >

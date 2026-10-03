@@ -169,7 +169,7 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
               alignItems: 'center',
               gap: '6px',
               fontFamily: 'var(--font-sans)',
-              fontSize: '13px',
+              fontSize: '14.5px',
               fontWeight: 700,
               letterSpacing: '0.08em',
               textTransform: 'uppercase',
@@ -195,7 +195,7 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
           {/* Context Badge */}
           <span
             style={{
-              fontSize: '11px',
+              fontSize: '13px',
               letterSpacing: '0.09em',
               textTransform: 'uppercase',
               fontWeight: 600,
@@ -235,7 +235,7 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
           <h1
             style={{
               fontFamily: 'var(--font-serif)',
-              fontSize: '34px',
+              fontSize: 'clamp(32px, 3.8vw, 42px)',
               lineHeight: '1.15',
               fontWeight: 400,
               color: isDark ? '#FBF7F2' : 'var(--color-mulberry)',
@@ -248,7 +248,7 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
 
           <p
             style={{
-              fontSize: '14px',
+              fontSize: '16px',
               lineHeight: '1.5',
               color: isDark ? '#BDB0B6' : '#6E5E68',
               margin: '0 0 28px 0',
@@ -265,15 +265,15 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  marginBottom: '7px',
+                  marginBottom: '8px',
                 }}
               >
                 <label
                   htmlFor="context-linkedin"
                   style={{
-                    fontSize: '11px',
+                    fontSize: '13.5px',
                     fontWeight: 600,
-                    letterSpacing: '0.08em',
+                    letterSpacing: '0.06em',
                     textTransform: 'uppercase',
                     color: isDark ? '#F5EFEB' : 'var(--color-mulberry)',
                   }}
@@ -282,7 +282,7 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
                 </label>
                 <span
                   style={{
-                    fontSize: '10.5px',
+                    fontSize: '12px',
                     letterSpacing: '0.04em',
                     color: isDark ? '#AFA2A9' : '#8A7A84',
                     textTransform: 'uppercase',
@@ -309,7 +309,7 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
                 autoComplete="off"
                 style={{
                   width: '100%',
-                  height: '52px',
+                  height: '54px',
                   borderRadius: '13px',
                   border: errors.linkedinUrl
                     ? '1.5px solid #E06D6D'
@@ -320,7 +320,7 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
                   backdropFilter: 'blur(8px)',
                   WebkitBackdropFilter: 'blur(8px)',
                   padding: '0 16px',
-                  fontSize: '15px',
+                  fontSize: '16.5px',
                   fontFamily: 'var(--font-sans)',
                   color: isDark ? '#FBF7F2' : 'var(--color-espresso)',
                   outline: 'none',
@@ -337,7 +337,7 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
                 <div
                   style={{
                     color: '#E06D6D',
-                    fontSize: '12px',
+                    fontSize: '13px',
                     marginTop: '6px',
                     lineHeight: '1.4',
                   }}
@@ -354,15 +354,15 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  marginBottom: '7px',
+                  marginBottom: '8px',
                 }}
               >
                 <label
                   htmlFor="context-instagram"
                   style={{
-                    fontSize: '11px',
+                    fontSize: '13.5px',
                     fontWeight: 600,
-                    letterSpacing: '0.08em',
+                    letterSpacing: '0.06em',
                     textTransform: 'uppercase',
                     color: isDark ? '#F5EFEB' : 'var(--color-mulberry)',
                   }}
@@ -371,7 +371,7 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
                 </label>
                 <span
                   style={{
-                    fontSize: '10.5px',
+                    fontSize: '12px',
                     letterSpacing: '0.04em',
                     color: isDark ? '#AFA2A9' : '#8A7A84',
                     textTransform: 'uppercase',
@@ -399,7 +399,7 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
                 autoCapitalize="none"
                 style={{
                   width: '100%',
-                  height: '52px',
+                  height: '54px',
                   borderRadius: '13px',
                   border: errors.instagramUsername
                     ? '1.5px solid #E06D6D'
@@ -410,7 +410,7 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
                   backdropFilter: 'blur(8px)',
                   WebkitBackdropFilter: 'blur(8px)',
                   padding: '0 16px',
-                  fontSize: '15px',
+                  fontSize: '16.5px',
                   fontFamily: 'var(--font-sans)',
                   color: isDark ? '#FBF7F2' : 'var(--color-espresso)',
                   outline: 'none',
@@ -427,7 +427,7 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
                 <div
                   style={{
                     color: '#E06D6D',
-                    fontSize: '12px',
+                    fontSize: '13px',
                     marginTop: '6px',
                     lineHeight: '1.4',
                   }}
@@ -477,7 +477,7 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
 
               <p
                 style={{
-                  fontSize: '12.5px',
+                  fontSize: '14px',
                   lineHeight: '1.5',
                   color: isDark ? '#C0B3B9' : '#6B5A65',
                   margin: 0,
@@ -504,12 +504,12 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
                 type="submit"
                 style={{
                   width: '100%',
-                  height: '54px',
-                  borderRadius: '27px',
+                  height: '56px',
+                  borderRadius: '28px',
                   backgroundColor: 'var(--color-mulberry)',
                   color: '#FFFFFF',
                   border: 'none',
-                  fontSize: '14px',
+                  fontSize: '16.5px',
                   fontWeight: 700,
                   letterSpacing: '0.08em',
                   textTransform: 'uppercase',
@@ -552,12 +552,12 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
                 onClick={handleSkipClick}
                 style={{
                   width: '100%',
-                  height: '48px',
-                  borderRadius: '24px',
+                  height: '52px',
+                  borderRadius: '26px',
                   backgroundColor: 'transparent',
                   color: isDark ? '#E5DCD4' : 'var(--color-mulberry)',
                   border: isDark ? '1.5px solid rgba(243, 238, 233, 0.22)' : '1.5px solid rgba(73, 40, 61, 0.2)',
-                  fontSize: '13px',
+                  fontSize: '15px',
                   fontWeight: 700,
                   letterSpacing: '0.06em',
                   textTransform: 'uppercase',

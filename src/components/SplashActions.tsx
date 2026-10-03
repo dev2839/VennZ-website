@@ -37,7 +37,7 @@ export const SplashActions: React.FC<SplashActionsProps> = ({
         <p
           style={{
             fontFamily: 'var(--font-sans)',
-            fontSize: '15px',
+            fontSize: '17px',
             fontWeight: 400,
             color: 'rgba(243, 238, 233, 0.95)',
             letterSpacing: '0.02em',
@@ -52,7 +52,7 @@ export const SplashActions: React.FC<SplashActionsProps> = ({
         <p
           style={{
             fontFamily: 'var(--font-script)',
-            fontSize: '40px',
+            fontSize: '44px',
             lineHeight: 1.15,
             color: '#FFFFFF',
             margin: 0,
@@ -70,12 +70,12 @@ export const SplashActions: React.FC<SplashActionsProps> = ({
         onClick={onGetStarted}
         style={{
           width: '100%',
-          maxWidth: '344px',
-          height: '56px',
+          maxWidth: '360px',
+          height: '58px',
           backgroundColor: '#E8A99B',
           color: '#272124',
           fontFamily: 'var(--font-sans)',
-          fontSize: '16.5px',
+          fontSize: '17.5px',
           fontWeight: 600,
           borderRadius: '9999px',
           border: 'none',
@@ -122,9 +122,9 @@ export const SplashActions: React.FC<SplashActionsProps> = ({
       {/* Secondary Action: Already a member? Log in */}
       <div
         style={{
-          marginTop: '18px',
+          marginTop: '20px',
           fontFamily: 'var(--font-sans)',
-          fontSize: '14px',
+          fontSize: '16px',
           color: 'rgba(243, 238, 233, 0.92)',
           textShadow: '0 1px 6px rgba(0, 0, 0, 0.6)',
           display: 'flex',
@@ -141,8 +141,8 @@ export const SplashActions: React.FC<SplashActionsProps> = ({
             border: 'none',
             color: '#FFFFFF',
             fontFamily: 'var(--font-sans)',
-            fontSize: '14px',
-            fontWeight: 500,
+            fontSize: '16px',
+            fontWeight: 600,
             cursor: 'pointer',
             padding: 0,
             textDecoration: 'underline',

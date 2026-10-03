@@ -531,7 +531,7 @@ const compressImageFile = (file: File): Promise<string> => {
                 alignItems: 'center',
                 gap: '8px',
                 fontFamily: 'var(--font-sans)',
-                fontSize: '13px',
+                fontSize: '14.5px',
                 fontWeight: 600,
                 letterSpacing: '0.08em',
                 textTransform: 'uppercase',
@@ -548,7 +548,7 @@ const compressImageFile = (file: File): Promise<string> => {
             {/* Subtle Step Indicator */}
             <span
               style={{
-                fontSize: '11px',
+                fontSize: '13px',
                 letterSpacing: '0.08em',
                 textTransform: 'uppercase',
                 fontWeight: 600,
@@ -566,11 +566,11 @@ const compressImageFile = (file: File): Promise<string> => {
           <h1
             style={{
               fontFamily: 'var(--font-serif)',
-              fontSize: '34px',
+              fontSize: 'clamp(32px, 3.8vw, 42px)',
               lineHeight: '1.15',
               fontWeight: 400,
               color: isDark ? '#FBF7F2' : 'var(--color-mulberry)',
-              margin: '0 0 6px 0',
+              margin: '0 0 8px 0',
               letterSpacing: '-0.01em',
             }}
           >
@@ -579,10 +579,10 @@ const compressImageFile = (file: File): Promise<string> => {
 
           <p
             style={{
-              fontSize: '14px',
-              lineHeight: '1.45',
+              fontSize: '16px',
+              lineHeight: '1.5',
               color: isDark ? '#BDB0B6' : '#6E5E68',
-              margin: '0 0 24px 0',
+              margin: '0 0 26px 0',
             }}
           >
             Tell us a bit about who you are and what you're looking for. Hand-reviewed before your profile goes live.
@@ -591,16 +591,16 @@ const compressImageFile = (file: File): Promise<string> => {
           {/* Form */}
           <form onSubmit={handleSubmit} noValidate>
             {/* 1. PUBLIC FIRST NAME */}
-            <div style={{ marginBottom: '20px' }}>
+            <div style={{ marginBottom: '22px' }}>
               <label
                 style={{
                   display: 'block',
-                  fontSize: '11px',
+                  fontSize: '13.5px',
                   fontWeight: 600,
-                  letterSpacing: '0.08em',
+                  letterSpacing: '0.06em',
                   textTransform: 'uppercase',
                   color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
-                  marginBottom: '7px',
+                  marginBottom: '8px',
                 }}
               >
                 PUBLIC FIRST NAME <span style={{ color: '#E06D6D' }}>*</span>
@@ -615,12 +615,12 @@ const compressImageFile = (file: File): Promise<string> => {
                 placeholder="e.g. Ananya"
                 style={{
                   width: '100%',
-                  height: '52px',
+                  height: '54px',
                   borderRadius: '13px',
                   border: errors.firstName ? '1.5px solid #E06D6D' : isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.22)',
                   backgroundColor: isDark ? 'rgba(24, 15, 20, 0.75)' : 'rgba(255, 255, 255, 0.65)',
                   padding: '0 16px',
-                  fontSize: '15.5px',
+                  fontSize: '16.5px',
                   fontFamily: 'var(--font-sans)',
                   color: isDark ? '#FBF7F2' : 'var(--color-espresso)',
                   outline: 'none',
@@ -628,21 +628,21 @@ const compressImageFile = (file: File): Promise<string> => {
                 }}
               />
               {errors.firstName && (
-                <div style={{ color: '#E06D6D', fontSize: '12px', marginTop: '5px' }}>{errors.firstName}</div>
+                <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.firstName}</div>
               )}
             </div>
 
             {/* 2. DATE OF BIRTH */}
-            <div style={{ marginBottom: '20px' }}>
+            <div style={{ marginBottom: '22px' }}>
               <label
                 style={{
                   display: 'block',
-                  fontSize: '11px',
+                  fontSize: '13.5px',
                   fontWeight: 600,
-                  letterSpacing: '0.08em',
+                  letterSpacing: '0.06em',
                   textTransform: 'uppercase',
                   color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
-                  marginBottom: '7px',
+                  marginBottom: '8px',
                 }}
               >
                 DATE OF BIRTH <span style={{ color: '#E06D6D' }}>*</span>
@@ -758,14 +758,14 @@ const compressImageFile = (file: File): Promise<string> => {
                 </button>
               </div>
               {!dateOfBirth ? (
-                <div style={{ fontSize: '11.5px', color: isDark ? '#B3A1A8' : '#8A7A84', marginTop: '6px', lineHeight: '1.4' }}>
+                <div style={{ fontSize: '13.5px', color: isDark ? '#B3A1A8' : '#8A7A84', marginTop: '6px', lineHeight: '1.4' }}>
                   Must be 18 years or older. Your exact birthdate is never displayed publicly.
                 </div>
               ) : (
                 <div style={{ marginTop: '6px', lineHeight: '1.4' }}>
                   <div
                     style={{
-                      fontSize: '13.5px',
+                      fontSize: '14.5px',
                       fontWeight: 700,
                       color: calculateAge(dateOfBirth) >= 18 ? (isDark ? '#F0D4B8' : 'var(--color-mulberry)') : '#E06D6D',
                       letterSpacing: '0.01em',
@@ -773,27 +773,27 @@ const compressImageFile = (file: File): Promise<string> => {
                   >
                     {calculateAge(dateOfBirth)} years old
                   </div>
-                  <div style={{ fontSize: '11.5px', color: isDark ? '#B3A1A8' : '#8A7A84', marginTop: '2px' }}>
+                  <div style={{ fontSize: '13px', color: isDark ? '#B3A1A8' : '#8A7A84', marginTop: '2px' }}>
                     Your exact birthdate is never displayed publicly
                   </div>
                 </div>
               )}
               {errors.dateOfBirth && (
-                <div style={{ color: '#E06D6D', fontSize: '12px', marginTop: '4px' }}>{errors.dateOfBirth}</div>
+                <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '4px' }}>{errors.dateOfBirth}</div>
               )}
             </div>
 
             {/* 3. CITY */}
-            <div style={{ marginBottom: '20px' }}>
+            <div style={{ marginBottom: '22px' }}>
               <label
                 style={{
                   display: 'block',
-                  fontSize: '11px',
+                  fontSize: '13.5px',
                   fontWeight: 600,
-                  letterSpacing: '0.08em',
+                  letterSpacing: '0.06em',
                   textTransform: 'uppercase',
                   color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
-                  marginBottom: '7px',
+                  marginBottom: '8px',
                 }}
               >
                 CITY <span style={{ color: '#E06D6D' }}>*</span>
@@ -808,12 +808,12 @@ const compressImageFile = (file: File): Promise<string> => {
                 placeholder="Enter your city (e.g. Mumbai)"
                 style={{
                   width: '100%',
-                  height: '52px',
+                  height: '54px',
                   borderRadius: '13px',
                   border: errors.city ? '1.5px solid #E06D6D' : isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.22)',
                   backgroundColor: isDark ? 'rgba(24, 15, 20, 0.75)' : 'rgba(255, 255, 255, 0.65)',
                   padding: '0 16px',
-                  fontSize: '15.5px',
+                  fontSize: '16.5px',
                   fontFamily: 'var(--font-sans)',
                   color: isDark ? '#FBF7F2' : 'var(--color-espresso)',
                   outline: 'none',
@@ -821,21 +821,21 @@ const compressImageFile = (file: File): Promise<string> => {
                 }}
               />
               {errors.city && (
-                <div style={{ color: '#E06D6D', fontSize: '12px', marginTop: '5px' }}>{errors.city}</div>
+                <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.city}</div>
               )}
             </div>
 
             {/* 4. GENDER IDENTITY */}
-            <div style={{ marginBottom: '20px' }}>
+            <div style={{ marginBottom: '22px' }}>
               <label
                 style={{
                   display: 'block',
-                  fontSize: '11px',
+                  fontSize: '13.5px',
                   fontWeight: 600,
-                  letterSpacing: '0.08em',
+                  letterSpacing: '0.06em',
                   textTransform: 'uppercase',
                   color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
-                  marginBottom: '7px',
+                  marginBottom: '8px',
                 }}
               >
                 GENDER IDENTITY <span style={{ color: '#E06D6D' }}>*</span>
@@ -848,12 +848,12 @@ const compressImageFile = (file: File): Promise<string> => {
                 }}
                 style={{
                   width: '100%',
-                  height: '52px',
+                  height: '54px',
                   borderRadius: '13px',
                   border: errors.genderIdentity ? '1.5px solid #E06D6D' : isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.22)',
                   backgroundColor: isDark ? 'rgba(24, 15, 20, 0.75)' : 'rgba(255, 255, 255, 0.65)',
                   padding: '0 16px',
-                  fontSize: '15px',
+                  fontSize: '16.5px',
                   fontFamily: 'var(--font-sans)',
                   color: genderIdentity ? (isDark ? '#FBF7F2' : 'var(--color-espresso)') : (isDark ? '#8A7A84' : '#8A7A84'),
                   outline: 'none',
@@ -881,40 +881,40 @@ const compressImageFile = (file: File): Promise<string> => {
                     placeholder="Describe your gender identity"
                     style={{
                       width: '100%',
-                      height: '46px',
+                      height: '48px',
                       borderRadius: '12px',
                       border: errors.selfDescribeGender ? '1.5px solid #E06D6D' : isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.22)',
                       backgroundColor: isDark ? 'rgba(24, 15, 20, 0.75)' : 'rgba(255, 255, 255, 0.65)',
                       padding: '0 14px',
-                      fontSize: '14.5px',
+                      fontSize: '16px',
                       color: isDark ? '#FBF7F2' : 'var(--color-espresso)',
                       outline: 'none',
                       boxSizing: 'border-box',
                     }}
                   />
                   {errors.selfDescribeGender && (
-                    <div style={{ color: '#E06D6D', fontSize: '12px', marginTop: '4px' }}>
+                    <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '4px' }}>
                       {errors.selfDescribeGender}
                     </div>
                   )}
                 </div>
               )}
               {errors.genderIdentity && (
-                <div style={{ color: '#E06D6D', fontSize: '12px', marginTop: '5px' }}>{errors.genderIdentity}</div>
+                <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.genderIdentity}</div>
               )}
             </div>
 
             {/* 5. INTERESTED IN DATING */}
-            <div style={{ marginBottom: '20px' }}>
+            <div style={{ marginBottom: '22px' }}>
               <label
                 style={{
                   display: 'block',
-                  fontSize: '11px',
+                  fontSize: '13.5px',
                   fontWeight: 600,
-                  letterSpacing: '0.08em',
+                  letterSpacing: '0.06em',
                   textTransform: 'uppercase',
                   color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
-                  marginBottom: '7px',
+                  marginBottom: '8px',
                 }}
               >
                 INTERESTED IN DATING <span style={{ color: '#E06D6D' }}>*</span>
@@ -927,12 +927,12 @@ const compressImageFile = (file: File): Promise<string> => {
                 }}
                 style={{
                   width: '100%',
-                  height: '52px',
+                  height: '54px',
                   borderRadius: '13px',
                   border: errors.datingPreference ? '1.5px solid #E06D6D' : isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.22)',
                   backgroundColor: isDark ? 'rgba(24, 15, 20, 0.75)' : 'rgba(255, 255, 255, 0.65)',
                   padding: '0 16px',
-                  fontSize: '15px',
+                  fontSize: '16.5px',
                   fontFamily: 'var(--font-sans)',
                   color: datingPreference ? (isDark ? '#FBF7F2' : 'var(--color-espresso)') : (isDark ? '#8A7A84' : '#8A7A84'),
                   outline: 'none',
@@ -946,21 +946,21 @@ const compressImageFile = (file: File): Promise<string> => {
                 <option value="EVERYONE" style={{ backgroundColor: isDark ? '#1C1218' : '#FFFFFF', color: isDark ? '#FBF7F2' : '#272124' }}>EVERYONE</option>
               </select>
               {errors.datingPreference && (
-                <div style={{ color: '#E06D6D', fontSize: '12px', marginTop: '5px' }}>{errors.datingPreference}</div>
+                <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.datingPreference}</div>
               )}
             </div>
 
             {/* 6. CURRENT STATUS */}
-            <div style={{ marginBottom: '20px' }}>
+            <div style={{ marginBottom: '22px' }}>
               <label
                 style={{
                   display: 'block',
-                  fontSize: '11px',
+                  fontSize: '13.5px',
                   fontWeight: 600,
-                  letterSpacing: '0.08em',
+                  letterSpacing: '0.06em',
                   textTransform: 'uppercase',
                   color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
-                  marginBottom: '7px',
+                  marginBottom: '8px',
                 }}
               >
                 CURRENT STATUS <span style={{ color: '#E06D6D' }}>*</span>
@@ -973,12 +973,12 @@ const compressImageFile = (file: File): Promise<string> => {
                 }}
                 style={{
                   width: '100%',
-                  height: '52px',
+                  height: '54px',
                   borderRadius: '13px',
                   border: errors.currentStatus ? '1.5px solid #E06D6D' : isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.22)',
                   backgroundColor: isDark ? 'rgba(24, 15, 20, 0.75)' : 'rgba(255, 255, 255, 0.65)',
                   padding: '0 16px',
-                  fontSize: '15px',
+                  fontSize: '16.5px',
                   fontFamily: 'var(--font-sans)',
                   color: currentStatus ? (isDark ? '#FBF7F2' : 'var(--color-espresso)') : (isDark ? '#8A7A84' : '#8A7A84'),
                   outline: 'none',
@@ -994,21 +994,21 @@ const compressImageFile = (file: File): Promise<string> => {
                 <option value="OTHER" style={{ backgroundColor: isDark ? '#1C1218' : '#FFFFFF', color: isDark ? '#FBF7F2' : '#272124' }}>OTHER</option>
               </select>
               {errors.currentStatus && (
-                <div style={{ color: '#E06D6D', fontSize: '12px', marginTop: '5px' }}>{errors.currentStatus}</div>
+                <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.currentStatus}</div>
               )}
             </div>
 
             {/* 7. DESIGNATION OR ROLE (COMPULSORY) */}
-            <div style={{ marginBottom: '20px' }}>
+            <div style={{ marginBottom: '22px' }}>
               <label
                 style={{
                   display: 'block',
-                  fontSize: '11px',
+                  fontSize: '13.5px',
                   fontWeight: 600,
-                  letterSpacing: '0.08em',
+                  letterSpacing: '0.06em',
                   textTransform: 'uppercase',
                   color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
-                  marginBottom: '7px',
+                  marginBottom: '8px',
                 }}
               >
                 DESIGNATION OR ROLE <span style={{ color: '#E06D6D' }}>*</span>
@@ -1023,12 +1023,12 @@ const compressImageFile = (file: File): Promise<string> => {
                 placeholder="e.g. Product Manager"
                 style={{
                   width: '100%',
-                  height: '52px',
+                  height: '54px',
                   borderRadius: '13px',
                   border: errors.designation ? '1.5px solid #E06D6D' : isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.22)',
                   backgroundColor: isDark ? 'rgba(24, 15, 20, 0.75)' : 'rgba(255, 255, 255, 0.65)',
                   padding: '0 16px',
-                  fontSize: '15px',
+                  fontSize: '16.5px',
                   fontFamily: 'var(--font-sans)',
                   color: isDark ? '#FBF7F2' : 'var(--color-espresso)',
                   outline: 'none',
@@ -1036,7 +1036,7 @@ const compressImageFile = (file: File): Promise<string> => {
                 }}
               />
               {errors.designation && (
-                <div style={{ color: '#E06D6D', fontSize: '12px', marginTop: '5px' }}>{errors.designation}</div>
+                <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.designation}</div>
               )}
             </div>
 
@@ -1045,12 +1045,12 @@ const compressImageFile = (file: File): Promise<string> => {
               <label
                 style={{
                   display: 'block',
-                  fontSize: '11px',
+                  fontSize: '13.5px',
                   fontWeight: 600,
-                  letterSpacing: '0.08em',
+                  letterSpacing: '0.06em',
                   textTransform: 'uppercase',
                   color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
-                  marginBottom: '7px',
+                  marginBottom: '8px',
                 }}
               >
                 COMPANY <span style={{ color: isDark ? '#B3A1A8' : '#8A7A84', fontWeight: 400 }}>(OPTIONAL)</span>
@@ -1062,12 +1062,12 @@ const compressImageFile = (file: File): Promise<string> => {
                 placeholder="e.g. Google"
                 style={{
                   width: '100%',
-                  height: '52px',
+                  height: '54px',
                   borderRadius: '13px',
                   border: isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.22)',
                   backgroundColor: isDark ? 'rgba(24, 15, 20, 0.75)' : 'rgba(255, 255, 255, 0.65)',
                   padding: '0 16px',
-                  fontSize: '15px',
+                  fontSize: '16.5px',
                   fontFamily: 'var(--font-sans)',
                   color: isDark ? '#FBF7F2' : 'var(--color-espresso)',
                   outline: 'none',
@@ -1115,12 +1115,12 @@ const compressImageFile = (file: File): Promise<string> => {
                 </div>
               )}
 
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
                 <label
                   style={{
-                    fontSize: '12px',
+                    fontSize: '13.5px',
                     fontWeight: 700,
-                    letterSpacing: '0.08em',
+                    letterSpacing: '0.06em',
                     textTransform: 'uppercase',
                     color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
                   }}
@@ -1129,7 +1129,7 @@ const compressImageFile = (file: File): Promise<string> => {
                 </label>
                 <span
                   style={{
-                    fontSize: '11.5px',
+                    fontSize: '13px',
                     fontWeight: 600,
                     color: photos.length >= 2 ? (isDark ? '#86EFAC' : '#2E7D32') : (isDark ? '#F0D4B8' : 'var(--color-mulberry)'),
                   }}
@@ -1140,8 +1140,8 @@ const compressImageFile = (file: File): Promise<string> => {
 
               <p
                 style={{
-                  fontSize: '13px',
-                  lineHeight: '1.4',
+                  fontSize: '14.5px',
+                  lineHeight: '1.45',
                   color: isDark ? '#BDB0B6' : '#6E5E68',
                   margin: '0 0 14px 0',
                 }}
@@ -1200,7 +1200,7 @@ const compressImageFile = (file: File): Promise<string> => {
                           left: '6px',
                           backgroundColor: 'rgba(73, 40, 61, 0.85)',
                           color: '#FFFFFF',
-                          fontSize: '9px',
+                          fontSize: '10px',
                           fontWeight: 700,
                           letterSpacing: '0.06em',
                           padding: '2px 6px',
@@ -1221,8 +1221,8 @@ const compressImageFile = (file: File): Promise<string> => {
                         position: 'absolute',
                         top: '6px',
                         right: '6px',
-                        width: '24px',
-                        height: '24px',
+                        width: '26px',
+                        height: '26px',
                         borderRadius: '50%',
                         backgroundColor: 'rgba(0, 0, 0, 0.65)',
                         color: '#FFFFFF',
@@ -1231,7 +1231,7 @@ const compressImageFile = (file: File): Promise<string> => {
                         alignItems: 'center',
                         justifyContent: 'center',
                         cursor: 'pointer',
-                        fontSize: '13px',
+                        fontSize: '14px',
                         lineHeight: 1,
                       }}
                     >
@@ -1269,15 +1269,15 @@ const compressImageFile = (file: File): Promise<string> => {
                   >
                     <div
                       style={{
-                        width: '32px',
-                        height: '32px',
+                        width: '34px',
+                        height: '34px',
                         borderRadius: '50%',
                         backgroundColor: isDark ? 'rgba(240, 212, 184, 0.15)' : 'rgba(73, 40, 61, 0.1)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
-                        fontSize: '18px',
+                        fontSize: '20px',
                         marginBottom: '4px',
                       }}
                     >
@@ -1285,7 +1285,7 @@ const compressImageFile = (file: File): Promise<string> => {
                     </div>
                     <span
                       style={{
-                        fontSize: '11px',
+                        fontSize: '12.5px',
                         fontWeight: 600,
                         color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
                         letterSpacing: '0.04em',
@@ -1306,8 +1306,8 @@ const compressImageFile = (file: File): Promise<string> => {
                     background: isDark ? 'rgba(240, 212, 184, 0.12)' : 'rgba(73, 40, 61, 0.08)',
                     border: isDark ? '1px solid rgba(240, 212, 184, 0.3)' : '1px solid rgba(73, 40, 61, 0.2)',
                     borderRadius: '8px',
-                    padding: '5px 10px',
-                    fontSize: '11.5px',
+                    padding: '6px 12px',
+                    fontSize: '13px',
                     color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
                     fontWeight: 600,
                     cursor: 'pointer',
@@ -1322,7 +1322,7 @@ const compressImageFile = (file: File): Promise<string> => {
                     style={{
                       background: 'transparent',
                       border: 'none',
-                      fontSize: '11.5px',
+                      fontSize: '13px',
                       color: isDark ? '#B3A1A8' : '#8A7A84',
                       textDecoration: 'underline',
                       cursor: 'pointer',
@@ -1334,7 +1334,7 @@ const compressImageFile = (file: File): Promise<string> => {
               </div>
 
               {errors.photos && (
-                <div style={{ color: '#E06D6D', fontSize: '12px', marginTop: '6px' }}>{errors.photos}</div>
+                <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '6px' }}>{errors.photos}</div>
               )}
             </div>
 
@@ -1346,17 +1346,17 @@ const compressImageFile = (file: File): Promise<string> => {
               <label
                 style={{
                   display: 'block',
-                  fontSize: '11px',
+                  fontSize: '13.5px',
                   fontWeight: 600,
-                  letterSpacing: '0.08em',
+                  letterSpacing: '0.06em',
                   textTransform: 'uppercase',
                   color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
-                  marginBottom: '4px',
+                  marginBottom: '5px',
                 }}
               >
                 INVITATION CODE <span style={{ color: isDark ? '#B3A1A8' : '#8A7A84', fontWeight: 400 }}>(OPTIONAL)</span>
               </label>
-              <p style={{ fontSize: '12.5px', lineHeight: '1.4', color: isDark ? '#BDB0B6' : '#6E5E68', margin: '0 0 8px 0' }}>
+              <p style={{ fontSize: '14px', lineHeight: '1.45', color: isDark ? '#BDB0B6' : '#6E5E68', margin: '0 0 10px 0' }}>
                 Were you invited by a member? Add their code for priority review. Leave it blank if you weren't — every application is read either way.
               </p>
               <input
@@ -1366,12 +1366,12 @@ const compressImageFile = (file: File): Promise<string> => {
                 placeholder="e.g. IC-MUM-4820"
                 style={{
                   width: '100%',
-                  height: '50px',
+                  height: '52px',
                   borderRadius: '13px',
                   border: isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.22)',
                   backgroundColor: isDark ? 'rgba(24, 15, 20, 0.75)' : 'rgba(255, 255, 255, 0.65)',
                   padding: '0 16px',
-                  fontSize: '14.5px',
+                  fontSize: '16px',
                   fontFamily: 'monospace',
                   color: isDark ? '#FBF7F2' : 'var(--color-espresso)',
                   outline: 'none',
@@ -1383,24 +1383,24 @@ const compressImageFile = (file: File): Promise<string> => {
 
             {/* 11. TWO-LINE INTRODUCTION (COMPULSORY) */}
             <div style={{ marginBottom: '32px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
                 <label
                   style={{
-                    fontSize: '11px',
+                    fontSize: '13.5px',
                     fontWeight: 600,
-                    letterSpacing: '0.08em',
+                    letterSpacing: '0.06em',
                     textTransform: 'uppercase',
                     color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
                   }}
                 >
                   TWO-LINE INTRODUCTION <span style={{ color: '#E06D6D', fontWeight: 700 }}>*</span>
                 </label>
-                <span style={{ fontSize: '11px', color: introduction.length === 140 ? '#E06D6D' : (isDark ? '#B3A1A8' : '#8A7A84'), fontFamily: 'monospace' }}>
+                <span style={{ fontSize: '13px', color: introduction.length === 140 ? '#E06D6D' : (isDark ? '#B3A1A8' : '#8A7A84'), fontFamily: 'monospace' }}>
                   {introduction.length}/140
                 </span>
               </div>
 
-              <p style={{ fontSize: '11.5px', color: isDark ? '#B3A1A8' : '#8A7A84', margin: '0 0 8px 0', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              <p style={{ fontSize: '13px', color: isDark ? '#B3A1A8' : '#8A7A84', margin: '0 0 8px 0', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                 SHOWN ON YOUR PROFILE AND CURATED INTRODUCTIONS
               </p>
 
@@ -1421,23 +1421,23 @@ const compressImageFile = (file: File): Promise<string> => {
                   border: errors.introduction ? '1.5px solid #E06D6D' : (isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.22)'),
                   backgroundColor: isDark ? 'rgba(24, 15, 20, 0.75)' : 'rgba(255, 255, 255, 0.65)',
                   padding: '12px 16px',
-                  fontSize: '14.5px',
+                  fontSize: '16px',
                   fontFamily: 'var(--font-sans)',
                   color: isDark ? '#FBF7F2' : 'var(--color-espresso)',
                   outline: 'none',
                   boxSizing: 'border-box',
                   resize: 'none',
-                  lineHeight: '1.45',
+                  lineHeight: '1.5',
                 }}
               />
               {errors.introduction && (
-                <div style={{ color: '#E06D6D', fontSize: '12px', marginTop: '6px' }}>{errors.introduction}</div>
+                <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '6px' }}>{errors.introduction}</div>
               )}
             </div>
 
             {/* General Validation Error Alert */}
             {errors.general && (
-              <div style={{ color: '#E06D6D', fontSize: '13px', marginBottom: '16px', fontWeight: 600 }}>
+              <div style={{ color: '#E06D6D', fontSize: '14px', marginBottom: '16px', fontWeight: 600 }}>
                 {errors.general}
               </div>
             )}
@@ -1451,7 +1451,7 @@ const compressImageFile = (file: File): Promise<string> => {
                 backgroundColor: isDark ? '#5C2D49' : 'var(--color-mulberry)',
                 color: '#FFFFFF',
                 fontFamily: 'var(--font-sans)',
-                fontSize: '14.5px',
+                fontSize: '16.5px',
                 fontWeight: 600,
                 letterSpacing: '0.04em',
                 borderRadius: '9999px',

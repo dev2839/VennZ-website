@@ -211,7 +211,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
               <span
                 style={{
                   fontFamily: 'var(--font-serif)',
-                  fontSize: '19px',
+                  fontSize: '21px',
                   fontWeight: 500,
                   letterSpacing: '0.12em',
                   textTransform: 'uppercase',
@@ -224,7 +224,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
               <span
                 style={{
                   fontFamily: 'var(--font-sans)',
-                  fontSize: '9.5px',
+                  fontSize: '11px',
                   fontWeight: 500,
                   letterSpacing: '0.16em',
                   textTransform: 'uppercase',
@@ -266,9 +266,9 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                     borderRadius: '9999px',
                     padding: '8px 18px',
                     fontFamily: 'var(--font-sans)',
-                    fontSize: '12px',
+                    fontSize: '14px',
                     fontWeight: isActive ? 600 : 500,
-                    letterSpacing: '0.1em',
+                    letterSpacing: '0.08em',
                     color: isActive ? activeColor : inactiveColor,
                     cursor: 'pointer',
                     display: 'inline-flex',
@@ -290,14 +290,14 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                   }}
                 >
                   {item.hasCrown && (
-                    <CrownIcon color={isActive ? '#E0B56A' : isDark ? '#D5A85A' : '#8A4B6E'} size={11} />
+                    <CrownIcon color={isActive ? '#E0B56A' : isDark ? '#D5A85A' : '#8A4B6E'} size={12} />
                   )}
                   <span>{item.label}</span>
                   {item.hasBadge && (
                     <span
                       style={{
-                        width: '6px',
-                        height: '6px',
+                        width: '7px',
+                        height: '7px',
                         borderRadius: '50%',
                         backgroundColor: '#C94A4A',
                         boxShadow: '0 0 6px rgba(201, 74, 74, 0.6)',
@@ -321,12 +321,12 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '7px',
-                padding: '6px 14px',
+                padding: '7px 16px',
                 borderRadius: '9999px',
                 backgroundColor: buttonBg,
                 border: `1px solid ${buttonBorder}`,
                 color: textColor,
-                fontSize: '11.5px',
+                fontSize: '13.5px',
                 fontWeight: 500,
                 cursor: 'pointer',
                 fontFamily: 'var(--font-sans)',
@@ -334,7 +334,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
               }}
               title="Jump directly to any application screen"
             >
-              <span style={{ maxWidth: '140px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              <span style={{ maxWidth: '160px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                 {currentScreenTitle}
               </span>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -346,10 +346,10 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
               <div
                 style={{
                   position: 'absolute',
-                  top: '42px',
+                  top: '44px',
                   right: 0,
-                  width: '260px',
-                  maxHeight: '380px',
+                  width: '280px',
+                  maxHeight: '400px',
                   overflowY: 'auto',
                   backgroundColor: isDark ? '#120a10' : '#FFFFFF',
                   borderRadius: '16px',
@@ -362,7 +362,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                 <div
                   style={{
                     padding: '8px 16px 6px',
-                    fontSize: '10px',
+                    fontSize: '11px',
                     fontWeight: 600,
                     letterSpacing: '0.12em',
                     textTransform: 'uppercase',
@@ -394,7 +394,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                         border: 'none',
                         color: isCur ? activeColor : textColor,
                         fontWeight: isCur ? 600 : 400,
-                        fontSize: '12.5px',
+                        fontSize: '13.5px',
                         cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',

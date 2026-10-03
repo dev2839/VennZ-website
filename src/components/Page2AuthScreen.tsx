@@ -225,8 +225,8 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
             <h1
               style={{
                 fontFamily: 'var(--font-serif)',
-                fontSize: '32px',
-                lineHeight: '1.18',
+                fontSize: 'clamp(34px, 4vw, 44px)',
+                lineHeight: '1.2',
                 fontWeight: 400,
                 color: 'var(--color-warm-porcelain)',
                 letterSpacing: '-0.01em',
@@ -242,10 +242,10 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
             <p
               style={{
                 fontFamily: 'var(--font-sans)',
-                fontSize: '14.5px',
-                lineHeight: '1.45',
-                color: 'rgba(243, 238, 233, 0.85)',
-                margin: '12px 0 0 0',
+                fontSize: '16px',
+                lineHeight: '1.5',
+                color: 'rgba(243, 238, 233, 0.9)',
+                margin: '14px 0 0 0',
                 textShadow: '0 1px 8px rgba(0, 0, 0, 0.5)',
               }}
             >
@@ -264,7 +264,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                height: '56px',
+                height: '58px',
                 borderRadius: '14px',
                 backgroundColor: 'rgba(26, 20, 24, 0.65)',
                 backdropFilter: 'blur(12px)',
@@ -290,7 +290,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
                   gap: '6px',
                   color: 'var(--color-warm-porcelain)',
                   fontFamily: 'var(--font-sans)',
-                  fontSize: '15.5px',
+                  fontSize: '16px',
                   fontWeight: 500,
                   cursor: 'default',
                   userSelect: 'none',
@@ -338,7 +338,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
                   outline: 'none',
                   color: 'var(--color-warm-porcelain)',
                   fontFamily: 'var(--font-sans)',
-                  fontSize: '15.5px',
+                  fontSize: '16.5px',
                   fontWeight: 400,
                   letterSpacing: '0.02em',
                 }}
@@ -350,7 +350,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
               <div
                 style={{
                   color: '#ff8a8a',
-                  fontSize: '12px',
+                  fontSize: '13.5px',
                   marginTop: '6px',
                   textAlign: 'left',
                   paddingLeft: '4px',
@@ -366,11 +366,11 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
               type="submit"
               style={{
                 width: '100%',
-                height: '54px',
+                height: '56px',
                 backgroundColor: 'var(--color-warm-porcelain)',
                 color: 'var(--color-espresso)',
                 fontFamily: 'var(--font-sans)',
-                fontSize: '16px',
+                fontSize: '17px',
                 fontWeight: 600,
                 borderRadius: '9999px',
                 border: 'none',
@@ -415,7 +415,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
             />
             <span
               style={{
-                fontSize: '13px',
+                fontSize: '14.5px',
                 color: 'rgba(243, 238, 233, 0.65)',
                 fontFamily: 'var(--font-sans)',
                 fontWeight: 400,
@@ -438,13 +438,13 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
             onClick={handleGoogleSignIn}
             style={{
               width: '100%',
-              height: '52px',
+              height: '54px',
               backgroundColor: 'rgba(26, 20, 24, 0.45)',
               border: '1px solid rgba(243, 238, 233, 0.25)',
               borderRadius: '9999px',
               color: 'var(--color-warm-porcelain)',
               fontFamily: 'var(--font-sans)',
-              fontSize: '14.5px',
+              fontSize: '15.5px',
               fontWeight: 500,
               display: 'flex',
               alignItems: 'center',

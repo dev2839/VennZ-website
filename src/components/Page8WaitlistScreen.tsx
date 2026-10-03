@@ -215,7 +215,7 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
               alignItems: 'center',
               gap: '6px',
               fontFamily: 'var(--font-sans)',
-              fontSize: '13px',
+              fontSize: '14.5px',
               fontWeight: 700,
               letterSpacing: '0.08em',
               textTransform: 'uppercase',
@@ -241,7 +241,7 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
           {/* Status Badge */}
           <span
             style={{
-              fontSize: '11px',
+              fontSize: '13px',
               letterSpacing: '0.09em',
               textTransform: 'uppercase',
               fontWeight: 700,
@@ -294,12 +294,12 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
               display: 'flex',
               alignItems: 'center',
               gap: '8px',
-              marginBottom: '8px',
+              marginBottom: '10px',
             }}
           >
             <span
               style={{
-                fontSize: '11px',
+                fontSize: '13px',
                 fontWeight: 700,
                 letterSpacing: '0.1em',
                 textTransform: 'uppercase',
@@ -308,10 +308,10 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
             >
               APPLICATION
             </span>
-            <span style={{ color: isDark ? 'rgba(243, 238, 233, 0.3)' : 'rgba(73, 40, 61, 0.3)', fontSize: '12px' }}>·</span>
+            <span style={{ color: isDark ? 'rgba(243, 238, 233, 0.3)' : 'rgba(73, 40, 61, 0.3)', fontSize: '13px' }}>·</span>
             <span
               style={{
-                fontSize: '11px',
+                fontSize: '13px',
                 fontWeight: 600,
                 letterSpacing: '0.08em',
                 textTransform: 'uppercase',
@@ -326,7 +326,7 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
           <h1
             style={{
               fontFamily: 'var(--font-serif)',
-              fontSize: '34px',
+              fontSize: 'clamp(32px, 3.8vw, 42px)',
               lineHeight: '1.15',
               fontWeight: 400,
               color: isDark ? '#FBF7F2' : 'var(--color-mulberry)',
@@ -340,7 +340,7 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
           {/* Subtitle */}
           <p
             style={{
-              fontSize: '14px',
+              fontSize: '16px',
               lineHeight: '1.5',
               color: isDark ? '#BDB0B6' : '#6E5E68',
               margin: '0 0 24px 0',
@@ -631,11 +631,11 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
               {/* Intentional Tagline */}
               <div
                 style={{
-                  fontSize: '12px',
+                  fontSize: '14.5px',
                   fontWeight: 500,
                   color: isDark ? '#D9CFD5' : '#6E5E68',
                   textAlign: 'center',
-                  marginBottom: '8px',
+                  marginBottom: '10px',
                 }}
               >
                 A more intentional way to meet, connect and grow!
@@ -647,12 +647,12 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
                 onClick={handleJoinMembership}
                 style={{
                   width: '100%',
-                  height: '54px',
-                  borderRadius: '27px',
+                  height: '56px',
+                  borderRadius: '28px',
                   backgroundColor: 'var(--color-mulberry)',
                   color: '#FFFFFF',
                   border: 'none',
-                  fontSize: '14px',
+                  fontSize: '16.5px',
                   fontWeight: 700,
                   letterSpacing: '0.08em',
                   textTransform: 'uppercase',
@@ -687,12 +687,12 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
                   onClick={handleTryFree}
                   style={{
                     width: '100%',
-                    height: '50px',
-                    borderRadius: '25px',
+                    height: '52px',
+                    borderRadius: '26px',
                     backgroundColor: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.75)',
                     color: isDark ? '#F5EFEB' : 'var(--color-mulberry)',
                     border: isDark ? '1.5px solid rgba(243, 238, 233, 0.25)' : '1.5px solid rgba(73, 40, 61, 0.25)',
-                    fontSize: '13px',
+                    fontSize: '15px',
                     fontWeight: 700,
                     letterSpacing: '0.06em',
                     textTransform: 'uppercase',
@@ -717,7 +717,7 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
                 {/* Microcopy: YOUR FIRST LOOK IS FREE · 24 HOURS · NO CARD NEEDED */}
                 <div
                   style={{
-                    fontSize: '10px',
+                    fontSize: '12px',
                     fontWeight: 600,
                     letterSpacing: '0.07em',
                     textTransform: 'uppercase',
