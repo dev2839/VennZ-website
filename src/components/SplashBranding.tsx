@@ -65,8 +65,8 @@ export const SplashBranding: React.FC<SplashBrandingProps> = ({ className = '' }
             src="/vennz-logo.png"
             alt="VennZ"
             style={{
-              maxHeight: '100px',
-              maxWidth: 'min(360px, 85vw)',
+              maxHeight: 'clamp(115px, 16vh, 145px)',
+              maxWidth: 'min(460px, 90vw)',
               width: 'auto',
               height: 'auto',
               objectFit: 'contain',

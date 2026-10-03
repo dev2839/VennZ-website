@@ -172,62 +172,209 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
         transition: 'background-color 0.3s ease',
       }}
     >
-      {/* Trending Ambient Gradient Mesh Background with purple glow */}
+      {/* Trending Ambient Gradient Mesh Background with rich purple depth */}
       <div
         style={{
           position: 'absolute',
           inset: 0,
           background: isDark
-            ? 'radial-gradient(ellipse at 50% 12%, rgba(107, 45, 102, 0.38) 0%, rgba(35, 12, 33, 0.6) 42%, rgba(20, 8, 19, 1) 100%)'
-            : 'radial-gradient(ellipse at 50% 10%, rgba(222, 203, 217, 0.45) 0%, rgba(244, 236, 227, 0.65) 50%, rgba(250, 246, 240, 1) 100%)',
+            ? 'radial-gradient(ellipse at 50% 18%, rgba(118, 48, 110, 0.42) 0%, rgba(50, 16, 46, 0.65) 38%, rgba(20, 8, 19, 1) 90%)'
+            : 'radial-gradient(ellipse at 50% 12%, rgba(222, 203, 217, 0.5) 0%, rgba(244, 236, 227, 0.7) 48%, rgba(250, 246, 240, 1) 100%)',
           pointerEvents: 'none',
           zIndex: 0,
         }}
       />
 
-      {/* Decorative Subtle Intersecting Venn Aura */}
+      {/* Elegant Geometric Venn Diagram Wireframe & Glowing Overlap Lens (Directly related to VennZ) */}
       <div
         style={{
           position: 'absolute',
-          top: '40px',
+          top: '3%',
           left: '50%',
           transform: 'translateX(-50%)',
-          width: 'min(900px, 95vw)',
-          height: 'min(600px, 80vh)',
+          width: 'min(980px, 96vw)',
+          height: 'min(640px, 85vh)',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
           pointerEvents: 'none',
           zIndex: 1,
-          opacity: isDark ? 0.45 : 0.6,
         }}
       >
+        <svg
+          viewBox="0 0 900 600"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          style={{
+            width: '100%',
+            height: '100%',
+            animation: 'slowBreathe 8s ease-in-out infinite',
+            transformOrigin: 'center center',
+          }}
+        >
+          <defs>
+            {/* Gradient for left circle */}
+            <linearGradient id="vennStrokeLeft" x1="160" y1="120" x2="560" y2="480" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor={isDark ? '#B78EB8' : '#8A4F7D'} stopOpacity="0.45" />
+              <stop offset="100%" stopColor={isDark ? '#FAF5EE' : '#FAF6F0'} stopOpacity="0.12" />
+            </linearGradient>
+
+            {/* Gradient for right circle */}
+            <linearGradient id="vennStrokeRight" x1="340" y1="120" x2="740" y2="480" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor={isDark ? '#E8A99B' : '#C47A96'} stopOpacity="0.4" />
+              <stop offset="100%" stopColor={isDark ? '#FAF5EE' : '#FAF6F0'} stopOpacity="0.12" />
+            </linearGradient>
+
+            {/* Central intersection glowing lens fill */}
+            <radialGradient id="lensGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor={isDark ? '#D7AFD2' : '#B78EB8'} stopOpacity={isDark ? '0.22' : '0.18'} />
+              <stop offset="60%" stopColor={isDark ? '#6B2D66' : '#E8A99B'} stopOpacity={isDark ? '0.12' : '0.08'} />
+              <stop offset="100%" stopColor={isDark ? '#6B2D66' : '#E8A99B'} stopOpacity="0" />
+            </radialGradient>
+
+            {/* Filter for subtle luminous bloom */}
+            <filter id="bloomSoft" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="8" result="blur" />
+              <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            </filter>
+          </defs>
+
+          {/* Central Intersection Lens (the meaningful connection overlap of VennZ) */}
+          <path
+            d="M 450 178 A 200 200 0 0 1 450 422 A 200 200 0 0 1 450 178 Z"
+            fill="url(#lensGlow)"
+            filter="url(#bloomSoft)"
+          />
+
+          {/* Left Circle - Primary Wireframe */}
+          <circle
+            cx="370"
+            cy="300"
+            r="200"
+            stroke="url(#vennStrokeLeft)"
+            strokeWidth="1.2"
+            opacity={isDark ? '0.65' : '0.55'}
+          />
+          {/* Left Circle - Concentric Orbital Dash */}
+          <circle
+            cx="370"
+            cy="300"
+            r="208"
+            stroke={isDark ? 'rgba(215, 175, 210, 0.25)' : 'rgba(73, 40, 61, 0.18)'}
+            strokeWidth="1"
+            strokeDasharray="4 8"
+          />
+
+          {/* Right Circle - Primary Wireframe */}
+          <circle
+            cx="530"
+            cy="300"
+            r="200"
+            stroke="url(#vennStrokeRight)"
+            strokeWidth="1.2"
+            opacity={isDark ? '0.65' : '0.55'}
+          />
+          {/* Right Circle - Concentric Orbital Dash */}
+          <circle
+            cx="530"
+            cy="300"
+            r="208"
+            stroke={isDark ? 'rgba(232, 169, 155, 0.25)' : 'rgba(73, 40, 61, 0.18)'}
+            strokeWidth="1"
+            strokeDasharray="4 8"
+          />
+
+          {/* Intersection Apex Nodes (Top and Bottom connection points) */}
+          <circle
+            cx="450"
+            cy="178"
+            r="3.5"
+            fill={isDark ? '#FAF5EE' : 'var(--color-mulberry)'}
+            opacity="0.8"
+          />
+          <circle
+            cx="450"
+            cy="178"
+            r="8"
+            stroke={isDark ? '#FAF5EE' : 'var(--color-mulberry)'}
+            strokeWidth="0.8"
+            opacity="0.35"
+          />
+
+          <circle
+            cx="450"
+            cy="422"
+            r="3.5"
+            fill={isDark ? '#FAF5EE' : 'var(--color-mulberry)'}
+            opacity="0.8"
+          />
+          <circle
+            cx="450"
+            cy="422"
+            r="8"
+            stroke={isDark ? '#FAF5EE' : 'var(--color-mulberry)'}
+            strokeWidth="0.8"
+            opacity="0.35"
+          />
+        </svg>
+
+        {/* Ambient Floating Stardust / Celestial Sparks */}
         <div
           style={{
             position: 'absolute',
-            width: 'clamp(260px, 45vw, 420px)',
-            height: 'clamp(260px, 45vw, 420px)',
-            borderRadius: '50%',
-            transform: 'translateX(-80px)',
-            background: isDark
-              ? 'radial-gradient(circle, rgba(139, 44, 116, 0.22) 0%, transparent 70%)'
-              : 'radial-gradient(circle, rgba(183, 142, 184, 0.22) 0%, transparent 70%)',
-            filter: 'blur(35px)',
+            top: '22%',
+            left: '12%',
+            color: isDark ? '#FAF5EE' : 'var(--color-mulberry)',
+            fontSize: '15px',
+            opacity: 0.55,
+            animation: 'celestialPulse 5s ease-in-out infinite',
+            pointerEvents: 'none',
           }}
-        />
+        >
+          ✦
+        </div>
         <div
           style={{
             position: 'absolute',
-            width: 'clamp(260px, 45vw, 420px)',
-            height: 'clamp(260px, 45vw, 420px)',
-            borderRadius: '50%',
-            transform: 'translateX(80px)',
-            background: isDark
-              ? 'radial-gradient(circle, rgba(107, 45, 102, 0.22) 0%, transparent 70%)'
-              : 'radial-gradient(circle, rgba(232, 169, 155, 0.25) 0%, transparent 70%)',
-            filter: 'blur(35px)',
+            top: '30%',
+            right: '14%',
+            color: isDark ? '#EADDCF' : 'var(--color-mulberry)',
+            fontSize: '13px',
+            opacity: 0.5,
+            animation: 'celestialPulse 6s ease-in-out 1.5s infinite',
+            pointerEvents: 'none',
           }}
-        />
+        >
+          ✦
+        </div>
+        <div
+          style={{
+            position: 'absolute',
+            bottom: '24%',
+            left: '18%',
+            color: isDark ? '#D7AFD2' : 'var(--color-mulberry)',
+            fontSize: '11px',
+            opacity: 0.45,
+            animation: 'celestialPulse 5.5s ease-in-out 3s infinite',
+            pointerEvents: 'none',
+          }}
+        >
+          ✦
+        </div>
+        <div
+          style={{
+            position: 'absolute',
+            bottom: '20%',
+            right: '20%',
+            color: isDark ? '#FAF5EE' : 'var(--color-mulberry)',
+            fontSize: '14px',
+            opacity: 0.5,
+            animation: 'celestialPulse 4.8s ease-in-out 2.2s infinite',
+            pointerEvents: 'none',
+          }}
+        >
+          ✦
+        </div>
       </div>
 
       {/* Optional Mobile Status Bar */}
