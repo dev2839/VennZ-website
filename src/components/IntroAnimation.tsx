@@ -1,243 +1,202 @@
 import React, { useEffect, useState } from 'react';
+import { useAuth } from '../context/AuthContext';
 
 interface IntroAnimationProps {
   onComplete: () => void;
-  appearanceMode?: 'ivory' | 'after-dark';
-  /** Total animation duration before initiating fade exit */
-  durationMs?: number;
+  /** Display duration in ms before starting exit fade */
+  duration?: number;
 }
-
-interface LetterItem {
-  id: string;
-  char: string;
-  src: string;
-  width: number; // proportional width
-  delay: number; // staggered entrance delay in ms
-  initialRotation: number;
-}
-
-const LETTERS: LetterItem[] = [
-  { id: 'v', char: 'V', src: '/letters/aligned_V.png', width: 286, delay: 200, initialRotation: -12 },
-  { id: 'e', char: 'e', src: '/letters/aligned_e.png', width: 113, delay: 550, initialRotation: 8 },
-  { id: 'n', char: 'n', src: '/letters/aligned_n.png', width: 112, delay: 900, initialRotation: -8 },
-  { id: 'z', char: 'Z', src: '/letters/aligned_Z.png', width: 151, delay: 1250, initialRotation: 14 },
-];
 
 export const IntroAnimation: React.FC<IntroAnimationProps> = ({
   onComplete,
-  appearanceMode = 'after-dark',
-  durationMs = 4200,
+  duration = 3400,
 }) => {
+  const { appearanceMode } = useAuth();
   const isDark = appearanceMode === 'after-dark';
-  const [phase, setPhase] = useState<'idle' | 'letters-entering' | 'unified-glow' | 'exiting'>('idle');
-  const [visibleLetters, setVisibleLetters] = useState<Set<string>>(new Set());
 
-  // Palette according to current theme
-  const bgColor = isDark ? '#080407' : '#FAF6F0';
-  const auraGlow = isDark
-    ? 'radial-gradient(circle, rgba(138, 48, 120, 0.42) 0%, rgba(73, 40, 61, 0.22) 42%, rgba(8, 4, 7, 0) 72%)'
-    : 'radial-gradient(circle, rgba(232, 169, 155, 0.55) 0%, rgba(179, 154, 174, 0.35) 45%, rgba(250, 246, 240, 0) 75%)';
-  const ringColor = isDark ? 'rgba(220, 180, 215, 0.16)' : 'rgba(73, 40, 61, 0.12)';
-  const shadowFilter = isDark
-    ? 'drop-shadow(0 20px 40px rgba(107, 45, 102, 0.55)) drop-shadow(0 0 50px rgba(183, 142, 184, 0.32))'
-    : 'drop-shadow(0 14px 32px rgba(73, 40, 61, 0.25)) drop-shadow(0 0 40px rgba(232, 169, 155, 0.35))';
+  // Phases:
+  // 1. 'initial': pre-mount resting state
+  // 2. 'reveal': soft pulse rings expand, logo scales up smoothly with glow
+  // 3. 'shimmer': trending luxury prismatic light beam sweeps across logo
+  // 4. 'exiting': scale gently towards viewer with seamless cinematic fade out
+  const [phase, setPhase] = useState<'initial' | 'reveal' | 'shimmer' | 'exiting'>('initial');
 
   useEffect(() => {
-    // 1. Start letter cascade immediately
+    // Start reveal almost immediately with smooth physics
     const startTimer = setTimeout(() => {
-      setPhase('letters-entering');
-    }, 100);
+      setPhase('reveal');
+    }, 80);
 
-    // Stagger reveal each letter
-    const letterTimers = LETTERS.map((letter) => {
-      return setTimeout(() => {
-        setVisibleLetters((prev) => new Set(prev).add(letter.id));
-      }, letter.delay);
-    });
+    // Trigger trending specular shimmer sweep halfway through
+    const shimmerTimer = setTimeout(() => {
+      setPhase('shimmer');
+    }, 1100);
 
-    // 2. Lock into unified shimmer glow state after all letters land
-    const glowTimer = setTimeout(() => {
-      setPhase('unified-glow');
-    }, 2200);
-
-    // 3. Initiate smooth slow cinematic exit
+    // Start graceful exit
     const exitTimer = setTimeout(() => {
       setPhase('exiting');
-    }, durationMs);
+    }, duration);
 
-    // 4. Complete callback after exit transition finishes
+    // Unmount upon complete fade out
     const finishTimer = setTimeout(() => {
       onComplete();
-    }, durationMs + 900);
+    }, duration + 850);
 
     return () => {
       clearTimeout(startTimer);
-      clearTimeout(glowTimer);
+      clearTimeout(shimmerTimer);
       clearTimeout(exitTimer);
       clearTimeout(finishTimer);
-      letterTimers.forEach(clearTimeout);
     };
-  }, [durationMs, onComplete]);
+  }, [duration, onComplete]);
+
+  // Color schemes based on user theme request:
+  // "if the theme is light then keep bg cream else keep dark bg"
+  const bgColor = isDark ? '#080507' : '#FAF6F0';
+  const ambientGlow = isDark
+    ? 'radial-gradient(circle at center, rgba(139, 44, 116, 0.45) 0%, rgba(68, 20, 60, 0.22) 42%, rgba(8, 5, 7, 0) 72%)'
+    : 'radial-gradient(circle at center, rgba(199, 148, 185, 0.38) 0%, rgba(230, 209, 219, 0.22) 45%, rgba(250, 246, 240, 0) 75%)';
+  const ringBorder = isDark ? 'rgba(215, 175, 210, 0.14)' : 'rgba(107, 45, 102, 0.12)';
+  const innerRingBorder = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(73, 40, 61, 0.07)';
+  const skipColor = isDark ? 'rgba(243, 238, 233, 0.45)' : 'rgba(73, 40, 61, 0.45)';
+  const skipHover = isDark ? '#FFFFFF' : 'var(--color-mulberry)';
 
   return (
     <div
-      aria-label="VennZ Launch Animation"
+      role="dialog"
+      aria-modal="true"
+      aria-label="VennZ"
       style={{
         position: 'fixed',
         inset: 0,
         zIndex: 99999,
         backgroundColor: bgColor,
         display: 'flex',
-        flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
         overflow: 'hidden',
-        transition: 'opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1)',
+        transition: 'opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), transform 0.85s cubic-bezier(0.16, 1, 0.3, 1)',
         opacity: phase === 'exiting' ? 0 : 1,
         transform: phase === 'exiting' ? 'scale(1.06)' : 'scale(1)',
         pointerEvents: phase === 'exiting' ? 'none' : 'auto',
       }}
     >
-      {/* Dynamic atmospheric ambient glow */}
+      {/* Ambient Pulsing Aura Backdrop */}
       <div
         style={{
           position: 'absolute',
-          width: 'min(90vw, 820px)',
-          height: 'min(90vw, 820px)',
+          width: 'min(900px, 95vw)',
+          height: 'min(900px, 95vw)',
           borderRadius: '50%',
-          background: auraGlow,
-          filter: 'blur(70px)',
-          transform: phase === 'idle' ? 'scale(0.5)' : phase === 'exiting' ? 'scale(1.4)' : 'scale(1.15)',
-          transition: 'transform 3.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 2.8s ease',
-          opacity: phase === 'exiting' ? 0 : 0.9,
+          background: ambientGlow,
+          filter: 'blur(60px)',
+          transform: phase === 'initial' ? 'scale(0.5)' : phase === 'exiting' ? 'scale(1.3)' : 'scale(1.05)',
+          transition: 'transform 3.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 2.5s ease',
+          opacity: phase === 'exiting' ? 0 : 1,
           pointerEvents: 'none',
         }}
       />
 
-      {/* Elegant geometric orbital circles */}
+      {/* Modern Trending Animated Geometric Concentric Halos */}
       <div
         style={{
           position: 'absolute',
-          width: '560px',
-          height: '560px',
+          width: 'min(580px, 86vw)',
+          height: 'min(580px, 86vw)',
           borderRadius: '50%',
-          border: `1.5px solid ${ringColor}`,
-          transform: phase === 'idle' ? 'scale(0.8) rotate(0deg)' : 'scale(1.12) rotate(60deg)',
-          transition: 'transform 4s cubic-bezier(0.16, 1, 0.3, 1), opacity 2s ease',
-          opacity: phase === 'exiting' ? 0 : 0.65,
+          border: `1px solid ${ringBorder}`,
+          transform: phase === 'initial' ? 'scale(0.65) rotate(0deg)' : 'scale(1.08) rotate(35deg)',
+          transition: 'transform 3.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 2s ease',
+          opacity: phase === 'exiting' ? 0 : 0.8,
           pointerEvents: 'none',
         }}
       />
       <div
         style={{
           position: 'absolute',
-          width: '740px',
-          height: '740px',
+          width: 'min(760px, 94vw)',
+          height: 'min(760px, 94vw)',
           borderRadius: '50%',
-          border: `1px dashed ${ringColor}`,
-          transform: phase === 'idle' ? 'scale(0.85) rotate(0deg)' : 'scale(1.08) rotate(-45deg)',
-          transition: 'transform 4.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 2s ease',
-          opacity: phase === 'exiting' ? 0 : 0.45,
+          border: `1px dashed ${innerRingBorder}`,
+          transform: phase === 'initial' ? 'scale(0.75) rotate(0deg)' : 'scale(1.04) rotate(-25deg)',
+          transition: 'transform 3.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 2s ease',
+          opacity: phase === 'exiting' ? 0 : 0.6,
           pointerEvents: 'none',
         }}
       />
 
-      {/* Main Logo Container - Big & prominent (NO extra subtitles, only VennZ) */}
+      {/* Main Hero Container: ONLY VennZ Logo (Much Bigger) */}
       <div
         style={{
           position: 'relative',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          width: '92vw',
-          maxWidth: '680px', // prominently large
-          filter: shadowFilter,
-          transition: 'transform 1.8s cubic-bezier(0.16, 1, 0.3, 1)',
-          transform:
-            phase === 'unified-glow'
-              ? 'scale(1.03)'
-              : phase === 'exiting'
-              ? 'scale(1.08)'
-              : 'scale(1)',
+          width: '100%',
+          maxWidth: '92vw',
         }}
       >
-        {/* Shimmer light sweep on top */}
         <div
           style={{
             position: 'relative',
-            display: 'flex',
+            display: 'inline-flex',
             alignItems: 'center',
             justifyContent: 'center',
-            width: '100%',
             overflow: 'hidden',
-            padding: '24px 0',
+            borderRadius: '24px',
+            padding: '28px 48px',
+            transform:
+              phase === 'initial'
+                ? 'scale(0.78) translateY(24px)'
+                : phase === 'exiting'
+                ? 'scale(1.08) translateY(-6px)'
+                : 'scale(1) translateY(0)',
+            opacity: phase === 'initial' ? 0 : 1,
+            transition:
+              'transform 1.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.3s cubic-bezier(0.16, 1, 0.3, 1)',
+            filter: isDark
+              ? 'drop-shadow(0 18px 48px rgba(139, 44, 116, 0.55)) drop-shadow(0 0 55px rgba(215, 175, 210, 0.3))'
+              : 'drop-shadow(0 16px 36px rgba(73, 40, 61, 0.22)) drop-shadow(0 0 40px rgba(183, 142, 184, 0.2))',
           }}
         >
-          {/* Individual letter reveal stream */}
-          <div
+          {/* Much Bigger VennZ Logo */}
+          <img
+            src="/vennz-logo.png"
+            alt="VennZ"
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '100%',
-              gap: '0px',
+              display: 'block',
+              width: 'clamp(280px, 58vw, 620px)',
+              height: 'auto',
+              maxHeight: 'clamp(95px, 22vh, 180px)',
+              objectFit: 'contain',
+              userSelect: 'none',
             }}
-          >
-            {LETTERS.map((letter) => {
-              const isVisible = visibleLetters.has(letter.id);
-              return (
-                <div
-                  key={letter.id}
-                  style={{
-                    flex: letter.width,
-                    maxWidth: `${(letter.width / 662) * 100}%`,
-                    position: 'relative',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    transform: isVisible
-                      ? 'translateY(0) scale(1) rotate(0deg)'
-                      : `translateY(45px) scale(0.65) rotate(${letter.initialRotation}deg)`,
-                    opacity: isVisible ? 1 : 0,
-                    filter: isVisible ? 'blur(0px)' : 'blur(8px)',
-                    transition:
-                      'transform 1.1s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), filter 0.85s cubic-bezier(0.16, 1, 0.3, 1)',
-                  }}
-                >
-                  <img
-                    src={letter.src}
-                    alt={letter.char}
-                    style={{
-                      width: '100%',
-                      height: 'auto',
-                      display: 'block',
-                      objectFit: 'contain',
-                      userSelect: 'none',
-                    }}
-                  />
-                </div>
-              );
-            })}
-          </div>
+          />
 
-          {/* Luxury Shimmer Sweep Line across the letters */}
+          {/* Trending Prismatic Specular Shimmer Beam */}
           <div
             style={{
               position: 'absolute',
-              top: 0,
-              bottom: 0,
-              width: '45%',
-              background:
-                'linear-gradient(105deg, transparent 0%, rgba(255, 255, 255, 0.15) 30%, rgba(255, 255, 255, 0.75) 50%, rgba(255, 255, 255, 0.15) 70%, transparent 100%)',
+              top: '-30%',
+              bottom: '-30%',
+              left: 0,
+              width: '65%',
+              background: isDark
+                ? 'linear-gradient(110deg, transparent 15%, rgba(255, 255, 255, 0.15) 35%, rgba(255, 255, 255, 0.85) 50%, rgba(255, 220, 245, 0.95) 53%, rgba(255, 255, 255, 0.3) 65%, transparent 85%)'
+                : 'linear-gradient(110deg, transparent 15%, rgba(255, 255, 255, 0.4) 35%, rgba(255, 255, 255, 0.95) 50%, rgba(245, 230, 240, 0.95) 53%, rgba(255, 255, 255, 0.5) 65%, transparent 85%)',
+              mixBlendMode: isDark ? 'screen' : 'overlay',
+              transform:
+                phase === 'initial' || phase === 'reveal'
+                  ? 'translateX(-160%) skewX(-18deg)'
+                  : 'translateX(260%) skewX(-18deg)',
+              transition: 'transform 1.9s cubic-bezier(0.2, 0.8, 0.2, 1)',
               pointerEvents: 'none',
-              transform: phase === 'unified-glow' ? 'translateX(260%)' : 'translateX(-160%)',
-              transition: 'transform 2.2s cubic-bezier(0.16, 1, 0.3, 1)',
             }}
           />
         </div>
       </div>
 
-      {/* Discreet Skip Button */}
+      {/* Accessible Skip Button */}
       <button
         type="button"
         onClick={onComplete}
@@ -246,22 +205,20 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({
           bottom: '36px',
           background: 'transparent',
           border: 'none',
-          color: isDark ? 'rgba(243, 238, 233, 0.35)' : 'rgba(73, 40, 61, 0.45)',
-          fontSize: '11px',
+          color: skipColor,
+          fontSize: '11.5px',
           letterSpacing: '0.18em',
           textTransform: 'uppercase',
+          fontWeight: 500,
+          fontFamily: 'var(--font-sans)',
           cursor: 'pointer',
-          padding: '8px 16px',
+          padding: '8px 18px',
           borderRadius: '999px',
-          transition: 'color 0.2s ease, opacity 0.2s ease',
-          opacity: phase === 'idle' ? 0 : 1,
+          transition: 'color 0.25s ease, opacity 0.3s ease',
+          opacity: phase === 'initial' ? 0 : 0.85,
         }}
-        onMouseEnter={(e) =>
-          (e.currentTarget.style.color = isDark ? 'rgba(243, 238, 233, 0.85)' : 'var(--color-mulberry)')
-        }
-        onMouseLeave={(e) =>
-          (e.currentTarget.style.color = isDark ? 'rgba(243, 238, 233, 0.35)' : 'rgba(73, 40, 61, 0.45)')
-        }
+        onMouseEnter={(e) => (e.currentTarget.style.color = skipHover)}
+        onMouseLeave={(e) => (e.currentTarget.style.color = skipColor)}
       >
         Skip
       </button>
