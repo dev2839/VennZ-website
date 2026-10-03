@@ -1,4 +1,5 @@
 import React from 'react';
+import { useAuth } from '../context/AuthContext';
 
 interface SplashActionsProps {
   onGetStarted?: () => void;
@@ -11,6 +12,9 @@ export const SplashActions: React.FC<SplashActionsProps> = ({
   onLogin,
   className = '',
 }) => {
+  const { appearanceMode } = useAuth();
+  const isDark = appearanceMode === 'after-dark';
+
   return (
     <div
       className={className}
@@ -39,10 +43,10 @@ export const SplashActions: React.FC<SplashActionsProps> = ({
             fontFamily: 'var(--font-sans)',
             fontSize: '17px',
             fontWeight: 400,
-            color: 'rgba(243, 238, 233, 0.95)',
+            color: isDark ? 'rgba(243, 238, 233, 0.95)' : '#6B5765',
             letterSpacing: '0.02em',
             margin: '0 0 2px 0',
-            textShadow: '0 2px 10px rgba(0, 0, 0, 0.8)',
+            textShadow: isDark ? '0 2px 10px rgba(0, 0, 0, 0.8)' : 'none',
           }}
         >
           Not just a dating app.
@@ -54,10 +58,10 @@ export const SplashActions: React.FC<SplashActionsProps> = ({
             fontFamily: 'var(--font-script)',
             fontSize: '44px',
             lineHeight: 1.15,
-            color: '#FFFFFF',
+            color: isDark ? '#FFFFFF' : 'var(--color-mulberry)',
             margin: 0,
             letterSpacing: '0.02em',
-            textShadow: '0 2px 14px rgba(0, 0, 0, 0.85)',
+            textShadow: isDark ? '0 2px 14px rgba(0, 0, 0, 0.85)' : 'none',
           }}
         >
           A community.
@@ -125,8 +129,8 @@ export const SplashActions: React.FC<SplashActionsProps> = ({
           marginTop: '20px',
           fontFamily: 'var(--font-sans)',
           fontSize: '16px',
-          color: 'rgba(243, 238, 233, 0.92)',
-          textShadow: '0 1px 6px rgba(0, 0, 0, 0.6)',
+          color: isDark ? 'rgba(243, 238, 233, 0.92)' : '#7A6874',
+          textShadow: isDark ? '0 1px 6px rgba(0, 0, 0, 0.6)' : 'none',
           display: 'flex',
           alignItems: 'center',
           gap: '6px',
@@ -139,19 +143,19 @@ export const SplashActions: React.FC<SplashActionsProps> = ({
           style={{
             background: 'transparent',
             border: 'none',
-            color: '#FFFFFF',
+            color: isDark ? '#FFFFFF' : 'var(--color-mulberry)',
             fontFamily: 'var(--font-sans)',
             fontSize: '16px',
-            fontWeight: 600,
+            fontWeight: 700,
             cursor: 'pointer',
             padding: 0,
             textDecoration: 'underline',
             textUnderlineOffset: '3px',
-            textDecorationColor: 'rgba(243, 238, 233, 0.8)',
+            textDecorationColor: isDark ? 'rgba(243, 238, 233, 0.8)' : 'var(--color-mulberry)',
             transition: 'opacity 0.15s ease',
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.opacity = '0.8';
+            e.currentTarget.style.opacity = '0.75';
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.opacity = '1';

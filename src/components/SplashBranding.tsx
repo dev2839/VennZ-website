@@ -1,10 +1,14 @@
 import React from 'react';
+import { useAuth } from '../context/AuthContext';
 
 interface SplashBrandingProps {
   className?: string;
 }
 
 export const SplashBranding: React.FC<SplashBrandingProps> = ({ className = '' }) => {
+  const { appearanceMode } = useAuth();
+  const isDark = appearanceMode === 'after-dark';
+
   return (
     <div
       className={className}
@@ -13,7 +17,7 @@ export const SplashBranding: React.FC<SplashBrandingProps> = ({ className = '' }
         flexDirection: 'column',
         alignItems: 'center',
         textAlign: 'center',
-        color: '#FFFFFF',
+        color: isDark ? '#FFFFFF' : 'var(--color-mulberry)',
         padding: '0 20px',
       }}
     >
@@ -23,12 +27,14 @@ export const SplashBranding: React.FC<SplashBrandingProps> = ({ className = '' }
           src="/vennz-logo.png"
           alt="VennZ"
           style={{
-            maxHeight: '76px',
-            maxWidth: '280px',
+            maxHeight: '80px',
+            maxWidth: '300px',
             width: 'auto',
             height: 'auto',
             objectFit: 'contain',
-            filter: 'drop-shadow(0 6px 16px rgba(0, 0, 0, 0.4))',
+            filter: isDark
+              ? 'drop-shadow(0 6px 18px rgba(0, 0, 0, 0.6)) brightness(1.08)'
+              : 'drop-shadow(0 4px 14px rgba(73, 40, 61, 0.18))',
           }}
         />
       </div>
@@ -41,9 +47,9 @@ export const SplashBranding: React.FC<SplashBrandingProps> = ({ className = '' }
           lineHeight: '1.45',
           fontWeight: 400,
           letterSpacing: '0.02em',
-          color: 'rgba(243, 238, 233, 0.95)',
-          marginTop: '18px',
-          textShadow: '0 1px 8px rgba(0, 0, 0, 0.6)',
+          color: isDark ? 'rgba(243, 238, 233, 0.95)' : 'var(--color-mulberry)',
+          marginTop: '16px',
+          textShadow: isDark ? '0 1px 8px rgba(0, 0, 0, 0.6)' : 'none',
         }}
       >
         Real people. Meaningful
