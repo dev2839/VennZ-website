@@ -74,19 +74,14 @@ export const SplashBranding: React.FC<SplashBrandingProps> = ({ className = '' }
               zIndex: 2,
               filter: isDark
                 ? [
-                    // Top rim highlight for 3D bevel
-                    'drop-shadow(0 -1.5px 1px rgba(255, 230, 255, 0.5))',
-                    // Primary extrusion step
-                    'drop-shadow(0 3px 5px rgba(20, 5, 18, 0.8))',
-                    // Secondary depth drop
-                    'drop-shadow(0 10px 18px rgba(0, 0, 0, 0.85))',
-                    // Ambient purple glow
-                    'drop-shadow(0 20px 35px rgba(139, 44, 116, 0.5))',
+                    // Pure 3D depth shadow with dark occlusion and soft plum ambient (no white cutout fringe)
+                    'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.9))',
+                    'drop-shadow(0 14px 28px rgba(0, 0, 0, 0.85))',
+                    'drop-shadow(0 26px 45px rgba(25, 5, 22, 0.6))',
                   ].join(' ')
                 : [
-                    'drop-shadow(0 -1.5px 1px rgba(255, 255, 255, 0.9))',
-                    'drop-shadow(0 3px 4px rgba(73, 40, 61, 0.35))',
-                    'drop-shadow(0 12px 20px rgba(73, 40, 61, 0.18))',
+                    'drop-shadow(0 3px 5px rgba(73, 40, 61, 0.35))',
+                    'drop-shadow(0 12px 22px rgba(73, 40, 61, 0.18))',
                     'drop-shadow(0 0 20px rgba(183, 142, 184, 0.2))',
                   ].join(' '),
             }}
@@ -102,7 +97,7 @@ export const SplashBranding: React.FC<SplashBrandingProps> = ({ className = '' }
           lineHeight: '1.4',
           fontWeight: 500,
           letterSpacing: '0.02em',
-          color: isDark ? 'rgba(243, 238, 233, 0.96)' : 'var(--color-mulberry)',
+          color: isDark ? '#FAF5EE' : 'var(--color-mulberry)',
           marginTop: '16px',
           whiteSpace: 'nowrap',
           textShadow: isDark ? '0 1px 8px rgba(0, 0, 0, 0.6)' : 'none',

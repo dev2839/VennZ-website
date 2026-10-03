@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { StatusBar } from './StatusBar';
 import { SplashBranding } from './SplashBranding';
 import { SplashActions } from './SplashActions';
@@ -99,10 +99,12 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
   const { appearanceMode } = useAuth();
   const isDark = appearanceMode === 'after-dark';
 
-  // Active highlighted card index for the 3D coverflow carousel
+  // Active card index for the 3D coverflow carousel
   const [activeIndex, setActiveIndex] = useState(2); // Center card active by default
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [scrollY, setScrollY] = useState(0);
+
+  const lastSwipeTime = useRef(0);
+  const touchStartX = useRef<number | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -112,12 +114,50 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Handle touchpad left/right swipe via wheel event
+  const handleWheel = (e: React.WheelEvent) => {
+    const absX = Math.abs(e.deltaX);
+    const absY = Math.abs(e.deltaY);
+
+    // Trigger on horizontal trackpad swipe or Shift+Wheel
+    if (absX > 18 || (e.shiftKey && absY > 18)) {
+      const now = Date.now();
+      if (now - lastSwipeTime.current > 260) {
+        lastSwipeTime.current = now;
+        const delta = absX > 18 ? e.deltaX : e.deltaY;
+        if (delta > 0) {
+          // Swipe left / move forward
+          setActiveIndex((prev) => Math.min(PILLARS.length - 1, prev + 1));
+        } else {
+          // Swipe right / move backward
+          setActiveIndex((prev) => Math.max(0, prev - 1));
+        }
+      }
+    }
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) {
+      if (diff > 0) {
+        // Swiped left
+        setActiveIndex((prev) => Math.min(PILLARS.length - 1, prev + 1));
+      } else {
+        // Swiped right
+        setActiveIndex((prev) => Math.max(0, prev - 1));
+      }
+    }
+    touchStartX.current = null;
+  };
+
   // Compute smooth dynamic scroll scale: shrinks slightly as user scrolls down, enlarges back on top
   const headerScale = Math.max(0.86, 1 - scrollY * 0.0008);
   const headerOpacity = Math.max(0.72, 1 - scrollY * 0.001);
-
-  // The currently focused card is either what the user is hovering over or the active index
-  const focusedIndex = hoveredIndex !== null ? hoveredIndex : activeIndex;
 
   return (
     <div
@@ -201,6 +241,10 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
       {/* SECTION 1: HERO VIEWPORT (Immediately visible on first open) */}
       {/* Takes 100vh so that the curated experience cards are only visible upon scrolling down */}
       {/* ======================================================== */}
+      {/* ======================================================== */}
+      {/* SECTION 1: HERO VIEWPORT (Immediately visible on first open) */}
+      {/* Takes full 100vh with VennZ and CTA placed directly in the center */}
+      {/* ======================================================== */}
       <section
         style={{
           position: 'relative',
@@ -208,8 +252,8 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
           width: '100%',
           maxWidth: '1360px',
           margin: '0 auto',
-          minHeight: 'calc(100vh - 68px)',
-          padding: '40px 20px 32px',
+          minHeight: '100vh',
+          padding: '24px 20px',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -220,11 +264,11 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
         {/* Editorial Branding Lockup with VennZ centered and Dynamic Scroll Zoom */}
         <div
           style={{
-            marginBottom: '36px',
+            marginBottom: '32px',
             textAlign: 'center',
             transform: `scale(${headerScale})`,
             opacity: headerOpacity,
-            transformOrigin: 'top center',
+            transformOrigin: 'center center',
             transition: 'transform 0.15s ease-out, opacity 0.15s ease-out',
             width: '100%',
             display: 'flex',
@@ -237,31 +281,8 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
         </div>
 
         {/* Action Suite (CTA: Get Started with Purple & Cream Shade) */}
-        <div style={{ width: '100%', maxWidth: '440px', marginBottom: '24px' }}>
+        <div style={{ width: '100%', maxWidth: '440px' }}>
           <SplashActions onGetStarted={onGetStarted} onLogin={onLogin} />
-        </div>
-
-        {/* Subtle Scroll Down Indicator to cue the user to slide down */}
-        <div
-          style={{
-            marginTop: 'auto',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '6px',
-            color: isDark ? 'rgba(215, 175, 210, 0.7)' : 'rgba(73, 40, 61, 0.65)',
-            fontSize: '11px',
-            letterSpacing: '0.18em',
-            textTransform: 'uppercase',
-            fontWeight: 600,
-            paddingBottom: '12px',
-            animation: 'bounceSlow 2.4s infinite',
-          }}
-        >
-          <span>Scroll to explore</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M7 10l5 5 5-5" />
-          </svg>
         </div>
       </section>
 
@@ -297,7 +318,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
               fontWeight: 700,
               letterSpacing: '0.22em',
               textTransform: 'uppercase',
-              color: isDark ? '#D7AFD2' : 'var(--color-mulberry)',
+              color: isDark ? '#FAF5EE' : 'var(--color-mulberry)',
             }}
           >
             CURATED EXCELLENCE
@@ -307,7 +328,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
               fontFamily: 'var(--font-serif)',
               fontSize: 'clamp(24px, 3.2vw, 34px)',
               fontWeight: 500,
-              color: isDark ? 'var(--color-warm-porcelain)' : 'var(--color-mulberry)',
+              color: isDark ? '#FAF5EE' : 'var(--color-mulberry)',
               margin: '8px 0 0 0',
             }}
           >
@@ -315,8 +336,11 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
           </h3>
         </div>
 
-        {/* 3D Staged Card Stage with Hover-Zoom Interaction (No Arrows) */}
+        {/* 3D Staged Card Stage with Touchpad Left/Right Swipe Interaction (No Cursor Hover Auto-Slide) */}
         <div
+          onWheel={handleWheel}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
           style={{
             position: 'relative',
             width: '100%',
@@ -326,15 +350,16 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
             justifyContent: 'center',
             overflow: 'visible',
             padding: '24px 0',
+            touchAction: 'pan-y',
           }}
         >
           {PILLARS.map((pillar, idx) => {
-            // Distance from current focused card
-            const offset = idx - focusedIndex;
+            // Distance from active center card
+            const offset = idx - activeIndex;
             const isCardFocused = offset === 0;
 
             // 3D positioning matching user reference:
-            // Focused/Hovered: scale(1.12), zIndex 20, center translate, zero rotation, fully opaque, vibrant purple glow
+            // Center card: scale(1.12), zIndex 20, center translate, zero rotation, fully opaque, vibrant purple glow
             // Outer cards: scaled down (0.82), rotated on Y-axis (18deg / -18deg), translated outwards, blended into purple background
             const translateX = offset * 210;
             const translateZ = isCardFocused ? 90 : -70 * Math.abs(offset);
@@ -346,8 +371,6 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
             return (
               <div
                 key={pillar.id}
-                onMouseEnter={() => setHoveredIndex(idx)}
-                onMouseLeave={() => setHoveredIndex(null)}
                 onClick={() => setActiveIndex(idx)}
                 style={{
                   position: 'absolute',
@@ -356,7 +379,11 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
                   borderRadius: '24px',
                   background: pillar.cardGradient,
                   border: isCardFocused
-                    ? '1.5px solid rgba(245, 230, 245, 0.55)'
+                    ? isDark
+                      ? '1.5px solid rgba(250, 245, 238, 0.75)'
+                      : '1.5px solid rgba(245, 230, 245, 0.55)'
+                    : isDark
+                    ? '1px solid rgba(250, 245, 238, 0.2)'
                     : '1px solid rgba(215, 175, 210, 0.15)',
                   boxShadow: isCardFocused
                     ? `0 28px 60px rgba(0, 0, 0, 0.7), 0 0 45px ${pillar.glowColor}`
@@ -408,9 +435,10 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
                       textTransform: 'uppercase',
                       padding: '4px 10px',
                       borderRadius: '999px',
-                      backgroundColor: 'rgba(255, 255, 255, 0.14)',
+                      backgroundColor: isDark ? 'rgba(250, 245, 238, 0.16)' : 'rgba(255, 255, 255, 0.14)',
+                      border: isDark ? '1px solid rgba(250, 245, 238, 0.25)' : 'none',
                       backdropFilter: 'blur(8px)',
-                      color: '#F4ECE3',
+                      color: '#FAF5EE',
                     }}
                   >
                     {pillar.badge}
@@ -421,9 +449,9 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
                       fontFamily: 'var(--font-sans)',
                       fontSize: '13px',
                       fontWeight: 700,
-                      color: '#FFFFFF',
+                      color: '#FAF5EE',
                       letterSpacing: '0.04em',
-                      backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                      backgroundColor: 'rgba(0, 0, 0, 0.35)',
                       padding: '4px 8px',
                       borderRadius: '8px',
                     }}
@@ -449,15 +477,15 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
                       width: '60px',
                       height: '60px',
                       borderRadius: '50%',
-                      backgroundColor: 'rgba(255, 255, 255, 0.12)',
+                      backgroundColor: isDark ? 'rgba(250, 245, 238, 0.12)' : 'rgba(255, 255, 255, 0.12)',
                       backdropFilter: 'blur(10px)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       fontSize: '26px',
-                      color: '#FFFFFF',
+                      color: '#FAF5EE',
                       boxShadow: '0 8px 22px rgba(0, 0, 0, 0.35)',
-                      border: '1px solid rgba(255, 255, 255, 0.2)',
+                      border: isDark ? '1px solid rgba(250, 245, 238, 0.3)' : '1px solid rgba(255, 255, 255, 0.2)',
                       marginBottom: '10px',
                       transition: 'transform 0.3s ease',
                       transform: isCardFocused ? 'scale(1.08)' : 'scale(1)',
@@ -471,7 +499,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
                       fontWeight: 600,
                       letterSpacing: '0.16em',
                       textTransform: 'uppercase',
-                      color: 'rgba(243, 238, 233, 0.75)',
+                      color: isDark ? '#FAF5EE' : 'rgba(243, 238, 233, 0.85)',
                     }}
                   >
                     {pillar.category}
@@ -485,7 +513,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
                       fontFamily: 'var(--font-serif)',
                       fontSize: '20px',
                       fontWeight: 600,
-                      color: '#FFFFFF',
+                      color: '#FAF5EE',
                       margin: '0 0 6px 0',
                       letterSpacing: '0.01em',
                       lineHeight: '1.2',
@@ -498,7 +526,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
                       fontFamily: 'var(--font-sans)',
                       fontSize: '12px',
                       lineHeight: '1.45',
-                      color: 'rgba(243, 238, 233, 0.88)',
+                      color: isDark ? '#FAF5EE' : 'rgba(243, 238, 233, 0.88)',
                       margin: 0,
                     }}
                   >
@@ -510,15 +538,47 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
           })}
         </div>
 
+        {/* Carousel pagination indicator dots */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            marginTop: '28px',
+          }}
+        >
+          {PILLARS.map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => setActiveIndex(i)}
+              aria-label={`Go to slide ${i + 1}`}
+              style={{
+                width: activeIndex === i ? '24px' : '8px',
+                height: '8px',
+                borderRadius: '999px',
+                backgroundColor: activeIndex === i
+                  ? (isDark ? '#FAF5EE' : 'var(--color-mulberry)')
+                  : (isDark ? 'rgba(250, 245, 238, 0.3)' : 'rgba(73, 40, 61, 0.25)'),
+                border: 'none',
+                padding: 0,
+                cursor: 'pointer',
+                transition: 'all 0.25s ease',
+              }}
+            />
+          ))}
+        </div>
+
         {/* --- LEARN HOW VENNZ WORKS BUTTON PLACED STRICTLY BELOW CARDS --- */}
         {onLearnHowItWorks && (
-          <div style={{ textAlign: 'center', marginTop: '42px', marginBottom: '16px' }}>
+          <div style={{ textAlign: 'center', marginTop: '36px', marginBottom: '16px' }}>
             <button
               type="button"
               onClick={onLearnHowItWorks}
               style={{
                 background: isDark ? 'rgba(40, 18, 38, 0.75)' : 'rgba(255, 255, 255, 0.9)',
-                border: isDark ? '1px solid rgba(215, 175, 210, 0.25)' : '1px solid rgba(73, 40, 61, 0.18)',
+                border: isDark ? '1px solid rgba(250, 245, 238, 0.35)' : '1px solid rgba(73, 40, 61, 0.18)',
                 color: isDark ? '#FAF5EE' : 'var(--color-mulberry)',
                 padding: '13px 32px',
                 borderRadius: '999px',
@@ -532,12 +592,12 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.borderColor = isDark ? '#EADDCF' : 'var(--color-mulberry)';
+                e.currentTarget.style.borderColor = isDark ? '#FAF5EE' : 'var(--color-mulberry)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'translateY(0)';
                 e.currentTarget.style.borderColor = isDark
-                  ? 'rgba(215, 175, 210, 0.25)'
+                  ? 'rgba(250, 245, 238, 0.35)'
                   : 'rgba(73, 40, 61, 0.18)';
               }}
             >
