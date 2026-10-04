@@ -577,7 +577,11 @@ export const App: React.FC = () => {
       )}
 
       {/* Universal Desktop & Mobile Web Navigation Bar */}
-      <WebNavbar currentPath={currentPath} onNavigate={navigate} />
+      {currentPath !== '/join' &&
+        currentPath !== '/login' &&
+        currentPath !== '/join/verify-code' && (
+          <WebNavbar currentPath={currentPath} onNavigate={navigate} />
+        )}
 
       {/* Main Responsive Web Content Area */}
       <main

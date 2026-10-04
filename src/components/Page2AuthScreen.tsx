@@ -492,8 +492,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
             display: 'flex',
             flexDirection: 'column',
             zIndex: 20,
-            marginTop: 'clamp(48px, 6vh, 0px)',
-            marginBottom: 'clamp(24px, 4vh, 0px)',
+            margin: 'clamp(24px, 4vh, 48px) 0',
           }}
         >
           {/* Card Brand Header */}

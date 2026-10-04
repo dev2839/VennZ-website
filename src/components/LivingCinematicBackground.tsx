@@ -262,6 +262,7 @@ export const LivingCinematicBackground: React.FC<LivingCinematicBackgroundProps>
             objectFit: 'cover',
             objectPosition: 'center 42%',
             display: 'block',
+            filter: 'brightness(128%) contrast(106%) saturate(120%)',
           }}
         />
       </div>
@@ -295,7 +296,7 @@ export const LivingCinematicBackground: React.FC<LivingCinematicBackgroundProps>
             bottom: 0,
             left: '20px',
             display: 'block',
-            filter: 'contrast(106%) saturate(110%)',
+            filter: 'brightness(130%) contrast(108%) saturate(122%)',
           }}
         />
       </div>
@@ -312,9 +313,9 @@ export const LivingCinematicBackground: React.FC<LivingCinematicBackgroundProps>
           zIndex: 3,
           pointerEvents: 'none',
           backgroundImage: `
-            radial-gradient(ellipse 85% 14% at 48% 28%, rgba(249, 170, 173, 0.28) 0%, transparent 68%),
-            radial-gradient(ellipse 95% 10% at 52% 55%, rgba(199, 87, 124, 0.2) 0%, transparent 72%),
-            repeating-linear-gradient(180deg, rgba(249, 170, 173, 0.12) 0px, transparent 4px, rgba(161, 82, 95, 0.08) 7px, transparent 15px)
+            radial-gradient(ellipse 85% 14% at 48% 28%, rgba(249, 170, 173, 0.35) 0%, transparent 68%),
+            radial-gradient(ellipse 95% 10% at 52% 55%, rgba(199, 87, 124, 0.25) 0%, transparent 72%),
+            repeating-linear-gradient(180deg, rgba(249, 170, 173, 0.16) 0px, transparent 4px, rgba(161, 82, 95, 0.1) 7px, transparent 15px)
           `,
           maskImage: 'linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.6) 55%, transparent 100%)',
           WebkitMaskImage: 'linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.6) 55%, transparent 100%)',
@@ -348,7 +349,7 @@ export const LivingCinematicBackground: React.FC<LivingCinematicBackgroundProps>
             objectFit: 'cover',
             objectPosition: 'center 42%',
             display: 'block',
-            filter: 'contrast(108%) brightness(99%)',
+            filter: 'contrast(106%) brightness(122%) saturate(115%)',
           }}
         />
       </div>
@@ -379,7 +380,7 @@ export const LivingCinematicBackground: React.FC<LivingCinematicBackgroundProps>
             objectFit: 'cover',
             objectPosition: 'center 42%',
             display: 'block',
-            filter: 'contrast(106%)',
+            filter: 'contrast(106%) brightness(122%) saturate(115%)',
           }}
         />
       </div>
@@ -395,7 +396,7 @@ export const LivingCinematicBackground: React.FC<LivingCinematicBackgroundProps>
           height: '24%',
           zIndex: 6,
           pointerEvents: 'none',
-          background: 'radial-gradient(ellipse 70% 60% at 48% 50%, rgba(249, 170, 173, 0.26) 0%, rgba(199, 87, 124, 0.2) 35%, rgba(70, 32, 55, 0) 75%)',
+          background: 'radial-gradient(ellipse 70% 60% at 48% 50%, rgba(249, 170, 173, 0.36) 0%, rgba(199, 87, 124, 0.28) 35%, rgba(70, 32, 55, 0) 75%)',
           mixBlendMode: 'screen',
         }}
       />
@@ -411,12 +412,12 @@ export const LivingCinematicBackground: React.FC<LivingCinematicBackgroundProps>
           height: '40%',
           zIndex: 7,
           pointerEvents: 'none',
-          background: 'radial-gradient(ellipse 80% 40% at 65% 15%, rgba(161, 82, 95, 0.14) 0%, rgba(70, 32, 55, 0) 70%)',
+          background: 'radial-gradient(ellipse 80% 40% at 65% 15%, rgba(161, 82, 95, 0.16) 0%, rgba(70, 32, 55, 0) 70%)',
           mixBlendMode: 'screen',
         }}
       />
 
-      {/* Layer 8: Cinematic Color Grading Vignette (Pure VennZ luxury palette integration) */}
+      {/* Layer 8: Cinematic Color Grading Vignette (Clearer, luminous, retaining card readability) */}
       <div
         style={{
           position: 'absolute',
@@ -424,9 +425,8 @@ export const LivingCinematicBackground: React.FC<LivingCinematicBackgroundProps>
           zIndex: 8,
           pointerEvents: 'none',
           background: `
-            radial-gradient(circle at 75% 50%, rgba(20, 14, 28, 0.28) 0%, rgba(20, 14, 28, 0.7) 75%, rgba(20, 14, 28, 0.92) 100%),
-            linear-gradient(to bottom, rgba(20, 14, 28, 0.65) 0%, rgba(70, 32, 55, 0.12) 30%, rgba(20, 14, 28, 0.4) 80%, rgba(20, 14, 28, 0.9) 100%),
-            linear-gradient(to right, rgba(20, 14, 28, 0.4) 0%, transparent 50%, rgba(20, 14, 28, 0.65) 100%)
+            radial-gradient(ellipse at 82% 50%, rgba(20, 14, 28, 0.48) 0%, rgba(20, 14, 28, 0.2) 48%, transparent 72%),
+            linear-gradient(to bottom, rgba(20, 14, 28, 0.22) 0%, transparent 16%, transparent 78%, rgba(20, 14, 28, 0.48) 100%)
           `,
         }}
       />
