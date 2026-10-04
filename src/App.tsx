@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { IntroAnimation } from './components/IntroAnimation';
 import { SplashScreen } from './components/SplashScreen';
 import { Page2AuthScreen } from './components/Page2AuthScreen';
-import { Page3OtpScreen } from './components/Page3OtpScreen';
 import { Page4ProfileScreen } from './components/Page4ProfileScreen';
 import { Page5IdentityScreen } from './components/Page5IdentityScreen';
 import { Page6ContextScreen } from './components/Page6ContextScreen';
@@ -131,17 +130,12 @@ export const App: React.FC = () => {
   const handleLogin = () => navigate('/login');
   const handleLearnHowItWorks = () => setLearnModalOpen(true);
 
-  // Handlers for Page 2
+  // Handlers for Page 2 (Unified Phone & OTP Authentication)
   const handleBackToSplash = () => navigate('/');
-  const handleContinueToOtp = (_phone: string) => navigate('/join/verify-code');
-
-  // Handlers for Page 3 (OTP)
-  const handleBackToAuth = () => navigate('/login');
-  const handleChangeNumber = () => navigate('/login');
   const handleOtpSuccess = () => navigate('/join/profile');
 
   // Handlers for Page 4 (Profile Setup)
-  const handleBackToOtp = () => navigate('/join/verify-code');
+  const handleBackToOtp = () => navigate('/login');
   const handleProfileSuccess = () => navigate('/join/identity-verification');
 
   // Handlers for Page 5 (Verify Identity)
@@ -212,7 +206,7 @@ export const App: React.FC = () => {
       return (
         <Page2AuthScreen
           onBack={handleBackToSplash}
-          onContinueToOtp={handleContinueToOtp}
+          onSuccess={handleOtpSuccess}
           showStatusBar={showStatusBar}
           showHomeIndicator={showHomeIndicator}
         />
@@ -221,9 +215,9 @@ export const App: React.FC = () => {
 
     if (currentPath === '/join/verify-code') {
       return (
-        <Page3OtpScreen
-          onBack={handleBackToAuth}
-          onChangeNumber={handleChangeNumber}
+        <Page2AuthScreen
+          initialStep="otp"
+          onBack={handleBackToSplash}
           onSuccess={handleOtpSuccess}
           showStatusBar={showStatusBar}
           showHomeIndicator={showHomeIndicator}
@@ -601,9 +595,12 @@ export const App: React.FC = () => {
       </main>
 
       {/* Comprehensive Editorial Web Footer */}
-      {currentPath !== '/member/chat' && (
-        <WebFooter onNavigate={(path) => navigate(path as RoutePath)} />
-      )}
+      {currentPath !== '/member/chat' &&
+        currentPath !== '/join' &&
+        currentPath !== '/login' &&
+        currentPath !== '/join/verify-code' && (
+          <WebFooter onNavigate={(path) => navigate(path as RoutePath)} />
+        )}
 
       {/* Learn How It Works Modal (Page 1) */}
       {learnModalOpen && (
