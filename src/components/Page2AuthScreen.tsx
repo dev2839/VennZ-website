@@ -182,8 +182,18 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
       if (index < 5) {
         otpInputRefs.current[index + 1]?.focus();
       }
+    } else if (numeric.length === 2) {
+      // User typed over existing character -> use newest typed digit
+      const lastChar = numeric.slice(-1);
+      const next = [...otpDigits];
+      next[index] = lastChar;
+      setOtpDigits(next);
+      if (otpError) setOtpError(null);
+      if (index < 5) {
+        otpInputRefs.current[index + 1]?.focus();
+      }
     } else {
-      // Pasted multiple digits
+      // Pasted full code
       handleOtpPasteString(numeric, index);
     }
   };
@@ -204,6 +214,11 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
   };
 
   const handleOtpKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleVerifyOtp();
+      return;
+    }
     if (e.key === 'Backspace') {
       if (!otpDigits[index] && index > 0) {
         const next = [...otpDigits];
@@ -261,7 +276,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
           } else if (onContinueToOtp) {
             onContinueToOtp(phoneNumber);
           }
-        }, 650);
+        }, 120);
       } else {
         setOtpError(result.error || 'Incorrect code. In demo mode, use 123456');
       }
@@ -398,7 +413,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
           aria-label="Back to welcome page"
           style={{
             position: 'absolute',
-            top: 'clamp(20px, 3vh, 32px)',
+            top: 'clamp(76px, 10vh, 88px)',
             left: 'clamp(20px, 4vw, 48px)',
             display: 'inline-flex',
             alignItems: 'center',
@@ -853,9 +868,11 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
                 {/* The 6 Digit Boxes */}
                 <div
                   style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(6, 1fr)',
-                    gap: 'clamp(6px, 1.8vw, 10px)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: 'clamp(6px, 1.6vw, 10px)',
+                    width: '100%',
                   }}
                 >
                   {otpDigits.map((digit, index) => (
@@ -867,16 +884,21 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
                       type="text"
                       inputMode="numeric"
                       pattern="[0-9]*"
-                      maxLength={1}
+                      maxLength={2}
                       value={digit}
                       onChange={(e) => handleOtpDigitChange(index, e.target.value)}
                       onKeyDown={(e) => handleOtpKeyDown(index, e)}
-                      onFocus={() => setFocusedOtpIndex(index)}
+                      onFocus={() => {
+                        setFocusedOtpIndex(index);
+                        otpInputRefs.current[index]?.select();
+                      }}
                       className="otp-input-box"
                       style={{
-                        height: 'clamp(48px, 6.5vw, 56px)',
+                        flex: 1,
+                        maxWidth: '52px',
+                        height: '46px',
                         textAlign: 'center',
-                        fontSize: '22px',
+                        fontSize: '18px',
                         fontWeight: 600,
                         color: '#FDF3F5',
                         backgroundColor: 'rgba(70, 32, 55, 0.55)',
@@ -889,7 +911,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
                             ? 'rgba(199, 87, 124, 0.65)'
                             : 'rgba(161, 82, 95, 0.35)'
                         }`,
-                        borderRadius: '12px',
+                        borderRadius: '11px',
                         outline: 'none',
                         transition: 'all 0.18s ease',
                         boxShadow: digit ? '0 0 8px rgba(199, 87, 124, 0.2)' : 'none',

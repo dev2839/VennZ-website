@@ -15,26 +15,20 @@ class OtpService {
    */
   public async verifyOtp(code: string): Promise<OtpVerificationResult> {
     // Artificial small latency to simulate authentic network validation
-    await new Promise((resolve) => setTimeout(resolve, 200));
+    await new Promise((resolve) => setTimeout(resolve, 150));
 
     const sanitized = code.trim();
 
-    if (sanitized.length !== 6) {
+    if (sanitized.length !== 6 || !/^\d{6}$/.test(sanitized)) {
       return {
         success: false,
         error: 'Please enter all six digits of the verification code.',
       };
     }
 
-    if (sanitized === DEMO_OTP) {
-      return {
-        success: true,
-      };
-    }
-
+    // In demo / prototype mode, accept any valid 6-digit code or DEMO_OTP
     return {
-      success: false,
-      error: 'Incorrect verification code. Please try again.',
+      success: true,
     };
   }
 

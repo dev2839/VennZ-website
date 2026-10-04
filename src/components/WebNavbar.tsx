@@ -139,15 +139,20 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
 
   const currentScreenTitle = allScreens.find((s) => s.path === currentPath)?.label || 'VennZ';
 
-  const borderBottom = isDark ? 'rgba(161, 82, 95, 0.22)' : 'rgba(199, 87, 124, 0.15)';
-  const textColor = isDark ? '#FDF3F5' : '#462037';
-  const activeColor = isDark ? '#F9AAAD' : '#A1525F';
-  const inactiveColor = isDark ? '#D4A2AC' : '#683A46';
+  const isAuthPage =
+    currentPath === '/join' ||
+    currentPath === '/login' ||
+    currentPath === '/join/verify-code';
+
+  const borderBottom = isDark || isAuthPage ? 'rgba(161, 82, 95, 0.22)' : 'rgba(199, 87, 124, 0.15)';
+  const textColor = isDark || isAuthPage ? '#FDF3F5' : '#462037';
+  const activeColor = isDark || isAuthPage ? '#F9AAAD' : '#A1525F';
+  const inactiveColor = isDark || isAuthPage ? '#D4A2AC' : '#683A46';
 
   return (
     <header
       style={{
-        position: 'sticky',
+        position: isAuthPage ? 'absolute' : 'sticky',
         top: 0,
         left: 0,
         right: 0,
