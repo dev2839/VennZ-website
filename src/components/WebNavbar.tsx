@@ -152,7 +152,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
   return (
     <header
       style={{
-        position: isAuthPage ? 'absolute' : 'sticky',
+        position: 'sticky',
         top: 0,
         left: 0,
         right: 0,

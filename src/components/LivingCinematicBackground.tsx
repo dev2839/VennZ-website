@@ -67,8 +67,8 @@ export const LivingCinematicBackground: React.FC<LivingCinematicBackgroundProps>
           object-fit: cover;
           object-position: center 42%;
           display: block;
-          opacity: 0.72;
-          filter: brightness(98%) contrast(106%) saturate(112%);
+          opacity: 0.96;
+          filter: brightness(114%) contrast(106%) saturate(122%);
           transform: translateZ(0);
           will-change: transform;
         }
@@ -114,12 +114,12 @@ export const LivingCinematicBackground: React.FC<LivingCinematicBackgroundProps>
           zIndex: 2,
           pointerEvents: 'none',
           background:
-            'radial-gradient(ellipse 75% 65% at 50% 50%, rgba(249, 170, 173, 0.22) 0%, rgba(199, 87, 124, 0.14) 45%, transparent 80%)',
+            'radial-gradient(ellipse 75% 65% at 50% 50%, rgba(249, 170, 173, 0.28) 0%, rgba(199, 87, 124, 0.16) 45%, transparent 80%)',
           mixBlendMode: 'screen',
         }}
       />
 
-      {/* Layer 3: Comprehensive Multi-Zone Scrim Overlay (Ensures 100% Clear Text Legibility) */}
+      {/* Layer 3: Balanced Feathered Scrim (Preserves Full Video Luminosity with Clear Text Readability) */}
       <div
         style={{
           position: 'absolute',
@@ -127,12 +127,12 @@ export const LivingCinematicBackground: React.FC<LivingCinematicBackgroundProps>
           zIndex: 3,
           pointerEvents: 'none',
           background: `
-            /* Left zone scrim: darkens the area behind the "Real people. Meaningful connections." headline */
-            linear-gradient(to right, rgba(20, 14, 28, 0.82) 0%, rgba(20, 14, 28, 0.58) 28%, rgba(20, 14, 28, 0.2) 55%, transparent 75%),
-            /* Right zone soft halo: balances depth behind the authentication card */
-            radial-gradient(ellipse at 82% 50%, rgba(20, 14, 28, 0.6) 0%, rgba(20, 14, 28, 0.28) 45%, transparent 72%),
-            /* Top & bottom framing: protects back button, navigation, and footer spacing */
-            linear-gradient(to bottom, rgba(20, 14, 28, 0.55) 0%, transparent 18%, transparent 78%, rgba(20, 14, 28, 0.72) 100%)
+            /* Left zone scrim: subtle protection behind typography, letting the living sunset motion shine */
+            linear-gradient(to right, rgba(20, 14, 28, 0.52) 0%, rgba(20, 14, 28, 0.2) 36%, transparent 62%),
+            /* Right zone halo: subtle backing behind the frosted glass auth panel */
+            radial-gradient(ellipse at 82% 50%, rgba(20, 14, 28, 0.38) 0%, transparent 68%),
+            /* Gentle top & bottom framing */
+            linear-gradient(to bottom, rgba(20, 14, 28, 0.38) 0%, transparent 16%, transparent 82%, rgba(20, 14, 28, 0.48) 100%)
           `,
         }}
       />

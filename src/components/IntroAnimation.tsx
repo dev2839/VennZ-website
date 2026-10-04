@@ -21,72 +21,30 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) =>
 
   // Phases:
   // 'wave': complete logo visible in center, letters sequentially pulse V -> e -> n -> n -> z in a continuous flowing wave
-  // 'traveling': letters physically travel in formation toward their exact Welcome page coordinates
-  const [phase, setPhase] = useState<'wave' | 'traveling'>('wave');
-  const [travel, setTravel] = useState<{
-    deltaX: number;
-    deltaY: number;
-    scale: number;
-  } | null>(null);
+  // 'dissolving': intro overlay smoothly dissolves in place, keeping the logo perfectly stationary without moving/jumping
+  const [phase, setPhase] = useState<'wave' | 'dissolving'>('wave');
 
-  const initiateTravel = () => {
-    if (phase === 'traveling') return;
+  const initiateComplete = () => {
+    if (phase === 'dissolving') return;
+    setPhase('dissolving');
 
-    // Find the exact location of the VennZ logo on the Welcome page
-    const targetEl =
-      document.getElementById('welcome-vennz-logo-img') ||
-      document.getElementById('welcome-vennz-logo-inner') ||
-      document.getElementById('welcome-vennz-logo-target');
-    const introEl = logoContainerRef.current;
-
-    if (targetEl && introEl) {
-      const targetRect = targetEl.getBoundingClientRect();
-      const introRect = introEl.getBoundingClientRect();
-
-      const targetCenterX = targetRect.left + targetRect.width / 2;
-      const targetCenterY = targetRect.top + targetRect.height / 2;
-      const introCenterX = introRect.left + introRect.width / 2;
-      const introCenterY = introRect.top + introRect.height / 2;
-
-      const deltaX = targetCenterX - introCenterX;
-      const deltaY = targetCenterY - introCenterY;
-      const scale = introRect.width > 0 ? targetRect.width / introRect.width : 0.88;
-
-      setTravel({ deltaX, deltaY, scale });
-    } else {
-      // Natural responsive fallback toward the upper-hero center
-      setTravel({
-        deltaX: 0,
-        deltaY: -(window.innerHeight * 0.16),
-        scale: 0.88,
-      });
-    }
-
-    setPhase('traveling');
-
-    // Exactly when the letters settle into their final position on the Welcome page
+    // Smoothly complete after fade duration without any coordinate translation
     setTimeout(() => {
       onComplete();
-    }, 820);
+    }, 600);
   };
 
   const handleSkip = () => {
-    if (phase === 'traveling') return;
-    initiateTravel();
+    initiateComplete();
   };
 
   useEffect(() => {
     // Letter pulse wave timeline:
-    // V: 0.15s - 0.55s
-    // e: 0.35s - 0.75s
-    // n1: 0.55s - 0.95s
-    // n2: 0.75s - 1.15s
-    // z: 0.95s - 1.35s
-    // Wave completes at 1.35s. Let complete logo rest unified for ~270ms.
-    // At 1.62s, physically transition letters to their Welcome page position.
+    // Wave completes around 1.35s. Let complete logo rest unified for ~250ms.
+    // At 1.6s, smoothly dissolve the intro overlay in place (NO coordinate movement).
     const waveEndTimer = setTimeout(() => {
-      initiateTravel();
-    }, 1620);
+      initiateComplete();
+    }, 1600);
 
     return () => {
       clearTimeout(waveEndTimer);
@@ -112,8 +70,10 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) =>
         inset: 0,
         zIndex: 99999,
         overflow: 'hidden',
-        pointerEvents: phase === 'traveling' ? 'none' : 'auto',
-        cursor: phase === 'traveling' ? 'default' : 'pointer',
+        pointerEvents: phase === 'dissolving' ? 'none' : 'auto',
+        cursor: phase === 'dissolving' ? 'default' : 'pointer',
+        opacity: phase === 'dissolving' ? 0 : 1,
+        transition: 'opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1)',
       }}
     >
       <style>{`
@@ -134,15 +94,13 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) =>
       `}</style>
 
       {/* ======================================================== */}
-      {/* 1. INTRO BACKDROP LAYER (Fades smoothly away during travel) */}
+      {/* 1. INTRO BACKDROP LAYER (Seamless ambient atmosphere)   */}
       {/* ======================================================== */}
       <div
         style={{
           position: 'absolute',
           inset: 0,
           background: bgGradient,
-          opacity: phase === 'traveling' ? 0 : 1,
-          transition: 'opacity 0.80s cubic-bezier(0.22, 1, 0.36, 1)',
           pointerEvents: 'none',
         }}
       >
@@ -166,8 +124,6 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) =>
             alignItems: 'center',
             justifyContent: 'center',
             pointerEvents: 'none',
-            opacity: phase === 'traveling' ? 0 : 1,
-            transition: 'opacity 0.60s ease',
           }}
         >
           {/* Left Venn Circle */}
@@ -240,8 +196,8 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) =>
             padding: '8px 18px',
             borderRadius: '999px',
             transition: 'color 0.25s ease, opacity 0.3s ease',
-            opacity: phase === 'traveling' ? 0 : 0.85,
-            pointerEvents: phase === 'traveling' ? 'none' : 'auto',
+            opacity: phase === 'dissolving' ? 0 : 0.85,
+            pointerEvents: phase === 'dissolving' ? 'none' : 'auto',
           }}
           onMouseEnter={(e) => (e.currentTarget.style.color = skipHover)}
           onMouseLeave={(e) => (e.currentTarget.style.color = skipColor)}
@@ -251,7 +207,7 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) =>
       </div>
 
       {/* ======================================================== */}
-      {/* 2. PHYSICAL TRAVELING LOGO LAYER (Remains 100% OPAQUE)  */}
+      {/* 2. STATIONARY LOGO LAYER (Rock-solid in place, 0 movement) */}
       {/* ======================================================== */}
       <div
         style={{
@@ -270,14 +226,8 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) =>
             position: 'relative',
             width: 'clamp(280px, 50vw, 480px)',
             aspectRatio: '984 / 303',
-            transform: travel
-              ? `translate3d(${travel.deltaX}px, ${travel.deltaY}px, 0) scale(${travel.scale})`
-              : 'translate3d(0, 0, 0) scale(1)',
-            transition: travel
-              ? 'transform 0.82s cubic-bezier(0.16, 1, 0.3, 1)'
-              : 'none',
+            transform: 'translate3d(0, 0, 0) scale(1)',
             transformOrigin: 'center center',
-            willChange: 'transform',
           }}
         >
           {/* Subtle Ground Depth Shadow matching Welcome page */}

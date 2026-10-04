@@ -192,15 +192,13 @@ select:-webkit-autofill {
 
 /* Custom UI Updates - Added animations and styles */
 
-/* Screen Transitions - Ultra-smooth luxury crossfade */
+/* Screen Transitions - Ultra-smooth continuous luxury crossfade (0 position jump) */
 @keyframes pageFadeIn {
   from {
     opacity: 0;
-    transform: translateY(6px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 

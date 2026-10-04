@@ -141,8 +141,9 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
       }
     }
 
-    // Persist phone in auth context
+    // Persist phone in auth context and dispatch OTP
     setPhoneAuth(raw);
+    otpService.sendOtp(raw);
     if (onContinueToOtp) {
       onContinueToOtp(raw);
     }
@@ -152,7 +153,8 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
     setOtpRevealed(true);
     setResendCountdown(30);
     setIsResendActive(false);
-    setResendNotice(null);
+    setResendNotice('Verification code dispatched. (Enter code: 123456 to verify)');
+    setTimeout(() => setResendNotice(null), 5000);
   };
 
   const handleEditPhoneNumber = () => {
@@ -247,10 +249,11 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
 
   const handleResendCode = () => {
     if (!isResendActive) return;
+    otpService.sendOtp(phoneNumber);
     setResendCountdown(30);
     setIsResendActive(false);
-    setResendNotice('A new verification code has been dispatched to your mobile number.');
-    setTimeout(() => setResendNotice(null), 4000);
+    setResendNotice('A new verification code has been dispatched. (Enter code: 123456 to verify)');
+    setTimeout(() => setResendNotice(null), 5000);
   };
 
   const handleVerifyOtp = async (e?: React.FormEvent) => {
@@ -278,7 +281,8 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
           }
         }, 120);
       } else {
-        setOtpError(result.error || 'Incorrect code. In demo mode, use 123456');
+        // Strictly reject wrong OTP: do NOT navigate to next page!
+        setOtpError(result.error || 'Invalid verification code. Please enter the correct code (123456).');
       }
     } catch {
       setOtpError('Verification request failed. Please check connection.');
@@ -329,15 +333,13 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
   return (
     <LivingCinematicBackground>
       <style>{`
-        /* Continuous entrance animation from previous page */
+        /* Continuous entrance animation from previous page (0 coordinate slide) */
         @keyframes continuousEntrance {
           0% {
             opacity: 0;
-            transform: translate3d(28px, 0, 0);
           }
           100% {
             opacity: 1;
-            transform: translate3d(0, 0, 0);
           }
         }
 
@@ -413,7 +415,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
           aria-label="Back to welcome page"
           style={{
             position: 'absolute',
-            top: 'clamp(76px, 10vh, 88px)',
+            top: 'clamp(24px, 4vh, 36px)',
             left: 'clamp(20px, 4vw, 48px)',
             display: 'inline-flex',
             alignItems: 'center',
@@ -467,7 +469,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
               color: '#FDF3F5',
               fontWeight: 400,
               margin: '0 0 14px 0',
-              textShadow: '0 2px 20px rgba(20, 14, 28, 0.8)',
+              textShadow: '0 2px 14px rgba(10, 6, 14, 0.95), 0 0 28px rgba(20, 14, 28, 0.85)',
             }}
           >
             Real people.<br />
@@ -482,8 +484,8 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
               lineHeight: 1.6,
               color: '#F8E2E6',
               margin: 0,
-              opacity: 0.88,
-              textShadow: '0 1px 12px rgba(20, 14, 28, 0.7)',
+              opacity: 0.9,
+              textShadow: '0 1px 12px rgba(10, 6, 14, 0.95), 0 0 18px rgba(20, 14, 28, 0.8)',
             }}
           >
             An invite-only ecosystem with zero anonymous profiles, biometric verification, and human matchmaking.
@@ -556,7 +558,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
               }}
             >
               {otpRevealed
-                ? `Enter the 6-digit code sent to ${countryCode} ${phoneNumber}`
+                ? `Enter the 6-digit code sent to ${countryCode} ${phoneNumber} (Use code: 123456)`
                 : 'Enter your mobile number to begin or continue your membership application.'}
             </p>
           </div>
