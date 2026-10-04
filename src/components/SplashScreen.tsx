@@ -26,43 +26,7 @@ interface PillarItem {
   glowColor: string;
 }
 
-interface StarConfig {
-  top: string;
-  left: string;
-  size: number;
-  opacity: number;
-  duration: string;
-  delay: string;
-  type: 'dot' | 'sparkle';
-}
 
-const FADED_STARS: StarConfig[] = [
-  // Upper hemisphere (hero & branding aura)
-  { top: '7%', left: '12%', size: 10, opacity: 0.32, duration: '4.8s', delay: '0s', type: 'sparkle' },
-  { top: '11%', left: '26%', size: 3, opacity: 0.24, duration: '5.4s', delay: '1.2s', type: 'dot' },
-  { top: '6%', left: '74%', size: 9, opacity: 0.3, duration: '4.6s', delay: '0.8s', type: 'sparkle' },
-  { top: '14%', left: '88%', size: 3, opacity: 0.22, duration: '6.2s', delay: '2.1s', type: 'dot' },
-  { top: '21%', left: '8%', size: 2.5, opacity: 0.28, duration: '5.5s', delay: '1.5s', type: 'dot' },
-  { top: '24%', left: '92%', size: 11, opacity: 0.35, duration: '5s', delay: '2.8s', type: 'sparkle' },
-  { top: '33%', left: '16%', size: 3, opacity: 0.2, duration: '6.6s', delay: '0.4s', type: 'dot' },
-  { top: '30%', left: '84%', size: 2.5, opacity: 0.25, duration: '4.9s', delay: '3.1s', type: 'dot' },
-
-  // Mid hemisphere (transition area)
-  { top: '42%', left: '6%', size: 10, opacity: 0.32, duration: '5.7s', delay: '1.8s', type: 'sparkle' },
-  { top: '46%', left: '94%', size: 3, opacity: 0.24, duration: '6.1s', delay: '0.9s', type: 'dot' },
-  { top: '53%', left: '11%', size: 2.5, opacity: 0.26, duration: '4.7s', delay: '2.4s', type: 'dot' },
-  { top: '56%', left: '89%', size: 9, opacity: 0.3, duration: '5.3s', delay: '1.1s', type: 'sparkle' },
-
-  // Lower hemisphere (card stage & footer area)
-  { top: '67%', left: '14%', size: 3, opacity: 0.22, duration: '5.8s', delay: '2.7s', type: 'dot' },
-  { top: '70%', left: '85%', size: 2.5, opacity: 0.22, duration: '6.3s', delay: '0.3s', type: 'dot' },
-  { top: '78%', left: '9%', size: 10, opacity: 0.34, duration: '5.1s', delay: '1.7s', type: 'sparkle' },
-  { top: '81%', left: '91%', size: 3, opacity: 0.25, duration: '5.6s', delay: '2.5s', type: 'dot' },
-  { top: '87%', left: '21%', size: 2.5, opacity: 0.2, duration: '6.2s', delay: '1.4s', type: 'dot' },
-  { top: '90%', left: '79%', size: 9, opacity: 0.31, duration: '4.8s', delay: '3.3s', type: 'sparkle' },
-  { top: '94%', left: '33%', size: 3, opacity: 0.22, duration: '5.2s', delay: '0.6s', type: 'dot' },
-  { top: '93%', left: '67%', size: 2.5, opacity: 0.24, duration: '5.9s', delay: '2.2s', type: 'dot' },
-];
 
 const PILLARS: PillarItem[] = [
   {
@@ -211,11 +175,11 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
         display: 'flex',
         flexDirection: 'column',
         overflowX: 'hidden',
-        backgroundColor: isDark ? '#100812' : '#ECE0EB',
+        backgroundColor: isDark ? '#100812' : '#F3EBF2',
         transition: 'background-color 0.3s ease',
       }}
     >
-      {/* Dynamic Ambient Gradient Mesh Background (softer purple in dark mode, rich visible purple shade in light mode) */}
+      {/* Dynamic Ambient Gradient Mesh Background (softer purple in dark mode, gentle subtle purple nuance in light mode) */}
       <div
         style={{
           position: 'absolute',
@@ -223,76 +187,14 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
           background: isDark
             ? 'radial-gradient(ellipse at 50% 16%, rgba(70, 26, 65, 0.28) 0%, rgba(28, 11, 26, 0.45) 45%, rgba(16, 8, 18, 1) 95%)'
             : [
-                'radial-gradient(ellipse at 50% 14%, rgba(186, 132, 190, 0.52) 0%, rgba(212, 168, 214, 0.4) 38%, rgba(234, 206, 232, 0.25) 65%, transparent 100%)',
-                'radial-gradient(ellipse at 50% 70%, rgba(172, 114, 176, 0.38) 0%, rgba(206, 160, 208, 0.28) 45%, transparent 80%)',
-                'linear-gradient(180deg, #EFE0EE 0%, #E8D4E6 42%, #EFE1EE 100%)',
+                'radial-gradient(ellipse at 50% 14%, rgba(196, 152, 198, 0.32) 0%, rgba(220, 186, 222, 0.22) 38%, rgba(240, 220, 238, 0.12) 65%, transparent 100%)',
+                'radial-gradient(ellipse at 50% 70%, rgba(185, 138, 188, 0.22) 0%, rgba(218, 184, 220, 0.15) 45%, transparent 80%)',
+                'linear-gradient(180deg, #F6EEF5 0%, #EFE4EE 42%, #F6EEF5 100%)',
               ].join(', '),
           pointerEvents: 'none',
           zIndex: 0,
         }}
       />
-
-
-
-      {/* Slightly Faded Background Stars / Constellations on Welcome Page */}
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          overflow: 'hidden',
-          pointerEvents: 'none',
-          zIndex: 1,
-        }}
-      >
-        {FADED_STARS.map((star, i) => {
-          const starColor = isDark
-            ? `rgba(250, 245, 238, ${star.opacity})`
-            : `rgba(122, 60, 114, ${star.opacity})`;
-
-          return (
-            <div
-              key={i}
-              style={{
-                position: 'absolute',
-                top: star.top,
-                left: star.left,
-                color: starColor,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                animation: `starTwinkle ${star.duration} ease-in-out infinite ${star.delay}`,
-                userSelect: 'none',
-              }}
-            >
-              {star.type === 'sparkle' ? (
-                <span
-                  style={{
-                    fontSize: `${star.size}px`,
-                    lineHeight: 1,
-                    textShadow: isDark
-                      ? '0 0 6px rgba(250, 245, 238, 0.35)'
-                      : '0 0 6px rgba(183, 142, 184, 0.35)',
-                  }}
-                >
-                  ✦
-                </span>
-              ) : (
-                <div
-                  style={{
-                    width: `${star.size}px`,
-                    height: `${star.size}px`,
-                    borderRadius: '50%',
-                    backgroundColor: starColor,
-                    boxShadow: isDark
-                      ? '0 0 4px rgba(250, 245, 238, 0.3)'
-                      : '0 0 4px rgba(183, 142, 184, 0.3)',
-                  }}
-                />
-              )}
-            </div>
-          );
-        })}
-      </div>
 
 
 

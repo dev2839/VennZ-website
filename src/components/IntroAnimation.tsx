@@ -7,19 +7,25 @@ interface IntroAnimationProps {
   duration?: number;
 }
 
+const LOGO_LETTERS = [
+  { id: 'V', src: '/letters/letter_V.png', origin: '13.26% 49.17%', delay: 0.18 },
+  { id: 'e', src: '/letters/letter_e.png', origin: '33.49% 55.78%', delay: 0.52 },
+  { id: 'n1', src: '/letters/letter_n1.png', origin: '50.97% 59.74%', delay: 0.86 },
+  { id: 'n2', src: '/letters/letter_n2.png', origin: '69.51% 60.23%', delay: 1.20 },
+  { id: 'z', src: '/letters/letter_z.png', origin: '88.16% 43.07%', delay: 1.54 },
+];
+
 export const IntroAnimation: React.FC<IntroAnimationProps> = ({
   onComplete,
-  duration = 2100,
+  duration = 2250,
 }) => {
   const { appearanceMode } = useAuth();
   const isDark = appearanceMode === 'after-dark';
 
   // Phases:
-  // 1. 'initial': pre-mount resting state
-  // 2. 'reveal': Venn diagram circles confluence into center, logo gently settles
-  // 3. 'shimmer': specular light wave sweeps through the 3D logo
-  // 4. 'exiting': buttery smooth crossfade dissolve into the welcome page
-  const [phase, setPhase] = useState<'initial' | 'reveal' | 'shimmer' | 'exiting'>('initial');
+  // 'visible': complete logo visible from start, letters pulse sequentially V -> e -> n -> n -> z
+  // 'exiting': buttery smooth crossfade dissolve into the welcome page
+  const [phase, setPhase] = useState<'visible' | 'exiting'>('visible');
 
   const handleSkip = () => {
     if (phase === 'exiting') return;
@@ -30,49 +36,26 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({
   };
 
   useEffect(() => {
-    // Start reveal with elegant easing
-    const startTimer = setTimeout(() => {
-      setPhase('reveal');
-    }, 40);
-
-    // Specular shimmer sweep across the 3D logo
-    const shimmerTimer = setTimeout(() => {
-      setPhase('shimmer');
-    }, 700);
-
-    // Exit transition
+    // Exit transition starts after the letter pulse wave has completed and rested
     const exitTimer = setTimeout(() => {
       setPhase('exiting');
     }, duration);
 
-    // Unmount
+    // Unmount and hand off to main welcome page
     const finishTimer = setTimeout(() => {
       onComplete();
     }, duration + 650);
 
     return () => {
-      clearTimeout(startTimer);
-      clearTimeout(shimmerTimer);
       clearTimeout(exitTimer);
       clearTimeout(finishTimer);
     };
   }, [duration, onComplete]);
 
-  // Color schemes matching the welcome page ambient palette exactly
+  // Color schemes: soft subtle purple nuance in light mode, deep twilight in dark mode
   const bgGradient = isDark
     ? 'linear-gradient(180deg, #180917 0%, #140813 50%, #100610 100%)'
-    : 'linear-gradient(180deg, #EAD6E8 0%, #EFE1ED 45%, #ECE0EB 100%)';
-
-  // Venn diagram circle styling (faint, geometric, interconnected)
-  const vennStrokeA = isDark ? 'rgba(215, 175, 210, 0.22)' : 'rgba(107, 45, 102, 0.18)';
-  const vennFillA = isDark ? 'rgba(107, 45, 102, 0.08)' : 'rgba(107, 45, 102, 0.04)';
-
-  const vennStrokeB = isDark ? 'rgba(235, 195, 225, 0.2)' : 'rgba(139, 44, 116, 0.16)';
-  const vennFillB = isDark ? 'rgba(73, 40, 61, 0.08)' : 'rgba(73, 40, 61, 0.04)';
-
-  const ambientGlow = isDark
-    ? 'radial-gradient(circle at center, rgba(145, 45, 125, 0.32) 0%, rgba(68, 20, 60, 0.15) 42%, transparent 72%)'
-    : 'radial-gradient(circle at center, rgba(200, 145, 185, 0.3) 0%, rgba(225, 195, 215, 0.18) 42%, transparent 72%)';
+    : 'linear-gradient(180deg, #F0E3EE 0%, #F5ECF4 45%, #F3EBF2 100%)';
 
   const skipColor = isDark ? 'rgba(243, 238, 233, 0.55)' : 'rgba(73, 40, 61, 0.6)';
   const skipHover = isDark ? '#FFFFFF' : 'var(--color-mulberry)';
@@ -99,111 +82,36 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({
         cursor: 'pointer',
       }}
     >
-      {/* Subtle Atmospheric Light Vignette & Soft Radiance (Top purple to bottom cream enhancer) */}
+      <style>{`
+        @keyframes vennzLetterWave {
+          0% {
+            transform: scale(1);
+            z-index: 2;
+          }
+          50% {
+            transform: scale(1.17);
+            z-index: 10;
+          }
+          100% {
+            transform: scale(1);
+            z-index: 2;
+          }
+        }
+      `}</style>
+
+      {/* Subtle Atmospheric Light Vignette (Soft background glow, no floating circles or discs) */}
       <div
         style={{
           position: 'absolute',
           inset: 0,
           background: isDark
-            ? 'radial-gradient(circle at 50% 20%, rgba(139, 44, 116, 0.28) 0%, transparent 60%)'
-            : 'radial-gradient(circle at 50% 18%, rgba(175, 115, 160, 0.22) 0%, rgba(250, 245, 238, 0.3) 65%, transparent 100%)',
+            ? 'radial-gradient(ellipse at 50% 20%, rgba(139, 44, 116, 0.25) 0%, transparent 65%)'
+            : 'radial-gradient(ellipse at 50% 18%, rgba(185, 135, 188, 0.16) 0%, rgba(248, 240, 247, 0.3) 65%, transparent 100%)',
           pointerEvents: 'none',
         }}
       />
 
-      {/* Ambient Pulsing Aura Backdrop behind logo */}
-      <div
-        style={{
-          position: 'absolute',
-          width: 'min(900px, 95vw)',
-          height: 'min(900px, 95vw)',
-          borderRadius: '50%',
-          background: ambientGlow,
-          filter: 'blur(70px)',
-          transform: phase === 'initial' ? 'scale(0.5)' : 'scale(1.05)',
-          transition: 'transform 2.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.8s ease',
-          opacity: phase === 'exiting' ? 0.3 : 1,
-          pointerEvents: 'none',
-        }}
-      />
-
-      {/* --- MINIMAL FAINT VENN DIAGRAM IN BACKGROUND --- */}
-      <div
-        style={{
-          position: 'absolute',
-          width: 'min(820px, 94vw)',
-          height: 'min(500px, 62vh)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          pointerEvents: 'none',
-          opacity: phase === 'initial' ? 0 : phase === 'exiting' ? 0 : 0.9,
-          transition: 'opacity 2.2s cubic-bezier(0.16, 1, 0.3, 1)',
-        }}
-      >
-        {/* Venn Circle Left */}
-        <div
-          style={{
-            position: 'absolute',
-            width: 'clamp(270px, 44vw, 460px)',
-            height: 'clamp(270px, 44vw, 460px)',
-            borderRadius: '50%',
-            border: `1.5px solid ${vennStrokeA}`,
-            backgroundColor: vennFillA,
-            transform:
-              phase === 'initial'
-                ? 'translateX(-115px) scale(0.85)'
-                : 'translateX(-95px) scale(1)',
-            transition: 'transform 2.2s cubic-bezier(0.16, 1, 0.3, 1)',
-            backdropFilter: 'blur(1.5px)',
-            boxShadow: isDark
-              ? 'inset 0 0 45px rgba(107, 45, 102, 0.16)'
-              : 'inset 0 0 40px rgba(160, 100, 145, 0.18)',
-          }}
-        />
-
-        {/* Venn Circle Right */}
-        <div
-          style={{
-            position: 'absolute',
-            width: 'clamp(270px, 44vw, 460px)',
-            height: 'clamp(270px, 44vw, 460px)',
-            borderRadius: '50%',
-            border: `1.5px solid ${vennStrokeB}`,
-            backgroundColor: vennFillB,
-            transform:
-              phase === 'initial'
-                ? 'translateX(115px) scale(0.85)'
-                : 'translateX(95px) scale(1)',
-            transition: 'transform 2.2s cubic-bezier(0.16, 1, 0.3, 1)',
-            backdropFilter: 'blur(1.5px)',
-            boxShadow: isDark
-              ? 'inset 0 0 45px rgba(139, 44, 116, 0.16)'
-              : 'inset 0 0 40px rgba(160, 100, 145, 0.18)',
-          }}
-        />
-
-        {/* Venn Intersection Subtle Radial Focus Accent */}
-        <div
-          style={{
-            position: 'absolute',
-            width: 'clamp(150px, 26vw, 260px)',
-            height: 'clamp(210px, 34vw, 340px)',
-            borderRadius: '50%',
-            background: isDark
-              ? 'radial-gradient(ellipse at center, rgba(215, 175, 210, 0.16) 0%, transparent 70%)'
-              : 'radial-gradient(ellipse at center, rgba(139, 44, 116, 0.12) 0%, transparent 70%)',
-            filter: 'blur(16px)',
-            transform:
-              phase === 'initial'
-                ? 'scale(0.7)'
-                : 'scale(1)',
-            transition: 'transform 2.2s cubic-bezier(0.16, 1, 0.3, 1)',
-          }}
-        />
-      </div>
-
-      {/* --- MAIN HERO: 3D EMBOSSED PERSPECTIVE VENNZ LOGO --- */}
+      {/* --- MAIN HERO: TASTEFULLY PROPORTIONED VENNZ LOGO WITH SEQUENTIAL LETTER PULSE --- */}
       <div
         style={{
           position: 'relative',
@@ -213,7 +121,6 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({
           width: '100%',
           maxWidth: '92vw',
           zIndex: 10,
-          perspective: '1200px',
         }}
       >
         <div
@@ -222,42 +129,28 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({
             display: 'inline-flex',
             alignItems: 'center',
             justifyContent: 'center',
-            borderRadius: '28px',
-            padding: '28px 48px',
-            transformStyle: 'preserve-3d',
-            transform:
-              phase === 'initial'
-                ? 'perspective(1200px) scale(0.92) translateY(14px)'
-                : 'perspective(1200px) scale(1) translateY(0)',
-            opacity: phase === 'initial' ? 0 : 1,
-            transition:
-              'transform 1.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s ease',
+            padding: '24px 36px',
           }}
         >
-          {/* Deep 3D Realistic Cast Ground Shadow underneath the 3D lettering */}
+          {/* Subtle Ground Depth Shadow */}
           <div
             style={{
               position: 'absolute',
               bottom: '4px',
-              left: '8%',
-              right: '8%',
-              height: '42px',
+              left: '6%',
+              right: '6%',
+              height: '32px',
               borderRadius: '50%',
               background: isDark
-                ? 'radial-gradient(ellipse at center, rgba(0, 0, 0, 0.9) 0%, rgba(85, 20, 75, 0.5) 45%, transparent 80%)'
-                : 'radial-gradient(ellipse at center, rgba(60, 20, 50, 0.38) 0%, rgba(139, 44, 116, 0.22) 45%, transparent 80%)',
-              filter: 'blur(18px)',
-              transform:
-                phase === 'initial'
-                  ? 'scale(0.8) translateY(8px)'
-                  : 'scale(1) translateY(0)',
-              transition: 'transform 1.4s cubic-bezier(0.22, 1, 0.36, 1)',
+                ? 'radial-gradient(ellipse at center, rgba(0, 0, 0, 0.85) 0%, rgba(85, 20, 75, 0.35) 45%, transparent 80%)'
+                : 'radial-gradient(ellipse at center, rgba(60, 20, 50, 0.28) 0%, rgba(139, 44, 116, 0.14) 45%, transparent 80%)',
+              filter: 'blur(14px)',
               pointerEvents: 'none',
               zIndex: 1,
             }}
           />
 
-          {/* 3D Multi-Layered Extrusion & Bevel Illumination for High Contrast Logo Clarity */}
+          {/* 3D Multi-Layered Extrusion & Depth Shadows */}
           <div
             style={{
               position: 'relative',
@@ -276,41 +169,38 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({
               transition: 'filter 1.2s ease',
             }}
           >
-            {/* VennZ Logo Image */}
-            <img
-              src="/vennz-logo.png"
-              alt="VennZ"
-              style={{
-                display: 'block',
-                width: 'clamp(300px, 60vw, 660px)',
-                height: 'auto',
-                maxHeight: 'clamp(100px, 24vh, 195px)',
-                objectFit: 'contain',
-                userSelect: 'none',
-                transform: 'translateZ(20px)',
-              }}
-            />
-
-            {/* Trending Prismatic Specular Shimmer Beam across 3D face */}
+            {/* Complete VennZ Logo Canvas with Letter-by-Letter Wave Animation */}
             <div
               style={{
-                position: 'absolute',
-                top: '-35%',
-                bottom: '-35%',
-                left: 0,
-                width: '60%',
-                background: isDark
-                  ? 'linear-gradient(110deg, transparent 15%, rgba(255, 255, 255, 0.15) 35%, rgba(255, 255, 255, 0.92) 50%, rgba(255, 220, 245, 0.95) 53%, rgba(255, 255, 255, 0.3) 65%, transparent 85%)'
-                  : 'linear-gradient(110deg, transparent 15%, rgba(255, 255, 255, 0.4) 35%, rgba(255, 255, 255, 0.98) 50%, rgba(245, 230, 240, 0.95) 53%, rgba(255, 255, 255, 0.5) 65%, transparent 85%)',
-                mixBlendMode: isDark ? 'screen' : 'overlay',
-                transform:
-                  phase === 'initial' || phase === 'reveal'
-                    ? 'translateX(-160%) skewX(-20deg)'
-                    : 'translateX(260%) skewX(-20deg)',
-                transition: 'transform 1.9s cubic-bezier(0.2, 0.8, 0.2, 1)',
-                pointerEvents: 'none',
+                position: 'relative',
+                width: 'clamp(240px, 46vw, 480px)',
+                maxHeight: 'clamp(80px, 16vh, 148px)',
+                aspectRatio: '984 / 303',
+                overflow: 'visible',
               }}
-            />
+            >
+              {LOGO_LETTERS.map((letter) => (
+                <img
+                  key={letter.id}
+                  src={letter.src}
+                  alt={letter.id}
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain',
+                    userSelect: 'none',
+                    pointerEvents: 'none',
+                    transformOrigin: letter.origin,
+                    transform: 'scale(1)',
+                    zIndex: 2,
+                    animation: `vennzLetterWave 0.34s cubic-bezier(0.42, 0, 0.58, 1) ${letter.delay}s 1 normal both`,
+                    willChange: 'transform',
+                  }}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -334,7 +224,7 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({
           padding: '8px 18px',
           borderRadius: '999px',
           transition: 'color 0.25s ease, opacity 0.3s ease',
-          opacity: phase === 'initial' ? 0 : 0.85,
+          opacity: 0.85,
           zIndex: 20,
         }}
         onMouseEnter={(e) => (e.currentTarget.style.color = skipHover)}
@@ -345,3 +235,5 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({
     </div>
   );
 };
+
+export default IntroAnimation;
