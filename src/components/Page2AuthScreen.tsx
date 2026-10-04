@@ -121,7 +121,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
         flexDirection: 'column',
         justifyContent: 'space-between',
         overflow: 'hidden',
-        backgroundColor: '#100c0e',
+        backgroundColor: '#140E1C',
       }}
     >
       {/* Clean Foliage Bokeh Background Asset */}
@@ -266,17 +266,17 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
                 alignItems: 'center',
                 height: '58px',
                 borderRadius: '14px',
-                backgroundColor: 'rgba(26, 20, 24, 0.65)',
+                backgroundColor: 'rgba(70, 32, 55, 0.65)',
                 backdropFilter: 'blur(12px)',
                 WebkitBackdropFilter: 'blur(12px)',
                 border: isFocused
-                  ? '1px solid rgba(243, 238, 233, 0.55)'
+                  ? '1px solid #F9AAAD'
                   : phoneError
                   ? '1px solid #e05a5a'
-                  : '1px solid rgba(243, 238, 233, 0.22)',
+                  : '1px solid rgba(161, 82, 95, 0.35)',
                 boxShadow: isFocused
-                  ? '0 0 0 3px rgba(243, 238, 233, 0.08)'
-                  : '0 4px 16px rgba(0, 0, 0, 0.2)',
+                  ? '0 0 0 3px rgba(249, 170, 173, 0.2)'
+                  : '0 4px 16px rgba(20, 14, 28, 0.35)',
                 padding: '0 16px',
                 boxSizing: 'border-box',
                 transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
@@ -367,8 +367,8 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
               style={{
                 width: '100%',
                 height: '56px',
-                backgroundColor: 'var(--color-warm-porcelain)',
-                color: 'var(--color-espresso)',
+                background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
+                color: '#FDF3F5',
                 fontFamily: 'var(--font-sans)',
                 fontSize: '17px',
                 fontWeight: 600,
@@ -376,8 +376,8 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
                 border: 'none',
                 cursor: 'pointer',
                 marginTop: '18px',
-                boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4)',
-                transition: 'transform 0.15s ease, background-color 0.15s ease',
+                boxShadow: '0 8px 24px rgba(20, 14, 28, 0.5), 0 0 20px rgba(161, 82, 95, 0.35)',
+                transition: 'transform 0.15s ease, background 0.2s ease, color 0.2s ease',
               }}
               onMouseDown={(e) => {
                 e.currentTarget.style.transform = 'scale(0.98)';
@@ -386,10 +386,12 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
                 e.currentTarget.style.transform = 'scale(1)';
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#FFFFFF';
+                e.currentTarget.style.background = 'linear-gradient(135deg, #C7577C 0%, #F9AAAD 100%)';
+                e.currentTarget.style.color = '#140E1C';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'var(--color-warm-porcelain)';
+                e.currentTarget.style.background = 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)';
+                e.currentTarget.style.color = '#FDF3F5';
                 e.currentTarget.style.transform = 'scale(1)';
               }}
             >
@@ -439,10 +441,10 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
             style={{
               width: '100%',
               height: '54px',
-              backgroundColor: 'rgba(26, 20, 24, 0.45)',
-              border: '1px solid rgba(243, 238, 233, 0.25)',
+              backgroundColor: 'rgba(70, 32, 55, 0.45)',
+              border: '1px solid rgba(161, 82, 95, 0.35)',
               borderRadius: '9999px',
-              color: 'var(--color-warm-porcelain)',
+              color: '#FDF3F5',
               fontFamily: 'var(--font-sans)',
               fontSize: '15.5px',
               fontWeight: 500,
@@ -457,12 +459,12 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
               transition: 'background-color 0.15s ease, border-color 0.15s ease',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(26, 20, 24, 0.7)';
-              e.currentTarget.style.borderColor = 'rgba(243, 238, 233, 0.4)';
+              e.currentTarget.style.backgroundColor = 'rgba(104, 58, 70, 0.65)';
+              e.currentTarget.style.borderColor = '#F9AAAD';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(26, 20, 24, 0.45)';
-              e.currentTarget.style.borderColor = 'rgba(243, 238, 233, 0.25)';
+              e.currentTarget.style.backgroundColor = 'rgba(70, 32, 55, 0.45)';
+              e.currentTarget.style.borderColor = 'rgba(161, 82, 95, 0.35)';
             }}
           >
             {/* Google "G" 4-color SVG Logo */}
@@ -494,10 +496,10 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
             style={{
               width: '100%',
               height: '52px',
-              backgroundColor: 'rgba(26, 20, 24, 0.45)',
-              border: '1px solid rgba(243, 238, 233, 0.25)',
+              backgroundColor: 'rgba(70, 32, 55, 0.45)',
+              border: '1px solid rgba(161, 82, 95, 0.35)',
               borderRadius: '9999px',
-              color: 'var(--color-warm-porcelain)',
+              color: '#FDF3F5',
               fontFamily: 'var(--font-sans)',
               fontSize: '14.5px',
               fontWeight: 500,
@@ -512,12 +514,12 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
               transition: 'background-color 0.15s ease, border-color 0.15s ease',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(26, 20, 24, 0.7)';
-              e.currentTarget.style.borderColor = 'rgba(243, 238, 233, 0.4)';
+              e.currentTarget.style.backgroundColor = 'rgba(104, 58, 70, 0.65)';
+              e.currentTarget.style.borderColor = '#F9AAAD';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(26, 20, 24, 0.45)';
-              e.currentTarget.style.borderColor = 'rgba(243, 238, 233, 0.25)';
+              e.currentTarget.style.backgroundColor = 'rgba(70, 32, 55, 0.45)';
+              e.currentTarget.style.borderColor = 'rgba(161, 82, 95, 0.35)';
             }}
           >
             {/* Apple Logo SVG */}

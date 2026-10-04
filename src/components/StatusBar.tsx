@@ -11,7 +11,7 @@ export const StatusBar: React.FC<StatusBarProps> = ({
   className = '',
   variant = 'light',
 }) => {
-  const textColor = variant === 'dark' ? '#272124' : 'var(--color-warm-porcelain)';
+  const textColor = variant === 'dark' ? '#462037' : '#FDF3F5';
 
   return (
     <div

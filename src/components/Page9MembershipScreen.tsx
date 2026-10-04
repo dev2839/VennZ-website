@@ -68,8 +68,8 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        backgroundColor: isDark ? '#050104' : '#F7F3EE',
-        color: isDark ? '#F3EEE9' : 'var(--color-espresso)',
+        backgroundColor: isDark ? '#140E1C' : '#FAF1F3',
+        color: isDark ? '#FDF3F5' : '#462037',
         fontFamily: 'var(--font-sans)',
         overflow: 'hidden',
       }}
@@ -94,7 +94,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
         style={{
           position: 'absolute',
           inset: 0,
-          backgroundColor: isDark ? 'rgba(3, 0, 3, 0.12)' : 'rgba(247, 243, 238, 0.42)',
+          backgroundColor: isDark ? 'rgba(20, 14, 28, 0.45)' : 'rgba(250, 241, 243, 0.42)',
           zIndex: 1,
           pointerEvents: 'none',
         }}
@@ -106,10 +106,10 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
           position: 'relative',
           zIndex: 20,
           flexShrink: 0,
-          backgroundColor: isDark ? 'rgba(5, 1, 4, 0.88)' : 'rgba(247, 243, 238, 0.88)',
+          backgroundColor: isDark ? 'rgba(20, 14, 28, 0.92)' : 'rgba(250, 241, 243, 0.92)',
           backdropFilter: 'blur(10px)',
           WebkitBackdropFilter: 'blur(10px)',
-          borderBottom: isDark ? '1px solid rgba(243, 238, 233, 0.08)' : '1px solid rgba(73, 40, 61, 0.06)',
+          borderBottom: isDark ? '1px solid rgba(161, 82, 95, 0.2)' : '1px solid rgba(161, 82, 95, 0.12)',
         }}
       >
         {showStatusBar && <StatusBar variant={isDark ? 'light' : 'dark'} />}
@@ -208,7 +208,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
               fontWeight: 700,
               letterSpacing: '0.1em',
               textTransform: 'uppercase',
-              color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
+              color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
               marginBottom: '8px',
             }}
           >
@@ -247,7 +247,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
             <>
               <div
                 style={{
-                  backgroundColor: isDark ? 'rgba(24, 15, 20, 0.85)' : 'rgba(255, 255, 255, 0.82)',
+                  backgroundColor: isDark ? 'rgba(70, 32, 55, 0.75)' : 'rgba(255, 255, 255, 0.82)',
                   backdropFilter: 'blur(12px)',
                   WebkitBackdropFilter: 'blur(12px)',
                   borderRadius: '18px',
@@ -335,7 +335,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                 <div style={{ marginTop: '20px', paddingTop: '16px', borderTop: isDark ? '1px solid rgba(243, 238, 233, 0.08)' : '1px solid rgba(73, 40, 61, 0.1)' }}>
                   <div
                     style={{
-                      borderLeft: `2.5px solid ${isDark ? '#F0D4B8' : 'var(--color-mulberry)'}`,
+                      borderLeft: `2.5px solid ${isDark ? '#F9AAAD' : 'var(--color-mulberry)'}`,
                       paddingLeft: '12px',
                     }}
                   >
@@ -362,7 +362,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                     fontWeight: 700,
                     letterSpacing: '0.1em',
                     textTransform: 'uppercase',
-                    color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
+                    color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
                     marginBottom: '8px',
                   }}
                 >
@@ -394,7 +394,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
           {viewMode !== 'membership_only' && (
             <div
               style={{
-                backgroundColor: isDark ? 'rgba(24, 15, 20, 0.76)' : 'rgba(255, 255, 255, 0.76)',
+                backgroundColor: isDark ? 'rgba(70, 32, 55, 0.65)' : 'rgba(255, 255, 255, 0.76)',
                 backdropFilter: 'blur(10px)',
                 WebkitBackdropFilter: 'blur(10px)',
                 borderRadius: '18px',
@@ -422,7 +422,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                     fontWeight: 700,
                     letterSpacing: '0.1em',
                     textTransform: 'uppercase',
-                    color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
+                    color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
                   }}
                 >
                   COMPLIMENTARY FIRST LOOK
@@ -483,7 +483,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                   >
                     <span
                       style={{
-                        color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
+                        color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
                         fontSize: '15px',
                         lineHeight: '1.45',
                         flexShrink: 0,
@@ -542,8 +542,8 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                     width: '100%',
                     height: '56px',
                     borderRadius: '28px',
-                    backgroundColor: 'var(--color-mulberry)',
-                    color: '#FFFFFF',
+                    background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
+                    color: '#FDF3F5',
                     border: 'none',
                     fontSize: '16.5px',
                     fontWeight: 700,
@@ -554,8 +554,16 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                     alignItems: 'center',
                     justifyContent: 'center',
                     gap: '8px',
-                    boxShadow: '0 6px 22px rgba(73, 40, 61, 0.28)',
-                    transition: 'background-color 0.2s ease, transform 0.15s ease',
+                    boxShadow: '0 6px 22px rgba(161, 82, 95, 0.4)',
+                    transition: 'filter 0.2s ease, transform 0.15s ease',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'linear-gradient(135deg, #C7577C 0%, #F9AAAD 100%)';
+                    e.currentTarget.style.transform = 'translateY(-1px)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)';
+                    e.currentTarget.style.transform = 'translateY(0)';
                   }}
                 >
                   <span>BECOME A MEMBER</span>
@@ -575,9 +583,9 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                   width: '100%',
                   height: '54px',
                   borderRadius: '27px',
-                  backgroundColor: viewMode === 'complimentary_only' ? 'var(--color-mulberry)' : 'transparent',
-                  color: viewMode === 'complimentary_only' ? '#FFFFFF' : (isDark ? '#F5EFEB' : 'var(--color-mulberry)'),
-                  border: viewMode === 'complimentary_only' ? 'none' : (isDark ? '1.5px solid rgba(243, 238, 233, 0.25)' : '1.5px solid rgba(73, 40, 61, 0.35)'),
+                  background: viewMode === 'complimentary_only' ? 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)' : 'transparent',
+                  color: viewMode === 'complimentary_only' ? '#FDF3F5' : (isDark ? '#F9AAAD' : '#462037'),
+                  border: viewMode === 'complimentary_only' ? 'none' : (isDark ? '1.5px solid rgba(161, 82, 95, 0.45)' : '1.5px solid rgba(161, 82, 95, 0.35)'),
                   fontSize: '15px',
                   fontWeight: 700,
                   letterSpacing: '0.08em',
@@ -587,7 +595,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '8px',
-                  boxShadow: viewMode === 'complimentary_only' ? '0 6px 22px rgba(73, 40, 61, 0.28)' : 'none',
+                  boxShadow: viewMode === 'complimentary_only' ? '0 6px 22px rgba(161, 82, 95, 0.4)' : 'none',
                   transition: 'all 0.2s ease',
                 }}
               >
@@ -625,7 +633,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
             position: 'fixed',
             inset: 0,
             zIndex: 100,
-            backgroundColor: 'rgba(5, 1, 4, 0.82)',
+            backgroundColor: 'rgba(20, 14, 28, 0.85)',
             backdropFilter: 'blur(8px)',
             WebkitBackdropFilter: 'blur(8px)',
             display: 'flex',
@@ -639,7 +647,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
             style={{
               width: '100%',
               maxWidth: '380px',
-              backgroundColor: isDark ? '#140D12' : '#FAF6F0',
+              backgroundColor: isDark ? '#462037' : '#FAF6F0',
               border: isDark ? '1.5px solid rgba(243, 238, 233, 0.2)' : '1.5px solid rgba(73, 40, 61, 0.25)',
               borderRadius: '24px',
               padding: '24px',
@@ -711,7 +719,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                     width: '40px',
                     height: '40px',
                     border: `3px solid ${isDark ? 'rgba(243, 238, 233, 0.2)' : 'rgba(73, 40, 61, 0.2)'}`,
-                    borderTop: `3px solid ${isDark ? '#F0D4B8' : 'var(--color-mulberry)'}`,
+                    borderTop: `3px solid ${isDark ? '#F9AAAD' : 'var(--color-mulberry)'}`,
                     borderRadius: '50%',
                     animation: 'spin 0.8s linear infinite',
                     margin: '0 auto 16px auto',
@@ -728,7 +736,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
             ) : (
               /* NORMAL CHECKOUT FORM */
               <>
-                <div style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: isDark ? '#F0D4B8' : 'var(--color-mulberry)', marginBottom: '4px' }}>
+                <div style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: isDark ? '#F9AAAD' : 'var(--color-mulberry)', marginBottom: '4px' }}>
                   DEMO CHECKOUT
                 </div>
                 <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '22px', margin: '0 0 16px 0', color: isDark ? '#FFFFFF' : 'var(--color-mulberry)' }}>
@@ -889,15 +897,15 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                     width: '100%',
                     height: '48px',
                     borderRadius: '24px',
-                    backgroundColor: 'var(--color-mulberry)',
-                    color: '#FFFFFF',
+                    background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
+                    color: '#FDF3F5',
                     border: 'none',
                     fontSize: '13.5px',
                     fontWeight: 700,
                     letterSpacing: '0.06em',
                     textTransform: 'uppercase',
                     cursor: 'pointer',
-                    boxShadow: '0 4px 16px rgba(73, 40, 61, 0.3)',
+                    boxShadow: '0 4px 16px rgba(161, 82, 95, 0.45)',
                   }}
                 >
                   PAY ₹1,499 & JOIN NOW →

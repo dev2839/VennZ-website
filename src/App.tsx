@@ -563,8 +563,8 @@ export const App: React.FC = () => {
         width: '100%',
         display: 'flex',
         flexDirection: 'column',
-        backgroundColor: isDark ? '#0F0C10' : '#F3EBF2',
-        color: isDark ? '#F3EEE9' : '#120D10',
+        backgroundColor: isDark ? '#140E1C' : '#FAF1F3',
+        color: isDark ? '#FDF3F5' : '#462037',
         fontFamily: 'var(--font-sans)',
         position: 'relative',
         transition: 'background-color 0.25s ease, color 0.25s ease',
@@ -615,8 +615,8 @@ export const App: React.FC = () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: 'rgba(10, 8, 10, 0.82)',
-            backdropFilter: 'blur(10px)',
+            backgroundColor: 'rgba(20, 14, 28, 0.85)',
+            backdropFilter: 'blur(12px)',
             padding: '24px',
           }}
           onClick={() => setLearnModalOpen(false)}
@@ -626,15 +626,15 @@ export const App: React.FC = () => {
             style={{
               width: '100%',
               maxWidth: '420px',
-              backgroundColor: isDark ? '#181216' : '#FFFFFF',
-              border: isDark ? '1px solid rgba(243, 238, 233, 0.15)' : '1px solid rgba(73, 40, 61, 0.12)',
+              backgroundColor: isDark ? '#462037' : '#FAF1F3',
+              border: isDark ? '1px solid rgba(161, 82, 95, 0.35)' : '1px solid rgba(199, 87, 124, 0.25)',
               borderRadius: '24px',
               padding: '32px 28px',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
               textAlign: 'center',
-              boxShadow: '0 24px 48px rgba(0, 0, 0, 0.4)',
+              boxShadow: '0 24px 48px rgba(0, 0, 0, 0.55)',
             }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -643,14 +643,14 @@ export const App: React.FC = () => {
                 width: '48px',
                 height: '48px',
                 borderRadius: '50%',
-                backgroundColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(73, 40, 61, 0.08)',
+                backgroundColor: isDark ? 'rgba(249, 170, 173, 0.12)' : 'rgba(161, 82, 95, 0.1)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 marginBottom: '16px',
               }}
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill={isDark ? '#F3EEE9' : 'var(--color-mulberry)'}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill={isDark ? '#F9AAAD' : '#A1525F'}>
                 <path d="M12 0L14.6 9.4L24 12L14.6 14.6L12 24L9.4 14.6L0 12L9.4 9.4L12 0Z" />
               </svg>
             </div>
@@ -659,7 +659,7 @@ export const App: React.FC = () => {
               style={{
                 fontFamily: 'var(--font-serif)',
                 fontSize: '24px',
-                color: isDark ? '#F3EEE9' : 'var(--color-mulberry)',
+                color: isDark ? '#FDF3F5' : '#462037',
                 marginBottom: '8px',
               }}
             >
@@ -670,7 +670,7 @@ export const App: React.FC = () => {
               style={{
                 fontSize: '14px',
                 lineHeight: '1.6',
-                color: isDark ? 'rgba(243, 238, 233, 0.8)' : '#6E5D68',
+                color: isDark ? '#D4A2AC' : '#683A46',
                 marginBottom: '24px',
               }}
             >
@@ -689,12 +689,13 @@ export const App: React.FC = () => {
                 height: '48px',
                 borderRadius: '9999px',
                 border: 'none',
-                backgroundColor: isDark ? 'var(--color-warm-porcelain)' : 'var(--color-mulberry)',
-                color: isDark ? 'var(--color-espresso)' : '#FFFFFF',
+                background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
+                color: '#FDF3F5',
                 fontSize: '14.5px',
                 fontWeight: 600,
                 letterSpacing: '0.04em',
                 cursor: 'pointer',
+                boxShadow: '0 6px 18px rgba(161, 82, 95, 0.35)',
               }}
             >
               Continue to Apply →

@@ -336,8 +336,8 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        backgroundColor: isDark ? '#050104' : '#F7F3EE',
-        color: isDark ? '#F3EEE9' : 'var(--color-espresso)',
+        backgroundColor: isDark ? '#140E1C' : '#FAF1F3',
+        color: isDark ? '#FDF3F5' : '#462037',
         fontFamily: 'var(--font-sans)',
         overflow: 'hidden',
       }}
@@ -364,7 +364,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
         style={{
           position: 'absolute',
           inset: 0,
-          backgroundColor: isDark ? 'rgba(3, 0, 3, 0.12)' : 'rgba(247, 243, 238, 0.42)',
+          backgroundColor: isDark ? 'rgba(20, 14, 28, 0.45)' : 'rgba(250, 241, 243, 0.42)',
           zIndex: 1,
           pointerEvents: 'none',
         }}
@@ -376,10 +376,10 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
           position: 'relative',
           zIndex: 20,
           flexShrink: 0,
-          backgroundColor: isDark ? 'rgba(5, 1, 4, 0.88)' : 'rgba(247, 243, 238, 0.88)',
+          backgroundColor: isDark ? 'rgba(20, 14, 28, 0.92)' : 'rgba(250, 241, 243, 0.92)',
           backdropFilter: 'blur(10px)',
           WebkitBackdropFilter: 'blur(10px)',
-          borderBottom: isDark ? '1px solid rgba(243, 238, 233, 0.08)' : '1px solid rgba(73, 40, 61, 0.06)',
+          borderBottom: isDark ? '1px solid rgba(161, 82, 95, 0.2)' : '1px solid rgba(161, 82, 95, 0.12)',
         }}
       >
         {showStatusBar && <StatusBar variant={isDark ? 'light' : 'dark'} />}
@@ -502,7 +502,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
           {/* ========================================================== */}
           <div
             style={{
-              backgroundColor: isDark ? 'rgba(24, 15, 20, 0.76)' : 'rgba(255, 255, 255, 0.76)',
+              backgroundColor: isDark ? 'rgba(70, 32, 55, 0.72)' : 'rgba(255, 255, 255, 0.76)',
               backdropFilter: 'blur(10px)',
               WebkitBackdropFilter: 'blur(10px)',
               borderRadius: '16px',
@@ -530,7 +530,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                   fontWeight: 700,
                   letterSpacing: '0.08em',
                   textTransform: 'uppercase',
-                  color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
+                  color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
                   margin: 0,
                   display: 'flex',
                   alignItems: 'center',
@@ -558,7 +558,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                     : (isDark ? 'rgba(240, 212, 184, 0.12)' : 'rgba(73, 40, 61, 0.08)'),
                   color: identityCheckComplete
                     ? (isDark ? '#86EFAC' : '#2E7D32')
-                    : (isDark ? '#F0D4B8' : 'var(--color-mulberry)'),
+                    : (isDark ? '#F9AAAD' : 'var(--color-mulberry)'),
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '5px',
@@ -684,7 +684,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                   width: '100%',
                   height: '50px',
                   borderRadius: '14px',
-                  backgroundColor: isDark ? '#5C2D49' : 'var(--color-mulberry)',
+                  backgroundColor: isDark ? '#A1525F' : 'var(--color-mulberry)',
                   color: '#FFFFFF',
                   border: isDark ? '1px solid rgba(240, 212, 184, 0.35)' : 'none',
                   fontSize: '14.5px',
@@ -705,7 +705,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.backgroundColor = isDark ? '#5C2D49' : 'var(--color-mulberry)';
+                  e.currentTarget.style.backgroundColor = isDark ? '#A1525F' : 'var(--color-mulberry)';
                 }}
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -722,7 +722,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
           {/* ========================================================== */}
           <div
             style={{
-              backgroundColor: isDark ? 'rgba(24, 15, 20, 0.76)' : 'rgba(255, 255, 255, 0.76)',
+              backgroundColor: isDark ? 'rgba(70, 32, 55, 0.72)' : 'rgba(255, 255, 255, 0.76)',
               backdropFilter: 'blur(10px)',
               WebkitBackdropFilter: 'blur(10px)',
               borderRadius: '16px',
@@ -750,7 +750,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                   fontWeight: 700,
                   letterSpacing: '0.08em',
                   textTransform: 'uppercase',
-                  color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
+                  color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
                   margin: 0,
                   display: 'flex',
                   alignItems: 'center',
@@ -778,7 +778,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                     : (isDark ? 'rgba(240, 212, 184, 0.12)' : 'rgba(73, 40, 61, 0.08)'),
                   color: selfieComplete
                     ? (isDark ? '#86EFAC' : '#2E7D32')
-                    : (isDark ? '#F0D4B8' : 'var(--color-mulberry)'),
+                    : (isDark ? '#F9AAAD' : 'var(--color-mulberry)'),
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '5px',
@@ -823,7 +823,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
+                    color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
                   }}
                 >
                   <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -844,7 +844,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                     width: '100%',
                     height: '50px',
                     borderRadius: '14px',
-                    backgroundColor: isDark ? '#5C2D49' : 'var(--color-mulberry)',
+                    backgroundColor: isDark ? '#A1525F' : 'var(--color-mulberry)',
                     color: '#FFFFFF',
                     border: isDark ? '1px solid rgba(240, 212, 184, 0.35)' : 'none',
                     fontSize: '14.5px',
@@ -865,7 +865,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.backgroundColor = isDark ? '#5C2D49' : 'var(--color-mulberry)';
+                    e.currentTarget.style.backgroundColor = isDark ? '#A1525F' : 'var(--color-mulberry)';
                   }}
                 >
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -885,7 +885,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                     borderRadius: '14px',
                     backgroundColor: isDark ? 'rgba(243, 238, 233, 0.08)' : 'rgba(73, 40, 61, 0.06)',
                     border: isDark ? '1px solid rgba(240, 212, 184, 0.25)' : '1px solid rgba(73, 40, 61, 0.18)',
-                    color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
+                    color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
                     fontSize: '13.5px',
                     fontWeight: 600,
                     letterSpacing: '0.04em',
@@ -935,7 +935,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                     overflow: 'hidden',
                     backgroundColor: '#1C151A',
                     boxShadow: '0 8px 24px rgba(0, 0, 0, 0.25)',
-                    border: isDark ? '2px solid #F0D4B8' : '2px solid var(--color-mulberry)',
+                    border: isDark ? '2px solid #F9AAAD' : '2px solid var(--color-mulberry)',
                   }}
                 >
                   {/* Real Live Camera Video Feed */}
@@ -1009,7 +1009,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                       flex: 1,
                       height: '48px',
                       borderRadius: '12px',
-                      backgroundColor: isDark ? '#5C2D49' : 'var(--color-mulberry)',
+                      backgroundColor: isDark ? '#A1525F' : 'var(--color-mulberry)',
                       color: '#FFFFFF',
                       border: isDark ? '1px solid rgba(240, 212, 184, 0.35)' : 'none',
                       fontSize: '13px',
@@ -1043,7 +1043,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                       borderRadius: '12px',
                       backgroundColor: isDark ? 'rgba(243, 238, 233, 0.08)' : 'rgba(73, 40, 61, 0.08)',
                       border: isDark ? '1px solid rgba(243, 238, 233, 0.2)' : '1px solid rgba(73, 40, 61, 0.2)',
-                      color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
+                      color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
                       fontSize: '12px',
                       fontWeight: 700,
                       cursor: 'pointer',
@@ -1133,7 +1133,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                         borderRadius: '14px',
                         backgroundColor: isDark ? 'rgba(243, 238, 233, 0.08)' : 'rgba(73, 40, 61, 0.08)',
                         border: isDark ? '1px solid rgba(243, 238, 233, 0.2)' : '1px solid rgba(73, 40, 61, 0.2)',
-                        color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
+                        color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
                         fontSize: '14px',
                         fontWeight: 700,
                         letterSpacing: '0.05em',
@@ -1168,7 +1168,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                         flex: 1.5,
                         height: '50px',
                         borderRadius: '14px',
-                        backgroundColor: isDark ? '#5C2D49' : 'var(--color-mulberry)',
+                        backgroundColor: isDark ? '#A1525F' : 'var(--color-mulberry)',
                         color: '#FFFFFF',
                         border: isDark ? '1px solid rgba(240, 212, 184, 0.35)' : 'none',
                         fontSize: '14px',
@@ -1189,7 +1189,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.transform = 'translateY(0)';
-                        e.currentTarget.style.backgroundColor = isDark ? '#5C2D49' : 'var(--color-mulberry)';
+                        e.currentTarget.style.backgroundColor = isDark ? '#A1525F' : 'var(--color-mulberry)';
                       }}
                     >
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
@@ -1205,7 +1205,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                     style={{
                       background: 'none',
                       border: 'none',
-                      color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
+                      color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
                       fontSize: '14px',
                       fontWeight: 600,
                       textDecoration: 'underline',
@@ -1245,7 +1245,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
                     style={{
-                      backgroundColor: isDark ? '#5C2D49' : 'var(--color-mulberry)',
+                      backgroundColor: isDark ? '#A1525F' : 'var(--color-mulberry)',
                       color: '#FFFFFF',
                       border: isDark ? '1px solid rgba(240, 212, 184, 0.35)' : 'none',
                       borderRadius: '10px',
@@ -1274,7 +1274,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                     onClick={handleStartCamera}
                     style={{
                       backgroundColor: isDark ? 'rgba(243, 238, 233, 0.08)' : 'rgba(73, 40, 61, 0.08)',
-                      color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
+                      color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
                       border: isDark ? '1px solid rgba(240, 212, 184, 0.25)' : '1px solid rgba(73, 40, 61, 0.2)',
                       borderRadius: '10px',
                       padding: '10px 16px',
@@ -1304,13 +1304,13 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                 width: '100%',
                 height: '56px',
                 borderRadius: '28px',
-                backgroundColor: canContinue
-                  ? (isDark ? '#5C2D49' : 'var(--color-mulberry)')
-                  : (isDark ? 'rgba(243, 238, 233, 0.1)' : 'rgba(73, 40, 61, 0.22)'),
+                background: canContinue
+                  ? 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)'
+                  : (isDark ? 'rgba(70, 32, 55, 0.4)' : 'rgba(161, 82, 95, 0.22)'),
                 color: canContinue
-                  ? '#FFFFFF'
-                  : (isDark ? 'rgba(243, 238, 233, 0.35)' : 'rgba(73, 40, 61, 0.45)'),
-                border: canContinue && isDark ? '1px solid rgba(240, 212, 184, 0.35)' : 'none',
+                  ? '#FDF3F5'
+                  : (isDark ? 'rgba(253, 243, 245, 0.35)' : 'rgba(70, 32, 55, 0.45)'),
+                border: 'none',
                 fontSize: '15.5px',
                 fontWeight: 700,
                 letterSpacing: '0.08em',
@@ -1321,19 +1321,19 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                 justifyContent: 'center',
                 gap: '8px',
                 boxShadow: canContinue
-                  ? (isDark ? '0 6px 22px rgba(0, 0, 0, 0.35)' : '0 6px 22px rgba(73, 40, 61, 0.28)')
+                  ? '0 6px 22px rgba(161, 82, 95, 0.4)'
                   : 'none',
-                transition: 'background-color 0.2s ease, transform 0.15s ease, opacity 0.2s ease',
+                transition: 'filter 0.2s ease, transform 0.15s ease, opacity 0.2s ease',
               }}
               onMouseEnter={(e) => {
                 if (canContinue) {
-                  e.currentTarget.style.backgroundColor = isDark ? '#73375B' : '#3B1F31';
+                  e.currentTarget.style.background = 'linear-gradient(135deg, #C7577C 0%, #F9AAAD 100%)';
                   e.currentTarget.style.transform = 'translateY(-1px)';
                 }
               }}
               onMouseLeave={(e) => {
                 if (canContinue) {
-                  e.currentTarget.style.backgroundColor = isDark ? '#5C2D49' : 'var(--color-mulberry)';
+                  e.currentTarget.style.background = 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)';
                   e.currentTarget.style.transform = 'translateY(0)';
                 }
               }}
@@ -1447,7 +1447,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                 color:
                   verifyStep === 'complete' || verifyStep === 'matched'
                     ? (isDark ? '#86EFAC' : '#2E7D32')
-                    : (isDark ? '#F0D4B8' : 'var(--color-mulberry)'),
+                    : (isDark ? '#F9AAAD' : 'var(--color-mulberry)'),
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -1503,7 +1503,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
             <div
               style={{
                 width: '100%',
-                backgroundColor: isDark ? 'rgba(24, 15, 20, 0.85)' : '#F9F6F3',
+                backgroundColor: isDark ? 'rgba(70, 32, 55, 0.78)' : '#F9F6F3',
                 border: isDark ? '1px solid rgba(243, 238, 233, 0.12)' : 'none',
                 borderRadius: '12px',
                 padding: '12px 14px',
@@ -1521,7 +1521,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                   gap: '8px',
                   color: verifyStep !== 'connecting'
                     ? (isDark ? '#86EFAC' : '#2E7D32')
-                    : (isDark ? '#F0D4B8' : 'var(--color-mulberry)'),
+                    : (isDark ? '#F9AAAD' : 'var(--color-mulberry)'),
                 }}
               >
                 <span>{verifyStep !== 'connecting' ? '✓' : '●'}</span>
@@ -1536,7 +1536,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                     verifyStep === 'matched' || verifyStep === 'complete'
                       ? (isDark ? '#86EFAC' : '#2E7D32')
                       : verifyStep === 'authenticating'
-                      ? (isDark ? '#F0D4B8' : 'var(--color-mulberry)')
+                      ? (isDark ? '#F9AAAD' : 'var(--color-mulberry)')
                       : (isDark ? '#B3A1A8' : '#8A7A84'),
                 }}
               >

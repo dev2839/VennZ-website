@@ -160,8 +160,8 @@ export const Page3OtpScreen: React.FC<Page3OtpScreenProps> = ({
         flexDirection: 'column',
         justifyContent: 'space-between',
         overflow: 'hidden',
-        backgroundColor: '#100c0e',
-        color: 'var(--color-warm-porcelain)',
+        backgroundColor: '#140E1C',
+        color: '#FDF3F5',
       }}
     >
       {/* Background: Same as Second Page with subtle blur */}
@@ -192,7 +192,7 @@ export const Page3OtpScreen: React.FC<Page3OtpScreenProps> = ({
           width: '100%',
           height: '100%',
           background:
-            'linear-gradient(180deg, rgba(16, 12, 14, 0.45) 0%, rgba(16, 12, 14, 0.25) 25%, rgba(16, 12, 14, 0.5) 55%, rgba(16, 12, 14, 0.85) 80%, rgba(16, 12, 14, 0.95) 100%)',
+            'linear-gradient(180deg, rgba(20, 14, 28, 0.55) 0%, rgba(20, 14, 28, 0.35) 25%, rgba(20, 14, 28, 0.65) 55%, rgba(20, 14, 28, 0.9) 80%, rgba(20, 14, 28, 0.98) 100%)',
           zIndex: 2,
           pointerEvents: 'none',
         }}
@@ -342,17 +342,17 @@ export const Page3OtpScreen: React.FC<Page3OtpScreenProps> = ({
                         flex: 1,
                         height: '58px',
                         borderRadius: '13px',
-                        backgroundColor: 'rgba(26, 20, 24, 0.65)',
+                        backgroundColor: 'rgba(70, 32, 55, 0.65)',
                         backdropFilter: 'blur(12px)',
                         WebkitBackdropFilter: 'blur(12px)',
                         border: isError
                           ? '1.5px solid #e05a5a'
                           : isCurFocused
-                          ? '1.5px solid rgba(243, 238, 233, 0.65)'
-                          : '1px solid rgba(243, 238, 233, 0.22)',
+                          ? '1.5px solid #F9AAAD'
+                          : '1px solid rgba(161, 82, 95, 0.35)',
                         boxShadow: isCurFocused
-                          ? '0 0 0 3px rgba(243, 238, 233, 0.12)'
-                          : '0 4px 16px rgba(0, 0, 0, 0.25)',
+                          ? '0 0 0 3px rgba(199, 87, 124, 0.25)'
+                          : '0 4px 16px rgba(0, 0, 0, 0.3)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
@@ -483,8 +483,8 @@ export const Page3OtpScreen: React.FC<Page3OtpScreenProps> = ({
                     width: '100%',
                     maxWidth: '344px',
                     height: '56px',
-                    backgroundColor: 'var(--color-warm-porcelain)',
-                    color: 'var(--color-espresso)',
+                    background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
+                    color: '#FDF3F5',
                     fontFamily: 'var(--font-sans)',
                     fontSize: '16.5px',
                     fontWeight: 600,
@@ -496,8 +496,8 @@ export const Page3OtpScreen: React.FC<Page3OtpScreenProps> = ({
                     justifyContent: 'center',
                     gap: '8px',
                     cursor: isVerifying ? 'wait' : 'pointer',
-                    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4)',
-                    transition: 'transform 0.15s ease, background-color 0.15s ease',
+                    boxShadow: '0 8px 24px rgba(161, 82, 95, 0.45)',
+                    transition: 'transform 0.15s ease, background 0.2s ease, box-shadow 0.2s ease',
                     opacity: isVerifying ? 0.85 : 1,
                   }}
                   onMouseDown={(e) => {
@@ -507,11 +507,15 @@ export const Page3OtpScreen: React.FC<Page3OtpScreenProps> = ({
                     if (!isVerifying) e.currentTarget.style.transform = 'scale(1)';
                   }}
                   onMouseEnter={(e) => {
-                    if (!isVerifying) e.currentTarget.style.backgroundColor = '#FFFFFF';
+                    if (!isVerifying) {
+                      e.currentTarget.style.background = 'linear-gradient(135deg, #C7577C 0%, #F9AAAD 100%)';
+                      e.currentTarget.style.boxShadow = '0 10px 28px rgba(199, 87, 124, 0.55)';
+                    }
                   }}
                   onMouseLeave={(e) => {
                     if (!isVerifying) {
-                      e.currentTarget.style.backgroundColor = 'var(--color-warm-porcelain)';
+                      e.currentTarget.style.background = 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)';
+                      e.currentTarget.style.boxShadow = '0 8px 24px rgba(161, 82, 95, 0.45)';
                       e.currentTarget.style.transform = 'scale(1)';
                     }
                   }}

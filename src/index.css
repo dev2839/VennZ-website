@@ -1,12 +1,28 @@
-/* VennZ - Global Design System */
+/* VennZ - Global Design System (Reference Palette) */
 :root {
-  /* Brand Color Palette */
-  --color-mulberry: #49283D;
-  --color-dusty-lilac: #B39AAE;
-  --color-mushroom: #A99B91;
-  --color-warm-porcelain: #F3EEE9;
-  --color-espresso: #272124;
-  --color-peach-blush: #E8A99B;
+  /* Core Reference Color Palette */
+  --color-primary-dark: #140E1C;
+  --color-deep-plum: #462037;
+  --color-dark-mauve: #683A46;
+  --color-muted-rose: #A1525F;
+  --color-soft-dusty-rose: #C7577C;
+  --color-light-blush: #F9AAAD;
+
+  /* Text & Surfaces */
+  --color-blush-white: #FDF3F5;
+  --color-blush-subtle: #F8E2E6;
+
+  /* Brand mappings remapped to the reference palette */
+  --color-mulberry: #462037;
+  --color-dusty-lilac: #A1525F;
+  --color-mushroom: #683A46;
+  --color-warm-porcelain: #FDF3F5;
+  --color-espresso: #140E1C;
+  --color-peach-blush: #F9AAAD;
+
+  /* Button gradients */
+  --btn-gradient-primary: linear-gradient(135deg, #A1525F 0%, #C7577C 100%);
+  --btn-gradient-hover: linear-gradient(135deg, #C7577C 0%, #F9AAAD 100%);
 
   /* Typography */
   --font-serif: 'Sugar', 'Brown Sugar', 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
@@ -26,7 +42,7 @@
 html, body {
   min-height: 100%;
   width: 100%;
-  background-color: #0F0C10;
+  background-color: #140E1C;
   color: var(--color-warm-porcelain);
   font-family: var(--font-sans);
   font-weight: 300;
@@ -51,7 +67,7 @@ b, strong {
   flex-direction: column;
   align-items: stretch;
   justify-content: flex-start;
-  background-color: #0F0C10;
+  background-color: #140E1C;
 }
 
 /* Custom Scrollbars */
@@ -60,16 +76,16 @@ b, strong {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.2);
+  background: #140E1C;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-mulberry);
+  background: var(--color-dark-mauve);
   border-radius: 3px;
 }
 
 /* Focus styles */
 button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
-  outline: 2px solid var(--color-peach-blush);
+  outline: 2px solid var(--color-soft-dusty-rose);
   outline-offset: 2px;
 }
 
@@ -84,7 +100,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   width: 24px;
   height: 24px;
   transform: scale(1.25);
-  filter: invert(18%) sepia(22%) saturate(1350%) hue-rotate(275deg) brightness(88%) contrast(92%);
+  filter: invert(45%) sepia(35%) saturate(700%) hue-rotate(300deg) brightness(95%) contrast(90%);
   opacity: 0.85;
   transition: transform 0.15s ease, opacity 0.15s ease;
   margin-right: 2px;
@@ -97,7 +113,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
 /* Form Input Color Scheme & Autofill Overrides */
 input, select, textarea {
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 input:-webkit-autofill,
@@ -105,8 +121,8 @@ input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 textarea:-webkit-autofill,
 select:-webkit-autofill {
-  -webkit-text-fill-color: var(--color-espresso) !important;
-  -webkit-box-shadow: 0 0 0px 1000px rgba(255, 255, 255, 0.9) inset !important;
+  -webkit-text-fill-color: var(--color-warm-porcelain) !important;
+  -webkit-box-shadow: 0 0 0px 1000px #462037 inset !important;
   transition: background-color 5000s ease-in-out 0s;
 }
 
@@ -221,7 +237,7 @@ select:-webkit-autofill {
   100% { background-position: 200% 0; }
 }
 .skeleton {
-  background: linear-gradient(90deg, rgba(179, 154, 174, 0.1) 25%, rgba(179, 154, 174, 0.2) 50%, rgba(179, 154, 174, 0.1) 75%);
+  background: linear-gradient(90deg, rgba(104, 58, 70, 0.15) 25%, rgba(161, 82, 95, 0.25) 50%, rgba(104, 58, 70, 0.15) 75%);
   background-size: 200% 100%;
   animation: shimmer 2s infinite linear;
   border-radius: 8px;
@@ -237,7 +253,7 @@ select:-webkit-autofill {
   top: 16px;
   left: 16px;
   font-size: 16px;
-  color: var(--color-mushroom);
+  color: var(--color-muted-rose);
   transition: 0.2s ease all;
   pointer-events: none;
 }
@@ -246,9 +262,9 @@ select:-webkit-autofill {
   top: -8px;
   left: 12px;
   font-size: 12px;
-  background-color: var(--color-espresso);
+  background-color: var(--color-deep-plum);
   padding: 0 4px;
-  color: var(--color-peach-blush);
+  color: var(--color-light-blush);
 }
 
 /* Form Slide Animations */

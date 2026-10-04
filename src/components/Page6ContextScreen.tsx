@@ -96,8 +96,8 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        backgroundColor: isDark ? '#050104' : '#F7F3EE',
-        color: isDark ? '#F3EEE9' : 'var(--color-espresso)',
+        backgroundColor: isDark ? '#140E1C' : '#FAF1F3',
+        color: isDark ? '#FDF3F5' : '#462037',
         fontFamily: 'var(--font-sans)',
         overflow: 'hidden',
       }}
@@ -125,7 +125,7 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
         style={{
           position: 'absolute',
           inset: 0,
-          backgroundColor: isDark ? 'rgba(3, 0, 3, 0.12)' : 'rgba(247, 243, 238, 0.42)',
+          backgroundColor: isDark ? 'rgba(20, 14, 28, 0.45)' : 'rgba(250, 241, 243, 0.42)',
           zIndex: 1,
           pointerEvents: 'none',
         }}
@@ -137,10 +137,10 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
           position: 'relative',
           zIndex: 20,
           flexShrink: 0,
-          backgroundColor: isDark ? 'rgba(5, 1, 4, 0.88)' : 'rgba(247, 243, 238, 0.88)',
+          backgroundColor: isDark ? 'rgba(20, 14, 28, 0.92)' : 'rgba(250, 241, 243, 0.92)',
           backdropFilter: 'blur(10px)',
           WebkitBackdropFilter: 'blur(10px)',
-          borderBottom: isDark ? '1px solid rgba(243, 238, 233, 0.08)' : '1px solid rgba(73, 40, 61, 0.06)',
+          borderBottom: isDark ? '1px solid rgba(161, 82, 95, 0.2)' : '1px solid rgba(161, 82, 95, 0.12)',
         }}
       >
         {showStatusBar && <StatusBar variant={isDark ? 'light' : 'dark'} />}
@@ -314,9 +314,9 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
                   border: errors.linkedinUrl
                     ? '1.5px solid #E06D6D'
                     : focusedField === 'linkedin'
-                    ? isDark ? '1.5px solid #F0D4B8' : '1.5px solid var(--color-mulberry)'
+                    ? isDark ? '1.5px solid #F9AAAD' : '1.5px solid var(--color-mulberry)'
                     : isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.22)',
-                  backgroundColor: isDark ? 'rgba(24, 15, 20, 0.75)' : 'rgba(255, 255, 255, 0.72)',
+                  backgroundColor: isDark ? 'rgba(70, 32, 55, 0.65)' : 'rgba(255, 255, 255, 0.72)',
                   backdropFilter: 'blur(8px)',
                   WebkitBackdropFilter: 'blur(8px)',
                   padding: '0 16px',
@@ -328,7 +328,7 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
                   transition: 'border-color 0.15s ease, box-shadow 0.15s ease',
                   boxShadow:
                     focusedField === 'linkedin'
-                      ? isDark ? '0 0 0 3px rgba(240, 212, 184, 0.15)' : '0 0 0 3px rgba(73, 40, 61, 0.08)'
+                      ? isDark ? '0 0 0 3px rgba(249, 170, 173, 0.2)' : '0 0 0 3px rgba(73, 40, 61, 0.08)'
                       : 'none',
                 }}
               />
@@ -404,9 +404,9 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
                   border: errors.instagramUsername
                     ? '1.5px solid #E06D6D'
                     : focusedField === 'instagram'
-                    ? isDark ? '1.5px solid #F0D4B8' : '1.5px solid var(--color-mulberry)'
+                    ? isDark ? '1.5px solid #F9AAAD' : '1.5px solid var(--color-mulberry)'
                     : isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.22)',
-                  backgroundColor: isDark ? 'rgba(24, 15, 20, 0.75)' : 'rgba(255, 255, 255, 0.72)',
+                  backgroundColor: isDark ? 'rgba(70, 32, 55, 0.65)' : 'rgba(255, 255, 255, 0.72)',
                   backdropFilter: 'blur(8px)',
                   WebkitBackdropFilter: 'blur(8px)',
                   padding: '0 16px',
@@ -418,7 +418,7 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
                   transition: 'border-color 0.15s ease, box-shadow 0.15s ease',
                   boxShadow:
                     focusedField === 'instagram'
-                      ? isDark ? '0 0 0 3px rgba(240, 212, 184, 0.15)' : '0 0 0 3px rgba(73, 40, 61, 0.08)'
+                      ? isDark ? '0 0 0 3px rgba(249, 170, 173, 0.2)' : '0 0 0 3px rgba(73, 40, 61, 0.08)'
                       : 'none',
                 }}
               />
@@ -440,7 +440,7 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
             {/* 3. EXPLANATION CALLOUT */}
             <div
               style={{
-                backgroundColor: isDark ? 'rgba(24, 15, 20, 0.72)' : 'rgba(255, 255, 255, 0.65)',
+                backgroundColor: isDark ? 'rgba(70, 32, 55, 0.62)' : 'rgba(255, 255, 255, 0.65)',
                 backdropFilter: 'blur(8px)',
                 WebkitBackdropFilter: 'blur(8px)',
                 borderRadius: '14px',
@@ -454,7 +454,7 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
             >
               <div
                 style={{
-                  color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
+                  color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
                   flexShrink: 0,
                   marginTop: '1px',
                 }}
@@ -506,8 +506,8 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
                   width: '100%',
                   height: '56px',
                   borderRadius: '28px',
-                  backgroundColor: 'var(--color-mulberry)',
-                  color: '#FFFFFF',
+                  background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
+                  color: '#FDF3F5',
                   border: 'none',
                   fontSize: '16.5px',
                   fontWeight: 700,
@@ -518,15 +518,15 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '8px',
-                  boxShadow: '0 6px 22px rgba(73, 40, 61, 0.28)',
-                  transition: 'background-color 0.2s ease, transform 0.15s ease',
+                  boxShadow: '0 6px 22px rgba(161, 82, 95, 0.4)',
+                  transition: 'filter 0.2s ease, transform 0.15s ease',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#3B1F31';
+                  e.currentTarget.style.background = 'linear-gradient(135deg, #C7577C 0%, #F9AAAD 100%)';
                   e.currentTarget.style.transform = 'translateY(-1px)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'var(--color-mulberry)';
+                  e.currentTarget.style.background = 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)';
                   e.currentTarget.style.transform = 'translateY(0)';
                 }}
               >

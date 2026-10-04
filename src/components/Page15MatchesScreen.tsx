@@ -52,13 +52,13 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
   };
 
   // Theme variables
-  const themeBgColor = isDark ? '#050104' : '#F7F3EE';
-  const themeTextColor = isDark ? '#F3EEE9' : 'var(--color-espresso)';
-  const themeMulberry = isDark ? '#F3EEE9' : 'var(--color-mulberry)';
-  const themeMuted = isDark ? '#D5C5CF' : '#8A7A84';
-  const themeBorder = isDark ? 'rgba(243, 238, 233, 0.18)' : 'rgba(73, 40, 61, 0.12)';
-  const themeCardBg = isDark ? 'rgba(10, 2, 9, 0.94)' : 'rgba(255, 255, 255, 0.65)';
-  const themeCardBorder = isDark ? '1px solid rgba(243, 238, 233, 0.16)' : '1px solid rgba(73, 40, 61, 0.12)';
+  const themeBgColor = isDark ? '#140E1C' : '#FAF1F3';
+  const themeTextColor = isDark ? '#FDF3F5' : '#462037';
+  const themeMulberry = isDark ? '#F9AAAD' : '#462037';
+  const themeMuted = isDark ? '#D4A2AC' : '#683A46';
+  const themeBorder = isDark ? 'rgba(161, 82, 95, 0.28)' : 'rgba(161, 82, 95, 0.18)';
+  const themeCardBg = isDark ? 'rgba(70, 32, 55, 0.75)' : 'rgba(255, 255, 255, 0.75)';
+  const themeCardBorder = isDark ? '1px solid rgba(161, 82, 95, 0.3)' : '1px solid rgba(161, 82, 95, 0.18)';
 
   const handleAccept = (requestId: string, name: string) => {
     acceptRequest(requestId);
@@ -112,7 +112,7 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
         style={{
           position: 'absolute',
           inset: 0,
-          backgroundColor: isDark ? 'rgba(3, 0, 3, 0.12)' : 'rgba(247, 243, 238, 0.35)',
+          backgroundColor: isDark ? 'rgba(20, 14, 28, 0.45)' : 'rgba(250, 241, 243, 0.35)',
           zIndex: 1,
           pointerEvents: 'none',
         }}
@@ -124,7 +124,7 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
           style={{
             position: 'relative',
             zIndex: 45,
-            backgroundColor: isDark ? 'rgba(5, 1, 4, 0.98)' : 'rgba(247, 243, 238, 0.92)',
+            backgroundColor: isDark ? 'rgba(20, 14, 28, 0.98)' : 'rgba(250, 241, 243, 0.92)',
             transition: 'background-color 0.25s ease',
           }}
         >
@@ -178,20 +178,20 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
               style={{
                 height: '40px',
                 borderRadius: '22px',
-                border: activeSubTab === 'matches' ? 'none' : `1px solid ${isDark ? 'rgba(243, 238, 233, 0.2)' : 'rgba(73, 40, 61, 0.2)'}`,
-                backgroundColor: activeSubTab === 'matches'
-                  ? (isDark ? '#F3EEE9' : '#FFFFFF')
+                border: activeSubTab === 'matches' ? 'none' : `1px solid ${isDark ? 'rgba(161, 82, 95, 0.3)' : 'rgba(161, 82, 95, 0.2)'}`,
+                background: activeSubTab === 'matches'
+                  ? (isDark ? 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)' : '#FFFFFF')
                   : 'transparent',
                 color: activeSubTab === 'matches'
-                  ? (isDark ? '#050104' : 'var(--color-mulberry)')
+                  ? (isDark ? '#FDF3F5' : 'var(--color-mulberry)')
                   : themeMuted,
                 fontSize: '11.5px',
-                fontWeight: activeSubTab === 'matches' ? 500 : 400,
+                fontWeight: activeSubTab === 'matches' ? 600 : 400,
                 letterSpacing: '0.1em',
                 textTransform: 'uppercase',
                 cursor: 'pointer',
                 boxShadow: activeSubTab === 'matches'
-                  ? (isDark ? '0 2px 10px rgba(0, 0, 0, 0.35)' : '0 2px 8px rgba(73, 40, 61, 0.12)')
+                  ? (isDark ? '0 2px 10px rgba(161, 82, 95, 0.4)' : '0 2px 8px rgba(161, 82, 95, 0.15)')
                   : 'none',
                 transition: 'all 0.15s ease',
               }}
@@ -206,20 +206,20 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
               style={{
                 height: '40px',
                 borderRadius: '22px',
-                border: activeSubTab === 'requests' ? 'none' : `1px solid ${isDark ? 'rgba(243, 238, 233, 0.2)' : 'rgba(73, 40, 61, 0.2)'}`,
-                backgroundColor: activeSubTab === 'requests'
-                  ? (isDark ? '#F3EEE9' : '#FFFFFF')
+                border: activeSubTab === 'requests' ? 'none' : `1px solid ${isDark ? 'rgba(161, 82, 95, 0.3)' : 'rgba(161, 82, 95, 0.2)'}`,
+                background: activeSubTab === 'requests'
+                  ? (isDark ? 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)' : '#FFFFFF')
                   : 'transparent',
                 color: activeSubTab === 'requests'
-                  ? (isDark ? '#050104' : 'var(--color-mulberry)')
+                  ? (isDark ? '#FDF3F5' : 'var(--color-mulberry)')
                   : themeMuted,
                 fontSize: '11.5px',
-                fontWeight: activeSubTab === 'requests' ? 500 : 400,
+                fontWeight: activeSubTab === 'requests' ? 600 : 400,
                 letterSpacing: '0.1em',
                 textTransform: 'uppercase',
                 cursor: 'pointer',
                 boxShadow: activeSubTab === 'requests'
-                  ? (isDark ? '0 2px 10px rgba(0, 0, 0, 0.35)' : '0 2px 8px rgba(73, 40, 61, 0.12)')
+                  ? (isDark ? '0 2px 10px rgba(161, 82, 95, 0.4)' : '0 2px 8px rgba(161, 82, 95, 0.15)')
                   : 'none',
                 transition: 'all 0.15s ease',
               }}
@@ -339,8 +339,8 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
                               flex: 1.15,
                               height: '34px',
                               borderRadius: '17px',
-                              backgroundColor: isDark ? '#F3EEE9' : 'var(--color-mulberry)',
-                              color: isDark ? '#050104' : '#FFFFFF',
+                              background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
+                              color: '#FDF3F5',
                               border: 'none',
                               fontSize: '11px',
                               fontWeight: 700,
@@ -350,7 +350,7 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
-                              boxShadow: isDark ? '0 2px 8px rgba(0,0,0,0.3)' : '0 2px 8px rgba(73, 40, 61, 0.2)',
+                              boxShadow: '0 2px 8px rgba(161, 82, 95, 0.4)',
                               transition: 'all 0.15s ease',
                             }}
                           >
@@ -634,14 +634,15 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
                     style={{
                       padding: '10px 22px',
                       borderRadius: '20px',
-                      backgroundColor: isDark ? '#F3EEE9' : 'var(--color-mulberry)',
-                      color: isDark ? '#050104' : '#FFFFFF',
+                      background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
+                      color: '#FDF3F5',
                       border: 'none',
                       fontSize: '11.5px',
                       fontWeight: 700,
                       letterSpacing: '0.08em',
                       textTransform: 'uppercase',
                       cursor: 'pointer',
+                      boxShadow: '0 4px 14px rgba(161, 82, 95, 0.4)',
                     }}
                   >
                     DISCOVER INTRODUCTIONS
@@ -662,8 +663,8 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
             left: '50%',
             transform: 'translateX(-50%)',
             zIndex: 55,
-            backgroundColor: isDark ? '#F3EEE9' : 'rgba(39, 33, 36, 0.95)',
-            color: isDark ? '#050104' : '#FFFFFF',
+            backgroundColor: isDark ? '#462037' : 'rgba(70, 32, 55, 0.95)',
+            color: '#FDF3F5',
             fontSize: '12.5px',
             fontWeight: 600,
             padding: '9px 18px',

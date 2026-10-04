@@ -82,12 +82,12 @@ export const Page14HelpScreen: React.FC<Page14HelpScreenProps> = ({
   };
 
   // Theme styling
-  const themeBgColor = isDark ? '#050104' : '#F7F3EE';
-  const themeTextColor = isDark ? '#F3EEE9' : 'var(--color-espresso)';
-  const themeMulberry = isDark ? '#F3EEE9' : 'var(--color-mulberry)';
-  const themeMuted = isDark ? '#D5C5CF' : '#6E5E68';
-  const themeBorder = isDark ? 'rgba(243, 238, 233, 0.18)' : 'rgba(73, 40, 61, 0.12)';
-  const themeCardBg = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.75)';
+  const themeBgColor = isDark ? '#140E1C' : '#FAF1F3';
+  const themeTextColor = isDark ? '#FDF3F5' : '#462037';
+  const themeMulberry = isDark ? '#F9AAAD' : '#462037';
+  const themeMuted = isDark ? '#D4A2AC' : '#683A46';
+  const themeBorder = isDark ? 'rgba(161, 82, 95, 0.28)' : 'rgba(161, 82, 95, 0.18)';
+  const themeCardBg = isDark ? 'rgba(70, 32, 55, 0.75)' : 'rgba(255, 255, 255, 0.75)';
 
   return (
     <div
@@ -125,7 +125,7 @@ export const Page14HelpScreen: React.FC<Page14HelpScreenProps> = ({
         style={{
           position: 'absolute',
           inset: 0,
-          backgroundColor: isDark ? 'rgba(3, 0, 3, 0.12)' : 'rgba(247, 243, 238, 0.35)',
+          backgroundColor: isDark ? 'rgba(20, 14, 28, 0.45)' : 'rgba(250, 241, 243, 0.35)',
           zIndex: 1,
           pointerEvents: 'none',
         }}
@@ -137,7 +137,7 @@ export const Page14HelpScreen: React.FC<Page14HelpScreenProps> = ({
           style={{
             position: 'relative',
             zIndex: 45,
-            backgroundColor: isDark ? 'rgba(5, 1, 4, 0.98)' : 'rgba(247, 243, 238, 0.92)',
+            backgroundColor: isDark ? 'rgba(20, 14, 28, 0.98)' : 'rgba(250, 241, 243, 0.92)',
             transition: 'background-color 0.25s ease',
           }}
         >
@@ -278,16 +278,16 @@ export const Page14HelpScreen: React.FC<Page14HelpScreenProps> = ({
                     style={{
                       padding: '8px 16px',
                       borderRadius: '20px',
-                      border: isSelected ? `1.5px solid ${isDark ? '#F3EEE9' : 'var(--color-mulberry)'}` : `1px solid ${themeBorder}`,
-                      backgroundColor: isSelected ? (isDark ? '#F3EEE9' : 'var(--color-mulberry)') : themeCardBg,
-                      color: isSelected ? (isDark ? '#49283D' : '#FFFFFF') : themeMulberry,
+                      border: isSelected ? '1.5px solid #C7577C' : `1px solid ${themeBorder}`,
+                      background: isSelected ? 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)' : themeCardBg,
+                      color: isSelected ? '#FDF3F5' : themeMulberry,
                       fontSize: '11px',
                       fontWeight: isSelected ? 800 : 600,
                       letterSpacing: '0.08em',
                       textTransform: 'uppercase',
                       cursor: 'pointer',
                       transition: 'all 0.15s ease',
-                      boxShadow: isSelected ? '0 3px 10px rgba(0, 0, 0, 0.2)' : 'none',
+                      boxShadow: isSelected ? '0 3px 10px rgba(161, 82, 95, 0.35)' : 'none',
                     }}
                   >
                     {cat}
@@ -361,8 +361,8 @@ export const Page14HelpScreen: React.FC<Page14HelpScreenProps> = ({
               width: '100%',
               height: '48px',
               borderRadius: '24px',
-              backgroundColor: isSubmitEnabled ? (isDark ? '#F3EEE9' : 'var(--color-mulberry)') : (isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(73, 40, 61, 0.16)'),
-              color: isSubmitEnabled ? (isDark ? '#050104' : '#FFFFFF') : themeMuted,
+              background: isSubmitEnabled ? 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)' : (isDark ? 'rgba(70, 32, 55, 0.4)' : 'rgba(161, 82, 95, 0.16)'),
+              color: isSubmitEnabled ? '#FDF3F5' : themeMuted,
               border: 'none',
               fontSize: '12px',
               fontWeight: 700,
@@ -372,7 +372,7 @@ export const Page14HelpScreen: React.FC<Page14HelpScreenProps> = ({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              boxShadow: isSubmitEnabled ? '0 6px 18px rgba(0, 0, 0, 0.25)' : 'none',
+              boxShadow: isSubmitEnabled ? '0 6px 18px rgba(161, 82, 95, 0.4)' : 'none',
               transition: 'all 0.15s ease',
               marginBottom: '28px',
             }}
@@ -542,15 +542,15 @@ export const Page14HelpScreen: React.FC<Page14HelpScreenProps> = ({
                 width: '100%',
                 height: '44px',
                 borderRadius: '22px',
-                backgroundColor: isDark ? '#F3EEE9' : 'var(--color-mulberry)',
-                color: isDark ? '#49283D' : '#FFFFFF',
+                background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
+                color: '#FDF3F5',
                 border: 'none',
                 fontSize: '12px',
                 fontWeight: 700,
                 letterSpacing: '0.08em',
                 textTransform: 'uppercase',
                 cursor: 'pointer',
-                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
+                boxShadow: '0 4px 12px rgba(161, 82, 95, 0.4)',
               }}
             >
               DONE

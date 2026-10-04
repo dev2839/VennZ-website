@@ -21,7 +21,7 @@ export const SplashBranding: React.FC<SplashBrandingProps> = ({
         flexDirection: 'column',
         alignItems: 'center',
         textAlign: 'center',
-        color: isDark ? '#FFFFFF' : 'var(--color-mulberry)',
+        color: isDark ? '#FDF3F5' : '#462037',
         padding: '0 20px',
       }}
     >
@@ -59,8 +59,8 @@ export const SplashBranding: React.FC<SplashBrandingProps> = ({
               height: '24px',
               borderRadius: '50%',
               background: isDark
-                ? 'radial-gradient(ellipse at center, rgba(0, 0, 0, 0.85) 0%, rgba(139, 44, 116, 0.35) 45%, transparent 75%)'
-                : 'radial-gradient(ellipse at center, rgba(73, 40, 61, 0.28) 0%, transparent 70%)',
+                ? 'radial-gradient(ellipse at center, rgba(0, 0, 0, 0.85) 0%, rgba(104, 58, 70, 0.35) 45%, transparent 75%)'
+                : 'radial-gradient(ellipse at center, rgba(161, 82, 95, 0.25) 0%, transparent 70%)',
               filter: 'blur(10px)',
               pointerEvents: 'none',
               zIndex: 1,
@@ -85,15 +85,16 @@ export const SplashBranding: React.FC<SplashBrandingProps> = ({
               transition: 'opacity 0.25s ease',
               filter: isDark
                 ? [
-                    // Pure 3D depth shadow with dark occlusion and soft plum ambient (no white cutout fringe)
+                    // Pure 3D depth shadow with dark occlusion and soft plum/mauve ambient
                     'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.9))',
                     'drop-shadow(0 14px 28px rgba(0, 0, 0, 0.85))',
-                    'drop-shadow(0 26px 45px rgba(25, 5, 22, 0.6))',
+                    'drop-shadow(0 26px 45px rgba(20, 14, 28, 0.7))',
+                    'drop-shadow(0 0 20px rgba(161, 82, 95, 0.25))',
                   ].join(' ')
                 : [
-                    'drop-shadow(0 3px 5px rgba(73, 40, 61, 0.35))',
-                    'drop-shadow(0 12px 22px rgba(73, 40, 61, 0.18))',
-                    'drop-shadow(0 0 20px rgba(183, 142, 184, 0.2))',
+                    'drop-shadow(0 3px 5px rgba(70, 32, 55, 0.3))',
+                    'drop-shadow(0 12px 22px rgba(104, 58, 70, 0.16))',
+                    'drop-shadow(0 0 20px rgba(199, 87, 124, 0.18))',
                   ].join(' '),
             }}
           />
@@ -108,7 +109,7 @@ export const SplashBranding: React.FC<SplashBrandingProps> = ({
           lineHeight: '1.4',
           fontWeight: 500,
           letterSpacing: '0.02em',
-          color: isDark ? '#FAF5EE' : 'var(--color-mulberry)',
+          color: isDark ? '#FDF3F5' : '#462037',
           marginTop: '16px',
           whiteSpace: 'nowrap',
           textShadow: isDark ? '0 1px 8px rgba(0, 0, 0, 0.6)' : 'none',

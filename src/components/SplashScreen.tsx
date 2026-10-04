@@ -39,9 +39,9 @@ const PILLARS: PillarItem[] = [
     badge: 'DAILY CURATION',
     score: '9.8 ★',
     category: 'INTRODUCTIONS',
-    cardGradientDark: 'linear-gradient(150deg, #3A1636 0%, #230B21 55%, #130512 100%)',
-    cardGradientLight: 'linear-gradient(150deg, #582453 0%, #3B1638 55%, #220B20 100%)',
-    glowColor: 'rgba(183, 142, 184, 0.45)',
+    cardGradientDark: 'linear-gradient(150deg, #462037 0%, #2A1322 55%, #140E1C 100%)',
+    cardGradientLight: 'linear-gradient(150deg, #683A46 0%, #462037 60%, #271420 100%)',
+    glowColor: 'rgba(161, 82, 95, 0.45)',
   },
   {
     id: 'pillar-verification',
@@ -52,9 +52,9 @@ const PILLARS: PillarItem[] = [
     badge: 'VERIFIED CIRCLE',
     score: '9.9 ★',
     category: 'INTEGRITY',
-    cardGradientDark: 'linear-gradient(150deg, #441A3F 0%, #2A0E27 55%, #160615 100%)',
-    cardGradientLight: 'linear-gradient(150deg, #64285D 0%, #43173F 55%, #270D25 100%)',
-    glowColor: 'rgba(215, 175, 210, 0.45)',
+    cardGradientDark: 'linear-gradient(150deg, #532341 0%, #35172B 55%, #140E1C 100%)',
+    cardGradientLight: 'linear-gradient(150deg, #743E4E 0%, #4D233C 60%, #2D1625 100%)',
+    glowColor: 'rgba(199, 87, 124, 0.45)',
   },
   {
     id: 'pillar-elevate',
@@ -65,9 +65,9 @@ const PILLARS: PillarItem[] = [
     badge: 'CONCIERGE DESK',
     score: '9.6 ★',
     category: 'PREMIUM SERVICE',
-    cardGradientDark: 'linear-gradient(150deg, #33132F 0%, #20091E 55%, #110410 100%)',
-    cardGradientLight: 'linear-gradient(150deg, #4E1E48 0%, #341231 55%, #1F0A1D 100%)',
-    glowColor: 'rgba(232, 169, 155, 0.45)',
+    cardGradientDark: 'linear-gradient(150deg, #683A46 0%, #3F1C32 55%, #140E1C 100%)',
+    cardGradientLight: 'linear-gradient(150deg, #8C475A 0%, #5B2945 60%, #341829 100%)',
+    glowColor: 'rgba(249, 170, 173, 0.45)',
   },
   {
     id: 'pillar-mixers',
@@ -78,9 +78,9 @@ const PILLARS: PillarItem[] = [
     badge: 'SECRET VENUES',
     score: '9.7 ★',
     category: 'MEMBERS GATHERINGS',
-    cardGradientDark: 'linear-gradient(150deg, #481B43 0%, #2D0F2A 55%, #170716 100%)',
-    cardGradientLight: 'linear-gradient(150deg, #6B2B64 0%, #481943 55%, #290E26 100%)',
-    glowColor: 'rgba(200, 135, 185, 0.45)',
+    cardGradientDark: 'linear-gradient(150deg, #4F223D 0%, #301426 55%, #140E1C 100%)',
+    cardGradientLight: 'linear-gradient(150deg, #6E3B4B 0%, #482038 60%, #2A1423 100%)',
+    glowColor: 'rgba(199, 87, 124, 0.45)',
   },
   {
     id: 'pillar-community',
@@ -91,9 +91,9 @@ const PILLARS: PillarItem[] = [
     badge: 'EXCLUSIVE ECOSYSTEM',
     score: '9.9 ★',
     category: 'COMMUNITY',
-    cardGradientDark: 'linear-gradient(150deg, #371434 0%, #220B20 55%, #120511 100%)',
-    cardGradientLight: 'linear-gradient(150deg, #531F4E 0%, #371434 55%, #210B20 100%)',
-    glowColor: 'rgba(195, 150, 180, 0.45)',
+    cardGradientDark: 'linear-gradient(150deg, #5C2847 0%, #39182E 55%, #140E1C 100%)',
+    cardGradientLight: 'linear-gradient(150deg, #7A4153 0%, #522540 60%, #2F1727 100%)',
+    glowColor: 'rgba(161, 82, 95, 0.45)',
   },
 ];
 
@@ -177,21 +177,21 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
         display: 'flex',
         flexDirection: 'column',
         overflowX: 'hidden',
-        backgroundColor: isDark ? '#0F0C10' : '#F3EBF2',
+        backgroundColor: isDark ? '#140E1C' : '#FAF1F3',
         transition: 'background-color 0.3s ease',
       }}
     >
-      {/* Dynamic Ambient Gradient Mesh Background (softer purple in dark mode, gentle subtle purple nuance in light mode) */}
+      {/* Dynamic Ambient Gradient Mesh Background (Cinematic dark plum / mauve subtle sweep) */}
       <div
         style={{
           position: 'absolute',
           inset: 0,
           background: isDark
-            ? 'radial-gradient(ellipse at 50% 16%, rgba(45, 22, 42, 0.18) 0%, rgba(20, 14, 20, 0.30) 45%, rgba(13, 10, 14, 1) 95%)'
+            ? 'radial-gradient(ellipse at 50% 16%, rgba(70, 32, 55, 0.45) 0%, rgba(104, 58, 70, 0.22) 40%, rgba(20, 14, 28, 0.98) 90%)'
             : [
-                'radial-gradient(ellipse at 50% 14%, rgba(196, 152, 198, 0.32) 0%, rgba(220, 186, 222, 0.22) 38%, rgba(240, 220, 238, 0.12) 65%, transparent 100%)',
-                'radial-gradient(ellipse at 50% 70%, rgba(185, 138, 188, 0.22) 0%, rgba(218, 184, 220, 0.15) 45%, transparent 80%)',
-                'linear-gradient(180deg, #F6EEF5 0%, #EFE4EE 42%, #F6EEF5 100%)',
+                'radial-gradient(ellipse at 50% 14%, rgba(236, 209, 216, 0.5) 0%, rgba(242, 223, 228, 0.3) 38%, rgba(250, 241, 243, 0.15) 65%, transparent 100%)',
+                'radial-gradient(ellipse at 50% 70%, rgba(227, 189, 199, 0.3) 0%, rgba(245, 230, 235, 0.2) 45%, transparent 80%)',
+                'linear-gradient(180deg, #FBF3F5 0%, #FAF1F3 42%, #FBF3F5 100%)',
               ].join(', '),
           pointerEvents: 'none',
           zIndex: 0,
@@ -296,7 +296,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
               fontWeight: 700,
               letterSpacing: '0.22em',
               textTransform: 'uppercase',
-              color: isDark ? '#FAF5EE' : 'var(--color-mulberry)',
+              color: isDark ? '#F9AAAD' : '#A1525F',
             }}
           >
             CURATED EXCELLENCE
@@ -306,7 +306,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
               fontFamily: 'var(--font-serif)',
               fontSize: 'clamp(24px, 3.2vw, 34px)',
               fontWeight: 500,
-              color: isDark ? '#FAF5EE' : 'var(--color-mulberry)',
+              color: isDark ? '#FDF3F5' : '#462037',
               margin: '8px 0 0 0',
             }}
           >
@@ -331,7 +331,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
             touchAction: 'pan-y',
           }}
         >
-          {/* Ambient Purple Backlight to blend the cards into purple ambiance */}
+          {/* Ambient Mauve/Plum Backlight to blend the cards into cinematic ambiance */}
           <div
             style={{
               position: 'absolute',
@@ -342,8 +342,8 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
               height: '320px',
               borderRadius: '50%',
               background: isDark
-                ? 'radial-gradient(ellipse at center, rgba(45, 20, 42, 0.14) 0%, transparent 70%)'
-                : 'radial-gradient(ellipse at center, rgba(183, 142, 184, 0.35) 0%, transparent 70%)',
+                ? 'radial-gradient(ellipse at center, rgba(104, 58, 70, 0.28) 0%, transparent 70%)'
+                : 'radial-gradient(ellipse at center, rgba(199, 87, 124, 0.25) 0%, transparent 70%)',
               filter: 'blur(50px)',
               pointerEvents: 'none',
               zIndex: 1,
@@ -379,18 +379,18 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
                   background: cardBg,
                   border: isCardFocused
                     ? isDark
-                      ? '1.5px solid rgba(250, 245, 238, 0.75)'
-                      : '1.5px solid rgba(183, 142, 184, 0.75)'
+                      ? '1.5px solid #F9AAAD'
+                      : '1.5px solid #C7577C'
                     : isDark
-                    ? '1px solid rgba(250, 245, 238, 0.15)'
-                    : '1px solid rgba(139, 44, 116, 0.25)',
+                    ? '1px solid rgba(161, 82, 95, 0.35)'
+                    : '1px solid rgba(161, 82, 95, 0.22)',
                   boxShadow: isCardFocused
                     ? isDark
-                      ? `0 28px 60px rgba(0, 0, 0, 0.7), 0 0 42px ${pillar.glowColor}`
-                      : `0 24px 50px rgba(73, 40, 61, 0.28), 0 0 38px ${pillar.glowColor}`
+                      ? `0 28px 60px rgba(20, 14, 28, 0.8), 0 0 36px ${pillar.glowColor}`
+                      : `0 24px 50px rgba(70, 32, 55, 0.25), 0 0 32px ${pillar.glowColor}`
                     : isDark
-                    ? '0 12px 28px rgba(0, 0, 0, 0.45)'
-                    : '0 10px 24px rgba(73, 40, 61, 0.18)',
+                    ? '0 12px 28px rgba(20, 14, 28, 0.5)'
+                    : '0 10px 24px rgba(70, 32, 55, 0.15)',
                   transform: `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`,
                   opacity,
                   zIndex,
@@ -415,7 +415,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
                     left: '15%',
                     right: '15%',
                     height: '1px',
-                    background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent)',
+                    background: 'linear-gradient(90deg, transparent, rgba(249, 170, 173, 0.4), transparent)',
                     pointerEvents: 'none',
                   }}
                 />
@@ -438,10 +438,10 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
                       textTransform: 'uppercase',
                       padding: '4px 10px',
                       borderRadius: '999px',
-                      backgroundColor: isDark ? 'rgba(250, 245, 238, 0.16)' : 'rgba(255, 255, 255, 0.14)',
-                      border: isDark ? '1px solid rgba(250, 245, 238, 0.25)' : 'none',
+                      backgroundColor: isDark ? 'rgba(249, 170, 173, 0.16)' : 'rgba(255, 255, 255, 0.18)',
+                      border: isDark ? '1px solid rgba(249, 170, 173, 0.35)' : '1px solid rgba(199, 87, 124, 0.3)',
                       backdropFilter: 'blur(8px)',
-                      color: '#FAF5EE',
+                      color: '#FDF3F5',
                     }}
                   >
                     {pillar.badge}
@@ -452,9 +452,9 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
                       fontFamily: 'var(--font-sans)',
                       fontSize: '13px',
                       fontWeight: 700,
-                      color: '#FAF5EE',
+                      color: '#FDF3F5',
                       letterSpacing: '0.04em',
-                      backgroundColor: 'rgba(0, 0, 0, 0.35)',
+                      backgroundColor: 'rgba(20, 14, 28, 0.55)',
                       padding: '4px 8px',
                       borderRadius: '8px',
                     }}
@@ -480,15 +480,15 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
                       width: '60px',
                       height: '60px',
                       borderRadius: '50%',
-                      backgroundColor: isDark ? 'rgba(250, 245, 238, 0.12)' : 'rgba(255, 255, 255, 0.12)',
+                      backgroundColor: isDark ? 'rgba(104, 58, 70, 0.45)' : 'rgba(255, 255, 255, 0.18)',
                       backdropFilter: 'blur(10px)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       fontSize: '26px',
-                      color: '#FAF5EE',
-                      boxShadow: '0 8px 22px rgba(0, 0, 0, 0.35)',
-                      border: isDark ? '1px solid rgba(250, 245, 238, 0.3)' : '1px solid rgba(255, 255, 255, 0.2)',
+                      color: isDark ? '#F9AAAD' : '#FDF3F5',
+                      boxShadow: '0 8px 22px rgba(20, 14, 28, 0.4)',
+                      border: isDark ? '1px solid rgba(161, 82, 95, 0.4)' : '1px solid rgba(255, 255, 255, 0.3)',
                       marginBottom: '10px',
                       transition: 'transform 0.3s ease',
                       transform: isCardFocused ? 'scale(1.08)' : 'scale(1)',
@@ -502,7 +502,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
                       fontWeight: 600,
                       letterSpacing: '0.16em',
                       textTransform: 'uppercase',
-                      color: isDark ? '#FAF5EE' : 'rgba(243, 238, 233, 0.85)',
+                      color: isDark ? '#F9AAAD' : 'rgba(253, 243, 245, 0.9)',
                     }}
                   >
                     {pillar.category}
@@ -516,7 +516,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
                       fontFamily: 'var(--font-serif)',
                       fontSize: '20px',
                       fontWeight: 600,
-                      color: '#FAF5EE',
+                      color: '#FDF3F5',
                       margin: '0 0 6px 0',
                       letterSpacing: '0.01em',
                       lineHeight: '1.2',
@@ -529,7 +529,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
                       fontFamily: 'var(--font-sans)',
                       fontSize: '12px',
                       lineHeight: '1.45',
-                      color: isDark ? '#FAF5EE' : 'rgba(243, 238, 233, 0.88)',
+                      color: isDark ? 'rgba(253, 243, 245, 0.85)' : 'rgba(253, 243, 245, 0.9)',
                       margin: 0,
                     }}
                   >
@@ -562,8 +562,8 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
                 height: '8px',
                 borderRadius: '999px',
                 backgroundColor: activeIndex === i
-                  ? (isDark ? '#FAF5EE' : 'var(--color-mulberry)')
-                  : (isDark ? 'rgba(250, 245, 238, 0.3)' : 'rgba(73, 40, 61, 0.25)'),
+                  ? (isDark ? '#F9AAAD' : '#A1525F')
+                  : (isDark ? 'rgba(161, 82, 95, 0.35)' : 'rgba(161, 82, 95, 0.22)'),
                 border: 'none',
                 padding: 0,
                 cursor: 'pointer',
@@ -580,9 +580,9 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
               type="button"
               onClick={onLearnHowItWorks}
               style={{
-                background: isDark ? 'rgba(40, 18, 38, 0.75)' : 'rgba(255, 255, 255, 0.9)',
-                border: isDark ? '1px solid rgba(250, 245, 238, 0.35)' : '1px solid rgba(73, 40, 61, 0.18)',
-                color: isDark ? '#FAF5EE' : 'var(--color-mulberry)',
+                background: isDark ? 'rgba(70, 32, 55, 0.85)' : 'rgba(255, 255, 255, 0.92)',
+                border: isDark ? '1px solid rgba(161, 82, 95, 0.45)' : '1px solid rgba(161, 82, 95, 0.25)',
+                color: isDark ? '#FDF3F5' : '#462037',
                 padding: '13px 32px',
                 borderRadius: '999px',
                 fontSize: '15px',
@@ -590,18 +590,20 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
                 fontWeight: 600,
                 letterSpacing: '0.03em',
                 cursor: 'pointer',
-                boxShadow: '0 4px 18px rgba(0, 0, 0, 0.12)',
+                boxShadow: isDark ? '0 4px 18px rgba(20, 14, 28, 0.4)' : '0 4px 18px rgba(70, 32, 55, 0.1)',
                 transition: 'all 0.2s ease',
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.borderColor = isDark ? '#FAF5EE' : 'var(--color-mulberry)';
+                e.currentTarget.style.borderColor = isDark ? '#F9AAAD' : '#A1525F';
+                e.currentTarget.style.color = isDark ? '#F9AAAD' : '#A1525F';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'translateY(0)';
                 e.currentTarget.style.borderColor = isDark
-                  ? 'rgba(250, 245, 238, 0.35)'
-                  : 'rgba(73, 40, 61, 0.18)';
+                  ? 'rgba(161, 82, 95, 0.45)'
+                  : 'rgba(161, 82, 95, 0.25)';
+                e.currentTarget.style.color = isDark ? '#FDF3F5' : '#462037';
               }}
             >
               Learn How VennZ Works →
@@ -616,7 +618,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
           style={{
             width: '134px',
             height: '5px',
-            backgroundColor: isDark ? 'rgba(243, 238, 233, 0.35)' : 'rgba(73, 40, 61, 0.25)',
+            backgroundColor: isDark ? 'rgba(161, 82, 95, 0.35)' : 'rgba(161, 82, 95, 0.25)',
             borderRadius: '9999px',
             margin: '0 auto 12px',
             position: 'relative',

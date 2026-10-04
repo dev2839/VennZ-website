@@ -89,17 +89,17 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
   const [confirmedBooking, setConfirmedBooking] = useState<MixerBooking | null>(null);
 
   // Dynamic Theme Colors
-  const themeBgColor = isDark ? '#050104' : '#F7F3EE';
-  const themeTextColor = isDark ? '#F3EEE9' : 'var(--color-espresso)';
-  const themeMulberry = isDark ? '#F3EEE9' : 'var(--color-mulberry)';
-  const themeMuted = isDark ? '#D5C5CF' : '#6E5D68';
-  const themeBorder = isDark ? 'rgba(243, 238, 233, 0.16)' : 'rgba(73, 40, 61, 0.12)';
-  const themeCardBg = isDark ? 'rgba(10, 2, 9, 0.94)' : 'rgba(255, 255, 255, 0.65)';
+  const themeBgColor = isDark ? '#140E1C' : '#FAF1F3';
+  const themeTextColor = isDark ? '#FDF3F5' : '#462037';
+  const themeMulberry = isDark ? '#F9AAAD' : '#462037';
+  const themeMuted = isDark ? '#D4A2AC' : '#683A46';
+  const themeBorder = isDark ? 'rgba(161, 82, 95, 0.28)' : 'rgba(161, 82, 95, 0.18)';
+  const themeCardBg = isDark ? 'rgba(70, 32, 55, 0.75)' : 'rgba(255, 255, 255, 0.75)';
   const themeCardBorder = isDark
-    ? '1px solid rgba(243, 238, 233, 0.16)'
-    : '1px solid rgba(73, 40, 61, 0.12)';
-  const themeButtonBg = isDark ? '#F3EEE9' : 'var(--color-mulberry)';
-  const themeButtonText = isDark ? '#050104' : '#FFFFFF';
+    ? '1px solid rgba(161, 82, 95, 0.3)'
+    : '1px solid rgba(161, 82, 95, 0.18)';
+  const themeButtonBg = 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)';
+  const themeButtonText = '#FDF3F5';
 
   // Partition bookings
   const upcomingBookings = mixerBookings.filter((b) => b.bookingStatus === 'Confirmed');
@@ -224,7 +224,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
         style={{
           position: 'absolute',
           inset: 0,
-          backgroundColor: isDark ? 'rgba(3, 0, 3, 0.12)' : 'rgba(247, 243, 238, 0.35)',
+          backgroundColor: isDark ? 'rgba(20, 14, 28, 0.45)' : 'rgba(250, 241, 243, 0.35)',
           zIndex: 1,
           pointerEvents: 'none',
         }}
@@ -236,7 +236,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
           style={{
             position: 'relative',
             zIndex: 45,
-            backgroundColor: isDark ? 'rgba(5, 1, 4, 0.98)' : 'rgba(247, 243, 238, 0.92)',
+            backgroundColor: isDark ? 'rgba(20, 14, 28, 0.98)' : 'rgba(250, 241, 243, 0.92)',
             transition: 'background-color 0.25s ease',
           }}
         >
@@ -417,8 +417,8 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                   width: '100%',
                   height: '52px',
                   borderRadius: '26px',
-                  backgroundColor: 'var(--color-mulberry)',
-                  color: '#FFFFFF',
+                  background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
+                  color: '#FDF3F5',
                   border: 'none',
                   fontSize: '13.5px',
                   fontWeight: 700,
@@ -428,15 +428,15 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '8px',
-                  boxShadow: '0 6px 20px rgba(73, 40, 61, 0.28)',
-                  transition: 'background-color 0.2s ease, transform 0.15s ease',
+                  boxShadow: '0 6px 20px rgba(161, 82, 95, 0.4)',
+                  transition: 'filter 0.2s ease, transform 0.15s ease',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#3B1F31';
+                  e.currentTarget.style.filter = 'brightness(1.1)';
                   e.currentTarget.style.transform = 'translateY(-1px)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'var(--color-mulberry)';
+                  e.currentTarget.style.filter = 'brightness(1)';
                   e.currentTarget.style.transform = 'translateY(0)';
                 }}
               >
@@ -1571,7 +1571,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                     borderRadius: '18px',
                     border: myEventsTab === 'upcoming' ? 'none' : 'transparent',
                     backgroundColor: myEventsTab === 'upcoming' ? (isDark ? '#F3EEE9' : '#FFFFFF') : 'transparent',
-                    color: myEventsTab === 'upcoming' ? (isDark ? '#050104' : 'var(--color-mulberry)') : themeMuted,
+                    color: myEventsTab === 'upcoming' ? (isDark ? '#140E1C' : 'var(--color-mulberry)') : themeMuted,
                     fontSize: '11px',
                     fontWeight: myEventsTab === 'upcoming' ? 500 : 400,
                     letterSpacing: '0.08em',
@@ -1590,7 +1590,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                     borderRadius: '18px',
                     border: myEventsTab === 'interested' ? 'none' : 'transparent',
                     backgroundColor: myEventsTab === 'interested' ? (isDark ? '#F3EEE9' : '#FFFFFF') : 'transparent',
-                    color: myEventsTab === 'interested' ? (isDark ? '#050104' : 'var(--color-mulberry)') : themeMuted,
+                    color: myEventsTab === 'interested' ? (isDark ? '#140E1C' : 'var(--color-mulberry)') : themeMuted,
                     fontSize: '11px',
                     fontWeight: myEventsTab === 'interested' ? 500 : 400,
                     letterSpacing: '0.08em',
@@ -1609,7 +1609,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                     borderRadius: '18px',
                     border: myEventsTab === 'past' ? 'none' : 'transparent',
                     backgroundColor: myEventsTab === 'past' ? (isDark ? '#F3EEE9' : '#FFFFFF') : 'transparent',
-                    color: myEventsTab === 'past' ? (isDark ? '#050104' : 'var(--color-mulberry)') : themeMuted,
+                    color: myEventsTab === 'past' ? (isDark ? '#140E1C' : 'var(--color-mulberry)') : themeMuted,
                     fontSize: '11px',
                     fontWeight: myEventsTab === 'past' ? 500 : 400,
                     letterSpacing: '0.08em',

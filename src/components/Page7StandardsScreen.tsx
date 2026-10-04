@@ -58,8 +58,8 @@ export const Page7StandardsScreen: React.FC<Page7StandardsScreenProps> = ({
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        backgroundColor: isDark ? '#050104' : '#F7F3EE',
-        color: isDark ? '#F3EEE9' : 'var(--color-espresso)',
+        backgroundColor: isDark ? '#140E1C' : '#FAF1F3',
+        color: isDark ? '#FDF3F5' : '#462037',
         fontFamily: 'var(--font-sans)',
         overflow: 'hidden',
       }}
@@ -87,7 +87,7 @@ export const Page7StandardsScreen: React.FC<Page7StandardsScreenProps> = ({
         style={{
           position: 'absolute',
           inset: 0,
-          backgroundColor: isDark ? 'rgba(3, 0, 3, 0.12)' : 'rgba(247, 243, 238, 0.42)',
+          backgroundColor: isDark ? 'rgba(20, 14, 28, 0.45)' : 'rgba(250, 241, 243, 0.42)',
           zIndex: 1,
           pointerEvents: 'none',
         }}
@@ -99,10 +99,10 @@ export const Page7StandardsScreen: React.FC<Page7StandardsScreenProps> = ({
           position: 'relative',
           zIndex: 20,
           flexShrink: 0,
-          backgroundColor: isDark ? 'rgba(5, 1, 4, 0.88)' : 'rgba(247, 243, 238, 0.88)',
+          backgroundColor: isDark ? 'rgba(20, 14, 28, 0.92)' : 'rgba(250, 241, 243, 0.92)',
           backdropFilter: 'blur(10px)',
           WebkitBackdropFilter: 'blur(10px)',
-          borderBottom: isDark ? '1px solid rgba(243, 238, 233, 0.08)' : '1px solid rgba(73, 40, 61, 0.06)',
+          borderBottom: isDark ? '1px solid rgba(161, 82, 95, 0.2)' : '1px solid rgba(161, 82, 95, 0.12)',
         }}
       >
         {showStatusBar && <StatusBar variant={isDark ? 'light' : 'dark'} />}
@@ -222,7 +222,7 @@ export const Page7StandardsScreen: React.FC<Page7StandardsScreenProps> = ({
           {/* Numbered Standards List */}
           <div
             style={{
-              backgroundColor: isDark ? 'rgba(24, 15, 20, 0.75)' : 'rgba(255, 255, 255, 0.72)',
+              backgroundColor: isDark ? 'rgba(70, 32, 55, 0.65)' : 'rgba(255, 255, 255, 0.72)',
               backdropFilter: 'blur(8px)',
               WebkitBackdropFilter: 'blur(8px)',
               borderRadius: '16px',
@@ -252,7 +252,7 @@ export const Page7StandardsScreen: React.FC<Page7StandardsScreenProps> = ({
                     fontFamily: 'var(--font-serif)',
                     fontSize: '20px',
                     lineHeight: '1.2',
-                    color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
+                    color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
                     fontWeight: 600,
                     width: '26px',
                     flexShrink: 0,
@@ -289,7 +289,7 @@ export const Page7StandardsScreen: React.FC<Page7StandardsScreenProps> = ({
                 marginBottom: '28px',
                 cursor: 'pointer',
                 userSelect: 'none',
-                backgroundColor: isDark ? 'rgba(24, 15, 20, 0.65)' : 'rgba(255, 255, 255, 0.55)',
+                backgroundColor: isDark ? 'rgba(70, 32, 55, 0.55)' : 'rgba(255, 255, 255, 0.55)',
                 padding: '14px 16px',
                 borderRadius: '14px',
                 border: isAccepted
@@ -314,10 +314,10 @@ export const Page7StandardsScreen: React.FC<Page7StandardsScreenProps> = ({
                   height: '24px',
                   borderRadius: '6px',
                   border: isAccepted
-                    ? isDark ? '1.5px solid #F0D4B8' : '1.5px solid var(--color-mulberry)'
+                    ? isDark ? '1.5px solid #F9AAAD' : '1.5px solid var(--color-mulberry)'
                     : isDark ? '1.5px solid rgba(243, 238, 233, 0.3)' : '1.5px solid rgba(73, 40, 61, 0.35)',
                   backgroundColor: isAccepted
-                    ? isDark ? '#5C2D4C' : 'var(--color-mulberry)'
+                    ? isDark ? '#A1525F' : 'var(--color-mulberry)'
                     : isDark ? 'rgba(255, 255, 255, 0.05)' : '#FFFFFF',
                   display: 'flex',
                   alignItems: 'center',
@@ -361,7 +361,7 @@ export const Page7StandardsScreen: React.FC<Page7StandardsScreenProps> = ({
                     setActiveModal('Terms and Conditions');
                   }}
                   style={{
-                    color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
+                    color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
                     fontWeight: 600,
                     textDecoration: 'underline',
                     textUnderlineOffset: '2px',
@@ -377,7 +377,7 @@ export const Page7StandardsScreen: React.FC<Page7StandardsScreenProps> = ({
                     setActiveModal('Privacy Policy');
                   }}
                   style={{
-                    color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
+                    color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
                     fontWeight: 600,
                     textDecoration: 'underline',
                     textUnderlineOffset: '2px',
@@ -393,7 +393,7 @@ export const Page7StandardsScreen: React.FC<Page7StandardsScreenProps> = ({
                     setActiveModal('Community Guidelines');
                   }}
                   style={{
-                    color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
+                    color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
                     fontWeight: 600,
                     textDecoration: 'underline',
                     textUnderlineOffset: '2px',
@@ -417,12 +417,12 @@ export const Page7StandardsScreen: React.FC<Page7StandardsScreenProps> = ({
                   width: '100%',
                   height: '56px',
                   borderRadius: '28px',
-                  backgroundColor: isAccepted
-                    ? 'var(--color-mulberry)'
-                    : isDark ? 'rgba(243, 238, 233, 0.1)' : 'rgba(73, 40, 61, 0.22)',
+                  background: isAccepted
+                    ? 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)'
+                    : isDark ? 'rgba(70, 32, 55, 0.4)' : 'rgba(161, 82, 95, 0.22)',
                   color: isAccepted
-                    ? '#FFFFFF'
-                    : isDark ? 'rgba(243, 238, 233, 0.35)' : 'rgba(73, 40, 61, 0.45)',
+                    ? '#FDF3F5'
+                    : isDark ? 'rgba(253, 243, 245, 0.35)' : 'rgba(70, 32, 55, 0.45)',
                   border: 'none',
                   fontSize: '16.5px',
                   fontWeight: 700,
@@ -434,20 +434,20 @@ export const Page7StandardsScreen: React.FC<Page7StandardsScreenProps> = ({
                   justifyContent: 'center',
                   gap: '8px',
                   boxShadow: isAccepted
-                    ? '0 6px 22px rgba(73, 40, 61, 0.28)'
+                    ? '0 6px 22px rgba(161, 82, 95, 0.4)'
                     : 'none',
                   transition:
-                    'background-color 0.2s ease, transform 0.15s ease, opacity 0.2s ease',
+                    'filter 0.2s ease, transform 0.15s ease, opacity 0.2s ease',
                 }}
                 onMouseEnter={(e) => {
                   if (isAccepted) {
-                    e.currentTarget.style.backgroundColor = '#3B1F31';
+                    e.currentTarget.style.background = 'linear-gradient(135deg, #C7577C 0%, #F9AAAD 100%)';
                     e.currentTarget.style.transform = 'translateY(-1px)';
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (isAccepted) {
-                    e.currentTarget.style.backgroundColor = 'var(--color-mulberry)';
+                    e.currentTarget.style.background = 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)';
                     e.currentTarget.style.transform = 'translateY(0)';
                   }
                 }}
@@ -523,12 +523,12 @@ export const Page7StandardsScreen: React.FC<Page7StandardsScreenProps> = ({
             style={{
               width: '100%',
               maxWidth: '360px',
-              backgroundColor: isDark ? '#1C1218' : '#FFFFFF',
+              backgroundColor: isDark ? '#462037' : '#FFFFFF',
               borderRadius: '20px',
               padding: '28px 24px',
-              boxShadow: '0 20px 40px rgba(0, 0, 0, 0.35)',
+              boxShadow: '0 20px 40px rgba(0, 0, 0, 0.45)',
               textAlign: 'left',
-              border: isDark ? '1px solid rgba(243, 238, 233, 0.12)' : 'none',
+              border: isDark ? '1px solid rgba(161, 82, 95, 0.35)' : 'none',
             }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -536,7 +536,7 @@ export const Page7StandardsScreen: React.FC<Page7StandardsScreenProps> = ({
               style={{
                 fontFamily: 'var(--font-serif)',
                 fontSize: '22px',
-                color: isDark ? '#FBF7F2' : 'var(--color-mulberry)',
+                color: isDark ? '#FDF3F5' : '#462037',
                 margin: '0 0 12px 0',
               }}
             >
@@ -546,7 +546,7 @@ export const Page7StandardsScreen: React.FC<Page7StandardsScreenProps> = ({
               style={{
                 fontSize: '13px',
                 lineHeight: '1.5',
-                color: isDark ? '#D9CFD5' : '#5E4E58',
+                color: isDark ? '#D4A2AC' : '#683A46',
                 margin: '0 0 20px 0',
               }}
             >
@@ -564,14 +564,15 @@ export const Page7StandardsScreen: React.FC<Page7StandardsScreenProps> = ({
                 width: '100%',
                 height: '46px',
                 borderRadius: '23px',
-                backgroundColor: 'var(--color-mulberry)',
-                color: '#FFFFFF',
+                background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
+                color: '#FDF3F5',
                 border: 'none',
                 fontSize: '13px',
                 fontWeight: 700,
                 letterSpacing: '0.06em',
                 textTransform: 'uppercase',
                 cursor: 'pointer',
+                boxShadow: '0 4px 14px rgba(161, 82, 95, 0.4)',
               }}
             >
               GOT IT

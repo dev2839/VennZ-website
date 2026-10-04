@@ -30,11 +30,11 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
   const [actionAnimating, setActionAnimating] = useState<'pass' | 'request' | null>(null);
   const [blockModalOpen, setBlockModalOpen] = useState(false);
 
-  const themeBgColor = isDark ? '#050104' : '#F7F3EE';
-  const themeTextColor = isDark ? '#F3EEE9' : 'var(--color-espresso)';
-  const themeMulberry = isDark ? '#F3EEE9' : 'var(--color-mulberry)';
-  const themeMuted = isDark ? '#D5C5CF' : '#8A7A84';
-  const themeBorder = isDark ? 'rgba(243, 238, 233, 0.18)' : 'rgba(73, 40, 61, 0.1)';
+  const themeBgColor = isDark ? '#140E1C' : '#FAF1F3';
+  const themeTextColor = isDark ? '#FDF3F5' : '#462037';
+  const themeMulberry = isDark ? '#F9AAAD' : '#462037';
+  const themeMuted = isDark ? '#D4A2AC' : '#683A46';
+  const themeBorder = isDark ? 'rgba(161, 82, 95, 0.28)' : 'rgba(161, 82, 95, 0.18)';
 
   const handlePass = () => {
     setActionAnimating('pass');
@@ -108,7 +108,7 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
 
       {/* iOS Status Bar */}
       {showStatusBar && (
-        <div style={{ position: 'relative', zIndex: 45, backgroundColor: isDark ? 'rgba(5, 1, 4, 0.98)' : 'rgba(247, 243, 238, 0.92)' }}>
+        <div style={{ position: 'relative', zIndex: 45, backgroundColor: isDark ? 'rgba(20, 14, 28, 0.98)' : 'rgba(250, 241, 243, 0.92)' }}>
           <StatusBar variant={isDark ? 'light' : 'dark'} />
         </div>
       )}
@@ -448,9 +448,9 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
                 flex: 1,
                 height: '48px',
                 borderRadius: '24px',
-                backgroundColor: isDark ? 'rgba(73, 40, 61, 0.6)' : 'rgba(255, 255, 255, 0.85)',
+                backgroundColor: isDark ? 'rgba(70, 32, 55, 0.75)' : 'rgba(255, 255, 255, 0.85)',
                 color: themeMulberry,
-                border: isDark ? '1.5px solid rgba(243, 238, 233, 0.35)' : '1.5px solid rgba(73, 40, 61, 0.35)',
+                border: isDark ? '1.5px solid rgba(161, 82, 95, 0.4)' : '1.5px solid rgba(161, 82, 95, 0.25)',
                 fontSize: '12.5px',
                 fontWeight: 700,
                 letterSpacing: '0.09em',
@@ -460,7 +460,7 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '6px',
-                boxShadow: isDark ? '0 3px 12px rgba(0, 0, 0, 0.25)' : '0 3px 12px rgba(73, 40, 61, 0.05)',
+                boxShadow: isDark ? '0 3px 12px rgba(0, 0, 0, 0.25)' : '0 3px 12px rgba(161, 82, 95, 0.08)',
               }}
             >
               <span>PASS</span>
@@ -474,8 +474,8 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
                 flex: 1.25,
                 height: '48px',
                 borderRadius: '24px',
-                backgroundColor: isDark ? '#F3EEE9' : 'var(--color-mulberry)',
-                color: isDark ? '#050104' : '#FFFFFF',
+                background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
+                color: '#FDF3F5',
                 border: 'none',
                 fontSize: '12.5px',
                 fontWeight: 700,
@@ -486,7 +486,7 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '6px',
-                boxShadow: isDark ? '0 6px 18px rgba(0, 0, 0, 0.35)' : '0 6px 18px rgba(73, 40, 61, 0.28)',
+                boxShadow: '0 6px 18px rgba(161, 82, 95, 0.4)',
               }}
             >
               <span>SEND REQUEST</span>

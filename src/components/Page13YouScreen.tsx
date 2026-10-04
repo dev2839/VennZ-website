@@ -169,15 +169,15 @@ export const Page13YouScreen: React.FC<Page13YouScreenProps> = ({
   };
 
   // Dynamic theme styling
-  // In After Dark: Deep midnight obsidian black (#050104) and cream (#F3EEE9)
-  const themeBgColor = isDark ? '#050104' : '#F7F3EE';
-  const themeTextColor = isDark ? '#F3EEE9' : 'var(--color-espresso)';
-  const themeMulberry = isDark ? '#F3EEE9' : 'var(--color-mulberry)';
-  const themeMuted = isDark ? '#D5C5CF' : '#8A7A84';
-  const themeBorder = isDark ? 'rgba(243, 238, 233, 0.18)' : 'rgba(73, 40, 61, 0.12)';
-  const themeCardBg = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.65)';
-  const themeButtonBg = isDark ? '#F3EEE9' : 'var(--color-mulberry)';
-  const themeButtonText = isDark ? '#050104' : '#FFFFFF';
+  // In After Dark: Deep cinematic palette (#140E1C) and blush (#FDF3F5 / #F9AAAD)
+  const themeBgColor = isDark ? '#140E1C' : '#FAF1F3';
+  const themeTextColor = isDark ? '#FDF3F5' : '#462037';
+  const themeMulberry = isDark ? '#F9AAAD' : '#462037';
+  const themeMuted = isDark ? '#D4A2AC' : '#683A46';
+  const themeBorder = isDark ? 'rgba(161, 82, 95, 0.28)' : 'rgba(161, 82, 95, 0.18)';
+  const themeCardBg = isDark ? 'rgba(70, 32, 55, 0.75)' : 'rgba(255, 255, 255, 0.75)';
+  const themeButtonBg = isDark ? 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)' : 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)';
+  const themeButtonText = '#FDF3F5';
 
   return (
     <div
@@ -215,7 +215,7 @@ export const Page13YouScreen: React.FC<Page13YouScreenProps> = ({
         style={{
           position: 'absolute',
           inset: 0,
-          backgroundColor: isDark ? 'rgba(3, 0, 3, 0.12)' : 'rgba(247, 243, 238, 0.35)',
+          backgroundColor: isDark ? 'rgba(20, 14, 28, 0.45)' : 'rgba(250, 241, 243, 0.35)',
           zIndex: 1,
           pointerEvents: 'none',
         }}
@@ -227,7 +227,7 @@ export const Page13YouScreen: React.FC<Page13YouScreenProps> = ({
           style={{
             position: 'relative',
             zIndex: 45,
-            backgroundColor: isDark ? 'rgba(5, 1, 4, 0.98)' : 'rgba(247, 243, 238, 0.92)',
+            backgroundColor: isDark ? 'rgba(20, 14, 28, 0.98)' : 'rgba(250, 241, 243, 0.92)',
             transition: 'background-color 0.25s ease',
           }}
         >
@@ -484,15 +484,15 @@ export const Page13YouScreen: React.FC<Page13YouScreenProps> = ({
                     width: '100%',
                     height: '46px',
                     borderRadius: '24px',
-                    backgroundColor: 'var(--color-mulberry)',
-                    color: '#FFFFFF',
+                    background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
+                    color: '#FDF3F5',
                     border: 'none',
                     fontSize: '12px',
                     fontWeight: 700,
                     letterSpacing: '0.08em',
                     textTransform: 'uppercase',
                     cursor: 'pointer',
-                    boxShadow: '0 4px 14px rgba(73, 40, 61, 0.2)',
+                    boxShadow: '0 4px 14px rgba(161, 82, 95, 0.4)',
                   }}
                 >
                   UPGRADE FOR 4 INVITATIONS/MONTH →
@@ -705,14 +705,14 @@ export const Page13YouScreen: React.FC<Page13YouScreenProps> = ({
                 style={{
                   padding: '10px 4px',
                   borderRadius: '12px',
-                  backgroundColor: isMember ? 'var(--color-mulberry)' : (isDark ? 'rgba(255, 255, 255, 0.07)' : 'rgba(73, 40, 61, 0.06)'),
-                  color: isMember ? '#FFFFFF' : themeMulberry,
-                  border: `1px solid ${isMember ? 'var(--color-mulberry)' : themeBorder}`,
+                  background: isMember ? 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)' : (isDark ? 'rgba(70, 32, 55, 0.45)' : 'rgba(161, 82, 95, 0.08)'),
+                  color: isMember ? '#FDF3F5' : themeMulberry,
+                  border: `1px solid ${isMember ? '#C7577C' : themeBorder}`,
                   fontSize: '10.5px',
                   fontWeight: 700,
                   cursor: 'pointer',
                   textAlign: 'center',
-                  boxShadow: isMember ? '0 3px 10px rgba(73, 40, 61, 0.25)' : 'none',
+                  boxShadow: isMember ? '0 3px 10px rgba(161, 82, 95, 0.35)' : 'none',
                   transition: 'all 0.15s ease',
                 }}
               >
@@ -725,14 +725,14 @@ export const Page13YouScreen: React.FC<Page13YouScreenProps> = ({
                 style={{
                   padding: '10px 4px',
                   borderRadius: '12px',
-                  backgroundColor: (isComplimentary && !isTrialExpired) ? 'var(--color-mulberry)' : (isDark ? 'rgba(255, 255, 255, 0.07)' : 'rgba(73, 40, 61, 0.06)'),
-                  color: (isComplimentary && !isTrialExpired) ? '#FFFFFF' : themeMulberry,
-                  border: `1px solid ${(isComplimentary && !isTrialExpired) ? 'var(--color-mulberry)' : themeBorder}`,
+                  background: (isComplimentary && !isTrialExpired) ? 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)' : (isDark ? 'rgba(70, 32, 55, 0.45)' : 'rgba(161, 82, 95, 0.08)'),
+                  color: (isComplimentary && !isTrialExpired) ? '#FDF3F5' : themeMulberry,
+                  border: `1px solid ${(isComplimentary && !isTrialExpired) ? '#C7577C' : themeBorder}`,
                   fontSize: '10.5px',
                   fontWeight: 700,
                   cursor: 'pointer',
                   textAlign: 'center',
-                  boxShadow: (isComplimentary && !isTrialExpired) ? '0 3px 10px rgba(73, 40, 61, 0.25)' : 'none',
+                  boxShadow: (isComplimentary && !isTrialExpired) ? '0 3px 10px rgba(161, 82, 95, 0.35)' : 'none',
                   transition: 'all 0.15s ease',
                 }}
               >
@@ -745,14 +745,14 @@ export const Page13YouScreen: React.FC<Page13YouScreenProps> = ({
                 style={{
                   padding: '10px 4px',
                   borderRadius: '12px',
-                  backgroundColor: isTrialExpired ? 'var(--color-mulberry)' : (isDark ? 'rgba(255, 255, 255, 0.07)' : 'rgba(73, 40, 61, 0.06)'),
-                  color: isTrialExpired ? '#FFFFFF' : themeMulberry,
-                  border: `1px solid ${isTrialExpired ? 'var(--color-mulberry)' : themeBorder}`,
+                  background: isTrialExpired ? 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)' : (isDark ? 'rgba(70, 32, 55, 0.45)' : 'rgba(161, 82, 95, 0.08)'),
+                  color: isTrialExpired ? '#FDF3F5' : themeMulberry,
+                  border: `1px solid ${isTrialExpired ? '#C7577C' : themeBorder}`,
                   fontSize: '10.5px',
                   fontWeight: 700,
                   cursor: 'pointer',
                   textAlign: 'center',
-                  boxShadow: isTrialExpired ? '0 3px 10px rgba(73, 40, 61, 0.25)' : 'none',
+                  boxShadow: isTrialExpired ? '0 3px 10px rgba(161, 82, 95, 0.35)' : 'none',
                   transition: 'all 0.15s ease',
                 }}
               >

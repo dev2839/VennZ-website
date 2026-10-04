@@ -311,7 +311,7 @@ const defaultState: AuthState = {
   authMethod: null,
   isAuthenticated: false,
   isPhoneVerified: false,
-  appearanceMode: 'ivory',
+  appearanceMode: 'after-dark',
   profile: defaultProfile,
   incomingRequests: INITIAL_INCOMING_REQUESTS,
   sentRequests: INITIAL_SENT_REQUESTS,
@@ -391,7 +391,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           mixerEvents: (mergedState.mixerEvents && mergedState.mixerEvents.length > 0) ? mergedState.mixerEvents : INITIAL_MIXER_EVENTS,
           mixerBookings: (mergedState.mixerBookings && mergedState.mixerBookings.length > 0) ? mergedState.mixerBookings : INITIAL_PAST_BOOKINGS,
           mixerInterestedEventIds: Array.isArray(mergedState.mixerInterestedEventIds) ? mergedState.mixerInterestedEventIds : [],
-          appearanceMode: savedAppearance || mergedState.appearanceMode || 'ivory',
+          appearanceMode: savedAppearance || mergedState.appearanceMode || 'after-dark',
         };
       }
       if (savedAppearance) {

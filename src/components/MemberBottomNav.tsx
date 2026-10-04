@@ -40,12 +40,12 @@ export const MemberBottomNav: React.FC<MemberBottomNavProps> = ({
     { id: 'you', label: 'YOU' },
   ];
 
-  const navBg = isDark ? 'rgba(5, 1, 4, 0.98)' : 'rgba(247, 243, 238, 0.94)';
-  const borderTopColor = isDark ? 'rgba(243, 238, 233, 0.15)' : 'rgba(73, 40, 61, 0.1)';
-  const activeColor = isDark ? '#F3EEE9' : 'var(--color-mulberry)';
-  const inactiveColor = isDark ? 'rgba(243, 238, 233, 0.65)' : '#8A7A84';
-  const indicatorColor = isDark ? 'rgba(243, 238, 233, 0.35)' : 'rgba(73, 40, 61, 0.22)';
-  const crownColor = isDark ? '#DFB76C' : '#8A4B6E';
+  const navBg = isDark ? 'rgba(20, 14, 28, 0.98)' : 'rgba(250, 241, 243, 0.96)';
+  const borderTopColor = isDark ? 'rgba(161, 82, 95, 0.25)' : 'rgba(199, 87, 124, 0.2)';
+  const activeColor = isDark ? '#F9AAAD' : '#A1525F';
+  const inactiveColor = isDark ? '#D4A2AC' : '#683A46';
+  const indicatorColor = isDark ? 'rgba(249, 170, 173, 0.35)' : 'rgba(161, 82, 95, 0.25)';
+  const crownColor = isDark ? '#DFB76C' : '#C7577C';
 
   return (
     <nav

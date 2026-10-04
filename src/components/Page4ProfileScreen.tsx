@@ -469,8 +469,8 @@ const compressImageFile = (file: File): Promise<string> => {
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
-        backgroundColor: isDark ? '#050104' : '#FAF6F0',
-        color: isDark ? '#F3EEE9' : 'var(--color-espresso)',
+        backgroundColor: isDark ? '#140E1C' : '#FAF1F3',
+        color: isDark ? '#FDF3F5' : '#462037',
         fontFamily: 'var(--font-sans)',
       }}
     >
@@ -505,7 +505,7 @@ const compressImageFile = (file: File): Promise<string> => {
         }}
       >
         {/* Top Fixed Area: Status Bar & Back Button */}
-        <div style={{ position: 'sticky', top: 0, zIndex: 20, backgroundColor: isDark ? 'rgba(5, 1, 4, 0.88)' : 'rgba(250, 246, 240, 0.85)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }}>
+        <div style={{ position: 'sticky', top: 0, zIndex: 20, backgroundColor: isDark ? 'rgba(20, 14, 28, 0.92)' : 'rgba(250, 241, 243, 0.92)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }}>
           {showStatusBar && <StatusBar variant={isDark ? 'light' : 'dark'} />}
 
           {/* ← BACK & Step Indicator */}
@@ -599,7 +599,7 @@ const compressImageFile = (file: File): Promise<string> => {
                   fontWeight: 600,
                   letterSpacing: '0.06em',
                   textTransform: 'uppercase',
-                  color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
+                  color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
                   marginBottom: '8px',
                 }}
               >
@@ -618,7 +618,7 @@ const compressImageFile = (file: File): Promise<string> => {
                   height: '54px',
                   borderRadius: '13px',
                   border: errors.firstName ? '1.5px solid #E06D6D' : isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.22)',
-                  backgroundColor: isDark ? 'rgba(24, 15, 20, 0.75)' : 'rgba(255, 255, 255, 0.65)',
+                  backgroundColor: isDark ? 'rgba(70, 32, 55, 0.65)' : 'rgba(255, 255, 255, 0.65)',
                   padding: '0 16px',
                   fontSize: '16.5px',
                   fontFamily: 'var(--font-sans)',
@@ -641,7 +641,7 @@ const compressImageFile = (file: File): Promise<string> => {
                   fontWeight: 600,
                   letterSpacing: '0.06em',
                   textTransform: 'uppercase',
-                  color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
+                  color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
                   marginBottom: '8px',
                 }}
               >
@@ -661,7 +661,7 @@ const compressImageFile = (file: File): Promise<string> => {
                     height: '56px',
                     borderRadius: '13px',
                     border: errors.dateOfBirth ? '1.5px solid #E06D6D' : isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.22)',
-                    backgroundColor: isDark ? 'rgba(24, 15, 20, 0.75)' : 'rgba(255, 255, 255, 0.65)',
+                    backgroundColor: isDark ? 'rgba(70, 32, 55, 0.65)' : 'rgba(255, 255, 255, 0.65)',
                     padding: '0 52px 0 16px',
                     fontSize: '16px',
                     fontFamily: 'var(--font-sans)',
@@ -720,7 +720,7 @@ const compressImageFile = (file: File): Promise<string> => {
                     borderRadius: '10px',
                     border: 'none',
                     backgroundColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(73, 40, 61, 0.08)',
-                    color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
+                    color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -767,7 +767,7 @@ const compressImageFile = (file: File): Promise<string> => {
                     style={{
                       fontSize: '14.5px',
                       fontWeight: 700,
-                      color: calculateAge(dateOfBirth) >= 18 ? (isDark ? '#F0D4B8' : 'var(--color-mulberry)') : '#E06D6D',
+                      color: calculateAge(dateOfBirth) >= 18 ? (isDark ? '#F9AAAD' : 'var(--color-mulberry)') : '#E06D6D',
                       letterSpacing: '0.01em',
                     }}
                   >
@@ -792,7 +792,7 @@ const compressImageFile = (file: File): Promise<string> => {
                   fontWeight: 600,
                   letterSpacing: '0.06em',
                   textTransform: 'uppercase',
-                  color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
+                  color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
                   marginBottom: '8px',
                 }}
               >
@@ -811,7 +811,7 @@ const compressImageFile = (file: File): Promise<string> => {
                   height: '54px',
                   borderRadius: '13px',
                   border: errors.city ? '1.5px solid #E06D6D' : isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.22)',
-                  backgroundColor: isDark ? 'rgba(24, 15, 20, 0.75)' : 'rgba(255, 255, 255, 0.65)',
+                  backgroundColor: isDark ? 'rgba(70, 32, 55, 0.65)' : 'rgba(255, 255, 255, 0.65)',
                   padding: '0 16px',
                   fontSize: '16.5px',
                   fontFamily: 'var(--font-sans)',
@@ -834,7 +834,7 @@ const compressImageFile = (file: File): Promise<string> => {
                   fontWeight: 600,
                   letterSpacing: '0.06em',
                   textTransform: 'uppercase',
-                  color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
+                  color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
                   marginBottom: '8px',
                 }}
               >
@@ -851,7 +851,7 @@ const compressImageFile = (file: File): Promise<string> => {
                   height: '54px',
                   borderRadius: '13px',
                   border: errors.genderIdentity ? '1.5px solid #E06D6D' : isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.22)',
-                  backgroundColor: isDark ? 'rgba(24, 15, 20, 0.75)' : 'rgba(255, 255, 255, 0.65)',
+                  backgroundColor: isDark ? 'rgba(70, 32, 55, 0.65)' : 'rgba(255, 255, 255, 0.65)',
                   padding: '0 16px',
                   fontSize: '16.5px',
                   fontFamily: 'var(--font-sans)',
@@ -884,7 +884,7 @@ const compressImageFile = (file: File): Promise<string> => {
                       height: '48px',
                       borderRadius: '12px',
                       border: errors.selfDescribeGender ? '1.5px solid #E06D6D' : isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.22)',
-                      backgroundColor: isDark ? 'rgba(24, 15, 20, 0.75)' : 'rgba(255, 255, 255, 0.65)',
+                      backgroundColor: isDark ? 'rgba(70, 32, 55, 0.65)' : 'rgba(255, 255, 255, 0.65)',
                       padding: '0 14px',
                       fontSize: '16px',
                       color: isDark ? '#FBF7F2' : 'var(--color-espresso)',
@@ -913,7 +913,7 @@ const compressImageFile = (file: File): Promise<string> => {
                   fontWeight: 600,
                   letterSpacing: '0.06em',
                   textTransform: 'uppercase',
-                  color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
+                  color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
                   marginBottom: '8px',
                 }}
               >
@@ -930,7 +930,7 @@ const compressImageFile = (file: File): Promise<string> => {
                   height: '54px',
                   borderRadius: '13px',
                   border: errors.datingPreference ? '1.5px solid #E06D6D' : isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.22)',
-                  backgroundColor: isDark ? 'rgba(24, 15, 20, 0.75)' : 'rgba(255, 255, 255, 0.65)',
+                  backgroundColor: isDark ? 'rgba(70, 32, 55, 0.65)' : 'rgba(255, 255, 255, 0.65)',
                   padding: '0 16px',
                   fontSize: '16.5px',
                   fontFamily: 'var(--font-sans)',
@@ -959,7 +959,7 @@ const compressImageFile = (file: File): Promise<string> => {
                   fontWeight: 600,
                   letterSpacing: '0.06em',
                   textTransform: 'uppercase',
-                  color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
+                  color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
                   marginBottom: '8px',
                 }}
               >
@@ -976,7 +976,7 @@ const compressImageFile = (file: File): Promise<string> => {
                   height: '54px',
                   borderRadius: '13px',
                   border: errors.currentStatus ? '1.5px solid #E06D6D' : isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.22)',
-                  backgroundColor: isDark ? 'rgba(24, 15, 20, 0.75)' : 'rgba(255, 255, 255, 0.65)',
+                  backgroundColor: isDark ? 'rgba(70, 32, 55, 0.65)' : 'rgba(255, 255, 255, 0.65)',
                   padding: '0 16px',
                   fontSize: '16.5px',
                   fontFamily: 'var(--font-sans)',
@@ -1007,7 +1007,7 @@ const compressImageFile = (file: File): Promise<string> => {
                   fontWeight: 600,
                   letterSpacing: '0.06em',
                   textTransform: 'uppercase',
-                  color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
+                  color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
                   marginBottom: '8px',
                 }}
               >
@@ -1026,7 +1026,7 @@ const compressImageFile = (file: File): Promise<string> => {
                   height: '54px',
                   borderRadius: '13px',
                   border: errors.designation ? '1.5px solid #E06D6D' : isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.22)',
-                  backgroundColor: isDark ? 'rgba(24, 15, 20, 0.75)' : 'rgba(255, 255, 255, 0.65)',
+                  backgroundColor: isDark ? 'rgba(70, 32, 55, 0.65)' : 'rgba(255, 255, 255, 0.65)',
                   padding: '0 16px',
                   fontSize: '16.5px',
                   fontFamily: 'var(--font-sans)',
@@ -1049,7 +1049,7 @@ const compressImageFile = (file: File): Promise<string> => {
                   fontWeight: 600,
                   letterSpacing: '0.06em',
                   textTransform: 'uppercase',
-                  color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
+                  color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
                   marginBottom: '8px',
                 }}
               >
@@ -1065,7 +1065,7 @@ const compressImageFile = (file: File): Promise<string> => {
                   height: '54px',
                   borderRadius: '13px',
                   border: isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.22)',
-                  backgroundColor: isDark ? 'rgba(24, 15, 20, 0.75)' : 'rgba(255, 255, 255, 0.65)',
+                  backgroundColor: isDark ? 'rgba(70, 32, 55, 0.65)' : 'rgba(255, 255, 255, 0.65)',
                   padding: '0 16px',
                   fontSize: '16.5px',
                   fontFamily: 'var(--font-sans)',
@@ -1122,7 +1122,7 @@ const compressImageFile = (file: File): Promise<string> => {
                     fontWeight: 700,
                     letterSpacing: '0.06em',
                     textTransform: 'uppercase',
-                    color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
+                    color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
                   }}
                 >
                   PHOTOGRAPHS <span style={{ color: '#E06D6D' }}>*</span>
@@ -1131,7 +1131,7 @@ const compressImageFile = (file: File): Promise<string> => {
                   style={{
                     fontSize: '13px',
                     fontWeight: 600,
-                    color: photos.length >= 2 ? (isDark ? '#86EFAC' : '#2E7D32') : (isDark ? '#F0D4B8' : 'var(--color-mulberry)'),
+                    color: photos.length >= 2 ? (isDark ? '#86EFAC' : '#2E7D32') : (isDark ? '#F9AAAD' : 'var(--color-mulberry)'),
                   }}
                 >
                   {photos.length} / 6 added
@@ -1176,7 +1176,7 @@ const compressImageFile = (file: File): Promise<string> => {
                       aspectRatio: '3/4',
                       borderRadius: '14px',
                       overflow: 'hidden',
-                      backgroundColor: isDark ? 'rgba(24, 15, 20, 0.75)' : 'rgba(73, 40, 61, 0.08)',
+                      backgroundColor: isDark ? 'rgba(70, 32, 55, 0.65)' : 'rgba(73, 40, 61, 0.08)',
                       border: isDark ? '1.5px solid rgba(243, 238, 233, 0.18)' : '1.5px solid rgba(73, 40, 61, 0.15)',
                       boxShadow: '0 4px 12px rgba(0, 0, 0, 0.06)',
                     }}
@@ -1248,7 +1248,7 @@ const compressImageFile = (file: File): Promise<string> => {
                       aspectRatio: '3/4',
                       borderRadius: '14px',
                       border: isDark ? '1.5px dashed rgba(243, 238, 233, 0.35)' : '1.5px dashed rgba(73, 40, 61, 0.35)',
-                      backgroundColor: isDark ? 'rgba(24, 15, 20, 0.55)' : 'rgba(255, 255, 255, 0.45)',
+                      backgroundColor: isDark ? 'rgba(70, 32, 55, 0.45)' : 'rgba(255, 255, 255, 0.45)',
                       display: 'flex',
                       flexDirection: 'column',
                       alignItems: 'center',
@@ -1259,11 +1259,11 @@ const compressImageFile = (file: File): Promise<string> => {
                       textAlign: 'center',
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = isDark ? 'rgba(24, 15, 20, 0.8)' : 'rgba(255, 255, 255, 0.75)';
-                      e.currentTarget.style.borderColor = isDark ? '#F0D4B8' : 'var(--color-mulberry)';
+                      e.currentTarget.style.backgroundColor = isDark ? 'rgba(70, 32, 55, 0.75)' : 'rgba(255, 255, 255, 0.75)';
+                      e.currentTarget.style.borderColor = isDark ? '#F9AAAD' : 'var(--color-mulberry)';
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = isDark ? 'rgba(24, 15, 20, 0.55)' : 'rgba(255, 255, 255, 0.45)';
+                      e.currentTarget.style.backgroundColor = isDark ? 'rgba(70, 32, 55, 0.45)' : 'rgba(255, 255, 255, 0.45)';
                       e.currentTarget.style.borderColor = isDark ? 'rgba(243, 238, 233, 0.35)' : 'rgba(73, 40, 61, 0.35)';
                     }}
                   >
@@ -1276,7 +1276,7 @@ const compressImageFile = (file: File): Promise<string> => {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
+                        color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
                         fontSize: '20px',
                         marginBottom: '4px',
                       }}
@@ -1287,7 +1287,7 @@ const compressImageFile = (file: File): Promise<string> => {
                       style={{
                         fontSize: '12.5px',
                         fontWeight: 600,
-                        color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
+                        color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
                         letterSpacing: '0.04em',
                       }}
                     >
@@ -1308,7 +1308,7 @@ const compressImageFile = (file: File): Promise<string> => {
                     borderRadius: '8px',
                     padding: '6px 12px',
                     fontSize: '13px',
-                    color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
+                    color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
                     fontWeight: 600,
                     cursor: 'pointer',
                   }}
@@ -1350,7 +1350,7 @@ const compressImageFile = (file: File): Promise<string> => {
                   fontWeight: 600,
                   letterSpacing: '0.06em',
                   textTransform: 'uppercase',
-                  color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
+                  color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
                   marginBottom: '5px',
                 }}
               >
@@ -1369,7 +1369,7 @@ const compressImageFile = (file: File): Promise<string> => {
                   height: '52px',
                   borderRadius: '13px',
                   border: isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.22)',
-                  backgroundColor: isDark ? 'rgba(24, 15, 20, 0.75)' : 'rgba(255, 255, 255, 0.65)',
+                  backgroundColor: isDark ? 'rgba(70, 32, 55, 0.65)' : 'rgba(255, 255, 255, 0.65)',
                   padding: '0 16px',
                   fontSize: '16px',
                   fontFamily: 'monospace',
@@ -1390,7 +1390,7 @@ const compressImageFile = (file: File): Promise<string> => {
                     fontWeight: 600,
                     letterSpacing: '0.06em',
                     textTransform: 'uppercase',
-                    color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
+                    color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
                   }}
                 >
                   TWO-LINE INTRODUCTION <span style={{ color: '#E06D6D', fontWeight: 700 }}>*</span>
@@ -1419,7 +1419,7 @@ const compressImageFile = (file: File): Promise<string> => {
                   width: '100%',
                   borderRadius: '13px',
                   border: errors.introduction ? '1.5px solid #E06D6D' : (isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.22)'),
-                  backgroundColor: isDark ? 'rgba(24, 15, 20, 0.75)' : 'rgba(255, 255, 255, 0.65)',
+                  backgroundColor: isDark ? 'rgba(70, 32, 55, 0.65)' : 'rgba(255, 255, 255, 0.65)',
                   padding: '12px 16px',
                   fontSize: '16px',
                   fontFamily: 'var(--font-sans)',
@@ -1448,21 +1448,21 @@ const compressImageFile = (file: File): Promise<string> => {
               style={{
                 width: '100%',
                 height: '56px',
-                backgroundColor: isDark ? '#5C2D49' : 'var(--color-mulberry)',
-                color: '#FFFFFF',
+                background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
+                color: '#FDF3F5',
                 fontFamily: 'var(--font-sans)',
                 fontSize: '16.5px',
                 fontWeight: 600,
                 letterSpacing: '0.04em',
                 borderRadius: '9999px',
-                border: isDark ? '1px solid rgba(240, 212, 184, 0.35)' : 'none',
+                border: 'none',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '8px',
-                boxShadow: isDark ? '0 8px 24px rgba(0, 0, 0, 0.4)' : '0 8px 24px rgba(73, 40, 61, 0.28)',
-                transition: 'transform 0.15s ease, background-color 0.15s ease',
+                boxShadow: '0 8px 24px rgba(161, 82, 95, 0.4)',
+                transition: 'transform 0.15s ease, background 0.2s ease, box-shadow 0.2s ease',
               }}
               onMouseDown={(e) => {
                 e.currentTarget.style.transform = 'scale(0.98)';
@@ -1471,10 +1471,12 @@ const compressImageFile = (file: File): Promise<string> => {
                 e.currentTarget.style.transform = 'scale(1)';
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = isDark ? '#73375B' : '#391d2f';
+                e.currentTarget.style.background = 'linear-gradient(135deg, #C7577C 0%, #F9AAAD 100%)';
+                e.currentTarget.style.boxShadow = '0 10px 28px rgba(199, 87, 124, 0.55)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = isDark ? '#5C2D49' : 'var(--color-mulberry)';
+                e.currentTarget.style.background = 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)';
+                e.currentTarget.style.boxShadow = '0 8px 24px rgba(161, 82, 95, 0.4)';
                 e.currentTarget.style.transform = 'scale(1)';
               }}
             >

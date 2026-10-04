@@ -74,15 +74,15 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
   }, [currentView, elevateMessages.length]);
 
   // Dynamic Theme Colors
-  const themeBgColor = isDark ? '#050104' : '#F7F3EE';
-  const themeTextColor = isDark ? '#F3EEE9' : 'var(--color-espresso)';
-  const themeMulberry = isDark ? '#F3EEE9' : 'var(--color-mulberry)';
-  const themeMuted = isDark ? '#D5C5CF' : '#6E5D68';
-  const themeBorder = isDark ? 'rgba(243, 238, 233, 0.16)' : 'rgba(73, 40, 61, 0.12)';
-  const themeCardBg = isDark ? 'rgba(10, 2, 9, 0.94)' : 'rgba(255, 255, 255, 0.65)';
-  const themeCardBorder = isDark ? '1px solid rgba(243, 238, 233, 0.16)' : '1px solid rgba(73, 40, 61, 0.12)';
-  const themeButtonBg = isDark ? '#F3EEE9' : 'var(--color-mulberry)';
-  const themeButtonText = isDark ? '#050104' : '#FFFFFF';
+  const themeBgColor = isDark ? '#140E1C' : '#FAF1F3';
+  const themeTextColor = isDark ? '#FDF3F5' : '#462037';
+  const themeMulberry = isDark ? '#F9AAAD' : '#462037';
+  const themeMuted = isDark ? '#D4A2AC' : '#683A46';
+  const themeBorder = isDark ? 'rgba(161, 82, 95, 0.28)' : 'rgba(161, 82, 95, 0.18)';
+  const themeCardBg = isDark ? 'rgba(70, 32, 55, 0.75)' : 'rgba(255, 255, 255, 0.75)';
+  const themeCardBorder = isDark ? '1px solid rgba(161, 82, 95, 0.3)' : '1px solid rgba(161, 82, 95, 0.18)';
+  const themeButtonBg = 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)';
+  const themeButtonText = '#FDF3F5';
 
   // Bookings partitioning
   const upcomingBookings = elevateBookings.filter((b) => b.bookingStatus !== 'Completed');
@@ -205,7 +205,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
         style={{
           position: 'absolute',
           inset: 0,
-          backgroundColor: isDark ? 'rgba(3, 0, 3, 0.12)' : 'rgba(247, 243, 238, 0.35)',
+          backgroundColor: isDark ? 'rgba(20, 14, 28, 0.45)' : 'rgba(250, 241, 243, 0.35)',
           zIndex: 1,
           pointerEvents: 'none',
         }}
@@ -217,7 +217,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
           style={{
             position: 'relative',
             zIndex: 45,
-            backgroundColor: isDark ? 'rgba(5, 1, 4, 0.98)' : 'rgba(247, 243, 238, 0.92)',
+            backgroundColor: isDark ? 'rgba(20, 14, 28, 0.98)' : 'rgba(250, 241, 243, 0.92)',
             transition: 'background-color 0.25s ease',
           }}
         >
@@ -397,8 +397,8 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                   width: '100%',
                   height: '52px',
                   borderRadius: '26px',
-                  backgroundColor: 'var(--color-mulberry)',
-                  color: '#FFFFFF',
+                  background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
+                  color: '#FDF3F5',
                   border: 'none',
                   fontSize: '13.5px',
                   fontWeight: 700,
@@ -408,15 +408,15 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '8px',
-                  boxShadow: '0 6px 20px rgba(73, 40, 61, 0.28)',
-                  transition: 'background-color 0.2s ease, transform 0.15s ease',
+                  boxShadow: '0 6px 20px rgba(161, 82, 95, 0.4)',
+                  transition: 'filter 0.2s ease, transform 0.15s ease',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#3B1F31';
+                  e.currentTarget.style.filter = 'brightness(1.1)';
                   e.currentTarget.style.transform = 'translateY(-1px)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'var(--color-mulberry)';
+                  e.currentTarget.style.filter = 'brightness(1)';
                   e.currentTarget.style.transform = 'translateY(0)';
                 }}
               >
@@ -1051,7 +1051,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                             cursor: 'pointer',
                             border: isSelected ? 'none' : `1px solid ${themeBorder}`,
                             backgroundColor: isSelected ? (isDark ? '#F3EEE9' : 'var(--color-mulberry)') : 'transparent',
-                            color: isSelected ? (isDark ? '#050104' : '#FFFFFF') : themeMuted,
+                            color: isSelected ? (isDark ? '#140E1C' : '#FFFFFF') : themeMuted,
                             transition: 'all 0.15s ease',
                           }}
                         >
@@ -1395,7 +1395,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                             ? (isDark ? '#F3EEE9' : 'var(--color-mulberry)')
                             : (isDark ? 'rgba(20, 8, 18, 0.94)' : 'rgba(255, 255, 255, 0.85)'),
                           color: isMember
-                            ? (isDark ? '#050104' : '#FFFFFF')
+                            ? (isDark ? '#140E1C' : '#FFFFFF')
                             : themeTextColor,
                           border: isMember ? 'none' : themeCardBorder,
                           fontSize: '13.5px',
@@ -1435,7 +1435,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                                 padding: '8px',
                                 borderRadius: '16px',
                                 backgroundColor: isDark ? '#F3EEE9' : 'var(--color-mulberry)',
-                                color: isDark ? '#050104' : '#FFFFFF',
+                                color: isDark ? '#140E1C' : '#FFFFFF',
                                 border: 'none',
                                 fontSize: '11px',
                                 fontWeight: 500,
@@ -1689,7 +1689,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                             backgroundColor: isDone
                               ? (isCurrent ? (isDark ? '#F3EEE9' : 'var(--color-mulberry)') : (isDark ? 'rgba(129, 199, 132, 0.4)' : 'rgba(46, 125, 50, 0.3)'))
                               : (isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(73, 40, 61, 0.1)'),
-                            color: isDone ? (isCurrent ? (isDark ? '#050104' : '#FFFFFF') : (isDark ? '#81C784' : '#2E7D32')) : themeMuted,
+                            color: isDone ? (isCurrent ? (isDark ? '#140E1C' : '#FFFFFF') : (isDark ? '#81C784' : '#2E7D32')) : themeMuted,
                             fontSize: '10px',
                             fontWeight: 400,
                             display: 'flex',
@@ -1882,7 +1882,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                     borderRadius: '20px',
                     border: bookingsTab === 'upcoming' ? 'none' : 'transparent',
                     backgroundColor: bookingsTab === 'upcoming' ? (isDark ? '#F3EEE9' : '#FFFFFF') : 'transparent',
-                    color: bookingsTab === 'upcoming' ? (isDark ? '#050104' : 'var(--color-mulberry)') : themeMuted,
+                    color: bookingsTab === 'upcoming' ? (isDark ? '#140E1C' : 'var(--color-mulberry)') : themeMuted,
                     fontSize: '11.5px',
                     fontWeight: bookingsTab === 'upcoming' ? 500 : 400,
                     letterSpacing: '0.08em',
@@ -1901,7 +1901,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                     borderRadius: '20px',
                     border: bookingsTab === 'past' ? 'none' : 'transparent',
                     backgroundColor: bookingsTab === 'past' ? (isDark ? '#F3EEE9' : '#FFFFFF') : 'transparent',
-                    color: bookingsTab === 'past' ? (isDark ? '#050104' : 'var(--color-mulberry)') : themeMuted,
+                    color: bookingsTab === 'past' ? (isDark ? '#140E1C' : 'var(--color-mulberry)') : themeMuted,
                     fontSize: '11.5px',
                     fontWeight: bookingsTab === 'past' ? 500 : 400,
                     letterSpacing: '0.08em',

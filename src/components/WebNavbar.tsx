@@ -139,10 +139,10 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
 
   const currentScreenTitle = allScreens.find((s) => s.path === currentPath)?.label || 'VennZ';
 
-  const borderBottom = isDark ? 'rgba(250, 245, 238, 0.12)' : 'rgba(73, 40, 61, 0.08)';
-  const textColor = isDark ? '#F3EEE9' : 'var(--color-espresso)';
-  const activeColor = isDark ? '#F3EEE9' : 'var(--color-mulberry)';
-  const inactiveColor = isDark ? 'rgba(243, 238, 233, 0.65)' : '#7A6A74';
+  const borderBottom = isDark ? 'rgba(161, 82, 95, 0.22)' : 'rgba(199, 87, 124, 0.15)';
+  const textColor = isDark ? '#FDF3F5' : '#462037';
+  const activeColor = isDark ? '#F9AAAD' : '#A1525F';
+  const inactiveColor = isDark ? '#D4A2AC' : '#683A46';
 
   return (
     <header
@@ -194,8 +194,8 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                 maxWidth: '130px',
                 objectFit: 'contain',
                 filter: isDark
-                  ? 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.7)) drop-shadow(0 4px 12px rgba(139, 44, 116, 0.45))'
-                  : 'drop-shadow(0 1px 3px rgba(73, 40, 61, 0.2))',
+                  ? 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.7)) drop-shadow(0 4px 12px rgba(104, 58, 70, 0.45))'
+                  : 'drop-shadow(0 1px 3px rgba(70, 32, 55, 0.2))',
               }}
             />
 
@@ -208,7 +208,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                     fontWeight: 600,
                     letterSpacing: '0.18em',
                     textTransform: 'uppercase',
-                    color: isDark ? 'rgba(243, 238, 233, 0.7)' : '#7A6B74',
+                    color: isDark ? '#D4A2AC' : '#683A46',
                     marginTop: '1px',
                   }}
                 >
@@ -240,8 +240,8 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                     position: 'relative',
                     background: isActive
                       ? isDark
-                        ? 'rgba(255, 255, 255, 0.1)'
-                        : 'rgba(73, 40, 61, 0.08)'
+                        ? 'rgba(199, 87, 124, 0.22)'
+                        : 'rgba(161, 82, 95, 0.12)'
                       : 'transparent',
                     border: 'none',
                     borderRadius: '9999px',
@@ -260,7 +260,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                   onMouseEnter={(e) => {
                     if (!isActive) {
                       e.currentTarget.style.color = textColor;
-                      e.currentTarget.style.backgroundColor = isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(73, 40, 61, 0.04)';
+                      e.currentTarget.style.backgroundColor = isDark ? 'rgba(199, 87, 124, 0.12)' : 'rgba(161, 82, 95, 0.08)';
                     }
                   }}
                   onMouseLeave={(e) => {
@@ -271,7 +271,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                   }}
                 >
                   {item.hasCrown && (
-                    <CrownIcon color={isActive ? '#E0B56A' : isDark ? '#D5A85A' : '#8A4B6E'} size={12} />
+                    <CrownIcon color={isActive ? '#E0B56A' : isDark ? '#D5A85A' : '#C7577C'} size={12} />
                   )}
                   <span>{item.label}</span>
                   {item.hasBadge && (
@@ -333,10 +333,10 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                   width: '280px',
                   maxHeight: '400px',
                   overflowY: 'auto',
-                  backgroundColor: isDark ? '#120a10' : '#FFFFFF',
+                  backgroundColor: isDark ? '#462037' : '#FAF1F3',
                   borderRadius: '16px',
                   border: `1px solid ${borderBottom}`,
-                  boxShadow: '0 16px 40px rgba(0, 0, 0, 0.4)',
+                  boxShadow: isDark ? '0 16px 40px rgba(20, 14, 28, 0.6)' : '0 16px 40px rgba(70, 32, 55, 0.12)',
                   padding: '8px 0',
                   zIndex: 100,
                 }}
@@ -460,10 +460,10 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                   right: 0,
                   width: '360px',
                   maxHeight: '440px',
-                  backgroundColor: isDark ? '#0e060d' : '#FFFFFF',
+                  backgroundColor: isDark ? '#462037' : '#FAF1F3',
                   borderRadius: '18px',
                   border: `1px solid ${borderBottom}`,
-                  boxShadow: '0 20px 48px rgba(0, 0, 0, 0.5)',
+                  boxShadow: isDark ? '0 20px 48px rgba(20, 14, 28, 0.65)' : '0 20px 48px rgba(70, 32, 55, 0.15)',
                   overflow: 'hidden',
                   zIndex: 100,
                   display: 'flex',
@@ -486,7 +486,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                       fontWeight: 600,
                       letterSpacing: '0.14em',
                       textTransform: 'uppercase',
-                      color: isDark ? 'rgba(243, 238, 233, 0.7)' : '#7A6A74',
+                      color: isDark ? '#F9AAAD' : '#A1525F',
                     }}
                   >
                     NOTIFICATIONS
@@ -494,7 +494,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                   <span
                     style={{
                       fontSize: '11px',
-                      color: isDark ? 'rgba(243, 238, 233, 0.5)' : '#998A94',
+                      color: isDark ? '#D4A2AC' : '#8A7A84',
                     }}
                   >
                     {notifications.length} updates
@@ -522,19 +522,19 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                           cursor: notif.targetRoute ? 'pointer' : 'default',
                           backgroundColor: !notif.isRead
                             ? isDark
-                              ? 'rgba(255, 255, 255, 0.03)'
-                              : 'rgba(73, 40, 61, 0.03)'
+                              ? 'rgba(249, 170, 173, 0.08)'
+                              : 'rgba(161, 82, 95, 0.06)'
                             : 'transparent',
                           transition: 'background-color 0.15s ease',
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor = isDark ? 'rgba(255, 255, 255, 0.06)' : 'rgba(73, 40, 61, 0.05)';
+                          e.currentTarget.style.backgroundColor = isDark ? 'rgba(249, 170, 173, 0.12)' : 'rgba(161, 82, 95, 0.1)';
                         }}
                         onMouseLeave={(e) => {
                           e.currentTarget.style.backgroundColor = !notif.isRead
                             ? isDark
-                              ? 'rgba(255, 255, 255, 0.03)'
-                              : 'rgba(73, 40, 61, 0.03)'
+                              ? 'rgba(249, 170, 173, 0.08)'
+                              : 'rgba(161, 82, 95, 0.06)'
                             : 'transparent';
                         }}
                       >
@@ -544,7 +544,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                             fontWeight: 600,
                             letterSpacing: '0.12em',
                             textTransform: 'uppercase',
-                            color: isDark ? '#E8A99B' : '#9B4D6E',
+                            color: isDark ? '#F9AAAD' : '#C7577C',
                             marginBottom: '3px',
                           }}
                         >
@@ -652,8 +652,8 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                   height: '34px',
                   borderRadius: '50%',
                   overflow: 'hidden',
-                  border: '1.5px solid var(--color-peach-blush)',
-                  backgroundColor: 'var(--color-mulberry)',
+                  border: isDark ? '1.5px solid #F9AAAD' : '1.5px solid #C7577C',
+                  backgroundColor: '#462037',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -662,7 +662,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                 {profile.photos && profile.photos[0] ? (
                   <img src={profile.photos[0]} alt="You" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 ) : (
-                  <span style={{ fontSize: '13px', fontWeight: 600, color: '#FFF' }}>
+                  <span style={{ fontSize: '13px', fontWeight: 600, color: '#FDF3F5' }}>
                     {(profile.firstName || 'U')[0]}
                   </span>
                 )}
@@ -699,12 +699,13 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
       {mobileMenuOpen && isMemberArea && (
         <div
           style={{
-            backgroundColor: isDark ? 'rgba(20, 8, 19, 0.98)' : 'rgba(247, 238, 246, 0.98)',
+            backgroundColor: isDark ? 'rgba(20, 14, 28, 0.98)' : 'rgba(250, 241, 243, 0.98)',
             backdropFilter: 'blur(16px)',
             padding: '12px 20px 18px',
             display: 'flex',
             flexDirection: 'column',
             gap: '6px',
+            borderBottom: isDark ? '1px solid rgba(161, 82, 95, 0.25)' : '1px solid rgba(199, 87, 124, 0.2)',
           }}
         >
           {navItems.map((item) => {
@@ -723,7 +724,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                   padding: '10px 14px',
                   borderRadius: '10px',
                   border: 'none',
-                  backgroundColor: isActive ? (isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(73, 40, 61, 0.08)') : 'transparent',
+                  backgroundColor: isActive ? (isDark ? 'rgba(199, 87, 124, 0.22)' : 'rgba(161, 82, 95, 0.12)') : 'transparent',
                   color: isActive ? activeColor : textColor,
                   fontSize: '13px',
                   fontWeight: isActive ? 600 : 500,

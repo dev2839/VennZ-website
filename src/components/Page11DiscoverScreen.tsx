@@ -275,12 +275,12 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
   const cardOpacity = isAnimatingOut ? 0 : 1;
 
   // Dynamic theme styling
-  const themeBgColor = isDark ? '#050104' : '#F7F3EE';
-  const themeTextColor = isDark ? '#F3EEE9' : 'var(--color-espresso)';
-  const themeMulberry = isDark ? '#F3EEE9' : 'var(--color-mulberry)';
-  const themeMuted = isDark ? '#D5C5CF' : '#8A7A84';
-  const themeBorder = isDark ? 'rgba(243, 238, 233, 0.18)' : 'rgba(73, 40, 61, 0.12)';
-  const themeCardBg = isDark ? 'rgba(10, 2, 9, 0.94)' : 'rgba(255, 255, 255, 0.5)';
+  const themeBgColor = isDark ? '#140E1C' : '#FAF1F3';
+  const themeTextColor = isDark ? '#FDF3F5' : '#462037';
+  const themeMulberry = isDark ? '#F9AAAD' : '#462037';
+  const themeMuted = isDark ? '#D4A2AC' : '#683A46';
+  const themeBorder = isDark ? 'rgba(161, 82, 95, 0.28)' : 'rgba(161, 82, 95, 0.18)';
+  const themeCardBg = isDark ? 'rgba(70, 32, 55, 0.75)' : 'rgba(255, 255, 255, 0.75)';
 
   return (
     <div
@@ -320,7 +320,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
         style={{
           position: 'absolute',
           inset: 0,
-          backgroundColor: isDark ? 'rgba(3, 0, 3, 0.12)' : 'rgba(247, 243, 238, 0.35)',
+          backgroundColor: isDark ? 'rgba(20, 14, 28, 0.45)' : 'rgba(250, 241, 243, 0.35)',
           zIndex: 1,
           pointerEvents: 'none',
         }}
@@ -332,7 +332,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
           style={{
             position: 'relative',
             zIndex: 45,
-            backgroundColor: isDark ? 'rgba(5, 1, 4, 0.98)' : 'rgba(247, 243, 238, 0.92)',
+            backgroundColor: isDark ? 'rgba(20, 14, 28, 0.98)' : 'rgba(250, 241, 243, 0.92)',
             transition: 'background-color 0.25s ease',
           }}
         >
@@ -803,10 +803,10 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                     width: '48px',
                     height: '48px',
                     borderRadius: '50%',
-                    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                    backgroundColor: isDark ? 'rgba(20, 14, 28, 0.75)' : 'rgba(0, 0, 0, 0.4)',
                     backdropFilter: 'blur(12px)',
-                    color: '#FFFFFF',
-                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                    color: isDark ? '#F9AAAD' : '#FFFFFF',
+                    border: '1px solid ' + (isDark ? 'rgba(161, 82, 95, 0.4)' : 'rgba(255, 255, 255, 0.3)'),
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -826,14 +826,14 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                     width: '48px',
                     height: '48px',
                     borderRadius: '50%',
-                    backgroundColor: 'var(--color-peach-blush)',
-                    color: '#000',
+                    background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
+                    color: '#FDF3F5',
                     border: 'none',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     cursor: 'pointer',
-                    boxShadow: '0 4px 12px rgba(232, 169, 155, 0.4)',
+                    boxShadow: '0 4px 14px rgba(161, 82, 95, 0.45)',
                   }}
                 >
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -1033,8 +1033,8 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                 height: '50px',
                 padding: '0 30px',
                 borderRadius: '25px',
-                backgroundColor: 'var(--color-mulberry)',
-                color: '#FFFFFF',
+                background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
+                color: '#FDF3F5',
                 border: 'none',
                 fontSize: '13.5px',
                 fontWeight: 700,
@@ -1043,15 +1043,15 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '8px',
-                boxShadow: '0 6px 20px rgba(73, 40, 61, 0.25)',
-                transition: 'background-color 0.2s ease, transform 0.15s ease',
+                boxShadow: '0 6px 20px rgba(161, 82, 95, 0.35)',
+                transition: 'filter 0.2s ease, transform 0.15s ease',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#3B1F31';
+                e.currentTarget.style.filter = 'brightness(1.1)';
                 e.currentTarget.style.transform = 'translateY(-1px)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'var(--color-mulberry)';
+                e.currentTarget.style.filter = 'brightness(1)';
                 e.currentTarget.style.transform = 'translateY(0)';
               }}
             >
@@ -1244,7 +1244,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                     padding: '6px 14px',
                     borderRadius: '16px',
                     backgroundColor: userDatingPref === 'WOMEN' ? (isDark ? '#F3EEE9' : 'var(--color-mulberry)') : (isDark ? 'rgba(243, 238, 233, 0.1)' : 'rgba(73, 40, 61, 0.06)'),
-                    color: userDatingPref === 'WOMEN' ? (isDark ? '#050104' : '#FFFFFF') : themeMulberry,
+                    color: userDatingPref === 'WOMEN' ? (isDark ? '#140E1C' : '#FFFFFF') : themeMulberry,
                     border: `1px solid ${themeBorder}`,
                     fontSize: '11px',
                     fontWeight: 700,
@@ -1260,7 +1260,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                     padding: '6px 14px',
                     borderRadius: '16px',
                     backgroundColor: userDatingPref === 'MEN' ? (isDark ? '#F3EEE9' : 'var(--color-mulberry)') : (isDark ? 'rgba(243, 238, 233, 0.1)' : 'rgba(73, 40, 61, 0.06)'),
-                    color: userDatingPref === 'MEN' ? (isDark ? '#050104' : '#FFFFFF') : themeMulberry,
+                    color: userDatingPref === 'MEN' ? (isDark ? '#140E1C' : '#FFFFFF') : themeMulberry,
                     border: `1px solid ${themeBorder}`,
                     fontSize: '11px',
                     fontWeight: 700,
@@ -1276,7 +1276,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                     padding: '6px 14px',
                     borderRadius: '16px',
                     backgroundColor: (!userDatingPref || userDatingPref === 'EVERYONE') ? (isDark ? '#F3EEE9' : 'var(--color-mulberry)') : (isDark ? 'rgba(243, 238, 233, 0.1)' : 'rgba(73, 40, 61, 0.06)'),
-                    color: (!userDatingPref || userDatingPref === 'EVERYONE') ? (isDark ? '#050104' : '#FFFFFF') : themeMulberry,
+                    color: (!userDatingPref || userDatingPref === 'EVERYONE') ? (isDark ? '#140E1C' : '#FFFFFF') : themeMulberry,
                     border: `1px solid ${themeBorder}`,
                     fontSize: '11px',
                     fontWeight: 700,

@@ -27,8 +27,8 @@ export const Page10OverviewScreen: React.FC<Page10OverviewScreenProps> = ({
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        backgroundColor: isDark ? '#050104' : '#F7F3EE',
-        color: isDark ? '#F3EEE9' : 'var(--color-espresso)',
+        backgroundColor: isDark ? '#140E1C' : '#FAF1F3',
+        color: isDark ? '#FDF3F5' : '#462037',
         fontFamily: 'var(--font-sans)',
         overflow: 'hidden',
       }}
@@ -53,7 +53,7 @@ export const Page10OverviewScreen: React.FC<Page10OverviewScreenProps> = ({
         style={{
           position: 'absolute',
           inset: 0,
-          backgroundColor: isDark ? 'rgba(3, 0, 3, 0.12)' : 'rgba(247, 243, 238, 0.42)',
+          backgroundColor: isDark ? 'rgba(20, 14, 28, 0.35)' : 'rgba(250, 241, 243, 0.42)',
           zIndex: 1,
           pointerEvents: 'none',
         }}
@@ -65,10 +65,10 @@ export const Page10OverviewScreen: React.FC<Page10OverviewScreenProps> = ({
           position: 'relative',
           zIndex: 20,
           flexShrink: 0,
-          backgroundColor: isDark ? 'rgba(5, 1, 4, 0.88)' : 'rgba(247, 243, 238, 0.88)',
+          backgroundColor: isDark ? 'rgba(20, 14, 28, 0.92)' : 'rgba(250, 241, 243, 0.92)',
           backdropFilter: 'blur(10px)',
           WebkitBackdropFilter: 'blur(10px)',
-          borderBottom: isDark ? '1px solid rgba(243, 238, 233, 0.08)' : '1px solid rgba(73, 40, 61, 0.06)',
+          borderBottom: isDark ? '1px solid rgba(161, 82, 95, 0.2)' : '1px solid rgba(199, 87, 124, 0.15)',
         }}
       >
         {showStatusBar && <StatusBar variant={isDark ? 'light' : 'dark'} />}
@@ -176,7 +176,7 @@ export const Page10OverviewScreen: React.FC<Page10OverviewScreenProps> = ({
                 fontWeight: 700,
                 letterSpacing: '0.12em',
                 textTransform: 'uppercase',
-                color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
+                color: isDark ? '#F9AAAD' : '#A1525F',
               }}
             >
               WELCOME TO VENNZ
@@ -190,7 +190,7 @@ export const Page10OverviewScreen: React.FC<Page10OverviewScreenProps> = ({
               fontSize: '32px',
               lineHeight: '1.2',
               fontWeight: 400,
-              color: isDark ? '#FBF7F2' : 'var(--color-mulberry)',
+              color: isDark ? '#FDF3F5' : '#462037',
               margin: '0 0 14px 0',
               letterSpacing: '-0.01em',
             }}
@@ -203,7 +203,7 @@ export const Page10OverviewScreen: React.FC<Page10OverviewScreenProps> = ({
             style={{
               fontSize: '14px',
               lineHeight: '1.55',
-              color: isDark ? '#BDB0B6' : '#6E5E68',
+              color: isDark ? '#D4A2AC' : '#683A46',
               margin: '0 0 28px 0',
             }}
           >
@@ -215,13 +215,13 @@ export const Page10OverviewScreen: React.FC<Page10OverviewScreenProps> = ({
           {/* Section: Your First Look includes */}
           <div
             style={{
-              backgroundColor: isDark ? 'rgba(24, 15, 20, 0.76)' : 'rgba(255, 255, 255, 0.76)',
+              backgroundColor: isDark ? 'rgba(70, 32, 55, 0.75)' : 'rgba(236, 209, 216, 0.65)',
               backdropFilter: 'blur(10px)',
               WebkitBackdropFilter: 'blur(10px)',
               borderRadius: '18px',
-              border: isDark ? '1.5px solid rgba(243, 238, 233, 0.14)' : '1.5px solid rgba(73, 40, 61, 0.2)',
+              border: isDark ? '1.5px solid rgba(161, 82, 95, 0.35)' : '1.5px solid rgba(199, 87, 124, 0.25)',
               padding: '22px 20px',
-              boxShadow: isDark ? 'none' : '0 4px 20px rgba(73, 40, 61, 0.05)',
+              boxShadow: isDark ? 'none' : '0 4px 20px rgba(70, 32, 55, 0.08)',
               marginBottom: '22px',
             }}
           >
@@ -231,7 +231,7 @@ export const Page10OverviewScreen: React.FC<Page10OverviewScreenProps> = ({
                 fontWeight: 700,
                 letterSpacing: '0.1em',
                 textTransform: 'uppercase',
-                color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
+                color: isDark ? '#F9AAAD' : '#A1525F',
                 marginBottom: '16px',
               }}
             >
@@ -315,8 +315,8 @@ export const Page10OverviewScreen: React.FC<Page10OverviewScreenProps> = ({
               width: '100%',
               height: '54px',
               borderRadius: '27px',
-              backgroundColor: 'var(--color-mulberry)',
-              color: '#FFFFFF',
+              background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
+              color: '#FDF3F5',
               border: 'none',
               fontSize: '13.5px',
               fontWeight: 700,
@@ -327,16 +327,18 @@ export const Page10OverviewScreen: React.FC<Page10OverviewScreenProps> = ({
               alignItems: 'center',
               justifyContent: 'center',
               gap: '8px',
-              boxShadow: '0 6px 22px rgba(73, 40, 61, 0.28)',
-              transition: 'background-color 0.2s ease, transform 0.15s ease',
+              boxShadow: '0 6px 22px rgba(20, 14, 28, 0.5), 0 0 16px rgba(161, 82, 95, 0.3)',
+              transition: 'background 0.2s ease, transform 0.15s ease, color 0.2s ease',
               marginBottom: '20px',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#3B1F31';
+              e.currentTarget.style.background = 'linear-gradient(135deg, #C7577C 0%, #F9AAAD 100%)';
+              e.currentTarget.style.color = '#140E1C';
               e.currentTarget.style.transform = 'translateY(-1px)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'var(--color-mulberry)';
+              e.currentTarget.style.background = 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)';
+              e.currentTarget.style.color = '#FDF3F5';
               e.currentTarget.style.transform = 'translateY(0)';
             }}
           >

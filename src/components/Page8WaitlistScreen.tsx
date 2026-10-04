@@ -142,8 +142,8 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        backgroundColor: isDark ? '#050104' : '#F7F3EE',
-        color: isDark ? '#F3EEE9' : 'var(--color-espresso)',
+        backgroundColor: isDark ? '#140E1C' : '#FAF1F3',
+        color: isDark ? '#FDF3F5' : '#462037',
         fontFamily: 'var(--font-sans)',
         overflow: 'hidden',
       }}
@@ -171,7 +171,7 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
         style={{
           position: 'absolute',
           inset: 0,
-          backgroundColor: isDark ? 'rgba(3, 0, 3, 0.12)' : 'rgba(247, 243, 238, 0.42)',
+          backgroundColor: isDark ? 'rgba(20, 14, 28, 0.45)' : 'rgba(250, 241, 243, 0.42)',
           zIndex: 1,
           pointerEvents: 'none',
         }}
@@ -183,10 +183,10 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
           position: 'relative',
           zIndex: 20,
           flexShrink: 0,
-          backgroundColor: isDark ? 'rgba(5, 1, 4, 0.88)' : 'rgba(247, 243, 238, 0.88)',
+          backgroundColor: isDark ? 'rgba(20, 14, 28, 0.92)' : 'rgba(250, 241, 243, 0.92)',
           backdropFilter: 'blur(10px)',
           WebkitBackdropFilter: 'blur(10px)',
-          borderBottom: isDark ? '1px solid rgba(243, 238, 233, 0.08)' : '1px solid rgba(73, 40, 61, 0.06)',
+          borderBottom: isDark ? '1px solid rgba(161, 82, 95, 0.2)' : '1px solid rgba(161, 82, 95, 0.12)',
         }}
       >
         {showStatusBar && <StatusBar variant={isDark ? 'light' : 'dark'} />}
@@ -303,7 +303,7 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
                 fontWeight: 700,
                 letterSpacing: '0.1em',
                 textTransform: 'uppercase',
-                color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
+                color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
               }}
             >
               APPLICATION
@@ -379,7 +379,7 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
                 fontWeight: 700,
                 letterSpacing: '0.1em',
                 textTransform: 'uppercase',
-                color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
+                color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
                 marginBottom: '10px',
               }}
             >
@@ -388,7 +388,7 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
 
             <div
               style={{
-                backgroundColor: isDark ? 'rgba(24, 15, 20, 0.75)' : 'rgba(255, 255, 255, 0.72)',
+                backgroundColor: isDark ? 'rgba(70, 32, 55, 0.65)' : 'rgba(255, 255, 255, 0.72)',
                 backdropFilter: 'blur(8px)',
                 WebkitBackdropFilter: 'blur(8px)',
                 borderRadius: '16px',
@@ -584,7 +584,7 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
                   <span
                     style={{
                       fontSize: '13.5px',
-                      color: isApproved ? (isDark ? '#F3EEE9' : '#272124') : (isDark ? '#F0D4B8' : 'var(--color-mulberry)'),
+                      color: isApproved ? (isDark ? '#F3EEE9' : '#272124') : (isDark ? '#F9AAAD' : 'var(--color-mulberry)'),
                       fontWeight: 600,
                     }}
                   >
@@ -649,8 +649,8 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
                   width: '100%',
                   height: '56px',
                   borderRadius: '28px',
-                  backgroundColor: 'var(--color-mulberry)',
-                  color: '#FFFFFF',
+                  background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
+                  color: '#FDF3F5',
                   border: 'none',
                   fontSize: '16.5px',
                   fontWeight: 700,
@@ -661,15 +661,15 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '8px',
-                  boxShadow: '0 6px 22px rgba(73, 40, 61, 0.28)',
-                  transition: 'background-color 0.2s ease, transform 0.15s ease',
+                  boxShadow: '0 6px 22px rgba(161, 82, 95, 0.4)',
+                  transition: 'filter 0.2s ease, transform 0.15s ease',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#3B1F31';
+                  e.currentTarget.style.background = 'linear-gradient(135deg, #C7577C 0%, #F9AAAD 100%)';
                   e.currentTarget.style.transform = 'translateY(-1px)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'var(--color-mulberry)';
+                  e.currentTarget.style.background = 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)';
                   e.currentTarget.style.transform = 'translateY(0)';
                 }}
               >
@@ -704,7 +704,7 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.backgroundColor = isDark ? 'rgba(255, 255, 255, 0.14)' : 'rgba(255, 255, 255, 0.95)';
-                    e.currentTarget.style.borderColor = isDark ? '#F0D4B8' : 'var(--color-mulberry)';
+                    e.currentTarget.style.borderColor = isDark ? '#F9AAAD' : 'var(--color-mulberry)';
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.backgroundColor = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.75)';
@@ -748,8 +748,8 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
                   width: '100%',
                   height: '52px',
                   borderRadius: '26px',
-                  backgroundColor: 'var(--color-mulberry)',
-                  color: '#FFFFFF',
+                  background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
+                  color: '#FDF3F5',
                   border: 'none',
                   fontSize: '13px',
                   fontWeight: 700,
@@ -760,14 +760,14 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '8px',
-                  boxShadow: '0 6px 20px rgba(73, 40, 61, 0.24)',
-                  transition: 'background-color 0.15s ease',
+                  boxShadow: '0 6px 20px rgba(161, 82, 95, 0.35)',
+                  transition: 'filter 0.15s ease',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#3B1F31';
+                  e.currentTarget.style.filter = 'brightness(1.1)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'var(--color-mulberry)';
+                  e.currentTarget.style.filter = 'brightness(1)';
                 }}
               >
                 <span>RETURN TO THE WELCOME PAGE</span>
@@ -795,8 +795,8 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
                   width: '100%',
                   height: '52px',
                   borderRadius: '26px',
-                  backgroundColor: 'var(--color-mulberry)',
-                  color: '#FFFFFF',
+                  background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
+                  color: '#FDF3F5',
                   border: 'none',
                   fontSize: '13.5px',
                   fontWeight: 700,
@@ -807,14 +807,14 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '8px',
-                  boxShadow: '0 6px 20px rgba(73, 40, 61, 0.24)',
-                  transition: 'background-color 0.15s ease',
+                  boxShadow: '0 6px 20px rgba(161, 82, 95, 0.35)',
+                  transition: 'filter 0.15s ease',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#3B1F31';
+                  e.currentTarget.style.filter = 'brightness(1.1)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'var(--color-mulberry)';
+                  e.currentTarget.style.filter = 'brightness(1)';
                 }}
               >
                 <span>UPDATE MY PHOTOGRAPHS</span>
@@ -830,7 +830,7 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
           {isUnderReview && (
             <div
               style={{
-                backgroundColor: isDark ? 'rgba(24, 15, 20, 0.72)' : 'rgba(255, 255, 255, 0.65)',
+                backgroundColor: isDark ? 'rgba(70, 32, 55, 0.62)' : 'rgba(255, 255, 255, 0.65)',
                 backdropFilter: 'blur(8px)',
                 WebkitBackdropFilter: 'blur(8px)',
                 borderRadius: '16px',
@@ -845,7 +845,7 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
                   fontWeight: 700,
                   letterSpacing: '0.1em',
                   textTransform: 'uppercase',
-                  color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
+                  color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
                   marginBottom: '10px',
                 }}
               >
@@ -1054,7 +1054,7 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
                     background: 'none',
                     border: 'none',
                     fontSize: '11px',
-                    color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
+                    color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
                     textDecoration: 'underline',
                     cursor: 'pointer',
                     padding: '3px 8px',
@@ -1071,13 +1071,13 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
                   type="button"
                   onClick={handleSimulate90Days}
                   style={{
-                    backgroundColor: isDark ? 'rgba(24, 15, 20, 0.85)' : 'rgba(255, 255, 255, 0.85)',
+                    backgroundColor: isDark ? 'rgba(70, 32, 55, 0.75)' : 'rgba(255, 255, 255, 0.85)',
                     border: isDark ? '1px dashed rgba(243, 238, 233, 0.25)' : '1px dashed rgba(73, 40, 61, 0.3)',
                     borderRadius: '8px',
                     padding: '6px 12px',
                     fontSize: '11px',
                     fontWeight: 600,
-                    color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
+                    color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
@@ -1225,7 +1225,7 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
               style={{
                 fontSize: '15px',
                 fontWeight: 600,
-                color: isDark ? '#F0D4B8' : 'var(--color-mulberry)',
+                color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
               }}
             >
               Thank you, {profile.firstName?.trim() || 'Member'}.
@@ -1254,8 +1254,8 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
                 width: '100%',
                 height: '46px',
                 borderRadius: '23px',
-                backgroundColor: 'var(--color-mulberry)',
-                color: '#FFFFFF',
+                background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
+                color: '#FDF3F5',
                 border: 'none',
                 fontSize: '13px',
                 fontWeight: 700,
@@ -1263,7 +1263,7 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
                 textTransform: 'uppercase',
                 cursor: 'pointer',
                 marginTop: '6px',
-                boxShadow: '0 4px 14px rgba(73, 40, 61, 0.22)',
+                boxShadow: '0 4px 14px rgba(161, 82, 95, 0.4)',
               }}
             >
               VIEW STATUS

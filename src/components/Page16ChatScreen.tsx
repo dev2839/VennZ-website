@@ -99,13 +99,13 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
   };
 
   // Theme variables
-  const themeBgColor = isDark ? '#050104' : '#F7F3EE';
-  const themeTextColor = isDark ? '#F3EEE9' : 'var(--color-espresso)';
-  const themeMulberry = isDark ? '#F3EEE9' : 'var(--color-mulberry)';
-  const themeMuted = isDark ? '#D5C5CF' : '#8A7A84';
-  const themeBorder = isDark ? 'rgba(243, 238, 233, 0.18)' : 'rgba(73, 40, 61, 0.12)';
-  const themeBubbleBg = isDark ? 'rgba(10, 2, 9, 0.94)' : 'rgba(255, 255, 255, 0.82)';
-  const themeBubbleBorder = isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.12)';
+  const themeBgColor = isDark ? '#140E1C' : '#FAF1F3';
+  const themeTextColor = isDark ? '#FDF3F5' : '#462037';
+  const themeMulberry = isDark ? '#F9AAAD' : '#462037';
+  const themeMuted = isDark ? '#D4A2AC' : '#683A46';
+  const themeBorder = isDark ? 'rgba(161, 82, 95, 0.28)' : 'rgba(161, 82, 95, 0.18)';
+  const themeBubbleBg = isDark ? 'rgba(70, 32, 55, 0.75)' : 'rgba(255, 255, 255, 0.82)';
+  const themeBubbleBorder = isDark ? '1px solid rgba(161, 82, 95, 0.3)' : '1px solid rgba(161, 82, 95, 0.18)';
 
   return (
     <div
@@ -142,7 +142,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
         style={{
           position: 'absolute',
           inset: 0,
-          backgroundColor: isDark ? 'rgba(3, 0, 3, 0.12)' : 'rgba(247, 243, 238, 0.35)',
+          backgroundColor: isDark ? 'rgba(20, 14, 28, 0.45)' : 'rgba(250, 241, 243, 0.35)',
           zIndex: 1,
           pointerEvents: 'none',
         }}
@@ -154,7 +154,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
           style={{
             position: 'relative',
             zIndex: 45,
-            backgroundColor: isDark ? 'rgba(5, 1, 4, 0.98)' : 'rgba(247, 243, 238, 0.92)',
+            backgroundColor: isDark ? 'rgba(20, 14, 28, 0.98)' : 'rgba(250, 241, 243, 0.92)',
             transition: 'background-color 0.25s ease',
           }}
         >
@@ -389,16 +389,16 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                       maxWidth: '82%',
                       padding: '14px 18px',
                       borderRadius: isMe ? '20px 20px 4px 20px' : '20px 20px 20px 4px',
-                      backgroundColor: isMe
-                        ? (isDark ? '#F3EEE9' : 'var(--color-mulberry)')
+                      background: isMe
+                        ? (isDark ? 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)' : 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)')
                         : themeBubbleBg,
                       color: isMe
-                        ? (isDark ? '#050104' : '#FFFFFF')
+                        ? '#FDF3F5'
                         : themeTextColor,
                       border: isMe ? 'none' : themeBubbleBorder,
                       boxShadow: isDark
                         ? '0 4px 16px rgba(0,0,0,0.35)'
-                        : '0 4px 14px rgba(73,40,61,0.08)',
+                        : '0 4px 14px rgba(161,82,95,0.12)',
                       fontFamily: isMe ? 'var(--font-sans)' : 'var(--font-serif)',
                       fontSize: isMe ? '14px' : '16px',
                       lineHeight: '1.5',
@@ -421,7 +421,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
           zIndex: 35,
           padding: '12px 20px 14px 20px',
           borderTop: `1px solid ${themeBorder}`,
-          backgroundColor: isDark ? 'rgba(5, 1, 4, 0.98)' : 'rgba(247, 243, 238, 0.94)',
+          backgroundColor: isDark ? 'rgba(20, 14, 28, 0.98)' : 'rgba(250, 241, 243, 0.94)',
           backdropFilter: 'blur(12px)',
           WebkitBackdropFilter: 'blur(12px)',
         }}
@@ -634,13 +634,13 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
             left: '50%',
             transform: 'translateX(-50%)',
             zIndex: 55,
-            backgroundColor: isDark ? '#F3EEE9' : 'rgba(39, 33, 36, 0.95)',
-            color: isDark ? '#050104' : '#FFFFFF',
+            backgroundColor: isDark ? '#462037' : 'rgba(70, 32, 55, 0.95)',
+            color: '#FDF3F5',
             fontSize: '12.5px',
             fontWeight: 600,
             padding: '9px 18px',
             borderRadius: '9999px',
-            boxShadow: '0 6px 20px rgba(0,0,0,0.25)',
+            boxShadow: '0 6px 20px rgba(0,0,0,0.35)',
             whiteSpace: 'nowrap',
           }}
         >

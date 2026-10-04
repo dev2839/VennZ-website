@@ -95,11 +95,11 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) =>
 
   // Ambient themes
   const bgGradient = isDark
-    ? 'linear-gradient(180deg, #120D13 0%, #0F0C10 50%, #0C090D 100%)'
-    : 'linear-gradient(180deg, #F0E3EE 0%, #F5ECF4 45%, #F3EBF2 100%)';
+    ? 'linear-gradient(180deg, #140E1C 0%, #462037 50%, #140E1C 100%)'
+    : 'linear-gradient(180deg, #FBF3F5 0%, #ECD1D8 50%, #FAF1F3 100%)';
 
-  const skipColor = isDark ? 'rgba(243, 238, 233, 0.55)' : 'rgba(73, 40, 61, 0.6)';
-  const skipHover = isDark ? '#FFFFFF' : 'var(--color-mulberry)';
+  const skipColor = isDark ? 'rgba(249, 170, 173, 0.7)' : 'rgba(104, 58, 70, 0.7)';
+  const skipHover = isDark ? '#FDF3F5' : '#462037';
 
   return (
     <div
@@ -152,8 +152,8 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) =>
             position: 'absolute',
             inset: 0,
             background: isDark
-              ? 'radial-gradient(circle at 50% 20%, rgba(80, 28, 72, 0.14) 0%, transparent 65%)'
-              : 'radial-gradient(circle at 50% 18%, rgba(185, 135, 188, 0.16) 0%, rgba(248, 240, 247, 0.3) 65%, transparent 100%)',
+              ? 'radial-gradient(circle at 50% 20%, rgba(104, 58, 70, 0.35) 0%, transparent 65%)'
+              : 'radial-gradient(circle at 50% 18%, rgba(199, 87, 124, 0.18) 0%, rgba(250, 241, 243, 0.3) 65%, transparent 100%)',
           }}
         />
 
@@ -178,11 +178,11 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) =>
               height: 'clamp(260px, 38vw, 380px)',
               borderRadius: '50%',
               border: isDark
-                ? '1.5px solid rgba(180, 150, 175, 0.12)'
-                : '1.5px solid rgba(139, 44, 116, 0.14)',
+                ? '1.5px solid rgba(161, 82, 95, 0.25)'
+                : '1.5px solid rgba(199, 87, 124, 0.2)',
               backgroundColor: isDark
-                ? 'rgba(75, 38, 70, 0.04)'
-                : 'rgba(183, 142, 184, 0.04)',
+                ? 'rgba(70, 32, 55, 0.12)'
+                : 'rgba(249, 170, 173, 0.08)',
               transform: 'translateX(-75px)',
             }}
           />
@@ -195,11 +195,11 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) =>
               height: 'clamp(260px, 38vw, 380px)',
               borderRadius: '50%',
               border: isDark
-                ? '1.5px solid rgba(180, 150, 175, 0.12)'
-                : '1.5px solid rgba(139, 44, 116, 0.14)',
+                ? '1.5px solid rgba(199, 87, 124, 0.25)'
+                : '1.5px solid rgba(199, 87, 124, 0.2)',
               backgroundColor: isDark
-                ? 'rgba(55, 32, 52, 0.04)'
-                : 'rgba(183, 142, 184, 0.04)',
+                ? 'rgba(104, 58, 70, 0.12)'
+                : 'rgba(249, 170, 173, 0.08)',
               transform: 'translateX(75px)',
             }}
           />
@@ -212,8 +212,8 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) =>
               height: 'clamp(190px, 28vw, 290px)',
               borderRadius: '50%',
               background: isDark
-                ? 'radial-gradient(ellipse at center, rgba(180, 150, 175, 0.10) 0%, transparent 70%)'
-                : 'radial-gradient(ellipse at center, rgba(139, 44, 116, 0.10) 0%, transparent 70%)',
+                ? 'radial-gradient(ellipse at center, rgba(249, 170, 173, 0.12) 0%, transparent 70%)'
+                : 'radial-gradient(ellipse at center, rgba(199, 87, 124, 0.12) 0%, transparent 70%)',
               filter: 'blur(12px)',
             }}
           />
@@ -290,8 +290,8 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) =>
               height: '24px',
               borderRadius: '50%',
               background: isDark
-                ? 'radial-gradient(ellipse at center, rgba(0, 0, 0, 0.85) 0%, rgba(139, 44, 116, 0.35) 45%, transparent 75%)'
-                : 'radial-gradient(ellipse at center, rgba(73, 40, 61, 0.28) 0%, transparent 70%)',
+                ? 'radial-gradient(ellipse at center, rgba(0, 0, 0, 0.85) 0%, rgba(104, 58, 70, 0.35) 45%, transparent 75%)'
+                : 'radial-gradient(ellipse at center, rgba(161, 82, 95, 0.25) 0%, transparent 70%)',
               filter: 'blur(10px)',
               pointerEvents: 'none',
               zIndex: 1,
@@ -311,12 +311,13 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) =>
                 ? [
                     'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.9))',
                     'drop-shadow(0 14px 28px rgba(0, 0, 0, 0.85))',
-                    'drop-shadow(0 26px 45px rgba(25, 5, 22, 0.6))',
+                    'drop-shadow(0 26px 45px rgba(20, 14, 28, 0.7))',
+                    'drop-shadow(0 0 20px rgba(161, 82, 95, 0.25))',
                   ].join(' ')
                 : [
-                    'drop-shadow(0 3px 5px rgba(73, 40, 61, 0.35))',
-                    'drop-shadow(0 12px 22px rgba(73, 40, 61, 0.18))',
-                    'drop-shadow(0 0 20px rgba(183, 142, 184, 0.2))',
+                    'drop-shadow(0 3px 5px rgba(70, 32, 55, 0.3))',
+                    'drop-shadow(0 12px 22px rgba(104, 58, 70, 0.16))',
+                    'drop-shadow(0 0 20px rgba(199, 87, 124, 0.18))',
                   ].join(' '),
             }}
           >
