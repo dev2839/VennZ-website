@@ -177,7 +177,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
         display: 'flex',
         flexDirection: 'column',
         overflowX: 'hidden',
-        backgroundColor: isDark ? '#100812' : '#F3EBF2',
+        backgroundColor: isDark ? '#0F0C10' : '#F3EBF2',
         transition: 'background-color 0.3s ease',
       }}
     >
@@ -187,7 +187,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
           position: 'absolute',
           inset: 0,
           background: isDark
-            ? 'radial-gradient(ellipse at 50% 16%, rgba(70, 26, 65, 0.28) 0%, rgba(28, 11, 26, 0.45) 45%, rgba(16, 8, 18, 1) 95%)'
+            ? 'radial-gradient(ellipse at 50% 16%, rgba(45, 22, 42, 0.18) 0%, rgba(20, 14, 20, 0.30) 45%, rgba(13, 10, 14, 1) 95%)'
             : [
                 'radial-gradient(ellipse at 50% 14%, rgba(196, 152, 198, 0.32) 0%, rgba(220, 186, 222, 0.22) 38%, rgba(240, 220, 238, 0.12) 65%, transparent 100%)',
                 'radial-gradient(ellipse at 50% 70%, rgba(185, 138, 188, 0.22) 0%, rgba(218, 184, 220, 0.15) 45%, transparent 80%)',
@@ -342,7 +342,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
               height: '320px',
               borderRadius: '50%',
               background: isDark
-                ? 'radial-gradient(ellipse at center, rgba(65, 24, 60, 0.22) 0%, transparent 70%)'
+                ? 'radial-gradient(ellipse at center, rgba(45, 20, 42, 0.14) 0%, transparent 70%)'
                 : 'radial-gradient(ellipse at center, rgba(183, 142, 184, 0.35) 0%, transparent 70%)',
               filter: 'blur(50px)',
               pointerEvents: 'none',

@@ -563,7 +563,7 @@ export const App: React.FC = () => {
         width: '100%',
         display: 'flex',
         flexDirection: 'column',
-        backgroundColor: isDark ? '#140813' : '#F3EBF2',
+        backgroundColor: isDark ? '#0F0C10' : '#F3EBF2',
         color: isDark ? '#F3EEE9' : '#120D10',
         fontFamily: 'var(--font-sans)',
         position: 'relative',

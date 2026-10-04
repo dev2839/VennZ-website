@@ -95,7 +95,7 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) =>
 
   // Ambient themes
   const bgGradient = isDark
-    ? 'linear-gradient(180deg, #180917 0%, #140813 50%, #100610 100%)'
+    ? 'linear-gradient(180deg, #120D13 0%, #0F0C10 50%, #0C090D 100%)'
     : 'linear-gradient(180deg, #F0E3EE 0%, #F5ECF4 45%, #F3EBF2 100%)';
 
   const skipColor = isDark ? 'rgba(243, 238, 233, 0.55)' : 'rgba(73, 40, 61, 0.6)';
@@ -152,7 +152,7 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) =>
             position: 'absolute',
             inset: 0,
             background: isDark
-              ? 'radial-gradient(circle at 50% 20%, rgba(139, 44, 116, 0.25) 0%, transparent 65%)'
+              ? 'radial-gradient(circle at 50% 20%, rgba(80, 28, 72, 0.14) 0%, transparent 65%)'
               : 'radial-gradient(circle at 50% 18%, rgba(185, 135, 188, 0.16) 0%, rgba(248, 240, 247, 0.3) 65%, transparent 100%)',
           }}
         />
@@ -178,10 +178,10 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) =>
               height: 'clamp(260px, 38vw, 380px)',
               borderRadius: '50%',
               border: isDark
-                ? '1.5px solid rgba(215, 175, 210, 0.18)'
+                ? '1.5px solid rgba(180, 150, 175, 0.12)'
                 : '1.5px solid rgba(139, 44, 116, 0.14)',
               backgroundColor: isDark
-                ? 'rgba(107, 45, 102, 0.05)'
+                ? 'rgba(75, 38, 70, 0.04)'
                 : 'rgba(183, 142, 184, 0.04)',
               transform: 'translateX(-75px)',
             }}
@@ -195,10 +195,10 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) =>
               height: 'clamp(260px, 38vw, 380px)',
               borderRadius: '50%',
               border: isDark
-                ? '1.5px solid rgba(235, 195, 225, 0.18)'
+                ? '1.5px solid rgba(180, 150, 175, 0.12)'
                 : '1.5px solid rgba(139, 44, 116, 0.14)',
               backgroundColor: isDark
-                ? 'rgba(73, 40, 61, 0.05)'
+                ? 'rgba(55, 32, 52, 0.04)'
                 : 'rgba(183, 142, 184, 0.04)',
               transform: 'translateX(75px)',
             }}
@@ -212,7 +212,7 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) =>
               height: 'clamp(190px, 28vw, 290px)',
               borderRadius: '50%',
               background: isDark
-                ? 'radial-gradient(ellipse at center, rgba(215, 175, 210, 0.14) 0%, transparent 70%)'
+                ? 'radial-gradient(ellipse at center, rgba(180, 150, 175, 0.10) 0%, transparent 70%)'
                 : 'radial-gradient(ellipse at center, rgba(139, 44, 116, 0.10) 0%, transparent 70%)',
               filter: 'blur(12px)',
             }}

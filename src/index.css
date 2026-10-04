@@ -26,7 +26,7 @@
 html, body {
   min-height: 100%;
   width: 100%;
-  background-color: #170a16;
+  background-color: #0F0C10;
   color: var(--color-warm-porcelain);
   font-family: var(--font-sans);
   font-weight: 300;
@@ -51,7 +51,7 @@ b, strong {
   flex-direction: column;
   align-items: stretch;
   justify-content: flex-start;
-  background-color: #140813;
+  background-color: #0F0C10;
 }
 
 /* Custom Scrollbars */

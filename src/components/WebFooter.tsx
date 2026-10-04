@@ -9,7 +9,7 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
   const { appearanceMode } = useAuth();
   const isDark = appearanceMode === 'after-dark';
 
-  const footerBg = isDark ? '#110610' : '#EFE6EE';
+  const footerBg = isDark ? '#0C090D' : '#EFE6EE';
   const borderTop = isDark ? 'rgba(215, 175, 210, 0.12)' : 'rgba(73, 40, 61, 0.08)';
   const textColor = isDark ? 'rgba(243, 238, 233, 0.6)' : '#7A6B74';
   const headingColor = isDark ? '#F3EEE9' : 'var(--color-mulberry)';
