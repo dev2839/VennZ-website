@@ -9,7 +9,6 @@ interface SplashActionsProps {
 
 export const SplashActions: React.FC<SplashActionsProps> = ({
   onGetStarted,
-  onLogin,
   className = '',
 }) => {
   const { appearanceMode } = useAuth();
@@ -30,7 +29,7 @@ export const SplashActions: React.FC<SplashActionsProps> = ({
       {/* Editorial Hook: "Not just a dating app. A community." */}
       <div
         style={{
-          marginBottom: '20px',
+          marginBottom: '24px',
           textAlign: 'center',
           display: 'flex',
           flexDirection: 'column',
@@ -41,10 +40,10 @@ export const SplashActions: React.FC<SplashActionsProps> = ({
         <p
           style={{
             fontFamily: 'var(--font-sans)',
-            fontSize: '13px',
+            fontSize: '13.5px',
             fontWeight: 500,
             textTransform: 'uppercase',
-            letterSpacing: '0.16em',
+            letterSpacing: '0.14em',
             color: isDark ? '#D4A2AC' : '#683A46',
             margin: '0 0 4px 0',
             textShadow: isDark ? '0 1px 6px rgba(0, 0, 0, 0.6)' : 'none',
@@ -57,7 +56,7 @@ export const SplashActions: React.FC<SplashActionsProps> = ({
         <p
           style={{
             fontFamily: 'var(--font-script)',
-            fontSize: 'clamp(42px, 5.2vw, 54px)',
+            fontSize: 'clamp(44px, 5.8vw, 56px)',
             lineHeight: 1.15,
             color: isDark ? '#FDF3F5' : '#462037',
             margin: 0,
@@ -76,11 +75,11 @@ export const SplashActions: React.FC<SplashActionsProps> = ({
         style={{
           width: '100%',
           maxWidth: '360px',
-          height: '54px',
+          height: '56px',
           background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
           color: '#FDF3F5',
           fontFamily: 'var(--font-sans)',
-          fontSize: '16px',
+          fontSize: '16.5px',
           fontWeight: 600,
           borderRadius: '9999px',
           border: isDark ? '1px solid rgba(249, 170, 173, 0.4)' : '1px solid rgba(161, 82, 95, 0.25)',
@@ -128,61 +127,6 @@ export const SplashActions: React.FC<SplashActionsProps> = ({
           <path d="m12 5 7 7-7 7" />
         </svg>
       </button>
-
-      {/* Secondary Sign In Action */}
-      {onLogin && (
-        <div style={{ marginTop: '12px', textAlign: 'center' }}>
-          <button
-            type="button"
-            onClick={onLogin}
-            style={{
-              background: 'none',
-              border: 'none',
-              padding: '6px 12px',
-              color: isDark ? '#D4A2AC' : '#683A46',
-              fontSize: '13px',
-              fontWeight: 500,
-              letterSpacing: '0.02em',
-              cursor: 'pointer',
-              transition: 'color 0.2s ease',
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = isDark ? '#F9AAAD' : '#A1525F')}
-            onMouseLeave={(e) => (e.currentTarget.style.color = isDark ? '#D4A2AC' : '#683A46')}
-          >
-            Already an approved member? <span style={{ textDecoration: 'underline', color: isDark ? '#FDF3F5' : '#462037', fontWeight: 600 }}>Sign In</span>
-          </button>
-        </div>
-      )}
-
-      {/* Minimalist Prestige Metrics */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: 'clamp(16px, 3.6vw, 30px)',
-          marginTop: '22px',
-          paddingTop: '18px',
-          borderTop: isDark ? '1px solid rgba(161, 82, 95, 0.18)' : '1px solid rgba(199, 87, 124, 0.15)',
-          width: '100%',
-          maxWidth: '380px',
-        }}
-      >
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: '15px', fontWeight: 600, color: isDark ? '#FDF3F5' : '#462037', letterSpacing: '0.03em' }}>100%</div>
-          <div style={{ fontSize: '10px', fontWeight: 500, color: isDark ? '#D4A2AC' : '#683A46', letterSpacing: '0.12em', textTransform: 'uppercase', marginTop: '2px' }}>Verified Circle</div>
-        </div>
-        <div style={{ width: '1px', height: '20px', backgroundColor: isDark ? 'rgba(161, 82, 95, 0.22)' : 'rgba(199, 87, 124, 0.18)' }} />
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: '15px', fontWeight: 600, color: isDark ? '#FDF3F5' : '#462037', letterSpacing: '0.03em' }}>1 : 1</div>
-          <div style={{ fontSize: '10px', fontWeight: 500, color: isDark ? '#D4A2AC' : '#683A46', letterSpacing: '0.12em', textTransform: 'uppercase', marginTop: '2px' }}>Curated Intros</div>
-        </div>
-        <div style={{ width: '1px', height: '20px', backgroundColor: isDark ? 'rgba(161, 82, 95, 0.22)' : 'rgba(199, 87, 124, 0.18)' }} />
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: '15px', fontWeight: 600, color: isDark ? '#FDF3F5' : '#462037', letterSpacing: '0.03em' }}>Zero</div>
-          <div style={{ fontSize: '10px', fontWeight: 500, color: isDark ? '#D4A2AC' : '#683A46', letterSpacing: '0.12em', textTransform: 'uppercase', marginTop: '2px' }}>Public Data</div>
-        </div>
-      </div>
     </div>
   );
 };

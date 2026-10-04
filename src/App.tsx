@@ -576,8 +576,12 @@ export const App: React.FC = () => {
         />
       )}
 
-      {/* Universal Desktop & Mobile Web Navigation Bar on each page */}
-      <WebNavbar currentPath={currentPath} onNavigate={navigate} />
+      {/* Universal Desktop & Mobile Web Navigation Bar on non-auth pages */}
+      {currentPath !== '/join' &&
+        currentPath !== '/login' &&
+        currentPath !== '/join/verify-code' && (
+          <WebNavbar currentPath={currentPath} onNavigate={navigate} />
+        )}
 
       {/* Main Responsive Web Content Area */}
       <main

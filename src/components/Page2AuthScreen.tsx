@@ -37,7 +37,19 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
   onSuccess,
   initialStep = 'phone',
 }) => {
-  const { phoneNumber: savedPhone, countryCode: savedCountryCode, setPhoneAuth, setPhoneVerified, setGoogleAuth } = useAuth();
+  const {
+    phoneNumber: savedPhone,
+    countryCode: savedCountryCode,
+    setPhoneAuth,
+    setPhoneVerified,
+    setGoogleAuth,
+    appearanceMode,
+    setAppearanceMode,
+    notifications = [],
+    unreadNotificationsCount = 0,
+    markNotificationsAsRead,
+  } = useAuth();
+  const isDark = appearanceMode === 'after-dark';
 
   // Mobile number state
   const [countryCode, setCountryCode] = useState<string>(savedCountryCode || '+91');
@@ -45,6 +57,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
   const [phoneError, setPhoneError] = useState<string | null>(null);
   const [isPhoneFocused, setIsPhoneFocused] = useState<boolean>(false);
   const [countryDropdownOpen, setCountryDropdownOpen] = useState<boolean>(false);
+  const [notificationsOpen, setNotificationsOpen] = useState<boolean>(false);
 
   // OTP Section state (revealed below mobile number on same page)
   const isOtpInitial = (initialStep as 'phone' | 'otp') === 'otp';
@@ -68,6 +81,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
 
   const otpInputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const notifRef = useRef<HTMLDivElement | null>(null);
 
   // Countdown timer for OTP resend
   useEffect(() => {
@@ -97,11 +111,14 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
     }
   }, [otpRevealed]);
 
-  // Click outside listener for country code dropdown
+  // Click outside listener for country code & notifications dropdowns
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setCountryDropdownOpen(false);
+      }
+      if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
+        setNotificationsOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -409,45 +426,275 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
           position: 'relative',
         }}
       >
-        {/* Back navigation button */}
-        <button
-          onClick={onBack}
-          aria-label="Back to welcome page"
+        {/* Top-Left Brand & Navigation (Logo with Back button naturally below it) */}
+        <div
           style={{
             position: 'absolute',
-            top: 'clamp(24px, 4vh, 36px)',
+            top: 'clamp(20px, 3.5vh, 32px)',
             left: 'clamp(20px, 4vw, 48px)',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '8px',
-            background: 'rgba(70, 32, 55, 0.45)',
-            backdropFilter: 'blur(16px)',
-            WebkitBackdropFilter: 'blur(16px)',
-            border: '1px solid rgba(161, 82, 95, 0.3)',
-            borderRadius: '100px',
-            padding: '10px 18px',
-            color: '#F9AAAD',
-            fontSize: '13px',
-            fontWeight: 500,
-            letterSpacing: '0.04em',
-            cursor: 'pointer',
-            zIndex: 30,
-            transition: 'all 0.2s ease',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = 'rgba(104, 58, 70, 0.65)';
-            e.currentTarget.style.borderColor = '#C7577C';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'rgba(70, 32, 55, 0.45)';
-            e.currentTarget.style.borderColor = 'rgba(161, 82, 95, 0.3)';
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            gap: '12px',
+            zIndex: 35,
           }}
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="15 18 9 12 15 6"></polyline>
-          </svg>
-          <span>Back</span>
-        </button>
+          {/* Top-left VennZ Logo */}
+          <div
+            onClick={onBack}
+            style={{
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              userSelect: 'none',
+            }}
+            title="Return to welcome"
+          >
+            <img
+              src="/vennz-logo.png"
+              alt="VennZ"
+              style={{
+                height: '34px',
+                width: 'auto',
+                maxWidth: '130px',
+                objectFit: 'contain',
+                filter: 'drop-shadow(0 2px 6px rgba(0, 0, 0, 0.8)) drop-shadow(0 4px 14px rgba(161, 82, 95, 0.4))',
+              }}
+            />
+          </div>
+
+          {/* Back navigation button positioned naturally over background below logo */}
+          <button
+            onClick={onBack}
+            aria-label="Back to welcome page"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              background: 'rgba(70, 32, 55, 0.45)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              border: '1px solid rgba(161, 82, 95, 0.3)',
+              borderRadius: '100px',
+              padding: '9px 16px',
+              color: '#F9AAAD',
+              fontSize: '13px',
+              fontWeight: 500,
+              letterSpacing: '0.04em',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(104, 58, 70, 0.65)';
+              e.currentTarget.style.borderColor = '#C7577C';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'rgba(70, 32, 55, 0.45)';
+              e.currentTarget.style.borderColor = 'rgba(161, 82, 95, 0.3)';
+            }}
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+            <span>Back</span>
+          </button>
+        </div>
+
+        {/* Top-Right Action Suite (Notifications & Theme Toggle) */}
+        <div
+          style={{
+            position: 'absolute',
+            top: 'clamp(20px, 3.5vh, 32px)',
+            right: 'clamp(20px, 4vw, 48px)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            zIndex: 35,
+          }}
+        >
+          {/* Notifications Icon Button */}
+          <div ref={notifRef} style={{ position: 'relative' }}>
+            <button
+              type="button"
+              onClick={() => {
+                const next = !notificationsOpen;
+                setNotificationsOpen(next);
+                if (next && unreadNotificationsCount > 0) {
+                  markNotificationsAsRead();
+                }
+              }}
+              aria-label="View notifications"
+              title="Notifications"
+              style={{
+                position: 'relative',
+                width: '40px',
+                height: '40px',
+                borderRadius: '50%',
+                backgroundColor: 'rgba(70, 32, 55, 0.45)',
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
+                border: '1px solid rgba(161, 82, 95, 0.3)',
+                color: '#F9AAAD',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(104, 58, 70, 0.65)';
+                e.currentTarget.style.borderColor = '#C7577C';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(70, 32, 55, 0.45)';
+                e.currentTarget.style.borderColor = 'rgba(161, 82, 95, 0.3)';
+              }}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+                <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+              </svg>
+              {unreadNotificationsCount > 0 && (
+                <span
+                  style={{
+                    position: 'absolute',
+                    top: '8px',
+                    right: '8px',
+                    width: '7px',
+                    height: '7px',
+                    borderRadius: '50%',
+                    backgroundColor: '#C94A4A',
+                    boxShadow: '0 0 6px rgba(201, 74, 74, 0.7)',
+                  }}
+                />
+              )}
+            </button>
+
+            {/* Notifications Dropdown Drawer */}
+            {notificationsOpen && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: '48px',
+                  right: 0,
+                  width: '320px',
+                  maxHeight: '380px',
+                  backgroundColor: 'rgba(30, 16, 28, 0.95)',
+                  backdropFilter: 'blur(24px)',
+                  WebkitBackdropFilter: 'blur(24px)',
+                  borderRadius: '18px',
+                  border: '1px solid rgba(161, 82, 95, 0.4)',
+                  boxShadow: '0 20px 48px rgba(10, 6, 14, 0.85)',
+                  overflow: 'hidden',
+                  zIndex: 100,
+                  display: 'flex',
+                  flexDirection: 'column',
+                }}
+              >
+                <div
+                  style={{
+                    padding: '14px 18px',
+                    borderBottom: '1px solid rgba(161, 82, 95, 0.25)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <span
+                    style={{
+                      fontFamily: 'var(--font-sans)',
+                      fontSize: '11px',
+                      fontWeight: 600,
+                      letterSpacing: '0.14em',
+                      textTransform: 'uppercase',
+                      color: '#F9AAAD',
+                    }}
+                  >
+                    NOTIFICATIONS
+                  </span>
+                  <span style={{ fontSize: '11px', color: '#D4A2AC' }}>
+                    {notifications.length} updates
+                  </span>
+                </div>
+
+                <div style={{ overflowY: 'auto', maxHeight: '300px' }}>
+                  {notifications.length === 0 ? (
+                    <div style={{ padding: '24px', textAlign: 'center', color: '#D4A2AC', fontSize: '13px' }}>
+                      No new notifications
+                    </div>
+                  ) : (
+                    notifications.map((notif) => (
+                      <div
+                        key={notif.id}
+                        style={{
+                          padding: '12px 18px',
+                          borderBottom: '1px solid rgba(161, 82, 95, 0.15)',
+                          cursor: 'default',
+                        }}
+                      >
+                        <h4 style={{ fontFamily: 'var(--font-serif)', fontSize: '14px', color: '#FDF3F5', margin: '0 0 3px' }}>
+                          {notif.title}
+                        </h4>
+                        <p style={{ margin: 0, fontSize: '12px', color: '#D4A2AC', lineHeight: 1.4 }}>
+                          {notif.message}
+                        </p>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Theme Toggle Button */}
+          <button
+            type="button"
+            onClick={() => setAppearanceMode(isDark ? 'ivory' : 'after-dark')}
+            aria-label={isDark ? 'Switch to Ivory theme' : 'Switch to Dark theme'}
+            title={isDark ? 'Switch to Ivory theme' : 'Switch to Dark theme'}
+            style={{
+              width: '40px',
+              height: '40px',
+              borderRadius: '50%',
+              backgroundColor: 'rgba(70, 32, 55, 0.45)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              border: '1px solid rgba(161, 82, 95, 0.3)',
+              color: '#F9AAAD',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(104, 58, 70, 0.65)';
+              e.currentTarget.style.borderColor = '#C7577C';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'rgba(70, 32, 55, 0.45)';
+              e.currentTarget.style.borderColor = 'rgba(161, 82, 95, 0.3)';
+            }}
+          >
+            {isDark ? (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="5" />
+                <line x1="12" y1="1" x2="12" y2="3" />
+                <line x1="12" y1="21" x2="12" y2="23" />
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                <line x1="1" y1="12" x2="3" y2="12" />
+                <line x1="21" y1="12" x2="23" y2="12" />
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+              </svg>
+            ) : (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+              </svg>
+            )}
+          </button>
+        </div>
 
         {/* Ambient Left Brand Typography (Desktop only - creates luxury balance) */}
         <div

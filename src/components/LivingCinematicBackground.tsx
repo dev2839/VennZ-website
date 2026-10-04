@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 
 interface LivingCinematicBackgroundProps {
   className?: string;
@@ -17,18 +17,54 @@ export const LivingCinematicBackground: React.FC<LivingCinematicBackgroundProps>
   className = '',
   children,
 }) => {
-  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const videoARef = useRef<HTMLVideoElement | null>(null);
+  const videoBRef = useRef<HTMLVideoElement | null>(null);
+  const [activeVideo, setActiveVideo] = useState<'A' | 'B'>('A');
 
-  // Guarantee seamless video playback across all browsers and power-saving modes
+  // Infinite seamless crossfade loop between Video A & Video B (eliminates loop restart stutter)
   useEffect(() => {
-    const playVideo = () => {
-      if (videoRef.current) {
-        videoRef.current.play().catch(() => {
-          // Autoplay policy fallback: video remains ready and will start on first interaction
-        });
+    const vidA = videoARef.current;
+    const vidB = videoBRef.current;
+    if (!vidA || !vidB) return;
+
+    // Start video A immediately
+    vidA.play().catch(() => {});
+
+    const crossfadeDuration = 0.8; // seconds before end to begin crossfade
+    let transitioningToB = false;
+    let transitioningToA = false;
+
+    const handleTimeUpdateA = () => {
+      if (!vidA.duration || isNaN(vidA.duration)) return;
+      if (vidA.currentTime >= vidA.duration - crossfadeDuration && !transitioningToB) {
+        transitioningToB = true;
+        transitioningToA = false;
+        vidB.currentTime = 0;
+        vidB.play().then(() => {
+          setActiveVideo('B');
+        }).catch(() => {});
       }
     };
-    playVideo();
+
+    const handleTimeUpdateB = () => {
+      if (!vidB.duration || isNaN(vidB.duration)) return;
+      if (vidB.currentTime >= vidB.duration - crossfadeDuration && !transitioningToA) {
+        transitioningToA = true;
+        transitioningToB = false;
+        vidA.currentTime = 0;
+        vidA.play().then(() => {
+          setActiveVideo('A');
+        }).catch(() => {});
+      }
+    };
+
+    vidA.addEventListener('timeupdate', handleTimeUpdateA);
+    vidB.addEventListener('timeupdate', handleTimeUpdateB);
+
+    return () => {
+      vidA.removeEventListener('timeupdate', handleTimeUpdateA);
+      vidB.removeEventListener('timeupdate', handleTimeUpdateB);
+    };
   }, []);
 
   return (
@@ -61,20 +97,22 @@ export const LivingCinematicBackground: React.FC<LivingCinematicBackgroundProps>
           will-change: opacity;
         }
 
-        .cinematic-bg-video {
+        .cinematic-bg-video-track {
+          position: absolute;
+          inset: 0;
           width: 100%;
           height: 100%;
           object-fit: cover;
           object-position: center 42%;
           display: block;
-          opacity: 0.96;
-          filter: brightness(114%) contrast(106%) saturate(122%);
-          transform: translateZ(0);
-          will-change: transform;
+          filter: brightness(109%) contrast(100%) saturate(114%) blur(0.46px);
+          transform: scale(1.02) translateZ(0);
+          transition: opacity 0.75s ease-in-out;
+          will-change: opacity, transform;
         }
       `}</style>
 
-      {/* Layer 1: High-Definition Living Cinematic Video */}
+      {/* Layer 1: Seamless Dual-Buffer Living Cinematic Video (100% continuous, zero loop hitch) */}
       <div
         style={{
           position: 'absolute',
@@ -84,11 +122,28 @@ export const LivingCinematicBackground: React.FC<LivingCinematicBackgroundProps>
           pointerEvents: 'none',
         }}
       >
+        {/* Track A */}
         <video
-          ref={videoRef}
-          className="cinematic-bg-video"
-          autoPlay
-          loop
+          ref={videoARef}
+          className="cinematic-bg-video-track"
+          style={{ opacity: activeVideo === 'A' ? 0.96 : 0 }}
+          muted
+          playsInline
+          poster="/auth-twilight.jpg"
+          preload="auto"
+        >
+          <source src="/videos/auth-bg.mp4" type="video/mp4" />
+          <source
+            src="/videos/Firefly%20Create%20a%20premium,%20realistic%20cinematic%20video%20from%20this%20exact%20image.%20Preserve%20the%20original%20com.mp4"
+            type="video/mp4"
+          />
+        </video>
+
+        {/* Track B */}
+        <video
+          ref={videoBRef}
+          className="cinematic-bg-video-track"
+          style={{ opacity: activeVideo === 'B' ? 0.96 : 0 }}
           muted
           playsInline
           poster="/auth-twilight.jpg"
