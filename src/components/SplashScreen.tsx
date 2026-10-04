@@ -10,6 +10,7 @@ interface SplashScreenProps {
   onLearnHowItWorks?: () => void;
   showStatusBar?: boolean;
   showHomeIndicator?: boolean;
+  isIntroActive?: boolean;
 }
 
 interface PillarItem {
@@ -102,6 +103,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
   onLearnHowItWorks,
   showStatusBar = false,
   showHomeIndicator = false,
+  isIntroActive = false,
 }) => {
   const { appearanceMode } = useAuth();
   const isDark = appearanceMode === 'after-dark';
@@ -245,11 +247,19 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
             justifyContent: 'center',
           }}
         >
-          <SplashBranding />
+          <SplashBranding isIntroActive={isIntroActive} />
         </div>
 
         {/* Action Suite (CTA: Get Started with Purple & Cream Shade) */}
-        <div style={{ width: '100%', maxWidth: '440px' }}>
+        <div
+          style={{
+            width: '100%',
+            maxWidth: '440px',
+            opacity: isIntroActive ? 0 : 1,
+            transform: isIntroActive ? 'translateY(12px)' : 'translateY(0)',
+            transition: 'opacity 0.45s ease 0.25s, transform 0.45s ease 0.25s',
+          }}
+        >
           <SplashActions onGetStarted={onGetStarted} onLogin={onLogin} />
         </div>
       </section>

@@ -3,9 +3,13 @@ import { useAuth } from '../context/AuthContext';
 
 interface SplashBrandingProps {
   className?: string;
+  isIntroActive?: boolean;
 }
 
-export const SplashBranding: React.FC<SplashBrandingProps> = ({ className = '' }) => {
+export const SplashBranding: React.FC<SplashBrandingProps> = ({
+  className = '',
+  isIntroActive = false,
+}) => {
   const { appearanceMode } = useAuth();
   const isDark = appearanceMode === 'after-dark';
 
@@ -23,6 +27,7 @@ export const SplashBranding: React.FC<SplashBrandingProps> = ({ className = '' }
     >
       {/* VennZ 3D Brand Logo */}
       <div
+        id="welcome-vennz-logo-target"
         style={{
           marginBottom: '20px',
           display: 'flex',
@@ -33,6 +38,7 @@ export const SplashBranding: React.FC<SplashBrandingProps> = ({ className = '' }
         }}
       >
         <div
+          id="welcome-vennz-logo-inner"
           style={{
             position: 'relative',
             display: 'inline-flex',
@@ -58,10 +64,13 @@ export const SplashBranding: React.FC<SplashBrandingProps> = ({ className = '' }
               filter: 'blur(10px)',
               pointerEvents: 'none',
               zIndex: 1,
+              opacity: isIntroActive ? 0 : 1,
+              transition: 'opacity 0.25s ease',
             }}
           />
 
           <img
+            id="welcome-vennz-logo-img"
             src="/vennz-logo.png"
             alt="VennZ"
             style={{
@@ -72,6 +81,8 @@ export const SplashBranding: React.FC<SplashBrandingProps> = ({ className = '' }
               objectFit: 'contain',
               position: 'relative',
               zIndex: 2,
+              opacity: isIntroActive ? 0 : 1,
+              transition: 'opacity 0.25s ease',
               filter: isDark
                 ? [
                     // Pure 3D depth shadow with dark occlusion and soft plum ambient (no white cutout fringe)
@@ -101,6 +112,9 @@ export const SplashBranding: React.FC<SplashBrandingProps> = ({ className = '' }
           marginTop: '16px',
           whiteSpace: 'nowrap',
           textShadow: isDark ? '0 1px 8px rgba(0, 0, 0, 0.6)' : 'none',
+          opacity: isIntroActive ? 0 : 1,
+          transform: isIntroActive ? 'translateY(10px)' : 'translateY(0)',
+          transition: 'opacity 0.4s ease 0.15s, transform 0.4s ease 0.15s',
         }}
       >
         Real people. Meaningful connections.

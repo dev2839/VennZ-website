@@ -551,6 +551,7 @@ export const App: React.FC = () => {
         onLearnHowItWorks={handleLearnHowItWorks}
         showStatusBar={showStatusBar}
         showHomeIndicator={showHomeIndicator}
+        isIntroActive={showIntro}
       />
     );
   };
