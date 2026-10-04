@@ -25,11 +25,56 @@ export const SplashBranding: React.FC<SplashBrandingProps> = ({
         padding: '0 20px',
       }}
     >
+      {/* Exclusivity Eyebrow Pill */}
+      <div
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '8px',
+          padding: '6px 16px',
+          borderRadius: '999px',
+          backgroundColor: isDark ? 'rgba(70, 32, 55, 0.55)' : 'rgba(255, 255, 255, 0.7)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
+          border: isDark ? '1px solid rgba(161, 82, 95, 0.38)' : '1px solid rgba(199, 87, 124, 0.25)',
+          boxShadow: isDark
+            ? '0 8px 24px rgba(10, 6, 14, 0.45), 0 0 1px 1px rgba(249, 170, 173, 0.12) inset'
+            : '0 6px 18px rgba(70, 32, 55, 0.08)',
+          marginBottom: '20px',
+          opacity: isIntroActive ? 0 : 1,
+          transform: isIntroActive ? 'translateY(-8px)' : 'translateY(0)',
+          transition: 'opacity 0.4s ease, transform 0.4s ease',
+        }}
+      >
+        <span
+          style={{
+            width: '6px',
+            height: '6px',
+            borderRadius: '50%',
+            backgroundColor: '#F9AAAD',
+            boxShadow: '0 0 8px #F9AAAD',
+            display: 'inline-block',
+          }}
+        />
+        <span
+          style={{
+            fontFamily: 'var(--font-sans)',
+            fontSize: '11px',
+            fontWeight: 600,
+            letterSpacing: '0.18em',
+            textTransform: 'uppercase',
+            color: isDark ? '#F9AAAD' : '#A1525F',
+          }}
+        >
+          Private By Invitation · Curated Circle
+        </span>
+      </div>
+
       {/* VennZ 3D Brand Logo */}
       <div
         id="welcome-vennz-logo-target"
         style={{
-          marginBottom: '20px',
+          marginBottom: '16px',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
@@ -105,12 +150,12 @@ export const SplashBranding: React.FC<SplashBrandingProps> = ({
       <p
         style={{
           fontFamily: 'var(--font-sans)',
-          fontSize: 'clamp(18px, 2.8vw, 24px)',
+          fontSize: 'clamp(18px, 2.6vw, 24px)',
           lineHeight: '1.4',
           fontWeight: 500,
           letterSpacing: '0.02em',
           color: isDark ? '#FDF3F5' : '#462037',
-          marginTop: '16px',
+          marginTop: '10px',
           whiteSpace: 'nowrap',
           textShadow: isDark ? '0 1px 8px rgba(0, 0, 0, 0.6)' : 'none',
           opacity: isIntroActive ? 0 : 1,
@@ -120,6 +165,65 @@ export const SplashBranding: React.FC<SplashBrandingProps> = ({
       >
         Real people. Meaningful connections.
       </p>
+
+      {/* Editorial Statement */}
+      <p
+        style={{
+          fontFamily: 'var(--font-sans)',
+          fontSize: 'clamp(13.5px, 1.6vw, 15px)',
+          lineHeight: '1.6',
+          fontWeight: 400,
+          color: isDark ? '#F8E2E6' : '#683A46',
+          maxWidth: '560px',
+          margin: '10px auto 0',
+          opacity: isIntroActive ? 0 : 0.88,
+          textShadow: isDark ? '0 1px 8px rgba(0, 0, 0, 0.5)' : 'none',
+          transition: 'opacity 0.4s ease 0.2s',
+        }}
+      >
+        A private ecosystem connecting accomplished individuals through verified identity, editorial curation, and authentic chemistry.
+      </p>
+
+      {/* Subtle Prestige Value Chips */}
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '8px',
+          marginTop: '20px',
+          opacity: isIntroActive ? 0 : 1,
+          transition: 'opacity 0.4s ease 0.25s',
+        }}
+      >
+        {[
+          { label: '100% Verified Members' },
+          { label: 'Editorial Introductions' },
+          { label: 'Private Mixers & Dinners' },
+        ].map((item, idx) => (
+          <div
+            key={idx}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '5px 14px',
+              borderRadius: '999px',
+              backgroundColor: isDark ? 'rgba(104, 58, 70, 0.25)' : 'rgba(255, 255, 255, 0.6)',
+              border: isDark ? '1px solid rgba(161, 82, 95, 0.26)' : '1px solid rgba(199, 87, 124, 0.2)',
+              fontSize: '11.5px',
+              fontWeight: 500,
+              letterSpacing: '0.04em',
+              color: isDark ? '#FDF3F5' : '#462037',
+              backdropFilter: 'blur(10px)',
+            }}
+          >
+            <span style={{ color: '#F9AAAD', fontSize: '9px' }}>✦</span>
+            <span>{item.label}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

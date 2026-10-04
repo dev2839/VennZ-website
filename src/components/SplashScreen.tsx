@@ -198,6 +198,72 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
         }}
       />
 
+      {/* Subtle Ambient Venn Overlapping Geometry (Brand Identity & Luxury Depth) */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          pointerEvents: 'none',
+          zIndex: 1,
+          overflow: 'hidden',
+          opacity: 0.75,
+        }}
+      >
+        {/* Left Venn Circle */}
+        <div
+          style={{
+            position: 'absolute',
+            width: 'clamp(320px, 44vw, 560px)',
+            height: 'clamp(320px, 44vw, 560px)',
+            borderRadius: '50%',
+            border: isDark
+              ? '1px solid rgba(161, 82, 95, 0.22)'
+              : '1px solid rgba(199, 87, 124, 0.18)',
+            background: isDark
+              ? 'radial-gradient(circle at center, rgba(70, 32, 55, 0.25) 0%, transparent 70%)'
+              : 'radial-gradient(circle at center, rgba(249, 170, 173, 0.15) 0%, transparent 70%)',
+            transform: 'translateX(-95px)',
+          }}
+        />
+
+        {/* Right Venn Circle */}
+        <div
+          style={{
+            position: 'absolute',
+            width: 'clamp(320px, 44vw, 560px)',
+            height: 'clamp(320px, 44vw, 560px)',
+            borderRadius: '50%',
+            border: isDark
+              ? '1px solid rgba(199, 87, 124, 0.22)'
+              : '1px solid rgba(199, 87, 124, 0.18)',
+            background: isDark
+              ? 'radial-gradient(circle at center, rgba(104, 58, 70, 0.25) 0%, transparent 70%)'
+              : 'radial-gradient(circle at center, rgba(249, 170, 173, 0.15) 0%, transparent 70%)',
+            transform: 'translateX(95px)',
+          }}
+        />
+
+        {/* Center Intersection Bloom */}
+        <div
+          style={{
+            position: 'absolute',
+            width: 'clamp(180px, 24vw, 300px)',
+            height: 'clamp(240px, 32vw, 420px)',
+            borderRadius: '50%',
+            background: isDark
+              ? 'radial-gradient(ellipse at center, rgba(249, 170, 173, 0.14) 0%, rgba(199, 87, 124, 0.08) 50%, transparent 75%)'
+              : 'radial-gradient(ellipse at center, rgba(199, 87, 124, 0.12) 0%, transparent 70%)',
+            filter: 'blur(16px)',
+          }}
+        />
+      </div>
+
 
 
       {/* Optional Mobile Status Bar */}
@@ -262,6 +328,65 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
         >
           <SplashActions onGetStarted={onGetStarted} onLogin={onLogin} />
         </div>
+
+        {/* Minimalist Scroll Cue pointing to the 3D Experience below */}
+        <button
+          type="button"
+          onClick={() => {
+            window.scrollTo({ top: window.innerHeight * 0.95, behavior: 'smooth' });
+          }}
+          aria-label="Scroll to discover VennZ standards"
+          style={{
+            position: 'absolute',
+            bottom: '24px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            background: 'none',
+            border: 'none',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '8px',
+            cursor: 'pointer',
+            color: isDark ? '#D4A2AC' : '#683A46',
+            opacity: isIntroActive ? 0 : 0.85,
+            transition: 'opacity 0.35s ease 0.3s, transform 0.2s ease',
+            zIndex: 15,
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.opacity = '1';
+            e.currentTarget.style.transform = 'translateX(-50%) translateY(2px)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.opacity = '0.85';
+            e.currentTarget.style.transform = 'translateX(-50%) translateY(0)';
+          }}
+        >
+          <span
+            style={{
+              fontSize: '10px',
+              fontWeight: 600,
+              letterSpacing: '0.22em',
+              textTransform: 'uppercase',
+              fontFamily: 'var(--font-sans)',
+            }}
+          >
+            Explore the Standard
+          </span>
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            style={{ animation: 'floatGentle 2.2s ease-in-out infinite' }}
+          >
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        </button>
       </section>
 
       {/* ======================================================== */}
