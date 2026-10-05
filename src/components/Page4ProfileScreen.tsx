@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { StatusBar } from './StatusBar';
 import { useAuth } from '../context/AuthContext';
 
@@ -59,7 +59,6 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
   } = useAuth();
   const isDark = appearanceMode === 'after-dark';
 
-  // Track initial photos snapshot when entering to verify genuinely new photos are added
   const initialPhotosRef = useRef<string[]>([...(profile.photos || [])]);
 
   // Form State
@@ -85,6 +84,28 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const photosSectionRef = useRef<HTMLDivElement | null>(null);
+
+  // ─── Dynamic Background Completion Progress ────────────────────────────────
+  // Tracks how many of the 10 key fields are filled; drives animated background.
+  const completionPct = useMemo(() => {
+    const checks = [
+      firstName.trim().length >= 2,                        // name
+      Boolean(dateOfBirth),                                // valid dob
+      city.trim().length >= 2,                             // city
+      Boolean(genderIdentity),                             // gender
+      Boolean(datingPreference),                           // dating pref
+      Boolean(currentStatus),                              // status
+      designation.trim().length >= 2,                      // designation
+      photos.length >= 2,                                  // ≥2 photos
+      introduction.trim().length >= 10,                    // introduction
+      company.trim().length >= 2,                          // bonus: company
+    ];
+    const filled = checks.filter(Boolean).length;
+    return filled / checks.length; // 0.0 – 1.0
+  }, [firstName, dateOfBirth, city, genderIdentity, datingPreference, currentStatus, designation, photos, introduction, company]);
+  // ──────────────────────────────────────────────────────────────────────────
+
+
 
   // Auto-scroll to photos section if opened in photo update mode
   useEffect(() => {
@@ -474,7 +495,13 @@ const compressImageFile = (file: File): Promise<string> => {
         fontFamily: 'var(--font-sans)',
       }}
     >
-      {/* Clean Parchment Watercolor Foliage Background (with Cream flowers in Dark Mode) */}
+      {/* ── Dynamic Profile Completion Background ────────────────────────────
+           Layer 0: base static parchment/floral image (always visible)
+           Layer 1–3: cinematic radial overlays that fade in as completion grows
+           All transitions are smooth CSS (0.8s ease) so changes feel gradual.
+      ────────────────────────────────────────────────────────────────────── */}
+
+      {/* Base background image */}
       <img
         src={isDark ? '/profile-bg-dark.png' : '/profile-bg.jpg'}
         alt="VennZ Profile Setup Background"
@@ -488,8 +515,79 @@ const compressImageFile = (file: File): Promise<string> => {
           objectPosition: 'center top',
           zIndex: 1,
           pointerEvents: 'none',
+          // Subtly desaturate at 0%; saturate as completion rises
+          filter: isDark
+            ? `brightness(${0.55 + completionPct * 0.35}) saturate(${0.7 + completionPct * 0.6})`
+            : `brightness(${0.88 + completionPct * 0.14}) saturate(${0.75 + completionPct * 0.5})`,
+          transition: 'filter 0.8s ease',
         }}
       />
+
+      {/* Layer 1: Deep vignette — fades OUT as completion rises */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: 2,
+          pointerEvents: 'none',
+          background: isDark
+            ? `radial-gradient(ellipse 120% 80% at 50% 0%, transparent 20%, rgba(14,8,22,${0.75 - completionPct * 0.55}) 100%)`
+            : `radial-gradient(ellipse 120% 80% at 50% 0%, transparent 20%, rgba(40,18,32,${0.22 - completionPct * 0.18}) 100%)`,
+          transition: 'background 0.8s ease',
+        }}
+      />
+
+      {/* Layer 2: Warm rose bloom at center — fades IN after 25% */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: 3,
+          pointerEvents: 'none',
+          opacity: Math.max(0, (completionPct - 0.25) / 0.75),
+          background: isDark
+            ? `radial-gradient(ellipse 70% 55% at 50% 38%, rgba(199,87,124,${0.18 * completionPct}) 0%, transparent 70%)`
+            : `radial-gradient(ellipse 70% 55% at 50% 38%, rgba(249,170,173,${0.22 * completionPct}) 0%, transparent 70%)`,
+          transition: 'opacity 0.8s ease, background 0.8s ease',
+        }}
+      />
+
+      {/* Layer 3: Plum depth corners — intensifies from 50% onward */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: 4,
+          pointerEvents: 'none',
+          opacity: Math.max(0, (completionPct - 0.5) / 0.5),
+          background: isDark
+            ? `
+                radial-gradient(ellipse 60% 40% at 0% 100%, rgba(70,32,55,${0.55 * completionPct}) 0%, transparent 65%),
+                radial-gradient(ellipse 60% 40% at 100% 0%, rgba(104,58,70,${0.4 * completionPct}) 0%, transparent 65%)
+              `
+            : `
+                radial-gradient(ellipse 60% 40% at 0% 100%, rgba(161,82,95,${0.15 * completionPct}) 0%, transparent 65%),
+                radial-gradient(ellipse 60% 40% at 100% 0%, rgba(199,87,124,${0.12 * completionPct}) 0%, transparent 65%)
+              `,
+          transition: 'opacity 0.8s ease, background 0.8s ease',
+        }}
+      />
+
+      {/* Layer 4: Full cinematic glow at 100% — golden-rose shimmer */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: 5,
+          pointerEvents: 'none',
+          opacity: Math.max(0, (completionPct - 0.85) / 0.15),
+          background: isDark
+            ? `radial-gradient(ellipse 90% 60% at 50% 55%, rgba(161,82,95,0.22) 0%, transparent 70%)`
+            : `radial-gradient(ellipse 90% 60% at 50% 55%, rgba(199,87,124,0.14) 0%, transparent 70%)`,
+          transition: 'opacity 1s ease',
+        }}
+      />
+
 
       {/* Foreground Scrollable Content */}
       <div
