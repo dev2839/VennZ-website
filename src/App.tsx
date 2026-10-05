@@ -32,7 +32,9 @@ export const App: React.FC = () => {
     appearanceMode,
     matches,
     setApplicationDecision,
+    isAuthenticated,
   } = useAuth();
+
   const isDark = appearanceMode === 'after-dark';
 
   const [selectedProfileForFullView, setSelectedProfileForFullView] = useState<DiscoverProfile | null>(
@@ -67,28 +69,57 @@ export const App: React.FC = () => {
     '/member/mixers',
   ];
 
+  // ── Startup auth-aware routing ──────────────────────────────────────────────
+  // Read auth state from localStorage synchronously so we know before first render
+  // whether the user is authenticated (completed sign-in) or not.
+  const getStartupAuthState = (): { isAuthenticated: boolean; membershipStatus: string | null } => {
+    try {
+      const saved = localStorage.getItem('inner_circle_auth_state');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        return {
+          isAuthenticated: !!parsed?.isAuthenticated,
+          membershipStatus: parsed?.membershipStatus || null,
+        };
+      }
+    } catch {}
+    return { isAuthenticated: false, membershipStatus: null };
+  };
+
+
   const [currentPath, setCurrentPath] = useState<RoutePath>(() => {
-    const path = window.location.pathname as RoutePath;
-    if (VALID_PATHS.includes(path) && path !== '/') {
-      return path;
+    const { isAuthenticated } = getStartupAuthState();
+
+    // If NOT authenticated → always start at root regardless of saved path
+    if (!isAuthenticated) {
+      try {
+        // Clear any stale path so next load is also clean
+        sessionStorage.removeItem('inner_circle_path');
+        localStorage.removeItem('inner_circle_path');
+      } catch {}
+      return '/';
     }
+
+    // If authenticated → restore their last known member page
     try {
       const savedPath = (sessionStorage.getItem('inner_circle_path') || localStorage.getItem('inner_circle_path')) as RoutePath;
-      if (savedPath && VALID_PATHS.includes(savedPath)) {
+      if (savedPath && VALID_PATHS.includes(savedPath) && savedPath !== '/') {
         return savedPath;
       }
     } catch {}
-    if (path === '/') return '/';
-    return '/';
+
+    // Authenticated but no saved path → go to discover
+    return '/discover';
+  });
+
+  const [showIntro, setShowIntro] = useState<boolean>(() => {
+    // Show intro animation ONLY when user is NOT authenticated and we're starting at root
+    const { isAuthenticated } = getStartupAuthState();
+    return !isAuthenticated;
   });
 
   const [learnModalOpen, setLearnModalOpen] = useState(false);
   const [isUpdatingPhotosMode, setIsUpdatingPhotosMode] = useState<boolean>(false);
-  const [showIntro, setShowIntro] = useState<boolean>(() => {
-    // Show intro when entering root landing '/'
-    const path = window.location.pathname;
-    return path === '/' || path === '';
-  });
 
   // Sync with browser history popstate
   useEffect(() => {
@@ -122,9 +153,17 @@ export const App: React.FC = () => {
   };
 
   // Handlers for Page 1
-  const handleGetStarted = () => navigate('/join');
+  const handleGetStarted = () => {
+    // If user is already authenticated, go directly to discover — no need to sign in again
+    if (isAuthenticated) {
+      navigate('/discover');
+    } else {
+      navigate('/join');
+    }
+  };
   const handleLogin = () => navigate('/login');
   const handleLearnHowItWorks = () => setLearnModalOpen(true);
+
 
   // Handlers for Page 2 (Unified Phone & OTP Authentication)
   const handleBackToSplash = () => navigate('/');
