@@ -158,12 +158,8 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
       }
     }
 
-    // Persist phone in auth context and dispatch OTP
-    setPhoneAuth(raw);
+    // Dispatch OTP locally without re-rendering the whole application
     otpService.sendOtp(raw);
-    if (onContinueToOtp) {
-      onContinueToOtp(raw);
-    }
 
     // Reveal OTP section seamlessly below phone number
     setPhoneError(null);
@@ -180,7 +176,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
     setOtpError(null);
   };
 
-  // OTP Digit changes
+  // OTP Digit changes: single digit per box, zero jump
   const handleOtpDigitChange = (index: number, val: string) => {
     const numeric = val.replace(/\D/g, '');
 
@@ -289,6 +285,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
       const result = await otpService.verifyOtp(code);
       if (result.success) {
         setVerifySuccess(true);
+        setPhoneAuth(phoneNumber);
         setPhoneVerified(true);
         setTimeout(() => {
           if (onSuccess) {
@@ -374,18 +371,12 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
         }
 
         .auth-panel-card {
-          animation: continuousEntrance 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
           will-change: transform, opacity;
-        }
-
-        .otp-reveal-container {
-          animation: otpSmoothReveal 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-          will-change: transform, opacity, max-height;
         }
 
         .otp-input-box:focus {
           border-color: #F9AAAD !important;
-          box-shadow: 0 0 0 1px #F9AAAD, 0 0 16px rgba(249, 170, 173, 0.35) !important;
+          box-shadow: 0 0 0 1px #F9AAAD, 0 0 12px rgba(249, 170, 173, 0.25) !important;
           background: rgba(104, 58, 70, 0.7) !important;
         }
 
@@ -413,15 +404,17 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
         }
       `}</style>
 
-      {/* Main Responsive Viewport Grid */}
+      {/* Main Responsive Viewport Grid - Top anchored to prevent upward jump when expanding */}
       <div
         style={{
           width: '100%',
           minHeight: '100dvh',
           display: 'flex',
-          alignItems: 'center',
+          alignItems: 'flex-start',
           justifyContent: 'flex-end',
           padding: 'clamp(20px, 4vw, 48px)',
+          paddingTop: 'clamp(80px, 12vh, 120px)',
+          paddingBottom: 'clamp(32px, 5vh, 60px)',
           boxSizing: 'border-box',
           position: 'relative',
         }}
@@ -756,7 +749,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
             display: 'flex',
             flexDirection: 'column',
             zIndex: 20,
-            margin: 'clamp(24px, 4vh, 48px) 0',
+            margin: 0,
           }}
         >
           {/* Card Brand Header */}
@@ -1030,49 +1023,67 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
               </div>
             )}
 
-            {/* Continue Button (Visible ONLY BEFORE OTP is revealed) */}
-            {!otpRevealed && (
-              <div style={{ marginTop: '10px' }}>
-                <button
-                  type="button"
-                  onClick={() => handleSendOtp()}
-                  className="primary-action-btn"
-                  style={{
-                    width: '100%',
-                    height: '52px',
-                    borderRadius: '14px',
-                    border: 'none',
-                    color: '#FDF3F5',
-                    fontSize: '15px',
-                    fontWeight: 600,
-                    letterSpacing: '0.04em',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '8px',
-                  }}
-                >
-                  <span>Continue</span>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                    <polyline points="12 5 19 12 12 19"></polyline>
-                  </svg>
-                </button>
-              </div>
-            )}
+            {/* Continue Button (Smoothly collapses when OTP is revealed) */}
+            <div
+              style={{
+                maxHeight: !otpRevealed ? '64px' : '0px',
+                opacity: !otpRevealed ? 1 : 0,
+                transform: !otpRevealed ? 'translateY(0)' : 'translateY(-4px)',
+                overflow: 'hidden',
+                transition: 'max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, transform 0.25s ease',
+                pointerEvents: !otpRevealed ? 'auto' : 'none',
+                marginTop: !otpRevealed ? '10px' : '0px',
+              }}
+            >
+              <button
+                type="button"
+                onClick={() => handleSendOtp()}
+                className="primary-action-btn"
+                style={{
+                  width: '100%',
+                  height: '52px',
+                  borderRadius: '14px',
+                  border: 'none',
+                  color: '#FDF3F5',
+                  fontSize: '15px',
+                  fontWeight: 600,
+                  letterSpacing: '0.04em',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                }}
+              >
+                <span>Continue</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </button>
+            </div>
           </div>
 
-          {/* Form Section 2: OTP Verification Reveal (ON THE SAME PAGE BELOW MOBILE INPUT) */}
-          {otpRevealed && (
-            <div className="otp-reveal-container" style={{ marginTop: '22px' }}>
-              <div
-                style={{
-                  height: '1px',
-                  backgroundColor: 'rgba(161, 82, 95, 0.25)',
-                  marginBottom: '20px',
-                }}
-              />
+          {/* Form Section 2: OTP Verification Reveal (SMOOTH EXPANSION IN-PLACE BELOW MOBILE INPUT) */}
+          <div
+            className="otp-reveal-container"
+            style={{
+              maxHeight: otpRevealed ? '600px' : '0px',
+              opacity: otpRevealed ? 1 : 0,
+              transform: otpRevealed ? 'translateY(0)' : 'translateY(-6px)',
+              overflow: 'hidden',
+              transition: 'max-height 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease, transform 0.35s ease',
+              pointerEvents: otpRevealed ? 'auto' : 'none',
+              marginTop: otpRevealed ? '20px' : '0px',
+            }}
+          >
+            <div
+              style={{
+                height: '1px',
+                backgroundColor: 'rgba(161, 82, 95, 0.25)',
+                marginBottom: '20px',
+              }}
+            />
 
               {/* 6 OTP Input Boxes */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -1133,7 +1144,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
                       type="text"
                       inputMode="numeric"
                       pattern="[0-9]*"
-                      maxLength={2}
+                      maxLength={1}
                       value={digit}
                       onChange={(e) => handleOtpDigitChange(index, e.target.value)}
                       onKeyDown={(e) => handleOtpKeyDown(index, e)}
@@ -1144,8 +1155,8 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
                       className="otp-input-box"
                       style={{
                         flex: 1,
-                        maxWidth: '52px',
-                        height: '46px',
+                        maxWidth: '48px',
+                        height: '48px',
                         textAlign: 'center',
                         fontSize: '18px',
                         fontWeight: 600,
@@ -1162,8 +1173,8 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
                         }`,
                         borderRadius: '11px',
                         outline: 'none',
-                        transition: 'all 0.18s ease',
-                        boxShadow: digit ? '0 0 8px rgba(199, 87, 124, 0.2)' : 'none',
+                        transition: 'border-color 0.15s ease, background-color 0.15s ease',
+                        boxSizing: 'border-box',
                       }}
                     />
                   ))}
@@ -1296,11 +1307,20 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
                 </div>
               </div>
             </div>
-          )}
 
-          {/* Social Sign In Alternatives (Visible when OTP is NOT revealed) */}
-          {!otpRevealed && (
-            <div style={{ marginTop: '24px' }}>
+          {/* Social Sign In Alternatives (Smoothly collapses when OTP is revealed) */}
+          <div
+            style={{
+              maxHeight: !otpRevealed ? '160px' : '0px',
+              opacity: !otpRevealed ? 1 : 0,
+              transform: !otpRevealed ? 'translateY(0)' : 'translateY(-4px)',
+              overflow: 'hidden',
+              transition: 'max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, transform 0.25s ease',
+              pointerEvents: !otpRevealed ? 'auto' : 'none',
+              marginTop: !otpRevealed ? '24px' : '0px',
+            }}
+          >
+            <div>
               <div
                 style={{
                   display: 'flex',
@@ -1374,7 +1394,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
                 <span>Continue with Google</span>
               </button>
             </div>
-          )}
+          </div>
 
           {/* Privacy & Terms Note */}
           <p
