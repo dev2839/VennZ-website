@@ -80,11 +80,11 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) =>
   };
 
   useEffect(() => {
-    // Wave pulse finishes at ~1.14s.
-    // Let the logo rest unified for ~240ms, then initiate physical travel at 1.38s.
+    // Letter reveal starts at 0s (staggered 0–0.112s), wave pulse peaks around 0.3+0.76s = 1.06s,
+    // wave ends at ~1.58s for the last letter. Rest for ~300ms then initiate travel at 1900ms.
     const travelTimer = setTimeout(() => {
       initiateTravel();
-    }, 1380);
+    }, 1900);
 
     return () => {
       clearTimeout(travelTimer);
@@ -113,18 +113,29 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) =>
       }}
     >
       <style>{`
+        @keyframes vennzLetterReveal {
+          0% {
+            opacity: 0;
+            transform: translateY(6px) scale(0.96);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0px) scale(1);
+          }
+        }
+
         @keyframes vennzWavePulse {
           0% {
             transform: scale(1);
-            z-index: 2;
           }
-          50% {
-            transform: scale(1.18);
-            z-index: 10;
+          38% {
+            transform: scale(1.22);
+          }
+          72% {
+            transform: scale(0.97);
           }
           100% {
             transform: scale(1);
-            z-index: 2;
           }
         }
       `}</style>
@@ -264,39 +275,10 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) =>
             position: 'relative',
             width: 'clamp(280px, 48vw, 440px)',
             aspectRatio: '984 / 303',
-            transform: 'perspective(1000px) rotateX(4deg) translateZ(8px)',
-            transformStyle: 'preserve-3d',
             transformOrigin: 'center center',
           }}
         >
-          {/* Subtle Ground Depth Shadow matching Welcome page */}
-          <div
-            style={{
-              position: 'absolute',
-              bottom: '-6px',
-              left: '10%',
-              right: '10%',
-              height: '24px',
-              borderRadius: '50%',
-              background: isDark
-                ? 'radial-gradient(ellipse at center, rgba(0, 0, 0, 0.85) 0%, rgba(104, 58, 70, 0.35) 45%, transparent 75%)'
-                : 'radial-gradient(ellipse at center, rgba(161, 82, 95, 0.25) 0%, transparent 70%)',
-              filter: 'blur(10px)',
-              pointerEvents: 'none',
-              zIndex: 1,
-              transform:
-                phase === 'traveling'
-                  ? `translate3d(${travel.deltaX}px, ${travel.deltaY}px, 0) scale(${travel.scale})`
-                  : 'translate3d(0, 0, 0) scale(1)',
-              transition:
-                phase === 'traveling'
-                  ? 'transform 0.85s cubic-bezier(0.16, 1, 0.3, 1)'
-                  : 'none',
-              willChange: 'transform',
-            }}
-          />
-
-          {/* 3D Multi-Layered Depth Shadow and Perspective Tilt */}
+          {/* Letter drop-shadow layer */}
           <div
             style={{
               position: 'absolute',
@@ -348,13 +330,17 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) =>
                       userSelect: 'none',
                       pointerEvents: 'none',
                       transformOrigin: letter.origin,
-                      transform: 'scale(1)',
                       zIndex: 2,
                       animation:
                         phase === 'wave'
-                          ? `vennzWavePulse 0.38s cubic-bezier(0.42, 0, 0.58, 1) ${letter.pulseDelay}s 1 normal both`
+                          ? [
+                              // First: elegant reveal (stagger per letter index)
+                              `vennzLetterReveal 0.55s cubic-bezier(0.16, 1, 0.3, 1) ${letter.travelDelay * 0.8}s 1 both`,
+                              // Then: flowing wave pulse (fires after reveal completes)
+                              `vennzWavePulse 0.52s cubic-bezier(0.34, 1.4, 0.64, 1) ${0.3 + letter.pulseDelay}s 1 forwards`,
+                            ].join(', ')
                           : 'none',
-                      willChange: 'transform',
+                      willChange: 'transform, opacity',
                     }}
                   />
                 </div>

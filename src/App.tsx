@@ -557,7 +557,6 @@ export const App: React.FC = () => {
         color: isDark ? '#FDF3F5' : '#462037',
         fontFamily: 'var(--font-sans)',
         position: 'relative',
-        transition: 'background-color 0.25s ease, color 0.25s ease',
       }}
     >
       {/* Intro Launch Animation */}

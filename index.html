@@ -5,6 +5,15 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <title>VennZ — Curated Connections</title>
+
+    <!-- Critical: Instant background to eliminate dark flash before React hydrates -->
+    <style>
+      html, body, #root {
+        background: linear-gradient(180deg, #140E1C 0%, #462037 50%, #140E1C 100%) !important;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
     
     <!-- Google Fonts: Sugar / Editorial Font pairings (Playfair Display, Cormorant Garamond, Manrope, DM Serif, Alex Brush, Plus Jakarta Sans) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
