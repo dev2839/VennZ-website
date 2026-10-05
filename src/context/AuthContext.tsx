@@ -321,7 +321,7 @@ const defaultState: AuthState = {
   authMethod: null,
   isAuthenticated: false,
   isPhoneVerified: false,
-  appearanceMode: 'after-dark',
+  appearanceMode: 'ivory',
   profile: defaultProfile,
   incomingRequests: INITIAL_INCOMING_REQUESTS,
   sentRequests: INITIAL_SENT_REQUESTS,
@@ -1171,9 +1171,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const resetAuth = () => {
-    setState(defaultState);
+    setState((prev) => {
+      // Preserve user's chosen appearance mode (do NOT forcefully switch theme to dark mode on account deletion/sign-out)
+      const currentAppearance =
+        prev.appearanceMode ||
+        (localStorage.getItem('inner_circle_appearance_mode') as 'ivory' | 'after-dark') ||
+        'ivory';
+
+      return {
+        ...defaultState,
+        appearanceMode: currentAppearance,
+      };
+    });
     try {
       localStorage.removeItem(STORAGE_KEY);
+      sessionStorage.removeItem('inner_circle_active_applicant_data');
+      localStorage.removeItem('inner_circle_active_applicant_data');
+      sessionStorage.removeItem('inner_circle_path');
+      localStorage.removeItem('inner_circle_path');
     } catch {
       // Ignore
     }

@@ -140,6 +140,67 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) =>
           transition: 'opacity 0.82s cubic-bezier(0.22, 1, 0.36, 1)',
         }}
       >
+        {/* ── Venn Diagram circles (brand-toned, ambient) ── */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            pointerEvents: 'none',
+          }}
+        >
+          {/* Left circle */}
+          <div
+            style={{
+              position: 'absolute',
+              width: 'clamp(220px, 38vw, 420px)',
+              height: 'clamp(220px, 38vw, 420px)',
+              borderRadius: '50%',
+              border: isDark
+                ? '1.5px solid rgba(161, 82, 95, 0.22)'
+                : '1.5px solid rgba(161, 82, 95, 0.18)',
+              backgroundColor: isDark
+                ? 'rgba(70, 32, 55, 0.10)'
+                : 'rgba(199, 87, 124, 0.05)',
+              transform: 'translateX(calc(-1 * clamp(45px, 8vw, 80px)))',
+              transition: 'opacity 0.6s ease',
+            }}
+          />
+          {/* Right circle */}
+          <div
+            style={{
+              position: 'absolute',
+              width: 'clamp(220px, 38vw, 420px)',
+              height: 'clamp(220px, 38vw, 420px)',
+              borderRadius: '50%',
+              border: isDark
+                ? '1.5px solid rgba(161, 82, 95, 0.22)'
+                : '1.5px solid rgba(161, 82, 95, 0.18)',
+              backgroundColor: isDark
+                ? 'rgba(70, 32, 55, 0.10)'
+                : 'rgba(199, 87, 124, 0.05)',
+              transform: 'translateX(clamp(45px, 8vw, 80px))',
+              transition: 'opacity 0.6s ease',
+            }}
+          />
+          {/* Intersection glow */}
+          <div
+            style={{
+              position: 'absolute',
+              width: 'clamp(80px, 14vw, 160px)',
+              height: 'clamp(180px, 32vw, 360px)',
+              borderRadius: '50%',
+              background: isDark
+                ? 'radial-gradient(ellipse at center, rgba(161, 82, 95, 0.13) 0%, transparent 70%)'
+                : 'radial-gradient(ellipse at center, rgba(199, 87, 124, 0.08) 0%, transparent 70%)',
+              filter: 'blur(14px)',
+              pointerEvents: 'none',
+            }}
+          />
+        </div>
+
         {/* Clean, subtle atmospheric vignette matching the cinematic theme */}
         <div
           style={{
