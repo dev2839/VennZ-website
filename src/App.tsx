@@ -34,6 +34,7 @@ export const App: React.FC = () => {
     matches,
     setApplicationDecision,
     isAuthenticated,
+    membershipStatus,
   } = useAuth();
 
   const isDark = appearanceMode === 'after-dark';
@@ -71,53 +72,26 @@ export const App: React.FC = () => {
     '/member/mixers',
   ];
 
-  // ── Startup auth-aware routing ──────────────────────────────────────────────
-  // Read auth state from localStorage synchronously so we know before first render
-  // whether the user is authenticated (completed sign-in) or not.
-  const getStartupAuthState = (): { isAuthenticated: boolean; membershipStatus: string | null } => {
-    try {
-      const saved = localStorage.getItem('inner_circle_auth_state');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        return {
-          isAuthenticated: !!parsed?.isAuthenticated,
-          membershipStatus: parsed?.membershipStatus || null,
-        };
-      }
-    } catch {}
-    return { isAuthenticated: false, membershipStatus: null };
-  };
-
+  const isRegisteredUser = Boolean(
+    isAuthenticated ||
+    membershipStatus === 'member' ||
+    membershipStatus === 'complimentary'
+  );
 
   const [currentPath, setCurrentPath] = useState<RoutePath>(() => {
-    const { isAuthenticated } = getStartupAuthState();
-
-    // If NOT authenticated → always start at root regardless of saved path
-    if (!isAuthenticated) {
-      try {
-        // Clear any stale path so next load is also clean
-        sessionStorage.removeItem('inner_circle_path');
-        localStorage.removeItem('inner_circle_path');
-      } catch {}
-      return '/';
+    // If URL has an explicit direct route that is not root, support it
+    const path = window.location.pathname as RoutePath;
+    if (path && path !== '/' && VALID_PATHS.includes(path)) {
+      return path;
     }
-
-    // If authenticated → restore their last known member page
-    try {
-      const savedPath = (sessionStorage.getItem('inner_circle_path') || localStorage.getItem('inner_circle_path')) as RoutePath;
-      if (savedPath && VALID_PATHS.includes(savedPath) && savedPath !== '/') {
-        return savedPath;
-      }
-    } catch {}
-
-    // Authenticated but no saved path → go to discover
-    return '/discover';
+    // Every time website starts/opens, always start at root '/' (Welcome page)
+    return '/';
   });
 
   const [showIntro, setShowIntro] = useState<boolean>(() => {
-    // Show intro animation ONLY when user is NOT authenticated and we're starting at root
-    const { isAuthenticated } = getStartupAuthState();
-    return !isAuthenticated;
+    // Every time website starts at root, always start with intro animation
+    const path = window.location.pathname;
+    return path === '/' || path === '';
   });
 
   const [learnModalOpen, setLearnModalOpen] = useState(false);
@@ -156,8 +130,9 @@ export const App: React.FC = () => {
 
   // Handlers for Page 1
   const handleGetStarted = () => {
-    // If user is already authenticated, go directly to discover — no need to sign in again
-    if (isAuthenticated) {
+    // If user has already registered / logged in, go directly to discover page
+    // If user has not logged in yet, go to sign in page (/join)
+    if (isRegisteredUser) {
       navigate('/discover');
     } else {
       navigate('/join');

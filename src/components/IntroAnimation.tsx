@@ -6,11 +6,11 @@ interface IntroAnimationProps {
 }
 
 const LOGO_LETTERS = [
-  { id: 'V', src: '/letters/letter_V.png', origin: '13.26% 49.17%', pulseDelay: 0.12, travelDelay: 0.00 },
-  { id: 'e', src: '/letters/letter_e.png', origin: '33.49% 55.78%', pulseDelay: 0.28, travelDelay: 0.035 },
-  { id: 'n1', src: '/letters/letter_n1.png', origin: '50.97% 59.74%', pulseDelay: 0.44, travelDelay: 0.070 },
-  { id: 'n2', src: '/letters/letter_n2.png', origin: '69.51% 60.23%', pulseDelay: 0.60, travelDelay: 0.105 },
-  { id: 'z', src: '/letters/letter_z.png', origin: '88.16% 43.07%', pulseDelay: 0.76, travelDelay: 0.140 },
+  { id: 'V', src: '/letters/letter_V.png', origin: '13.26% 49.17%', pulseDelay: 0.05, travelDelay: 0.00 },
+  { id: 'e', src: '/letters/letter_e.png', origin: '33.49% 55.78%', pulseDelay: 0.18, travelDelay: 0.035 },
+  { id: 'n1', src: '/letters/letter_n1.png', origin: '50.97% 59.74%', pulseDelay: 0.31, travelDelay: 0.070 },
+  { id: 'n2', src: '/letters/letter_n2.png', origin: '69.51% 60.23%', pulseDelay: 0.44, travelDelay: 0.105 },
+  { id: 'z', src: '/letters/letter_z.png', origin: '88.16% 43.07%', pulseDelay: 0.57, travelDelay: 0.140 },
 ];
 
 export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) => {
@@ -80,21 +80,19 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) =>
   };
 
   useEffect(() => {
-    // Letter reveal starts at 0s (staggered 0–0.112s), wave pulse peaks around 0.3+0.76s = 1.06s,
-    // wave ends at ~1.58s for the last letter. Rest for ~300ms then initiate travel at 1900ms.
+    // Wave pulse starts immediately at 0.05s and flows across all letters by ~1.05s.
+    // Settle unified briefly, then initiate travel at 1280ms.
     const travelTimer = setTimeout(() => {
       initiateTravel();
-    }, 1900);
+    }, 1280);
 
     return () => {
       clearTimeout(travelTimer);
     };
   }, []);
 
-  // Ambient themes
-  const bgGradient = isDark
-    ? 'linear-gradient(180deg, #140E1C 0%, #462037 50%, #140E1C 100%)'
-    : 'linear-gradient(180deg, #FBF3F5 0%, #ECD1D8 50%, #FAF1F3 100%)';
+  // Clean, seamless background matching the theme — zero colorful screen flash
+  const bgGradient = isDark ? '#140E1C' : '#FAF1F3';
 
   const skipColor = isDark ? 'rgba(249, 170, 173, 0.7)' : 'rgba(104, 58, 70, 0.7)';
   const skipHover = isDark ? '#FDF3F5' : '#462037';
@@ -113,17 +111,6 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) =>
       }}
     >
       <style>{`
-        @keyframes vennzLetterReveal {
-          0% {
-            opacity: 0;
-            transform: translateY(6px) scale(0.96);
-          }
-          100% {
-            opacity: 1;
-            transform: translateY(0px) scale(1);
-          }
-        }
-
         @keyframes vennzWavePulse {
           0% {
             transform: scale(1);
@@ -153,76 +140,16 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) =>
           transition: 'opacity 0.82s cubic-bezier(0.22, 1, 0.36, 1)',
         }}
       >
-        {/* Subtle Atmospheric Light Vignette */}
+        {/* Clean, subtle atmospheric vignette matching the cinematic theme */}
         <div
           style={{
             position: 'absolute',
             inset: 0,
             background: isDark
-              ? 'radial-gradient(circle at 50% 20%, rgba(104, 58, 70, 0.35) 0%, transparent 65%)'
-              : 'radial-gradient(circle at 50% 18%, rgba(199, 87, 124, 0.18) 0%, rgba(250, 241, 243, 0.3) 65%, transparent 100%)',
+              ? 'radial-gradient(circle at 50% 35%, rgba(70, 32, 55, 0.18) 0%, transparent 65%)'
+              : 'radial-gradient(circle at 50% 30%, rgba(199, 87, 124, 0.08) 0%, transparent 65%)',
           }}
         />
-
-        {/* Subtle, Elegant Venn-Diagram Overlapping Circles in Background */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            pointerEvents: 'none',
-          }}
-        >
-          {/* Left Venn Circle */}
-          <div
-            style={{
-              position: 'absolute',
-              width: 'clamp(260px, 38vw, 380px)',
-              height: 'clamp(260px, 38vw, 380px)',
-              borderRadius: '50%',
-              border: isDark
-                ? '1.5px solid rgba(161, 82, 95, 0.25)'
-                : '1.5px solid rgba(199, 87, 124, 0.2)',
-              backgroundColor: isDark
-                ? 'rgba(70, 32, 55, 0.12)'
-                : 'rgba(249, 170, 173, 0.08)',
-              transform: 'translateX(-75px)',
-            }}
-          />
-
-          {/* Right Venn Circle */}
-          <div
-            style={{
-              position: 'absolute',
-              width: 'clamp(260px, 38vw, 380px)',
-              height: 'clamp(260px, 38vw, 380px)',
-              borderRadius: '50%',
-              border: isDark
-                ? '1.5px solid rgba(199, 87, 124, 0.25)'
-                : '1.5px solid rgba(199, 87, 124, 0.2)',
-              backgroundColor: isDark
-                ? 'rgba(104, 58, 70, 0.12)'
-                : 'rgba(249, 170, 173, 0.08)',
-              transform: 'translateX(75px)',
-            }}
-          />
-
-          {/* Venn Intersection Center Glow */}
-          <div
-            style={{
-              position: 'absolute',
-              width: 'clamp(140px, 22vw, 220px)',
-              height: 'clamp(190px, 28vw, 290px)',
-              borderRadius: '50%',
-              background: isDark
-                ? 'radial-gradient(ellipse at center, rgba(249, 170, 173, 0.12) 0%, transparent 70%)'
-                : 'radial-gradient(ellipse at center, rgba(199, 87, 124, 0.12) 0%, transparent 70%)',
-              filter: 'blur(12px)',
-            }}
-          />
-        </div>
 
         {/* Accessible Skip Button */}
         <button
@@ -333,12 +260,7 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) =>
                       zIndex: 2,
                       animation:
                         phase === 'wave'
-                          ? [
-                              // First: elegant reveal (stagger per letter index)
-                              `vennzLetterReveal 0.55s cubic-bezier(0.16, 1, 0.3, 1) ${letter.travelDelay * 0.8}s 1 both`,
-                              // Then: flowing wave pulse (fires after reveal completes)
-                              `vennzWavePulse 0.52s cubic-bezier(0.34, 1.4, 0.64, 1) ${0.3 + letter.pulseDelay}s 1 forwards`,
-                            ].join(', ')
+                          ? `vennzWavePulse 0.48s cubic-bezier(0.34, 1.4, 0.64, 1) ${letter.pulseDelay}s 1 forwards`
                           : 'none',
                       willChange: 'transform, opacity',
                     }}
