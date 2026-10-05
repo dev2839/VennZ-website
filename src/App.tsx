@@ -161,7 +161,6 @@ export const App: React.FC = () => {
       navigate('/join');
     }
   };
-  const handleLogin = () => navigate('/login');
   const handleLearnHowItWorks = () => setLearnModalOpen(true);
 
 
@@ -576,7 +575,6 @@ export const App: React.FC = () => {
     return (
       <SplashScreen
         onGetStarted={handleGetStarted}
-        onLogin={handleLogin}
         onLearnHowItWorks={handleLearnHowItWorks}
         showStatusBar={showStatusBar}
         showHomeIndicator={showHomeIndicator}

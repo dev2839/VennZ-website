@@ -6,7 +6,6 @@ import { useAuth } from '../context/AuthContext';
 
 interface SplashScreenProps {
   onGetStarted: () => void;
-  onLogin: () => void;
   onLearnHowItWorks?: () => void;
   showStatusBar?: boolean;
   showHomeIndicator?: boolean;
@@ -99,7 +98,6 @@ const PILLARS: PillarItem[] = [
 
 export const SplashScreen: React.FC<SplashScreenProps> = ({
   onGetStarted,
-  onLogin,
   onLearnHowItWorks,
   showStatusBar = false,
   showHomeIndicator = false,
@@ -245,7 +243,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
             transition: 'opacity 0.45s ease 0.25s, transform 0.45s ease 0.25s',
           }}
         >
-          <SplashActions onGetStarted={onGetStarted} onLogin={onLogin} />
+          <SplashActions onGetStarted={onGetStarted} />
         </div>
       </section>
 

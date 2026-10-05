@@ -737,14 +737,14 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
           className="auth-panel-card"
           style={{
             width: '100%',
-            maxWidth: '460px',
+            maxWidth: '520px',
             backgroundColor: 'rgba(30, 16, 28, 0.72)',
             backdropFilter: 'blur(28px) saturate(180%)',
             WebkitBackdropFilter: 'blur(28px) saturate(180%)',
             border: '1px solid rgba(161, 82, 95, 0.35)',
             borderRadius: '24px',
             boxShadow: '0 28px 68px rgba(10, 6, 14, 0.75), 0 0 1px 1px rgba(249, 170, 173, 0.12) inset',
-            padding: 'clamp(28px, 4vw, 36px)',
+            padding: 'clamp(32px, 5vw, 44px)',
             boxSizing: 'border-box',
             display: 'flex',
             flexDirection: 'column',
@@ -752,46 +752,24 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
             margin: 0,
           }}
         >
-          {/* Card Brand Header */}
-          <div style={{ textAlign: 'center', marginBottom: '24px' }}>
-            {/* VennZ Emblem / Logo */}
-            <div
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginBottom: '16px',
-              }}
-            >
-              <img
-                src="/vennz-logo.png"
-                alt="VennZ"
-                style={{
-                  height: '38px',
-                  width: 'auto',
-                  maxWidth: '150px',
-                  objectFit: 'contain',
-                  filter: 'drop-shadow(0 2px 6px rgba(0, 0, 0, 0.8)) drop-shadow(0 4px 14px rgba(161, 82, 95, 0.4))',
-                }}
-              />
-            </div>
-
+          {/* Card Header — text only, no logo */}
+          <div style={{ textAlign: 'center', marginBottom: '28px' }}>
             <h1
               style={{
                 fontFamily: 'var(--font-serif)',
-                fontSize: '26px',
+                fontSize: '28px',
                 fontWeight: 400,
                 color: '#FDF3F5',
                 letterSpacing: '0.01em',
-                margin: '0 0 8px 0',
+                margin: '0 0 10px 0',
               }}
             >
               {otpRevealed ? 'Verification Code' : 'Welcome to VennZ'}
             </h1>
             <p
               style={{
-                fontSize: '14px',
-                lineHeight: 1.5,
+                fontSize: '14.5px',
+                lineHeight: 1.55,
                 color: '#F8E2E6',
                 opacity: 0.85,
                 margin: 0,
