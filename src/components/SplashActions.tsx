@@ -9,6 +9,7 @@ interface SplashActionsProps {
 
 export const SplashActions: React.FC<SplashActionsProps> = ({
   onGetStarted,
+  onLogin,
   className = '',
 }) => {
   const { appearanceMode } = useAuth();
@@ -127,6 +128,44 @@ export const SplashActions: React.FC<SplashActionsProps> = ({
           <path d="m12 5 7 7-7 7" />
         </svg>
       </button>
+
+      {/* Connected Flow: Direct Sign In link */}
+      {onLogin && (
+        <div
+          style={{
+            marginTop: '16px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            fontSize: '14px',
+            color: isDark ? '#D4A2AC' : '#683A46',
+            userSelect: 'none',
+          }}
+        >
+          <span>Already a member?</span>
+          <button
+            type="button"
+            onClick={onLogin}
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: isDark ? '#F9AAAD' : '#A1525F',
+              fontWeight: 600,
+              cursor: 'pointer',
+              padding: '4px 6px',
+              textDecoration: 'underline',
+              textUnderlineOffset: '3px',
+              fontSize: '14px',
+              fontFamily: 'var(--font-sans)',
+              transition: 'color 0.2s ease',
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = isDark ? '#FDF3F5' : '#462037')}
+            onMouseLeave={(e) => (e.currentTarget.style.color = isDark ? '#F9AAAD' : '#A1525F')}
+          >
+            Sign In
+          </button>
+        </div>
+      )}
     </div>
   );
 };

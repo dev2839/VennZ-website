@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { StatusBar } from './StatusBar';
 import { SplashBranding } from './SplashBranding';
 import { SplashActions } from './SplashActions';
@@ -110,18 +110,9 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
 
   // Active card index for the 3D coverflow carousel
   const [activeIndex, setActiveIndex] = useState(2); // Center card active by default
-  const [scrollY, setScrollY] = useState(0);
-
   const lastSwipeTime = useRef(0);
   const touchStartX = useRef<number | null>(null);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY || document.documentElement.scrollTop);
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   // Handle touchpad left/right swipe via wheel event
   const handleWheel = (e: React.WheelEvent) => {
@@ -164,9 +155,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
     touchStartX.current = null;
   };
 
-  // Compute smooth dynamic scroll scale: shrinks slightly as user scrolls down, enlarges back on top
-  const headerScale = Math.max(0.86, 1 - scrollY * 0.0008);
-  const headerOpacity = Math.max(0.72, 1 - scrollY * 0.001);
+
 
   return (
     <div
@@ -222,7 +211,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
           width: '100%',
           maxWidth: '1360px',
           margin: '0 auto',
-          minHeight: '100vh',
+          minHeight: 'calc(100dvh - 68px)',
           padding: '24px 20px',
           display: 'flex',
           flexDirection: 'column',
@@ -231,15 +220,11 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
           boxSizing: 'border-box',
         }}
       >
-        {/* Editorial Branding Lockup with VennZ centered and Dynamic Scroll Zoom */}
+        {/* Editorial Branding Lockup with VennZ centered */}
         <div
           style={{
             marginBottom: '32px',
             textAlign: 'center',
-            transform: `scale(${headerScale})`,
-            opacity: headerOpacity,
-            transformOrigin: 'center center',
-            transition: 'transform 0.15s ease-out, opacity 0.15s ease-out',
             width: '100%',
             display: 'flex',
             flexDirection: 'column',
@@ -573,9 +558,38 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
           ))}
         </div>
 
-        {/* --- LEARN HOW VENNZ WORKS BUTTON PLACED STRICTLY BELOW CARDS --- */}
-        {onLearnHowItWorks && (
-          <div style={{ textAlign: 'center', marginTop: '36px', marginBottom: '16px' }}>
+        {/* Bottom CTA suite to guide users into application */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: '16px', marginTop: '36px', marginBottom: '16px' }}>
+          <button
+            type="button"
+            onClick={onGetStarted}
+            style={{
+              background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
+              border: 'none',
+              color: '#FDF3F5',
+              padding: '13px 36px',
+              borderRadius: '999px',
+              fontSize: '15px',
+              fontFamily: 'var(--font-sans)',
+              fontWeight: 600,
+              letterSpacing: '0.03em',
+              cursor: 'pointer',
+              boxShadow: '0 6px 20px rgba(161, 82, 95, 0.4)',
+              transition: 'all 0.2s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 8px 24px rgba(199, 87, 124, 0.5)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 6px 20px rgba(161, 82, 95, 0.4)';
+            }}
+          >
+            Apply to Join VennZ →
+          </button>
+
+          {onLearnHowItWorks && (
             <button
               type="button"
               onClick={onLearnHowItWorks}
@@ -606,10 +620,10 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
                 e.currentTarget.style.color = isDark ? '#FDF3F5' : '#462037';
               }}
             >
-              Learn How VennZ Works →
+              Learn How VennZ Works
             </button>
-          </div>
-        )}
+          )}
+        </div>
       </section>
 
       {/* Optional iOS Home Indicator */}

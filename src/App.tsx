@@ -85,13 +85,9 @@ export const App: React.FC = () => {
   const [learnModalOpen, setLearnModalOpen] = useState(false);
   const [isUpdatingPhotosMode, setIsUpdatingPhotosMode] = useState<boolean>(false);
   const [showIntro, setShowIntro] = useState<boolean>(() => {
-    // Show intro on initial entry; if user has seen it in this session, skip unless on root landing
-    try {
-      const seen = sessionStorage.getItem('vennz_intro_seen');
-      return !seen;
-    } catch {
-      return true;
-    }
+    // Show intro when entering root landing '/'
+    const path = window.location.pathname;
+    return path === '/' || path === '';
   });
 
   // Sync with browser history popstate
