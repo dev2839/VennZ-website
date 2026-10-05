@@ -6,6 +6,14 @@ interface SplashBrandingProps {
   isIntroActive?: boolean;
 }
 
+const LOGO_LETTERS = [
+  { id: 'V', src: '/letters/letter_V.png' },
+  { id: 'e', src: '/letters/letter_e.png' },
+  { id: 'n1', src: '/letters/letter_n1.png' },
+  { id: 'n2', src: '/letters/letter_n2.png' },
+  { id: 'z', src: '/letters/letter_z.png' },
+];
+
 export const SplashBranding: React.FC<SplashBrandingProps> = ({
   className = '',
   isIntroActive = false,
@@ -41,12 +49,14 @@ export const SplashBranding: React.FC<SplashBrandingProps> = ({
           id="welcome-vennz-logo-inner"
           style={{
             position: 'relative',
-            display: 'inline-flex',
+            width: 'clamp(280px, 48vw, 440px)',
+            aspectRatio: '984 / 303',
+            display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             transform: 'perspective(1000px) rotateX(4deg) translateZ(8px)',
             transformStyle: 'preserve-3d',
-            transition: 'transform 0.3s ease',
+            transformOrigin: 'center center',
           }}
         >
           {/* Subtle Ground Depth Shadow */}
@@ -65,27 +75,21 @@ export const SplashBranding: React.FC<SplashBrandingProps> = ({
               pointerEvents: 'none',
               zIndex: 1,
               opacity: isIntroActive ? 0 : 1,
-              transition: 'opacity 0.25s ease',
+              transition: 'none',
             }}
           />
 
-          <img
-            id="welcome-vennz-logo-img"
-            src="/vennz-logo.png"
-            alt="VennZ"
+          {/* Letter / Logo Layer */}
+          <div
+            id="welcome-vennz-logo-letters"
             style={{
-              maxHeight: 'clamp(115px, 16vh, 145px)',
-              maxWidth: 'min(460px, 90vw)',
-              width: 'auto',
-              height: 'auto',
-              objectFit: 'contain',
-              position: 'relative',
+              position: 'absolute',
+              inset: 0,
               zIndex: 2,
               opacity: isIntroActive ? 0 : 1,
-              transition: 'opacity 0.25s ease',
+              transition: 'none',
               filter: isDark
                 ? [
-                    // Pure 3D depth shadow with dark occlusion and soft plum/mauve ambient
                     'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.9))',
                     'drop-shadow(0 14px 28px rgba(0, 0, 0, 0.85))',
                     'drop-shadow(0 26px 45px rgba(20, 14, 28, 0.7))',
@@ -97,7 +101,24 @@ export const SplashBranding: React.FC<SplashBrandingProps> = ({
                     'drop-shadow(0 0 20px rgba(199, 87, 124, 0.18))',
                   ].join(' '),
             }}
-          />
+          >
+            {LOGO_LETTERS.map((letter) => (
+              <img
+                key={letter.id}
+                src={letter.src}
+                alt={letter.id}
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'contain',
+                  userSelect: 'none',
+                  pointerEvents: 'none',
+                }}
+              />
+            ))}
+          </div>
         </div>
       </div>
 
@@ -114,8 +135,8 @@ export const SplashBranding: React.FC<SplashBrandingProps> = ({
           whiteSpace: 'nowrap',
           textShadow: isDark ? '0 1px 8px rgba(0, 0, 0, 0.6)' : 'none',
           opacity: isIntroActive ? 0 : 1,
-          transform: isIntroActive ? 'translateY(10px)' : 'translateY(0)',
-          transition: 'opacity 0.4s ease 0.15s, transform 0.4s ease 0.15s',
+          transform: isIntroActive ? 'translateY(12px)' : 'translateY(0)',
+          transition: 'opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s',
         }}
       >
         Real people. Meaningful connections.

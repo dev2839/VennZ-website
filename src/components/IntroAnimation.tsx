@@ -6,11 +6,11 @@ interface IntroAnimationProps {
 }
 
 const LOGO_LETTERS = [
-  { id: 'V', src: '/letters/letter_V.png', origin: '13.26% 49.17%', delay: 0.15 },
-  { id: 'e', src: '/letters/letter_e.png', origin: '33.49% 55.78%', delay: 0.35 },
-  { id: 'n1', src: '/letters/letter_n1.png', origin: '50.97% 59.74%', delay: 0.55 },
-  { id: 'n2', src: '/letters/letter_n2.png', origin: '69.51% 60.23%', delay: 0.75 },
-  { id: 'z', src: '/letters/letter_z.png', origin: '88.16% 43.07%', delay: 0.95 },
+  { id: 'V', src: '/letters/letter_V.png', origin: '13.26% 49.17%', pulseDelay: 0.12, travelDelay: 0.00 },
+  { id: 'e', src: '/letters/letter_e.png', origin: '33.49% 55.78%', pulseDelay: 0.28, travelDelay: 0.035 },
+  { id: 'n1', src: '/letters/letter_n1.png', origin: '50.97% 59.74%', pulseDelay: 0.44, travelDelay: 0.070 },
+  { id: 'n2', src: '/letters/letter_n2.png', origin: '69.51% 60.23%', pulseDelay: 0.60, travelDelay: 0.105 },
+  { id: 'z', src: '/letters/letter_z.png', origin: '88.16% 43.07%', pulseDelay: 0.76, travelDelay: 0.140 },
 ];
 
 export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) => {
@@ -21,33 +21,73 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) =>
 
   // Phases:
   // 'wave': complete logo visible in center, letters sequentially pulse V -> e -> n -> n -> z in a continuous flowing wave
-  // 'dissolving': intro overlay smoothly dissolves in place, keeping the logo perfectly stationary without moving/jumping
-  const [phase, setPhase] = useState<'wave' | 'dissolving'>('wave');
+  // 'traveling': individual letters physically travel with elegant stagger into Welcome page logo position
+  const [phase, setPhase] = useState<'wave' | 'traveling'>('wave');
+  const [travel, setTravel] = useState<{ deltaX: number; deltaY: number; scale: number }>({
+    deltaX: 0,
+    deltaY: 0,
+    scale: 1,
+  });
 
-  const initiateComplete = () => {
-    if (phase === 'dissolving') return;
-    setPhase('dissolving');
+  const isCompletedRef = useRef(false);
 
-    // Smoothly complete after fade duration without any coordinate translation
+  const initiateTravel = () => {
+    if (isCompletedRef.current) return;
+
+    // Measure exact target logo bounding rect on the Welcome page
+    const targetEl = document.getElementById('welcome-vennz-logo-inner');
+    const introEl = logoContainerRef.current;
+
+    let dX = 0;
+    let dY = -70; // Sensible default upward shift if measurement unavailable
+    let sc = 1;
+
+    if (targetEl && introEl) {
+      const targetRect = targetEl.getBoundingClientRect();
+      const introRect = introEl.getBoundingClientRect();
+
+      if (targetRect.width > 0 && introRect.width > 0) {
+        const targetCenterX = targetRect.left + targetRect.width / 2;
+        const targetCenterY = targetRect.top + targetRect.height / 2;
+        const introCenterX = introRect.left + introRect.width / 2;
+        const introCenterY = introRect.top + introRect.height / 2;
+
+        dX = targetCenterX - introCenterX;
+        dY = targetCenterY - introCenterY;
+        sc = targetRect.width / introRect.width;
+      }
+    }
+
+    setTravel({ deltaX: dX, deltaY: dY, scale: sc });
+    setPhase('traveling');
+
+    // Letter Z travel finishes at travelDelay (0.14s) + duration (0.85s) = 0.99s.
+    // Allow letters to firmly dock into final position before triggering handover.
     setTimeout(() => {
-      onComplete();
-    }, 600);
+      if (!isCompletedRef.current) {
+        isCompletedRef.current = true;
+        onComplete();
+      }
+    }, 1020);
   };
 
-  const handleSkip = () => {
-    initiateComplete();
+  const handleSkip = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    if (!isCompletedRef.current) {
+      isCompletedRef.current = true;
+      onComplete();
+    }
   };
 
   useEffect(() => {
-    // Letter pulse wave timeline:
-    // Wave completes around 1.35s. Let complete logo rest unified for ~250ms.
-    // At 1.6s, smoothly dissolve the intro overlay in place (NO coordinate movement).
-    const waveEndTimer = setTimeout(() => {
-      initiateComplete();
-    }, 1600);
+    // Wave pulse finishes at ~1.14s.
+    // Let the logo rest unified for ~240ms, then initiate physical travel at 1.38s.
+    const travelTimer = setTimeout(() => {
+      initiateTravel();
+    }, 1380);
 
     return () => {
-      clearTimeout(waveEndTimer);
+      clearTimeout(travelTimer);
     };
   }, []);
 
@@ -64,16 +104,12 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) =>
       role="dialog"
       aria-modal="true"
       aria-label="VennZ Intro"
-      onClick={handleSkip}
       style={{
         position: 'fixed',
         inset: 0,
         zIndex: 99999,
         overflow: 'hidden',
-        pointerEvents: phase === 'dissolving' ? 'none' : 'auto',
-        cursor: phase === 'dissolving' ? 'default' : 'pointer',
-        opacity: phase === 'dissolving' ? 0 : 1,
-        transition: 'opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1)',
+        pointerEvents: phase === 'traveling' ? 'none' : 'auto',
       }}
     >
       <style>{`
@@ -102,6 +138,8 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) =>
           inset: 0,
           background: bgGradient,
           pointerEvents: 'none',
+          opacity: phase === 'traveling' ? 0 : 1,
+          transition: 'opacity 0.82s cubic-bezier(0.22, 1, 0.36, 1)',
         }}
       >
         {/* Subtle Atmospheric Light Vignette */}
@@ -196,8 +234,8 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) =>
             padding: '8px 18px',
             borderRadius: '999px',
             transition: 'color 0.25s ease, opacity 0.3s ease',
-            opacity: phase === 'dissolving' ? 0 : 0.85,
-            pointerEvents: phase === 'dissolving' ? 'none' : 'auto',
+            opacity: phase === 'traveling' ? 0 : 0.85,
+            pointerEvents: phase === 'traveling' ? 'none' : 'auto',
           }}
           onMouseEnter={(e) => (e.currentTarget.style.color = skipHover)}
           onMouseLeave={(e) => (e.currentTarget.style.color = skipColor)}
@@ -207,7 +245,7 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) =>
       </div>
 
       {/* ======================================================== */}
-      {/* 2. STATIONARY LOGO LAYER (Rock-solid in place, 0 movement) */}
+      {/* 2. DYNAMIC LOGO TRAVEL LAYER                             */}
       {/* ======================================================== */}
       <div
         style={{
@@ -224,9 +262,10 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) =>
           ref={logoContainerRef}
           style={{
             position: 'relative',
-            width: 'clamp(280px, 50vw, 480px)',
+            width: 'clamp(280px, 48vw, 440px)',
             aspectRatio: '984 / 303',
-            transform: 'translate3d(0, 0, 0) scale(1)',
+            transform: 'perspective(1000px) rotateX(4deg) translateZ(8px)',
+            transformStyle: 'preserve-3d',
             transformOrigin: 'center center',
           }}
         >
@@ -245,17 +284,23 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) =>
               filter: 'blur(10px)',
               pointerEvents: 'none',
               zIndex: 1,
+              transform:
+                phase === 'traveling'
+                  ? `translate3d(${travel.deltaX}px, ${travel.deltaY}px, 0) scale(${travel.scale})`
+                  : 'translate3d(0, 0, 0) scale(1)',
+              transition:
+                phase === 'traveling'
+                  ? 'transform 0.85s cubic-bezier(0.16, 1, 0.3, 1)'
+                  : 'none',
+              willChange: 'transform',
             }}
           />
 
           {/* 3D Multi-Layered Depth Shadow and Perspective Tilt */}
           <div
             style={{
-              position: 'relative',
-              width: '100%',
-              height: '100%',
-              transform: 'perspective(1000px) rotateX(4deg) translateZ(8px)',
-              transformStyle: 'preserve-3d',
+              position: 'absolute',
+              inset: 0,
               zIndex: 2,
               filter: isDark
                 ? [
@@ -271,30 +316,50 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) =>
                   ].join(' '),
             }}
           >
-            {LOGO_LETTERS.map((letter) => (
-              <img
-                key={letter.id}
-                src={letter.src}
-                alt={letter.id}
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'contain',
-                  userSelect: 'none',
-                  pointerEvents: 'none',
-                  transformOrigin: letter.origin,
-                  transform: 'scale(1)',
-                  zIndex: 2,
-                  animation:
-                    phase === 'wave'
-                      ? `vennzWavePulse 0.40s cubic-bezier(0.42, 0, 0.58, 1) ${letter.delay}s 1 normal both`
+            {LOGO_LETTERS.map((letter) => {
+              const isTraveling = phase === 'traveling';
+              return (
+                <div
+                  key={letter.id}
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    width: '100%',
+                    height: '100%',
+                    transform: isTraveling
+                      ? `translate3d(${travel.deltaX}px, ${travel.deltaY}px, 0) scale(${travel.scale})`
+                      : 'translate3d(0, 0, 0) scale(1)',
+                    transition: isTraveling
+                      ? `transform 0.85s cubic-bezier(0.16, 1, 0.3, 1) ${letter.travelDelay}s`
                       : 'none',
-                  willChange: 'transform',
-                }}
-              />
-            ))}
+                    willChange: 'transform',
+                    pointerEvents: 'none',
+                  }}
+                >
+                  <img
+                    src={letter.src}
+                    alt={letter.id}
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'contain',
+                      userSelect: 'none',
+                      pointerEvents: 'none',
+                      transformOrigin: letter.origin,
+                      transform: 'scale(1)',
+                      zIndex: 2,
+                      animation:
+                        phase === 'wave'
+                          ? `vennzWavePulse 0.38s cubic-bezier(0.42, 0, 0.58, 1) ${letter.pulseDelay}s 1 normal both`
+                          : 'none',
+                      willChange: 'transform',
+                    }}
+                  />
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
