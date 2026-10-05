@@ -1,6 +1,7 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { StatusBar } from './StatusBar';
 import { useAuth } from '../context/AuthContext';
+import { calculateAgeFromISO, formatDobForDisplay, getNameInitial } from '../utils/ageCalculation';
 
 interface Page4ProfileScreenProps {
   onBack: () => void;
@@ -56,17 +57,35 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
     countryCode,
     appearanceMode,
     setApplicationDecision,
+    // DigiLocker verified identity (private, read-only in profile)
+    isDigiLockerVerified,
+    digiLockerVerifiedName,
+    digiLockerVerifiedDob,
   } = useAuth();
   const isDark = appearanceMode === 'after-dark';
 
+  // Track initial photos snapshot when entering to verify genuinely new photos are added
   const initialPhotosRef = useRef<string[]>([...(profile.photos || [])]);
 
+  // ── DigiLocker pre-fill ────────────────────────────────────────────────────
+  // Name and DOB come from DigiLocker verification when available.
+  // They are NON-EDITABLE once verified — the user cannot change them.
+  const verifiedName = isDigiLockerVerified && digiLockerVerifiedName ? digiLockerVerifiedName : null;
+  const verifiedDob = isDigiLockerVerified && digiLockerVerifiedDob ? digiLockerVerifiedDob : null;
+
   // Form State
-  const [firstName, setFirstName] = useState(profile.firstName || '');
-  const [dateOfBirth, setDateOfBirth] = useState(profile.dateOfBirth || '');
+  const [firstName, setFirstName] = useState(verifiedName || profile.firstName || '');
+  const [dateOfBirth, setDateOfBirth] = useState(verifiedDob || profile.dateOfBirth || '');
   const [rawDobInput, setRawDobInput] = useState(
-    profile.dateOfBirth ? isoToDisplayDate(profile.dateOfBirth) : ''
+    verifiedDob ? isoToDisplayDate(verifiedDob) : (profile.dateOfBirth ? isoToDisplayDate(profile.dateOfBirth) : '')
   );
+
+  // VennZ display name — seeded from first letter of verified name, user can customize
+  const [vennzName, setVennzName] = useState<string>(() => {
+    if (verifiedName) return getNameInitial(verifiedName);
+    return profile.firstName ? getNameInitial(profile.firstName) : '';
+  });
+
   const datePickerRef = useRef<HTMLInputElement | null>(null);
   const [city, setCity] = useState(profile.city || '');
   const [genderIdentity, setGenderIdentity] = useState(profile.genderIdentity || '');
@@ -85,28 +104,6 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const photosSectionRef = useRef<HTMLDivElement | null>(null);
 
-  // ─── Dynamic Background Completion Progress ────────────────────────────────
-  // Tracks how many of the 10 key fields are filled; drives animated background.
-  const completionPct = useMemo(() => {
-    const checks = [
-      firstName.trim().length >= 2,                        // name
-      Boolean(dateOfBirth),                                // valid dob
-      city.trim().length >= 2,                             // city
-      Boolean(genderIdentity),                             // gender
-      Boolean(datingPreference),                           // dating pref
-      Boolean(currentStatus),                              // status
-      designation.trim().length >= 2,                      // designation
-      photos.length >= 2,                                  // ≥2 photos
-      introduction.trim().length >= 10,                    // introduction
-      company.trim().length >= 2,                          // bonus: company
-    ];
-    const filled = checks.filter(Boolean).length;
-    return filled / checks.length; // 0.0 – 1.0
-  }, [firstName, dateOfBirth, city, genderIdentity, datingPreference, currentStatus, designation, photos, introduction, company]);
-  // ──────────────────────────────────────────────────────────────────────────
-
-
-
   // Auto-scroll to photos section if opened in photo update mode
   useEffect(() => {
     if (isUpdatingPhotosMode && photosSectionRef.current) {
@@ -119,7 +116,9 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
   // Auto-sync form changes into auth context so data isn't lost if user navigates back
   useEffect(() => {
     updateProfile({
-      firstName,
+      firstName: vennzName.trim() || firstName,
+      vennzName: vennzName.trim(),
+      legalName: verifiedName || firstName,
       dateOfBirth,
       city,
       genderIdentity,
@@ -134,6 +133,7 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
     });
   }, [
     firstName,
+    vennzName,
     dateOfBirth,
     city,
     genderIdentity,
@@ -239,16 +239,29 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
     const newErrors: { [key: string]: string } = {};
 
     // 1. Name validation
-    const trimmedName = firstName.trim();
-    if (!trimmedName) {
-      newErrors.firstName = 'Public first name is required.';
-    } else if (/\d/.test(trimmedName)) {
-      newErrors.firstName = 'Please enter a valid name (cannot contain numbers).';
-    } else if (!/^[A-Za-z\s'-]{2,50}$/.test(trimmedName)) {
-      newErrors.firstName = 'Please enter a valid alphabetic name.';
+    if (verifiedName) {
+      const trimmedVennz = vennzName.trim();
+      if (!trimmedVennz) {
+        newErrors.vennzName = 'Name on VennZ is required.';
+      } else if (trimmedVennz.endsWith('...') || trimmedVennz.length < 2) {
+        newErrors.vennzName = 'Please enter your complete public name on VennZ.';
+      } else if (/\d/.test(trimmedVennz)) {
+        newErrors.vennzName = 'Name cannot contain numbers.';
+      } else if (!/^[A-Za-z\s'.-]{2,50}$/.test(trimmedVennz)) {
+        newErrors.vennzName = 'Please enter a valid alphabetic name.';
+      }
+    } else {
+      const trimmedName = firstName.trim();
+      if (!trimmedName) {
+        newErrors.firstName = 'Public first name is required.';
+      } else if (/\d/.test(trimmedName)) {
+        newErrors.firstName = 'Please enter a valid name (cannot contain numbers).';
+      } else if (!/^[A-Za-z\s'-]{2,50}$/.test(trimmedName)) {
+        newErrors.firstName = 'Please enter a valid alphabetic name.';
+      }
     }
 
-    // 2. DOB & Age validation
+    // 2. DOB & Age validation (Strictly non-editable when verified by DigiLocker)
     if (!dateOfBirth) {
       if (rawDobInput.trim()) {
         newErrors.dateOfBirth = 'Please enter a complete and valid date (DD/MM/YYYY).';
@@ -261,7 +274,7 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
       if (birthDate > today) {
         newErrors.dateOfBirth = 'Date of birth cannot be in the future.';
       } else {
-        const age = calculateAge(dateOfBirth);
+        const age = calculateAgeFromISO(dateOfBirth);
         if (age < 18) {
           newErrors.dateOfBirth = 'You must be 18 or older to join VennZ.';
         }
@@ -336,7 +349,9 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
     const isValid = validateForm();
     if (isValid) {
       updateProfile({
-        firstName,
+        firstName: (vennzName.trim() || firstName).trim(),
+        vennzName: vennzName.trim(),
+        legalName: verifiedName || firstName,
         dateOfBirth,
         city,
         genderIdentity,
@@ -495,13 +510,7 @@ const compressImageFile = (file: File): Promise<string> => {
         fontFamily: 'var(--font-sans)',
       }}
     >
-      {/* ── Dynamic Profile Completion Background ────────────────────────────
-           Layer 0: base static parchment/floral image (always visible)
-           Layer 1–3: cinematic radial overlays that fade in as completion grows
-           All transitions are smooth CSS (0.8s ease) so changes feel gradual.
-      ────────────────────────────────────────────────────────────────────── */}
-
-      {/* Base background image */}
+      {/* Clean Parchment Watercolor Foliage Background (with Cream flowers in Dark Mode) */}
       <img
         src={isDark ? '/profile-bg-dark.png' : '/profile-bg.jpg'}
         alt="VennZ Profile Setup Background"
@@ -515,79 +524,8 @@ const compressImageFile = (file: File): Promise<string> => {
           objectPosition: 'center top',
           zIndex: 1,
           pointerEvents: 'none',
-          // Subtly desaturate at 0%; saturate as completion rises
-          filter: isDark
-            ? `brightness(${0.55 + completionPct * 0.35}) saturate(${0.7 + completionPct * 0.6})`
-            : `brightness(${0.88 + completionPct * 0.14}) saturate(${0.75 + completionPct * 0.5})`,
-          transition: 'filter 0.8s ease',
         }}
       />
-
-      {/* Layer 1: Deep vignette — fades OUT as completion rises */}
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          zIndex: 2,
-          pointerEvents: 'none',
-          background: isDark
-            ? `radial-gradient(ellipse 120% 80% at 50% 0%, transparent 20%, rgba(14,8,22,${0.75 - completionPct * 0.55}) 100%)`
-            : `radial-gradient(ellipse 120% 80% at 50% 0%, transparent 20%, rgba(40,18,32,${0.22 - completionPct * 0.18}) 100%)`,
-          transition: 'background 0.8s ease',
-        }}
-      />
-
-      {/* Layer 2: Warm rose bloom at center — fades IN after 25% */}
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          zIndex: 3,
-          pointerEvents: 'none',
-          opacity: Math.max(0, (completionPct - 0.25) / 0.75),
-          background: isDark
-            ? `radial-gradient(ellipse 70% 55% at 50% 38%, rgba(199,87,124,${0.18 * completionPct}) 0%, transparent 70%)`
-            : `radial-gradient(ellipse 70% 55% at 50% 38%, rgba(249,170,173,${0.22 * completionPct}) 0%, transparent 70%)`,
-          transition: 'opacity 0.8s ease, background 0.8s ease',
-        }}
-      />
-
-      {/* Layer 3: Plum depth corners — intensifies from 50% onward */}
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          zIndex: 4,
-          pointerEvents: 'none',
-          opacity: Math.max(0, (completionPct - 0.5) / 0.5),
-          background: isDark
-            ? `
-                radial-gradient(ellipse 60% 40% at 0% 100%, rgba(70,32,55,${0.55 * completionPct}) 0%, transparent 65%),
-                radial-gradient(ellipse 60% 40% at 100% 0%, rgba(104,58,70,${0.4 * completionPct}) 0%, transparent 65%)
-              `
-            : `
-                radial-gradient(ellipse 60% 40% at 0% 100%, rgba(161,82,95,${0.15 * completionPct}) 0%, transparent 65%),
-                radial-gradient(ellipse 60% 40% at 100% 0%, rgba(199,87,124,${0.12 * completionPct}) 0%, transparent 65%)
-              `,
-          transition: 'opacity 0.8s ease, background 0.8s ease',
-        }}
-      />
-
-      {/* Layer 4: Full cinematic glow at 100% — golden-rose shimmer */}
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          zIndex: 5,
-          pointerEvents: 'none',
-          opacity: Math.max(0, (completionPct - 0.85) / 0.15),
-          background: isDark
-            ? `radial-gradient(ellipse 90% 60% at 50% 55%, rgba(161,82,95,0.22) 0%, transparent 70%)`
-            : `radial-gradient(ellipse 90% 60% at 50% 55%, rgba(199,87,124,0.14) 0%, transparent 70%)`,
-          transition: 'opacity 1s ease',
-        }}
-      />
-
 
       {/* Foreground Scrollable Content */}
       <div
@@ -688,7 +626,123 @@ const compressImageFile = (file: File): Promise<string> => {
 
           {/* Form */}
           <form onSubmit={handleSubmit} noValidate>
-            {/* 1. PUBLIC FIRST NAME */}
+            {/* 1. LEGAL FULL NAME (Verified via DigiLocker - Strictly Non-Editable) */}
+            <div style={{ marginBottom: '22px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                <label
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    fontSize: '13.5px',
+                    fontWeight: 600,
+                    letterSpacing: '0.06em',
+                    textTransform: 'uppercase',
+                    color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
+                  }}
+                >
+                  <span>FULL NAME</span>
+                </label>
+                {verifiedName && (
+                  <span
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '5px',
+                      fontSize: '11px',
+                      fontWeight: 600,
+                      letterSpacing: '0.06em',
+                      textTransform: 'uppercase',
+                      color: '#C7577C',
+                      backgroundColor: 'rgba(199, 87, 124, 0.12)',
+                      border: '1px solid rgba(199, 87, 124, 0.3)',
+                      padding: '3px 8px',
+                      borderRadius: '6px',
+                    }}
+                  >
+                    <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
+                      <path d="M2 6l3 3 5-5" stroke="#C7577C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    VERIFIED BY DIGILOCKER
+                  </span>
+                )}
+              </div>
+
+              {verifiedName ? (
+                <div style={{ position: 'relative', width: '100%' }}>
+                  <input
+                    type="text"
+                    value={verifiedName}
+                    readOnly
+                    disabled
+                    aria-label="Verified Legal Full Name"
+                    style={{
+                      width: '100%',
+                      height: '54px',
+                      borderRadius: '13px',
+                      border: isDark ? '1px solid rgba(161, 82, 95, 0.35)' : '1px solid rgba(73, 40, 61, 0.22)',
+                      backgroundColor: isDark ? 'rgba(40, 18, 32, 0.75)' : 'rgba(240, 230, 235, 0.65)',
+                      padding: '0 44px 0 16px',
+                      fontSize: '16.5px',
+                      fontFamily: 'var(--font-sans)',
+                      color: isDark ? '#FDF3F5' : 'var(--color-espresso)',
+                      outline: 'none',
+                      boxSizing: 'border-box',
+                      cursor: 'not-allowed',
+                      opacity: 0.95,
+                    }}
+                  />
+                  <div
+                    style={{
+                      position: 'absolute',
+                      right: '14px',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      color: isDark ? '#A1525F' : '#8A7A84',
+                      display: 'flex',
+                      alignItems: 'center',
+                    }}
+                    title="Verified legal identity (non-editable)"
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                    </svg>
+                  </div>
+                </div>
+              ) : (
+                <input
+                  type="text"
+                  value={firstName}
+                  onChange={(e) => {
+                    setFirstName(e.target.value);
+                    if (errors.firstName) setErrors((prev) => ({ ...prev, firstName: '' }));
+                  }}
+                  placeholder="e.g. Rahul Sharma"
+                  style={{
+                    width: '100%',
+                    height: '54px',
+                    borderRadius: '13px',
+                    border: errors.firstName ? '1.5px solid #E06D6D' : isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.22)',
+                    backgroundColor: isDark ? 'rgba(70, 32, 55, 0.65)' : 'rgba(255, 255, 255, 0.65)',
+                    padding: '0 16px',
+                    fontSize: '16.5px',
+                    fontFamily: 'var(--font-sans)',
+                    color: isDark ? '#FBF7F2' : 'var(--color-espresso)',
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                  }}
+                />
+              )}
+              <div style={{ fontSize: '12.5px', color: isDark ? '#B3A1A8' : '#8A7A84', marginTop: '6px' }}>
+                Legal name verified from DigiLocker. Kept private and never displayed to other users.
+              </div>
+              {errors.firstName && (
+                <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.firstName}</div>
+              )}
+            </div>
+
+            {/* 2. NAME ON VENNZ (Public Display Name) */}
             <div style={{ marginBottom: '22px' }}>
               <label
                 style={{
@@ -701,21 +755,21 @@ const compressImageFile = (file: File): Promise<string> => {
                   marginBottom: '8px',
                 }}
               >
-                PUBLIC FIRST NAME <span style={{ color: '#E06D6D' }}>*</span>
+                NAME ON VENNZ <span style={{ color: '#E06D6D' }}>*</span>
               </label>
               <input
                 type="text"
-                value={firstName}
+                value={vennzName}
                 onChange={(e) => {
-                  setFirstName(e.target.value);
-                  if (errors.firstName) setErrors((prev) => ({ ...prev, firstName: '' }));
+                  setVennzName(e.target.value);
+                  if (errors.vennzName) setErrors((prev) => ({ ...prev, vennzName: '' }));
                 }}
-                placeholder="e.g. Ananya"
+                placeholder="e.g. Rahul or Rahul S."
                 style={{
                   width: '100%',
                   height: '54px',
                   borderRadius: '13px',
-                  border: errors.firstName ? '1.5px solid #E06D6D' : isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.22)',
+                  border: errors.vennzName ? '1.5px solid #E06D6D' : isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.22)',
                   backgroundColor: isDark ? 'rgba(70, 32, 55, 0.65)' : 'rgba(255, 255, 255, 0.65)',
                   padding: '0 16px',
                   fontSize: '16.5px',
@@ -725,157 +779,230 @@ const compressImageFile = (file: File): Promise<string> => {
                   boxSizing: 'border-box',
                 }}
               />
-              {errors.firstName && (
-                <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.firstName}</div>
+              <div style={{ fontSize: '12.5px', color: isDark ? '#B3A1A8' : '#8A7A84', marginTop: '6px' }}>
+                This is the name visible to other VennZ users. You can customize this.
+              </div>
+              {errors.vennzName && (
+                <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.vennzName}</div>
               )}
             </div>
 
-            {/* 2. DATE OF BIRTH */}
+            {/* 3. DATE OF BIRTH & AGE (Verified via DigiLocker - Strictly Non-Editable) */}
             <div style={{ marginBottom: '22px' }}>
-              <label
-                style={{
-                  display: 'block',
-                  fontSize: '13.5px',
-                  fontWeight: 600,
-                  letterSpacing: '0.06em',
-                  textTransform: 'uppercase',
-                  color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
-                  marginBottom: '8px',
-                }}
-              >
-                DATE OF BIRTH <span style={{ color: '#E06D6D' }}>*</span>
-              </label>
-              {/* Dual Input: Manual Typing (DD / MM / YYYY) + Calendar Picker Button */}
-              <div style={{ position: 'relative', width: '100%' }}>
-                <input
-                  type="text"
-                  inputMode="numeric"
-                  value={rawDobInput}
-                  onChange={handleManualDobChange}
-                  placeholder="DD / MM / YYYY"
-                  maxLength={10}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                <label
                   style={{
-                    width: '100%',
-                    height: '56px',
-                    borderRadius: '13px',
-                    border: errors.dateOfBirth ? '1.5px solid #E06D6D' : isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.22)',
-                    backgroundColor: isDark ? 'rgba(70, 32, 55, 0.65)' : 'rgba(255, 255, 255, 0.65)',
-                    padding: '0 52px 0 16px',
-                    fontSize: '16px',
-                    fontFamily: 'var(--font-sans)',
-                    color: isDark ? '#FBF7F2' : 'var(--color-espresso)',
-                    letterSpacing: '0.04em',
-                    outline: 'none',
-                    boxSizing: 'border-box',
-                  }}
-                />
-
-                {/* Hidden Native Date Input for Calendar Picker */}
-                <input
-                  ref={datePickerRef}
-                  type="date"
-                  max={new Date().toISOString().split('T')[0]}
-                  value={dateOfBirth}
-                  onChange={handleCalendarPickerChange}
-                  style={{
-                    position: 'absolute',
-                    opacity: 0,
-                    pointerEvents: 'none',
-                    width: 0,
-                    height: 0,
-                    bottom: 0,
-                    right: 0,
-                  }}
-                  tabIndex={-1}
-                  aria-hidden="true"
-                />
-
-                {/* Calendar Icon Button */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    const el = datePickerRef.current;
-                    if (!el) return;
-                    try {
-                      if (typeof (el as HTMLInputElement & { showPicker?: () => void }).showPicker === 'function') {
-                        (el as HTMLInputElement & { showPicker?: () => void }).showPicker!();
-                      } else {
-                        el.click();
-                      }
-                    } catch (err) {
-                      el.click();
-                    }
-                  }}
-                  title="Choose from calendar"
-                  aria-label="Open calendar picker"
-                  style={{
-                    position: 'absolute',
-                    right: '10px',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    width: '38px',
-                    height: '38px',
-                    borderRadius: '10px',
-                    border: 'none',
-                    backgroundColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(73, 40, 61, 0.08)',
+                    display: 'block',
+                    fontSize: '13.5px',
+                    fontWeight: 600,
+                    letterSpacing: '0.06em',
+                    textTransform: 'uppercase',
                     color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    transition: 'background-color 0.15s ease',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = isDark ? 'rgba(255, 255, 255, 0.18)' : 'rgba(73, 40, 61, 0.16)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(73, 40, 61, 0.08)';
                   }}
                 >
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                  DATE OF BIRTH <span style={{ color: '#E06D6D' }}>*</span>
+                </label>
+                {verifiedDob && (
+                  <span
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '5px',
+                      fontSize: '11px',
+                      fontWeight: 600,
+                      letterSpacing: '0.06em',
+                      textTransform: 'uppercase',
+                      color: '#C7577C',
+                      backgroundColor: 'rgba(199, 87, 124, 0.12)',
+                      border: '1px solid rgba(199, 87, 124, 0.3)',
+                      padding: '3px 8px',
+                      borderRadius: '6px',
+                    }}
                   >
-                    <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
-                    <line x1="16" x2="16" y1="2" y2="6" />
-                    <line x1="8" x2="8" y1="2" y2="6" />
-                    <line x1="3" x2="21" y1="10" y2="10" />
-                    <path d="M8 14h.01" />
-                    <path d="M12 14h.01" />
-                    <path d="M16 14h.01" />
-                    <path d="M8 18h.01" />
-                    <path d="M12 18h.01" />
-                    <path d="M16 18h.01" />
-                  </svg>
-                </button>
+                    <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
+                      <path d="M2 6l3 3 5-5" stroke="#C7577C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    VERIFIED BY DIGILOCKER
+                  </span>
+                )}
               </div>
-              {!dateOfBirth ? (
-                <div style={{ fontSize: '13.5px', color: isDark ? '#B3A1A8' : '#8A7A84', marginTop: '6px', lineHeight: '1.4' }}>
-                  Must be 18 years or older. Your exact birthdate is never displayed publicly.
+
+              {verifiedDob ? (
+                <div style={{ position: 'relative', width: '100%' }}>
+                  <input
+                    type="text"
+                    value={formatDobForDisplay(dateOfBirth) || isoToDisplayDate(dateOfBirth)}
+                    readOnly
+                    disabled
+                    aria-label="Verified Date of Birth"
+                    style={{
+                      width: '100%',
+                      height: '56px',
+                      borderRadius: '13px',
+                      border: errors.dateOfBirth ? '1.5px solid #E06D6D' : isDark ? '1px solid rgba(161, 82, 95, 0.35)' : '1px solid rgba(73, 40, 61, 0.22)',
+                      backgroundColor: isDark ? 'rgba(40, 18, 32, 0.75)' : 'rgba(240, 230, 235, 0.65)',
+                      padding: '0 44px 0 16px',
+                      fontSize: '16px',
+                      fontFamily: 'var(--font-sans)',
+                      color: isDark ? '#FDF3F5' : 'var(--color-espresso)',
+                      letterSpacing: '0.04em',
+                      outline: 'none',
+                      boxSizing: 'border-box',
+                      cursor: 'not-allowed',
+                      opacity: 0.95,
+                    }}
+                  />
+                  <div
+                    style={{
+                      position: 'absolute',
+                      right: '14px',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      color: isDark ? '#A1525F' : '#8A7A84',
+                      display: 'flex',
+                      alignItems: 'center',
+                    }}
+                    title="Verified date of birth (non-editable)"
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                    </svg>
+                  </div>
                 </div>
               ) : (
-                <div style={{ marginTop: '6px', lineHeight: '1.4' }}>
+                /* Dual Input: Manual Typing (DD / MM / YYYY) + Calendar Picker Button */
+                <div style={{ position: 'relative', width: '100%' }}>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    value={rawDobInput}
+                    onChange={handleManualDobChange}
+                    placeholder="DD / MM / YYYY"
+                    maxLength={10}
+                    style={{
+                      width: '100%',
+                      height: '56px',
+                      borderRadius: '13px',
+                      border: errors.dateOfBirth ? '1.5px solid #E06D6D' : isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.22)',
+                      backgroundColor: isDark ? 'rgba(70, 32, 55, 0.65)' : 'rgba(255, 255, 255, 0.65)',
+                      padding: '0 52px 0 16px',
+                      fontSize: '16px',
+                      fontFamily: 'var(--font-sans)',
+                      color: isDark ? '#FBF7F2' : 'var(--color-espresso)',
+                      letterSpacing: '0.04em',
+                      outline: 'none',
+                      boxSizing: 'border-box',
+                    }}
+                  />
+
+                  {/* Hidden Native Date Input for Calendar Picker */}
+                  <input
+                    ref={datePickerRef}
+                    type="date"
+                    max={new Date().toISOString().split('T')[0]}
+                    value={dateOfBirth}
+                    onChange={handleCalendarPickerChange}
+                    style={{
+                      position: 'absolute',
+                      opacity: 0,
+                      pointerEvents: 'none',
+                      width: 0,
+                      height: 0,
+                      bottom: 0,
+                      right: 0,
+                    }}
+                    tabIndex={-1}
+                    aria-hidden="true"
+                  />
+
+                  {/* Calendar Icon Button */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const el = datePickerRef.current;
+                      if (!el) return;
+                      try {
+                        if (typeof (el as HTMLInputElement & { showPicker?: () => void }).showPicker === 'function') {
+                          (el as HTMLInputElement & { showPicker?: () => void }).showPicker!();
+                        } else {
+                          el.click();
+                        }
+                      } catch (err) {
+                        el.click();
+                      }
+                    }}
+                    title="Choose from calendar"
+                    aria-label="Open calendar picker"
+                    style={{
+                      position: 'absolute',
+                      right: '10px',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      width: '38px',
+                      height: '38px',
+                      borderRadius: '10px',
+                      border: 'none',
+                      backgroundColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(73, 40, 61, 0.08)',
+                      color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: 'pointer',
+                      transition: 'background-color 0.15s ease',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = isDark ? 'rgba(255, 255, 255, 0.18)' : 'rgba(73, 40, 61, 0.16)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(73, 40, 61, 0.08)';
+                    }}
+                  >
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
+                      <line x1="16" x2="16" y1="2" y2="6" />
+                      <line x1="8" x2="8" y1="2" y2="6" />
+                      <line x1="3" x2="21" y1="10" y2="10" />
+                      <path d="M8 14h.01" />
+                      <path d="M12 14h.01" />
+                      <path d="M16 14h.01" />
+                      <path d="M8 18h.01" />
+                      <path d="M12 18h.01" />
+                      <path d="M16 18h.01" />
+                    </svg>
+                  </button>
+                </div>
+              )}
+
+              {/* Age calculation display */}
+              {dateOfBirth && (
+                <div style={{ marginTop: '8px', lineHeight: '1.4' }}>
                   <div
                     style={{
                       fontSize: '14.5px',
                       fontWeight: 700,
-                      color: calculateAge(dateOfBirth) >= 18 ? (isDark ? '#F9AAAD' : 'var(--color-mulberry)') : '#E06D6D',
+                      color: calculateAgeFromISO(dateOfBirth) >= 18 ? (isDark ? '#F9AAAD' : 'var(--color-mulberry)') : '#E06D6D',
                       letterSpacing: '0.01em',
                     }}
                   >
-                    {calculateAge(dateOfBirth)} years old
+                    {calculateAgeFromISO(dateOfBirth)} years old
+                    {calculateAgeFromISO(dateOfBirth) < 18 && ' (Must be 18 or older to join)'}
                   </div>
-                  <div style={{ fontSize: '13px', color: isDark ? '#B3A1A8' : '#8A7A84', marginTop: '2px' }}>
-                    Your exact birthdate is never displayed publicly
+                  <div style={{ fontSize: '12.5px', color: isDark ? '#B3A1A8' : '#8A7A84', marginTop: '2px' }}>
+                    Non-editable verification data. Your exact date of birth is kept private and never shown publicly.
                   </div>
                 </div>
               )}
+
               {errors.dateOfBirth && (
                 <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '4px' }}>{errors.dateOfBirth}</div>
               )}

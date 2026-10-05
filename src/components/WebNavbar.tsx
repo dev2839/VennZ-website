@@ -6,6 +6,7 @@ export type RoutePath =
   | '/join'
   | '/login'
   | '/join/verify-code'
+  | '/join/digilocker'
   | '/join/profile'
   | '/join/identity-verification'
   | '/join/context'

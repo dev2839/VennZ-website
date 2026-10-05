@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { IntroAnimation } from './components/IntroAnimation';
 import { SplashScreen } from './components/SplashScreen';
 import { Page2AuthScreen } from './components/Page2AuthScreen';
+import { Page3DigiLockerScreen } from './components/Page3DigiLockerScreen';
 import { Page4ProfileScreen } from './components/Page4ProfileScreen';
 import { Page5IdentityScreen } from './components/Page5IdentityScreen';
 import { Page6ContextScreen } from './components/Page6ContextScreen';
@@ -51,6 +52,7 @@ export const App: React.FC = () => {
     '/join',
     '/login',
     '/join/verify-code',
+    '/join/digilocker',
     '/join/profile',
     '/join/identity-verification',
     '/join/context',
@@ -166,10 +168,15 @@ export const App: React.FC = () => {
 
   // Handlers for Page 2 (Unified Phone & OTP Authentication)
   const handleBackToSplash = () => navigate('/');
-  const handleOtpSuccess = () => navigate('/join/profile');
+  // After OTP success → DigiLocker verification (before profile setup)
+  const handleOtpSuccess = () => navigate('/join/digilocker');
+
+  // Handlers for Page 3 (DigiLocker Verification)
+  const handleBackFromDigiLocker = () => navigate('/login');
+  const handleDigiLockerSuccess = () => navigate('/join/profile');
 
   // Handlers for Page 4 (Profile Setup)
-  const handleBackToOtp = () => navigate('/login');
+  const handleBackToOtp = () => navigate('/join/digilocker');
   const handleProfileSuccess = () => navigate('/join/identity-verification');
 
   // Handlers for Page 5 (Verify Identity)
@@ -255,6 +262,15 @@ export const App: React.FC = () => {
           onSuccess={handleOtpSuccess}
           showStatusBar={showStatusBar}
           showHomeIndicator={showHomeIndicator}
+        />
+      );
+    }
+
+    if (currentPath === '/join/digilocker') {
+      return (
+        <Page3DigiLockerScreen
+          onBack={handleBackFromDigiLocker}
+          onSuccess={handleDigiLockerSuccess}
         />
       );
     }
@@ -611,7 +627,8 @@ export const App: React.FC = () => {
       {/* Universal Desktop & Mobile Web Navigation Bar on non-auth pages */}
       {currentPath !== '/join' &&
         currentPath !== '/login' &&
-        currentPath !== '/join/verify-code' && (
+        currentPath !== '/join/verify-code' &&
+        currentPath !== '/join/digilocker' && (
           <WebNavbar currentPath={currentPath} onNavigate={navigate} />
         )}
 
@@ -634,7 +651,8 @@ export const App: React.FC = () => {
       {currentPath !== '/member/chat' &&
         currentPath !== '/join' &&
         currentPath !== '/login' &&
-        currentPath !== '/join/verify-code' && (
+        currentPath !== '/join/verify-code' &&
+        currentPath !== '/join/digilocker' && (
           <WebFooter onNavigate={(path) => navigate(path as RoutePath)} />
         )}
 

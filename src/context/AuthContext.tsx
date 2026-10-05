@@ -8,6 +8,8 @@ import { DUMMY_DISCOVER_PROFILES } from '../data/dummyProfiles';
 
 export interface UserProfile {
   firstName: string;
+  vennzName?: string;
+  legalName?: string;
   dateOfBirth: string;
   city: string;
   genderIdentity: string;
@@ -64,6 +66,10 @@ export interface AuthState {
   };
   profile: UserProfile;
   appearanceMode?: 'ivory' | 'after-dark';
+  // DigiLocker verification state (private — never shown on public profile)
+  isDigiLockerVerified?: boolean;
+  digiLockerVerifiedName?: string;    // Legal name from DigiLocker — non-editable
+  digiLockerVerifiedDob?: string;     // ISO date from DigiLocker — non-editable
   // Matches & Chat state
   incomingRequests?: IncomingRequest[];
   sentRequests?: SentRequest[];
@@ -108,6 +114,8 @@ interface AuthContextType extends AuthState {
   simulate90DaysPassed: () => void;
   updateProfile: (profileUpdates: Partial<UserProfile>) => void;
   resetAuth: () => void;
+  /** Store DigiLocker verified data (name + DOB). Call only after explicit user consent. */
+  setDigiLockerVerified: (name: string, dateOfBirth: string) => void;
   // Discover & Notification methods
   passedProfileIds: string[];
   sentRequestProfileIds: string[];
@@ -149,6 +157,8 @@ const STORAGE_KEY = 'inner_circle_auth_state';
 
 const defaultProfile: UserProfile = {
   firstName: '',
+  vennzName: '',
+  legalName: '',
   dateOfBirth: '',
   city: '',
   genderIdentity: '',
@@ -839,6 +849,43 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
+  /**
+   * Store DigiLocker verified identity data.
+   * Must only be called after the user explicitly grants consent.
+   * Name and DOB stored privately — never exposed on public profile.
+   */
+  const setDigiLockerVerified = (name: string, dateOfBirth: string) => {
+    setState((prev) => {
+      const initialVennzInitial = name.trim() ? name.trim().charAt(0).toUpperCase() : '';
+      const updatedProfile: UserProfile = {
+        ...prev.profile,
+        legalName: name,
+        dateOfBirth: dateOfBirth,
+        vennzName: prev.profile.vennzName || initialVennzInitial,
+        firstName: prev.profile.vennzName || initialVennzInitial || prev.profile.firstName,
+      };
+
+      const next = {
+        ...prev,
+        isDigiLockerVerified: true,
+        digiLockerVerifiedName: name,
+        digiLockerVerifiedDob: dateOfBirth,
+        profile: updatedProfile,
+      };
+
+      if (prev.phoneNumber) {
+        const records = { ...(prev.phoneRecords || {}) };
+        records[prev.phoneNumber] = {
+          ...(records[prev.phoneNumber] || {}),
+          profile: updatedProfile,
+        };
+        next.phoneRecords = records;
+      }
+
+      return next;
+    });
+  };
+
   const notificationsList = state.notifications && state.notifications.length > 0 
     ? state.notifications 
     : INITIAL_NOTIFICATIONS;
@@ -1409,6 +1456,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         simulate90DaysPassed,
         updateProfile,
         resetAuth,
+        setDigiLockerVerified,
         passedProfileIds,
         sentRequestProfileIds,
         notifications: notificationsList,
