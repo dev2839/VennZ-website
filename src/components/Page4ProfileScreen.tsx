@@ -103,8 +103,8 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
   const [photos, setPhotos] = useState<string[]>(profile.photos || []);
   const [invitationCode, setInvitationCode] = useState(profile.invitationCode || '');
   const [introduction, setIntroduction] = useState(profile.introduction || '');
-  const [interests, setInterests] = useState<string[]>([]);
-  const [vibes, setVibes] = useState<string[]>([]);
+  const [interests, setInterests] = useState<string[]>(profile.interests || []);
+  const [vibes, setVibes] = useState<string[]>(profile.vibes || []);
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
@@ -146,7 +146,7 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
       introduction,
       interests,
       vibes,
-    } as any);
+    });
   }, [
     firstName,
     vennzName,
@@ -382,7 +382,7 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
         introduction,
         interests,
         vibes,
-      } as any);
+      });
 
       if (isUpdatingPhotosMode) {
         sessionStorage.setItem('ic_photos_just_updated', 'true');

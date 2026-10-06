@@ -21,6 +21,8 @@ export interface UserProfile {
   photos: string[];
   invitationCode: string;
   introduction: string;
+  interests?: string[];
+  vibes?: string[];
   linkedinUrl?: string;
   instagramUsername?: string;
 }
