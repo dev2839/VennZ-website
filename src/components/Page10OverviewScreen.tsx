@@ -33,27 +33,12 @@ export const Page10OverviewScreen: React.FC<Page10OverviewScreenProps> = ({
         overflow: 'hidden',
       }}
     >
-      {/* Botanical Parchment Background (with Cream flowers in Dark Mode) */}
       <div
         style={{
           position: 'absolute',
           inset: 0,
-          backgroundImage: isDark ? 'url(/profile-bg-dark.png)' : 'url(/profile-bg.jpg)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'top center',
-          backgroundRepeat: 'no-repeat',
-          opacity: isDark ? 0.98 : 0.94,
-          zIndex: 0,
-          pointerEvents: 'none',
-        }}
-      />
-
-      {/* Subtle Luminous Warm Parchment Overlay */}
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          backgroundColor: isDark ? 'rgba(20, 14, 28, 0.35)' : 'rgba(250, 241, 243, 0.42)',
+          background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
+          opacity: isDark ? 0.2 : 0.1,
           zIndex: 1,
           pointerEvents: 'none',
         }}
