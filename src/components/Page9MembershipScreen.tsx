@@ -239,7 +239,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
           >
             {viewMode === 'complimentary_only'
               ? 'Your complimentary First Look awaits. Experience curated introductions for 24 hours.'
-              : 'One membership, everything included. Cancel any time from settings.'}
+              : 'One membership, everything included. Cancel any time.'}
           </p>
 
           {/* BOX 1 — MONTHLY MEMBERSHIP */}
