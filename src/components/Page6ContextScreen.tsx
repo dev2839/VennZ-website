@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 interface Page6ContextScreenProps {
   onBack: () => void;
   onSuccess: () => void;
-  onSkip: () => void;
+  onSkip?: () => void;
   showStatusBar?: boolean;
   showHomeIndicator?: boolean;
 }
@@ -13,7 +13,6 @@ interface Page6ContextScreenProps {
 export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
   onBack,
   onSuccess,
-  onSkip,
   showStatusBar = true,
   showHomeIndicator = true,
 }) => {
@@ -23,6 +22,8 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
   // Local state initialized from profile context
   const [linkedinUrl, setLinkedinUrl] = useState<string>(profile.linkedinUrl || '');
   const [instagramUsername, setInstagramUsername] = useState<string>(profile.instagramUsername || '');
+  const [showLinkedinPublicly, setShowLinkedinPublicly] = useState<boolean>(profile.showLinkedinPublicly ?? false);
+  const [showInstagramPublicly, setShowInstagramPublicly] = useState<boolean>(profile.showInstagramPublicly ?? false);
 
   // Validation errors
   const [errors, setErrors] = useState<{
@@ -78,14 +79,11 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
     updateProfile({
       linkedinUrl: linkedinUrl.trim(),
       instagramUsername: formattedInstagram,
+      showLinkedinPublicly,
+      showInstagramPublicly,
     });
 
     onSuccess();
-  };
-
-  const handleSkipClick = () => {
-    // Skip without altering or requiring either field
-    onSkip();
   };
 
   return (
@@ -345,6 +343,33 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
                   {errors.linkedinUrl}
                 </div>
               )}
+
+              {/* Public Display Toggle for LinkedIn */}
+              <label
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  marginTop: '10px',
+                  cursor: 'pointer',
+                  userSelect: 'none',
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={showLinkedinPublicly}
+                  onChange={(e) => setShowLinkedinPublicly(e.target.checked)}
+                  style={{
+                    width: '18px',
+                    height: '18px',
+                    accentColor: '#C7577C',
+                    cursor: 'pointer',
+                  }}
+                />
+                <span style={{ fontSize: '13px', color: isDark ? '#D9CFD5' : '#5E4E58' }}>
+                  Display LinkedIn publicly on my VennZ profile
+                </span>
+              </label>
             </div>
 
             {/* 2. INSTAGRAM USERNAME */}
@@ -435,6 +460,33 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
                   {errors.instagramUsername}
                 </div>
               )}
+
+              {/* Public Display Toggle for Instagram */}
+              <label
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  marginTop: '10px',
+                  cursor: 'pointer',
+                  userSelect: 'none',
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={showInstagramPublicly}
+                  onChange={(e) => setShowInstagramPublicly(e.target.checked)}
+                  style={{
+                    width: '18px',
+                    height: '18px',
+                    accentColor: '#C7577C',
+                    cursor: 'pointer',
+                  }}
+                />
+                <span style={{ fontSize: '13px', color: isDark ? '#D9CFD5' : '#5E4E58' }}>
+                  Display Instagram publicly on my VennZ profile
+                </span>
+              </label>
             </div>
 
             {/* 3. EXPLANATION CALLOUT */}
@@ -483,12 +535,12 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
                   margin: 0,
                 }}
               >
-                Adding these gives reviewers additional context. It does not guarantee approval, and neither the link nor the username is displayed on your dating profile.
+                Optional LinkedIn and Instagram profiles support verification and consistency checks. They will only be displayed publicly on your VennZ profile if you explicitly choose to display them above.
               </p>
             </div>
 
             {/* ========================================================== */}
-            {/* BUTTONS: PRIMARY CONTINUE & SECONDARY SKIP FOR NOW        */}
+            {/* BUTTON: PRIMARY CONTINUE                                  */}
             {/* ========================================================== */}
             <div
               style={{
@@ -544,39 +596,6 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
                   <path d="M5 12h14" />
                   <path d="m12 5 7 7-7 7" />
                 </svg>
-              </button>
-
-              {/* SECONDARY: SKIP FOR NOW */}
-              <button
-                type="button"
-                onClick={handleSkipClick}
-                style={{
-                  width: '100%',
-                  height: '52px',
-                  borderRadius: '26px',
-                  backgroundColor: 'transparent',
-                  color: isDark ? '#E5DCD4' : 'var(--color-mulberry)',
-                  border: isDark ? '1.5px solid rgba(243, 238, 233, 0.22)' : '1.5px solid rgba(73, 40, 61, 0.2)',
-                  fontSize: '15px',
-                  fontWeight: 700,
-                  letterSpacing: '0.06em',
-                  textTransform: 'uppercase',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  transition: 'background-color 0.15s ease, border-color 0.15s ease',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = isDark ? 'rgba(255, 255, 255, 0.06)' : 'rgba(73, 40, 61, 0.05)';
-                  e.currentTarget.style.borderColor = isDark ? 'rgba(243, 238, 233, 0.4)' : 'rgba(73, 40, 61, 0.35)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                  e.currentTarget.style.borderColor = isDark ? 'rgba(243, 238, 233, 0.22)' : 'rgba(73, 40, 61, 0.2)';
-                }}
-              >
-                SKIP FOR NOW
               </button>
             </div>
           </form>

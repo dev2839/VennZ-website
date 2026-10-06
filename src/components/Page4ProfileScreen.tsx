@@ -87,10 +87,23 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
     verifiedDob ? isoToDisplayDate(verifiedDob) : (profile.dateOfBirth ? isoToDisplayDate(profile.dateOfBirth) : '')
   );
 
+  const getInitial = (name?: string | null) => {
+    if (!name) return '';
+    const trimmed = name.trim();
+    return trimmed.length > 0 ? trimmed.charAt(0).toUpperCase() : '';
+  };
+
   const [vennzName, setVennzName] = useState<string>(() => {
-    if (verifiedName) return verifiedName.charAt(0).toUpperCase();
-    return profile.firstName ? profile.firstName.charAt(0).toUpperCase() : '';
+    return getInitial(verifiedName || profile.firstName);
   });
+
+  // Automatically keep vennzName locked to the first letter of legal name
+  useEffect(() => {
+    const nextInitial = getInitial(verifiedName || firstName);
+    if (nextInitial && nextInitial !== vennzName) {
+      setVennzName(nextInitial);
+    }
+  }, [verifiedName, firstName]);
 
   const datePickerRef = useRef<HTMLInputElement | null>(null);
   const [city, setCity] = useState(profile.city || '');
@@ -314,13 +327,20 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
     return Object.keys(newErrors).length === 0;
   };
 
-  const wordCount = introduction.trim().split(/\s+/).filter(w => w.length > 0).length;
-
   const validateStep2 = (): boolean => {
     const newErrors: { [key: string]: string } = {};
 
-    if (interests.length < 1) newErrors.interests = 'Select at least 1 interest.';
-    if (vibes.length < 1) newErrors.vibes = 'Select at least 1 vibe.';
+    if (interests.length < 3) {
+      newErrors.interests = 'Please select at least 3 interests to continue.';
+    } else if (interests.length > 6) {
+      newErrors.interests = 'You can select up to 6 interests.';
+    }
+
+    if (vibes.length < 2) {
+      newErrors.vibes = 'Please select at least 2 vibes to continue.';
+    } else if (vibes.length > 5) {
+      newErrors.vibes = 'You can select up to 5 vibes.';
+    }
     
     if (photos.length < 2) {
       newErrors.photos = 'Add at least 2 photos to continue.';
@@ -334,10 +354,11 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
       }
     }
 
-    if (wordCount < 1) {
+    const trimmedIntro = introduction.trim();
+    if (!trimmedIntro) {
       newErrors.introduction = 'A brief introduction is required.';
-    } else if (wordCount > 150) {
-      newErrors.introduction = 'Introduction must not exceed 150 words.';
+    } else if (introduction.length > 240) {
+      newErrors.introduction = 'Introduction cannot exceed 240 characters.';
     }
 
     const isIndian = !countryCode || countryCode === '+91';
@@ -514,8 +535,8 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
     basicDetails: Boolean(city.trim() && genderIdentity),
     datingPreferences: Boolean(datingPreference && currentStatus),
     workRole: Boolean(designation.trim()),
-    interestsVibe: Boolean(interests.length >= 1 && vibes.length >= 1),
-    presentation: Boolean(photos.length >= 2 && wordCount >= 1 && wordCount <= 150),
+    interestsVibe: Boolean(interests.length >= 3 && vibes.length >= 2),
+    presentation: Boolean(photos.length >= 2 && introduction.trim().length >= 1 && introduction.length <= 240),
   };
 
   const completedCount = Object.values(profileCompletion).filter(Boolean).length;
@@ -770,12 +791,49 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
 
                 {/* 2. NAME ON VENNZ */}
                 <div style={{ marginBottom: '22px' }}>
-                  <label style={{ display: 'block', fontSize: '13.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor, marginBottom: '8px' }}>
-                    NAME ON VENNZ <span style={{ color: '#E06D6D' }}>*</span>
-                  </label>
-                  <input type="text" value={vennzName} onChange={(e) => { setVennzName(e.target.value); if (errors.vennzName) setErrors((prev) => ({ ...prev, vennzName: '' })); }} placeholder="e.g. Rahul or Rahul S."
-                    style={{ width: '100%', height: '54px', borderRadius: '13px', border: errors.vennzName ? '1.5px solid #E06D6D' : `1px solid ${inputBorderColor}`, backgroundColor: inputBgColor, padding: '0 16px', fontSize: '16.5px', fontFamily: 'var(--font-sans)', color: textColor, outline: 'none', boxSizing: 'border-box' }}
-                  />
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                    <label style={{ display: 'block', fontSize: '13.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor }}>
+                      NAME ON VENNZ
+                    </label>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '11px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: isDark ? '#F9AAAD' : '#A1525F', backgroundColor: isDark ? 'rgba(161, 82, 95, 0.15)' : 'rgba(161, 82, 95, 0.08)', border: isDark ? '1px solid rgba(161, 82, 95, 0.3)' : '1px solid rgba(161, 82, 95, 0.2)', padding: '3px 8px', borderRadius: '6px' }}>
+                      FIRST INITIAL ONLY
+                    </span>
+                  </div>
+                  <div style={{ position: 'relative', width: '100%' }}>
+                    <input
+                      type="text"
+                      value={vennzName}
+                      readOnly
+                      disabled
+                      aria-label="Name on VennZ (Non-editable First Initial)"
+                      style={{
+                        width: '100%',
+                        height: '54px',
+                        borderRadius: '13px',
+                        border: isDark ? '1px solid rgba(161, 82, 95, 0.35)' : '1px solid rgba(73, 40, 61, 0.22)',
+                        backgroundColor: isDark ? 'rgba(40, 18, 32, 0.75)' : 'rgba(240, 230, 235, 0.65)',
+                        padding: '0 44px 0 16px',
+                        fontSize: '18px',
+                        fontFamily: 'var(--font-sans)',
+                        fontWeight: 700,
+                        letterSpacing: '0.08em',
+                        color: textColor,
+                        outline: 'none',
+                        boxSizing: 'border-box',
+                        cursor: 'not-allowed',
+                        opacity: 0.95,
+                      }}
+                    />
+                    <div style={{ position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)', color: isDark ? '#A1525F' : '#8A7A84', display: 'flex', alignItems: 'center' }} title="Non-editable initial">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div style={{ fontSize: '12.5px', color: isDark ? '#B3A1A8' : '#8A7A84', marginTop: '6px' }}>
+                    Your first initial is your public identifier on VennZ. Once you match with someone, they will see your full legal name.
+                  </div>
                   {errors.vennzName && <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.vennzName}</div>}
                 </div>
 
@@ -934,31 +992,55 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
             }}>
               <form onSubmit={handleSubmit} noValidate>
                 {/* 10. INTERESTS */}
-                <div style={{ marginBottom: '22px' }}>
-                  <label style={{ display: 'block', fontSize: '13.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor, marginBottom: '8px' }}>
-                    INTERESTS <span style={{ color: '#E06D6D' }}>*</span>
-                  </label>
+                <div style={{ marginBottom: '24px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+                    <label style={{ display: 'block', fontSize: '13.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor }}>
+                      INTERESTS <span style={{ color: '#E06D6D' }}>*</span>
+                    </label>
+                    <span style={{ fontSize: '12px', fontWeight: 600, color: interests.length >= 3 ? (isDark ? '#86EFAC' : '#2E7D32') : (isDark ? '#F9AAAD' : '#A1525F') }}>
+                      {interests.length} / 6 selected
+                    </span>
+                  </div>
+                  <p style={{ fontSize: '13px', color: isDark ? '#B3A1A8' : '#8A7A84', margin: '0 0 12px 0' }}>
+                    Select 3 to 6 interests that reflect who you are.
+                  </p>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
                     {INTEREST_OPTIONS.map(opt => renderChip(opt, interests.includes(opt), () => {
-                      setInterests(prev => prev.includes(opt) ? prev.filter(x => x !== opt) : [...prev, opt]);
+                      setInterests(prev => {
+                        if (prev.includes(opt)) return prev.filter(x => x !== opt);
+                        if (prev.length >= 6) return prev;
+                        return [...prev, opt];
+                      });
                       if (errors.interests) setErrors(prev => ({...prev, interests: ''}));
                     }))}
                   </div>
-                  {errors.interests && <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.interests}</div>}
+                  {errors.interests && <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '6px' }}>{errors.interests}</div>}
                 </div>
 
                 {/* 11. YOUR VIBE */}
-                <div style={{ marginBottom: '22px' }}>
-                  <label style={{ display: 'block', fontSize: '13.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor, marginBottom: '8px' }}>
-                    YOUR VIBE <span style={{ color: '#E06D6D' }}>*</span>
-                  </label>
+                <div style={{ marginBottom: '24px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+                    <label style={{ display: 'block', fontSize: '13.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor }}>
+                      YOUR VIBE <span style={{ color: '#E06D6D' }}>*</span>
+                    </label>
+                    <span style={{ fontSize: '12px', fontWeight: 600, color: vibes.length >= 2 ? (isDark ? '#86EFAC' : '#2E7D32') : (isDark ? '#F9AAAD' : '#A1525F') }}>
+                      {vibes.length} / 5 selected
+                    </span>
+                  </div>
+                  <p style={{ fontSize: '13px', color: isDark ? '#B3A1A8' : '#8A7A84', margin: '0 0 12px 0' }}>
+                    Choose 2 to 5 traits that capture your essence.
+                  </p>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
                     {VIBE_OPTIONS.map(opt => renderChip(opt, vibes.includes(opt), () => {
-                      setVibes(prev => prev.includes(opt) ? prev.filter(x => x !== opt) : [...prev, opt]);
+                      setVibes(prev => {
+                        if (prev.includes(opt)) return prev.filter(x => x !== opt);
+                        if (prev.length >= 5) return prev;
+                        return [...prev, opt];
+                      });
                       if (errors.vibes) setErrors(prev => ({...prev, vibes: ''}));
                     }))}
                   </div>
-                  {errors.vibes && <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.vibes}</div>}
+                  {errors.vibes && <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '6px' }}>{errors.vibes}</div>}
                 </div>
 
                 {/* 12. PHOTOS */}
@@ -1016,20 +1098,28 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                     <label style={{ display: 'block', fontSize: '13.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor }}>
                       ABOUT YOU <span style={{ color: '#E06D6D' }}>*</span>
                     </label>
-                    <span style={{ fontSize: '12px', color: wordCount > 150 ? '#E06D6D' : (isDark ? '#B3A1A8' : '#8A7A84') }}>
-                      {wordCount} / 150 words
+                    <span style={{ fontSize: '12px', color: introduction.length > 240 ? '#E06D6D' : (isDark ? '#B3A1A8' : '#8A7A84') }}>
+                      {introduction.length} / 240 characters
                     </span>
                   </div>
-                  <textarea value={introduction} onChange={(e) => { setIntroduction(e.target.value); if (errors.introduction) setErrors((prev) => ({ ...prev, introduction: '' })); }} placeholder="Tell us a bit about yourself..." rows={4}
-                    style={{ width: '100%', borderRadius: '13px', border: errors.introduction || wordCount > 150 ? '1.5px solid #E06D6D' : `1px solid ${inputBorderColor}`, backgroundColor: inputBgColor, padding: '16px', fontSize: '16.5px', fontFamily: 'var(--font-sans)', color: textColor, outline: 'none', boxSizing: 'border-box', resize: 'vertical', minHeight: '100px' }}
+                  <textarea
+                    value={introduction}
+                    maxLength={240}
+                    onChange={(e) => {
+                      setIntroduction(e.target.value);
+                      if (errors.introduction) setErrors((prev) => ({ ...prev, introduction: '' }));
+                    }}
+                    placeholder="A thoughtful note about what drives you, favorite conversation starters, or what you enjoy..."
+                    rows={4}
+                    style={{ width: '100%', borderRadius: '13px', border: errors.introduction || introduction.length > 240 ? '1.5px solid #E06D6D' : `1px solid ${inputBorderColor}`, backgroundColor: inputBgColor, padding: '16px', fontSize: '16.5px', fontFamily: 'var(--font-sans)', color: textColor, outline: 'none', boxSizing: 'border-box', resize: 'vertical', minHeight: '100px' }}
                   />
                   {errors.introduction && <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.introduction}</div>}
                 </div>
 
                 {errors.general && <div style={{ color: '#E06D6D', fontSize: '14px', marginBottom: '20px', padding: '12px', backgroundColor: 'rgba(224, 109, 109, 0.1)', borderRadius: '8px', border: '1px solid rgba(224, 109, 109, 0.3)' }}>{errors.general}</div>}
 
-                <button type="submit" disabled={wordCount > 150}
-                  style={{ width: '100%', height: '56px', borderRadius: '28px', background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)', color: '#fff', border: 'none', fontSize: '16px', fontWeight: 600, fontFamily: 'var(--font-sans)', letterSpacing: '0.04em', cursor: wordCount > 150 ? 'not-allowed' : 'pointer', opacity: wordCount > 150 ? 0.6 : 1, boxShadow: wordCount > 150 ? 'none' : '0 8px 24px rgba(161, 82, 95, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+                <button type="submit" disabled={introduction.length > 240}
+                  style={{ width: '100%', height: '56px', borderRadius: '28px', background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)', color: '#fff', border: 'none', fontSize: '16px', fontWeight: 600, fontFamily: 'var(--font-sans)', letterSpacing: '0.04em', cursor: introduction.length > 240 ? 'not-allowed' : 'pointer', opacity: introduction.length > 240 ? 0.6 : 1, boxShadow: introduction.length > 240 ? 'none' : '0 8px 24px rgba(161, 82, 95, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
                 >
                   {isUpdatingPhotosMode ? 'Submit Updated Photographs' : 'Your Venn is ready →'}
                 </button>

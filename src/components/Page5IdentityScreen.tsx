@@ -9,7 +9,6 @@ interface Page5IdentityScreenProps {
   showHomeIndicator?: boolean;
 }
 
-type VerificationStep = 'idle' | 'connecting' | 'authenticating' | 'matched' | 'complete';
 type CameraState = 'locked' | 'idle' | 'active' | 'captured' | 'permission_denied' | 'unsupported';
 
 // Helper: Downscale & compress verification selfie to ensure crystal-clear quality under 60KB (prevents localStorage quota errors)
@@ -58,25 +57,17 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
   showHomeIndicator = true,
 }) => {
   const {
-    profile,
-    isIdentityVerified = false,
     isSelfieVerified = false,
     selfieImage = null,
-    setIdentityVerified,
     setSelfieVerified,
     appearanceMode,
   } = useAuth();
   const isDark = appearanceMode === 'after-dark';
 
-  // Local verification states (initialized directly from context so refresh never resets them)
-  const [identityCheckComplete, setLocalIdentityComplete] = useState<boolean>(isIdentityVerified);
+  // Local verification state (initialized directly from context so refresh never resets it)
   const [selfieComplete, setLocalSelfieComplete] = useState<boolean>(isSelfieVerified);
 
-  // Secure Identity Check Modal State
-  const [isVerifyingModalOpen, setIsVerifyingModalOpen] = useState<boolean>(false);
-  const [verifyStep, setVerifyStep] = useState<VerificationStep>('idle');
-
-  // Camera States - camera is never locked! Ready and accessible immediately
+  // Camera States - camera is ready and accessible immediately
   const [cameraState, setCameraState] = useState<CameraState>(() => {
     if (isSelfieVerified && selfieImage) return 'captured';
     return 'idle';
@@ -92,9 +83,6 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
 
   // Sync state if context updates or upon page refresh
   useEffect(() => {
-    if (isIdentityVerified && !identityCheckComplete) {
-      setLocalIdentityComplete(true);
-    }
     if (isSelfieVerified && !selfieComplete) {
       setLocalSelfieComplete(true);
     }
@@ -102,7 +90,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
       setCapturedSelfieUrl(selfieImage);
       setCameraState('captured');
     }
-  }, [isIdentityVerified, isSelfieVerified, selfieImage]);
+  }, [isSelfieVerified, selfieImage]);
 
   // Robustly attach stream whenever video element mounts into DOM
   useEffect(() => {
@@ -132,33 +120,6 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
     if (videoRef.current) {
       videoRef.current.srcObject = null;
     }
-  };
-
-  // --------------------------------------------------------------------------
-  // 1. SECURE IDENTITY CHECK DEMO FLOW
-  // --------------------------------------------------------------------------
-  const handleStartIdentityCheck = () => {
-    setIsVerifyingModalOpen(true);
-    setVerifyStep('connecting');
-
-    // Simulate realistic multi-step authentication flow
-    setTimeout(() => {
-      setVerifyStep('authenticating');
-    }, 900);
-
-    setTimeout(() => {
-      setVerifyStep('matched');
-    }, 2000);
-
-    setTimeout(() => {
-      setVerifyStep('complete');
-    }, 2800);
-
-    setTimeout(() => {
-      setIsVerifyingModalOpen(false);
-      setLocalIdentityComplete(true);
-      setIdentityVerified(true);
-    }, 3600);
   };
 
   // --------------------------------------------------------------------------
@@ -314,11 +275,15 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
     stopCameraStream();
   };
 
-  // Both steps required for Continue
-  const canContinue = identityCheckComplete && selfieComplete;
+  // Verification selfie required for Continue
+  const canContinue = Boolean(selfieComplete || capturedSelfieUrl);
 
   const handleContinueClick = () => {
     if (!canContinue) return;
+    if (!selfieComplete && capturedSelfieUrl) {
+      setLocalSelfieComplete(true);
+      setSelfieVerified(true, capturedSelfieUrl);
+    }
     stopCameraStream();
     onSuccess();
   };
@@ -482,7 +447,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
               letterSpacing: '-0.01em',
             }}
           >
-            Verify your identity.
+            Verification selfie.
           </h1>
 
           <p
@@ -493,229 +458,8 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
               margin: '0 0 28px 0',
             }}
           >
-            VennZ is built for genuine people. Every applicant verifies their identity before review.
+            A quick photo to verify that your profile pictures authentically match you. Kept strictly confidential and never displayed on your public profile.
           </p>
-
-          {/* ========================================================== */}
-          {/* ========================================================== */}
-          {/* CARD 1 — SECURE IDENTITY CHECK                             */}
-          {/* ========================================================== */}
-          <div
-            style={{
-              backgroundColor: isDark ? 'rgba(70, 32, 55, 0.72)' : 'rgba(255, 255, 255, 0.76)',
-              backdropFilter: 'blur(10px)',
-              WebkitBackdropFilter: 'blur(10px)',
-              borderRadius: '16px',
-              border: identityCheckComplete
-                ? (isDark ? '1.5px solid rgba(74, 222, 128, 0.4)' : '1.5px solid rgba(46, 125, 50, 0.35)')
-                : (isDark ? '1.5px solid rgba(243, 238, 233, 0.14)' : '1px solid rgba(73, 40, 61, 0.16)'),
-              padding: '24px 22px',
-              marginBottom: '24px',
-              boxShadow: isDark ? 'none' : '0 6px 20px rgba(73, 40, 61, 0.05)',
-              transition: 'border-color 0.2s ease',
-            }}
-          >
-            {/* Header: Title + Status Badge */}
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginBottom: '12px',
-              }}
-            >
-              <h2
-                style={{
-                  fontSize: '15px',
-                  fontWeight: 700,
-                  letterSpacing: '0.08em',
-                  textTransform: 'uppercase',
-                  color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
-                  margin: 0,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                }}
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
-                  <path d="m9 12 2 2 4-4" />
-                </svg>
-                SECURE IDENTITY CHECK
-              </h2>
-
-              {/* Status Badge */}
-              <span
-                style={{
-                  fontSize: '12px',
-                  fontWeight: 700,
-                  letterSpacing: '0.08em',
-                  padding: '4px 11px',
-                  borderRadius: '12px',
-                  textTransform: 'uppercase',
-                  backgroundColor: identityCheckComplete
-                    ? (isDark ? 'rgba(74, 222, 128, 0.18)' : 'rgba(46, 125, 50, 0.12)')
-                    : (isDark ? 'rgba(240, 212, 184, 0.12)' : 'rgba(73, 40, 61, 0.08)'),
-                  color: identityCheckComplete
-                    ? (isDark ? '#86EFAC' : '#2E7D32')
-                    : (isDark ? '#F9AAAD' : 'var(--color-mulberry)'),
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '5px',
-                }}
-              >
-                {identityCheckComplete ? 'COMPLETE ✓' : 'REQUIRED'}
-              </span>
-            </div>
-
-            {/* Description */}
-            <p
-              style={{
-                fontSize: '15px',
-                lineHeight: '1.55',
-                color: isDark ? '#D9CFD5' : '#5E4E58',
-                margin: '0 0 18px 0',
-              }}
-            >
-              You'll be taken to our verification partner's consent-based flow and authenticate directly with them. We never see or store your government credentials — only the verified result.
-            </p>
-
-            {/* Privacy Metadata Grid */}
-            <div
-              style={{
-                backgroundColor: isDark ? 'rgba(243, 238, 233, 0.04)' : 'rgba(73, 40, 61, 0.04)',
-                borderRadius: '12px',
-                padding: '14px 16px',
-                marginBottom: '18px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '12px',
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px' }}>
-                <span
-                  style={{
-                    fontSize: '12.5px',
-                    fontWeight: 700,
-                    letterSpacing: '0.07em',
-                    textTransform: 'uppercase',
-                    color: isDark ? '#B3A1A8' : '#8A7A84',
-                    minWidth: '85px',
-                  }}
-                >
-                  RETURNED
-                </span>
-                <span style={{ fontSize: '15px', color: isDark ? '#FBF7F2' : 'var(--color-espresso)', fontWeight: 500 }}>
-                  Verified name · Date of birth
-                </span>
-              </div>
-
-              <div style={{ height: '1px', backgroundColor: isDark ? 'rgba(243, 238, 233, 0.08)' : 'rgba(73, 40, 61, 0.08)' }} />
-
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px' }}>
-                <span
-                  style={{
-                    fontSize: '12.5px',
-                    fontWeight: 700,
-                    letterSpacing: '0.07em',
-                    textTransform: 'uppercase',
-                    color: isDark ? '#B3A1A8' : '#8A7A84',
-                    minWidth: '85px',
-                  }}
-                >
-                  RETAINED
-                </span>
-                <span style={{ fontSize: '15px', color: isDark ? '#FBF7F2' : 'var(--color-espresso)', fontWeight: 500 }}>
-                  Only the minimum required result
-                </span>
-              </div>
-
-              <div style={{ height: '1px', backgroundColor: isDark ? 'rgba(243, 238, 233, 0.08)' : 'rgba(73, 40, 61, 0.08)' }} />
-
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px' }}>
-                <span
-                  style={{
-                    fontSize: '12.5px',
-                    fontWeight: 700,
-                    letterSpacing: '0.07em',
-                    textTransform: 'uppercase',
-                    color: isDark ? '#B3A1A8' : '#8A7A84',
-                    minWidth: '85px',
-                  }}
-                >
-                  PUBLIC
-                </span>
-                <span style={{ fontSize: '15px', color: isDark ? '#FBF7F2' : 'var(--color-espresso)', fontWeight: 500 }}>
-                  Nothing — verification is private
-                </span>
-              </div>
-            </div>
-
-            {/* Primary Action Button */}
-            {identityCheckComplete ? (
-              <div
-                style={{
-                  width: '100%',
-                  height: '50px',
-                  borderRadius: '12px',
-                  backgroundColor: isDark ? 'rgba(74, 222, 128, 0.15)' : 'rgba(46, 125, 50, 0.1)',
-                  border: isDark ? '1px solid rgba(74, 222, 128, 0.35)' : '1px solid rgba(46, 125, 50, 0.25)',
-                  color: isDark ? '#86EFAC' : '#2E7D32',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '14.5px',
-                  fontWeight: 700,
-                  letterSpacing: '0.06em',
-                  textTransform: 'uppercase',
-                  gap: '8px',
-                }}
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M20 6 9 17l-5-5" />
-                </svg>
-                <span>CREDENTIALS VERIFIED</span>
-              </div>
-            ) : (
-              <button
-                type="button"
-                onClick={handleStartIdentityCheck}
-                style={{
-                  width: '100%',
-                  height: '50px',
-                  borderRadius: '14px',
-                  backgroundColor: isDark ? '#A1525F' : 'var(--color-mulberry)',
-                  color: '#FFFFFF',
-                  border: isDark ? '1px solid rgba(240, 212, 184, 0.35)' : 'none',
-                  fontSize: '14.5px',
-                  fontWeight: 700,
-                  letterSpacing: '0.06em',
-                  textTransform: 'uppercase',
-                  cursor: 'pointer',
-                  boxShadow: isDark ? '0 4px 14px rgba(0, 0, 0, 0.3)' : '0 4px 14px rgba(73, 40, 61, 0.22)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '8px',
-                  transition: 'transform 0.15s ease, background-color 0.15s ease',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-1px)';
-                  e.currentTarget.style.backgroundColor = isDark ? '#73375B' : '#3B1F31';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.backgroundColor = isDark ? '#A1525F' : 'var(--color-mulberry)';
-                }}
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                  <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
-                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                </svg>
-                <span>VERIFY SECURELY</span>
-              </button>
-            )}
-          </div>
 
           {/* ========================================================== */}
           {/* CARD 2 — VERIFICATION SELFIE                               */}
@@ -1364,7 +1108,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                   fontWeight: 500,
                 }}
               >
-                Complete both identity check and selfie to continue
+                Please take or upload your verification selfie to continue
               </div>
             )}
           </div>
@@ -1398,191 +1142,6 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
           style={{ display: 'none' }}
         />
       </div>
-
-      {/* ========================================================== */}
-      {/* SECURE IDENTITY CHECK DEMO MODAL                           */}
-      {/* ========================================================== */}
-      {isVerifyingModalOpen && (
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            backgroundColor: 'rgba(18, 14, 17, 0.72)',
-            backdropFilter: 'blur(8px)',
-            WebkitBackdropFilter: 'blur(8px)',
-            zIndex: 100,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '24px',
-            boxSizing: 'border-box',
-          }}
-        >
-          <div
-            style={{
-              width: '100%',
-              maxWidth: '360px',
-              backgroundColor: isDark ? '#1C1218' : '#FFFFFF',
-              border: isDark ? '1.5px solid rgba(243, 238, 233, 0.15)' : 'none',
-              borderRadius: '20px',
-              padding: '28px 24px',
-              textAlign: 'center',
-              boxShadow: '0 20px 40px rgba(0, 0, 0, 0.35)',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '16px',
-            }}
-          >
-            {/* Animated Shield / Check Icon */}
-            <div
-              style={{
-                width: '64px',
-                height: '64px',
-                borderRadius: '50%',
-                backgroundColor:
-                  verifyStep === 'complete' || verifyStep === 'matched'
-                    ? (isDark ? 'rgba(74, 222, 128, 0.18)' : 'rgba(46, 125, 50, 0.12)')
-                    : (isDark ? 'rgba(240, 212, 184, 0.12)' : 'rgba(73, 40, 61, 0.08)'),
-                color:
-                  verifyStep === 'complete' || verifyStep === 'matched'
-                    ? (isDark ? '#86EFAC' : '#2E7D32')
-                    : (isDark ? '#F9AAAD' : 'var(--color-mulberry)'),
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'background-color 0.3s ease, color 0.3s ease',
-              }}
-            >
-              {verifyStep === 'complete' || verifyStep === 'matched' ? (
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M20 6 9 17l-5-5" />
-                </svg>
-              ) : (
-                <svg
-                  width="30"
-                  height="30"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  style={{ animation: 'spin 1.8s linear infinite' }}
-                >
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
-                  <path d="M12 8v4" />
-                  <path d="M12 16h.01" />
-                </svg>
-              )}
-            </div>
-
-            {/* Modal Title */}
-            <div>
-              <h3
-                style={{
-                  fontFamily: 'var(--font-serif)',
-                  fontSize: '22px',
-                  color: isDark ? '#FBF7F2' : 'var(--color-mulberry)',
-                  margin: '0 0 6px 0',
-                }}
-              >
-                {verifyStep === 'complete'
-                  ? 'Identity Authenticated'
-                  : 'Secure Verification Partner'}
-              </h3>
-              <p style={{ fontSize: '13px', color: isDark ? '#BDB0B6' : '#6E5E68', margin: 0, lineHeight: '1.45' }}>
-                {verifyStep === 'connecting' && 'Establishing encrypted handshake with identity network...'}
-                {verifyStep === 'authenticating' && 'Authenticating official government records...'}
-                {verifyStep === 'matched' && `Verified name and DOB matched for ${profile.firstName || 'applicant'}!`}
-                {verifyStep === 'complete' && 'Zero credentials stored. Verification record secured.'}
-              </p>
-            </div>
-
-            {/* Step Checkpoints */}
-            <div
-              style={{
-                width: '100%',
-                backgroundColor: isDark ? 'rgba(70, 32, 55, 0.78)' : '#F9F6F3',
-                border: isDark ? '1px solid rgba(243, 238, 233, 0.12)' : 'none',
-                borderRadius: '12px',
-                padding: '12px 14px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '8px',
-                textAlign: 'left',
-                fontSize: '12px',
-              }}
-            >
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  color: verifyStep !== 'connecting'
-                    ? (isDark ? '#86EFAC' : '#2E7D32')
-                    : (isDark ? '#F9AAAD' : 'var(--color-mulberry)'),
-                }}
-              >
-                <span>{verifyStep !== 'connecting' ? '✓' : '●'}</span>
-                <span>Consent-based OAuth Handshake</span>
-              </div>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  color:
-                    verifyStep === 'matched' || verifyStep === 'complete'
-                      ? (isDark ? '#86EFAC' : '#2E7D32')
-                      : verifyStep === 'authenticating'
-                      ? (isDark ? '#F9AAAD' : 'var(--color-mulberry)')
-                      : (isDark ? '#B3A1A8' : '#8A7A84'),
-                }}
-              >
-                <span>
-                  {verifyStep === 'matched' || verifyStep === 'complete'
-                    ? '✓'
-                    : verifyStep === 'authenticating'
-                    ? '●'
-                    : '○'}
-                </span>
-                <span>Government Credential Verification</span>
-              </div>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  color: verifyStep === 'complete'
-                    ? (isDark ? '#86EFAC' : '#2E7D32')
-                    : (isDark ? '#B3A1A8' : '#8A7A84'),
-                }}
-              >
-                <span>{verifyStep === 'complete' ? '✓' : '○'}</span>
-                <span>Tokenized Result Encrypted</span>
-              </div>
-            </div>
-
-            {/* Privacy Badge Footer */}
-            <div
-              style={{
-                fontSize: '11px',
-                color: isDark ? '#B3A1A8' : '#8A7A84',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '5px',
-              }}
-            >
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
-                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-              </svg>
-              <span>256-Bit TLS Encryption · Zero Credentials Retained</span>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

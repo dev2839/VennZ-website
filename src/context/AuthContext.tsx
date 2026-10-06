@@ -25,6 +25,8 @@ export interface UserProfile {
   vibes?: string[];
   linkedinUrl?: string;
   instagramUsername?: string;
+  showLinkedinPublicly?: boolean;
+  showInstagramPublicly?: boolean;
 }
 
 export interface PhoneRecord {
@@ -174,6 +176,8 @@ const defaultProfile: UserProfile = {
   introduction: '',
   linkedinUrl: '',
   instagramUsername: '',
+  showLinkedinPublicly: false,
+  showInstagramPublicly: false,
 };
 
 export const INITIAL_INCOMING_REQUESTS: IncomingRequest[] = [
@@ -1001,14 +1005,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const nextReqs = currentReqs.filter((r) => r.id !== requestId);
       const newMatchId = `match-${targetReq.profileId}`;
 
-      const openingText = targetReq.name === 'Meera'
-        ? "Thank you for accepting — I'm Meera. How has your week been?"
+      const FULL_NAMES: Record<string, string> = {
+        'meera-30': 'Meera Sen',
+        'kabir-33': 'Kabir Mehta',
+        'ananya-28': 'Ananya Roy',
+        'rhea-27': 'Rhea Kapoor',
+        'meera-26': 'Meera Deshmukh',
+        'arav-31': 'Arav Patel',
+        'rohan-29': 'Rohan Varma',
+      };
+      const matchedFullName = FULL_NAMES[targetReq.profileId] || targetReq.name;
+
+      const openingText = targetReq.name.startsWith('Meera') || targetReq.profileId.startsWith('meera')
+        ? "Thank you for accepting — I'm Meera Sen. How has your week been?"
         : `Hello! Happy to connect with you on VennZ.`;
 
       const newMatch: MatchItem = {
         id: newMatchId,
         profileId: targetReq.profileId,
-        name: targetReq.name,
+        name: matchedFullName,
         age: targetReq.age,
         city: targetReq.city,
         designation: targetReq.designation,
@@ -1034,7 +1049,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         id: `notif-match-${Date.now()}`,
         category: 'MATCH',
         sourcePage: 'CHAT',
-        title: `You matched with ${targetReq.name}`,
+        title: `You matched with ${matchedFullName}`,
         message: openingText,
         timestamp: 'Just now',
         isRead: false,

@@ -676,6 +676,40 @@ export const Page13YouScreen: React.FC<Page13YouScreenProps> = ({
                   {blockedCount} member(s)
                 </span>
               </div>
+
+              {/* PUBLIC LINKEDIN (if opted in) */}
+              {profile.showLinkedinPublicly && profile.linkedinUrl && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '11.5px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: themeMuted }}>
+                    LINKEDIN (PUBLIC)
+                  </span>
+                  <a
+                    href={profile.linkedinUrl.startsWith('http') ? profile.linkedinUrl : `https://${profile.linkedinUrl}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ fontSize: '13px', fontWeight: 600, color: themeMulberry, textDecoration: 'none' }}
+                  >
+                    View Profile ↗
+                  </a>
+                </div>
+              )}
+
+              {/* PUBLIC INSTAGRAM (if opted in) */}
+              {profile.showInstagramPublicly && profile.instagramUsername && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '11.5px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: themeMuted }}>
+                    INSTAGRAM (PUBLIC)
+                  </span>
+                  <a
+                    href={`https://instagram.com/${profile.instagramUsername.replace('@', '')}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ fontSize: '13px', fontWeight: 600, color: themeMulberry, textDecoration: 'none' }}
+                  >
+                    {profile.instagramUsername} ↗
+                  </a>
+                </div>
+              )}
             </div>
           </div>
 

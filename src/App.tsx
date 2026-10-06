@@ -509,7 +509,7 @@ export const App: React.FC = () => {
       const matchToChat = selectedChatMatch || (matches && matches[0]) || {
         id: 'match-meera-30',
         profileId: 'meera-30',
-        name: 'Meera',
+        name: 'Meera Sen',
         age: 30,
         city: 'PUNE, INDIA',
         designation: 'Corporate Counsel',
@@ -517,7 +517,7 @@ export const App: React.FC = () => {
         photo: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=900&auto=format&fit=crop&q=85',
         isVerified: true,
         matchedAt: Date.now(),
-        lastMessage: "Thank you for accepting — I'm Meera. How has your week been?",
+        lastMessage: "Thank you for accepting — I'm Meera Sen. How has your week been?",
         lastMessageTime: Date.now(),
       };
       return (
