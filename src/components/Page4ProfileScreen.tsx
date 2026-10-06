@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { StatusBar } from './StatusBar';
 import { useAuth } from '../context/AuthContext';
-import { calculateAgeFromISO, formatDobForDisplay, getNameInitial } from '../utils/ageCalculation';
+import { calculateAgeFromISO, getNameInitial } from '../utils/ageCalculation';
 
 interface Page4ProfileScreenProps {
   onBack: () => void;
@@ -12,6 +12,19 @@ interface Page4ProfileScreenProps {
   onPhotosUpdated?: () => void;
 }
 
+const GENDER_OPTIONS = ['WOMAN', 'MAN', 'NON-BINARY', 'PREFER TO SELF-DESCRIBE'];
+const DATING_PREF_OPTIONS = ['WOMEN', 'MEN', 'EVERYONE'];
+const STATUS_OPTIONS = ['WORKING', 'FOUNDER / ENTREPRENEUR', 'STUDENT', 'SELF-EMPLOYED / FREELANCER', 'OTHER'];
+const INTEREST_OPTIONS = [
+  'Art', 'Books', 'Cooking', 'Fitness', 'Gaming', 'Hiking', 'Music', 'Photography',
+  'Startups', 'Tech', 'Travel', 'Yoga', 'Cycling', 'Coffee', 'Cinema', 'Theatre',
+  'Investing', 'Sports', 'Dancing', 'Poetry'
+];
+const VIBE_OPTIONS = [
+  'Ambitious', 'Creative', 'Curious', 'Empathetic', 'Grounded', 'Humorous',
+  'Intellectual', 'Laid-back', 'Outgoing', 'Passionate', 'Spontaneous', 'Thoughtful'
+];
+
 const SAMPLE_PORTRAITS = [
   'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=80',
   'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=500&auto=format&fit=crop&q=80',
@@ -21,7 +34,6 @@ const SAMPLE_PORTRAITS = [
   'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500&auto=format&fit=crop&q=80',
 ];
 
-// Helper: Convert YYYY-MM-DD to DD/MM/YYYY
 const isoToDisplayDate = (iso: string): string => {
   if (!iso) return '';
   const parts = iso.split('-');
@@ -32,7 +44,6 @@ const isoToDisplayDate = (iso: string): string => {
   return iso;
 };
 
-// Helper: Check valid calendar date
 const isValidCalendarDate = (day: number, month: number, year: number): boolean => {
   if (year < 1900 || year > new Date().getFullYear()) return false;
   if (month < 1 || month > 12) return false;
@@ -57,30 +68,25 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
     countryCode,
     appearanceMode,
     setApplicationDecision,
-    // DigiLocker verified identity (private, read-only in profile)
     isDigiLockerVerified,
     digiLockerVerifiedName,
     digiLockerVerifiedDob,
   } = useAuth();
   const isDark = appearanceMode === 'after-dark';
 
-  // Track initial photos snapshot when entering to verify genuinely new photos are added
+  const [stage, setStage] = useState<'about' | 'venn'>('about');
+
   const initialPhotosRef = useRef<string[]>([...(profile.photos || [])]);
 
-  // ── DigiLocker pre-fill ────────────────────────────────────────────────────
-  // Name and DOB come from DigiLocker verification when available.
-  // They are NON-EDITABLE once verified — the user cannot change them.
   const verifiedName = isDigiLockerVerified && digiLockerVerifiedName ? digiLockerVerifiedName : null;
   const verifiedDob = isDigiLockerVerified && digiLockerVerifiedDob ? digiLockerVerifiedDob : null;
 
-  // Form State
   const [firstName, setFirstName] = useState(verifiedName || profile.firstName || '');
   const [dateOfBirth, setDateOfBirth] = useState(verifiedDob || profile.dateOfBirth || '');
   const [rawDobInput, setRawDobInput] = useState(
     verifiedDob ? isoToDisplayDate(verifiedDob) : (profile.dateOfBirth ? isoToDisplayDate(profile.dateOfBirth) : '')
   );
 
-  // VennZ display name — seeded from first letter of verified name, user can customize
   const [vennzName, setVennzName] = useState<string>(() => {
     if (verifiedName) return getNameInitial(verifiedName);
     return profile.firstName ? getNameInitial(profile.firstName) : '';
@@ -97,14 +103,14 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
   const [photos, setPhotos] = useState<string[]>(profile.photos || []);
   const [invitationCode, setInvitationCode] = useState(profile.invitationCode || '');
   const [introduction, setIntroduction] = useState(profile.introduction || '');
+  const [interests, setInterests] = useState<string[]>([]);
+  const [vibes, setVibes] = useState<string[]>([]);
 
-  // Validation Errors State
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const photosSectionRef = useRef<HTMLDivElement | null>(null);
 
-  // Auto-scroll to photos section if opened in photo update mode
   useEffect(() => {
     if (isUpdatingPhotosMode && photosSectionRef.current) {
       setTimeout(() => {
@@ -113,7 +119,6 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
     }
   }, [isUpdatingPhotosMode]);
 
-  // Auto-sync form changes into auth context so data isn't lost if user navigates back
   useEffect(() => {
     updateProfile({
       firstName: vennzName.trim() || firstName,
@@ -130,7 +135,9 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
       photos,
       invitationCode,
       introduction,
-    });
+      interests,
+      vibes,
+    } as any);
   }, [
     firstName,
     vennzName,
@@ -145,9 +152,10 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
     photos,
     invitationCode,
     introduction,
+    interests,
+    vibes,
   ]);
 
-  // Calculate age from YYYY-MM-DD
   const calculateAge = (dobString: string): number => {
     if (!dobString) return 0;
     const today = new Date();
@@ -160,18 +168,15 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
     return age;
   };
 
-  // Handle manual typing of DOB (DD / MM / YYYY)
   const handleManualDobChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputVal = e.target.value;
 
-    // Allow deleting smoothly
     if (inputVal.length < rawDobInput.length) {
       setRawDobInput(inputVal);
       setDateOfBirth('');
       return;
     }
 
-    // Extract digits only (max 8)
     const digits = inputVal.replace(/\D/g, '').slice(0, 8);
     let formatted = '';
     if (digits.length > 0) {
@@ -186,7 +191,6 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
 
     setRawDobInput(formatted);
 
-    // When all 8 digits (DD/MM/YYYY) are entered
     if (digits.length === 8) {
       const day = parseInt(digits.slice(0, 2), 10);
       const month = parseInt(digits.slice(2, 4), 10);
@@ -220,7 +224,6 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
     }
   };
 
-  // Handle native calendar picker selection (YYYY-MM-DD)
   const handleCalendarPickerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const isoVal = e.target.value;
     if (isoVal) {
@@ -234,11 +237,9 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
     }
   };
 
-  // Validate fields
-  const validateForm = (): boolean => {
+  const validateStep1 = (): boolean => {
     const newErrors: { [key: string]: string } = {};
 
-    // 1. Name validation
     if (verifiedName) {
       const trimmedVennz = vennzName.trim();
       if (!trimmedVennz) {
@@ -261,7 +262,6 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
       }
     }
 
-    // 2. DOB & Age validation (Strictly non-editable when verified by DigiLocker)
     if (!dateOfBirth) {
       if (rawDobInput.trim()) {
         newErrors.dateOfBirth = 'Please enter a complete and valid date (DD/MM/YYYY).';
@@ -281,58 +281,58 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
       }
     }
 
-    // 3. City validation
     if (!city.trim()) {
       newErrors.city = 'City is required.';
     }
 
-    // 4. Gender Identity validation
     if (!genderIdentity) {
       newErrors.genderIdentity = 'Please select your gender identity.';
     } else if (genderIdentity === 'PREFER TO SELF-DESCRIBE' && !selfDescribeGender.trim()) {
       newErrors.selfDescribeGender = 'Please specify how you self-describe.';
     }
 
-    // 5. Dating Preference validation
     if (!datingPreference) {
       newErrors.datingPreference = 'Please select your dating preference.';
     }
 
-    // 6. Current Status validation
     if (!currentStatus) {
       newErrors.currentStatus = 'Please select your current status.';
     }
 
-    // 7. Designation / Role validation (Compulsory)
     if (!designation.trim()) {
       newErrors.designation = 'Designation or role is required.';
     }
 
-    // 7. Photographs validation: Min 2, Max 6
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const wordCount = introduction.trim().split(/\s+/).filter(w => w.length > 0).length;
+
+  const validateStep2 = (): boolean => {
+    const newErrors: { [key: string]: string } = {};
+
+    if (interests.length < 1) newErrors.interests = 'Select at least 1 interest.';
+    if (vibes.length < 1) newErrors.vibes = 'Select at least 1 vibe.';
+    
     if (photos.length < 2) {
       newErrors.photos = 'Add at least 2 photos to continue.';
     } else if (photos.length > 6) {
       newErrors.photos = 'You can upload a maximum of 6 photos.';
     } else if (isUpdatingPhotosMode) {
-      // If user came here to update photos (from "more info"), verify they actually added at least one NEW photo
       const initial = initialPhotosRef.current;
       const hasAddedNewPhoto = photos.some((p) => !initial.includes(p));
-
       if (!hasAddedNewPhoto) {
-        newErrors.photos =
-          'A new photograph is required. Please add or replace with at least one new clear photograph before submitting.';
+        newErrors.photos = 'A new photograph is required. Please add or replace with at least one new clear photograph before submitting.';
       }
     }
 
-    // 8. Introduction validation (Compulsory two-line introduction)
-    const trimmedIntro = introduction.trim();
-    if (!trimmedIntro) {
-      newErrors.introduction = 'A two-line introduction is required as it will be shown on your profile.';
-    } else if (trimmedIntro.length > 140) {
-      newErrors.introduction = 'Introduction must not exceed 140 characters.';
+    if (wordCount < 1) {
+      newErrors.introduction = 'A brief introduction is required.';
+    } else if (wordCount > 150) {
+      newErrors.introduction = 'Introduction must not exceed 150 words.';
     }
 
-    // 9. Phone number verification check
     const isIndian = !countryCode || countryCode === '+91';
     if (!isIndian) {
       newErrors.general = 'Only Indian phone numbers (+91) are currently accepted.';
@@ -340,14 +340,24 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
       newErrors.general = 'Your phone number must be verified on the previous screen before continuing.';
     }
 
-    setErrors(newErrors);
+    setErrors(prev => ({...prev, ...newErrors}));
     return Object.keys(newErrors).length === 0;
+  };
+
+  const handleContinue = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (validateStep1()) setStage('venn');
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const isValid = validateForm();
-    if (isValid) {
+    const isStep1Valid = validateStep1();
+    if (!isStep1Valid) {
+      setStage('about');
+      return;
+    }
+    const isStep2Valid = validateStep2();
+    if (isStep2Valid) {
       updateProfile({
         firstName: (vennzName.trim() || firstName).trim(),
         vennzName: vennzName.trim(),
@@ -363,72 +373,69 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
         photos,
         invitationCode,
         introduction,
-      });
+        interests,
+        vibes,
+      } as any);
 
       if (isUpdatingPhotosMode) {
         sessionStorage.setItem('ic_photos_just_updated', 'true');
         setApplicationDecision(null);
-        if (onPhotosUpdated) {
-          onPhotosUpdated();
-        }
+        if (onPhotosUpdated) onPhotosUpdated();
       } else {
         onSuccess();
       }
     }
   };
 
-// Helper: Downscale & compress high-res camera photos (e.g. 12MP/24MP iPhone photos) to prevent memory crashes & storage quota errors on mobile WebKit
-const compressImageFile = (file: File): Promise<string> => {
-  return new Promise((resolve) => {
-    if (file.size < 150 * 1024) {
-      const reader = new FileReader();
-      reader.onload = (e) => resolve((e.target?.result as string) || '');
-      reader.onerror = () => resolve('');
-      reader.readAsDataURL(file);
-      return;
-    }
-
-    const img = new Image();
-    const objectUrl = URL.createObjectURL(file);
-    img.onload = () => {
-      URL.revokeObjectURL(objectUrl);
-      const canvas = document.createElement('canvas');
-      let { width, height } = img;
-      const maxDim = 900;
-      if (width > maxDim || height > maxDim) {
-        if (width > height) {
-          height = Math.round((height * maxDim) / width);
-          width = maxDim;
-        } else {
-          width = Math.round((width * maxDim) / height);
-          height = maxDim;
-        }
-      }
-      canvas.width = width;
-      canvas.height = height;
-      const ctx = canvas.getContext('2d');
-      if (ctx) {
-        ctx.drawImage(img, 0, 0, width, height);
-        resolve(canvas.toDataURL('image/jpeg', 0.8));
-      } else {
+  const compressImageFile = (file: File): Promise<string> => {
+    return new Promise((resolve) => {
+      if (file.size < 150 * 1024) {
         const reader = new FileReader();
         reader.onload = (e) => resolve((e.target?.result as string) || '');
         reader.onerror = () => resolve('');
         reader.readAsDataURL(file);
+        return;
       }
-    };
-    img.onerror = () => {
-      URL.revokeObjectURL(objectUrl);
-      const reader = new FileReader();
-      reader.onload = (e) => resolve((e.target?.result as string) || '');
-      reader.onerror = () => resolve('');
-      reader.readAsDataURL(file);
-    };
-    img.src = objectUrl;
-  });
-};
+      const img = new Image();
+      const objectUrl = URL.createObjectURL(file);
+      img.onload = () => {
+        URL.revokeObjectURL(objectUrl);
+        const canvas = document.createElement('canvas');
+        let { width, height } = img;
+        const maxDim = 900;
+        if (width > maxDim || height > maxDim) {
+          if (width > height) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          } else {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL('image/jpeg', 0.8));
+        } else {
+          const reader = new FileReader();
+          reader.onload = (e) => resolve((e.target?.result as string) || '');
+          reader.onerror = () => resolve('');
+          reader.readAsDataURL(file);
+        }
+      };
+      img.onerror = () => {
+        URL.revokeObjectURL(objectUrl);
+        const reader = new FileReader();
+        reader.onload = (e) => resolve((e.target?.result as string) || '');
+        reader.onerror = () => resolve('');
+        reader.readAsDataURL(file);
+      };
+      img.src = objectUrl;
+    });
+  };
 
-  // Handle Photo Upload with Mobile Memory Protection
   const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     const files = e.target.files;
@@ -460,7 +467,6 @@ const compressImageFile = (file: File): Promise<string> => {
       }
     }
 
-    // Reset file input
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -472,7 +478,6 @@ const compressImageFile = (file: File): Promise<string> => {
 
   const handleAddSamplePhotos = () => {
     if (isUpdatingPhotosMode) {
-      // Find a sample photo that is NOT in initial photos and NOT in current photos
       const candidate =
         SAMPLE_PORTRAITS.find(
           (p) => !initialPhotosRef.current.includes(p) && !photos.includes(p)
@@ -495,6 +500,52 @@ const compressImageFile = (file: File): Promise<string> => {
     });
   };
 
+  const completionRatio = useMemo(() => {
+    let filledCount = 0;
+    if ((vennzName.trim() || firstName).trim().length >= 2) filledCount++;
+    if (city.trim()) filledCount++;
+    if (genderIdentity) filledCount++;
+    if (datingPreference) filledCount++;
+    if (currentStatus) filledCount++;
+    if (designation.trim()) filledCount++;
+    if (interests.length >= 1) filledCount++;
+    if (vibes.length >= 1) filledCount++;
+    if (photos.length >= 2) filledCount++;
+    if (wordCount >= 1 && wordCount <= 150) filledCount++;
+    return filledCount / 10;
+  }, [vennzName, firstName, city, genderIdentity, datingPreference, currentStatus, designation, interests, vibes, photos, wordCount]);
+
+  const labelColor = isDark ? '#F9AAAD' : 'var(--color-mulberry)';
+  const inputBgColor = isDark ? 'rgba(70, 32, 55, 0.65)' : 'rgba(255,255,255,0.65)';
+  const inputBorderColor = isDark ? 'rgba(243,238,233,0.18)' : 'rgba(73,40,61,0.22)';
+  const textColor = isDark ? '#FBF7F2' : 'var(--color-espresso)';
+
+  const renderChip = (opt: string, isSelected: boolean, onClick: () => void) => (
+    <button
+      key={opt}
+      type="button"
+      onClick={onClick}
+      style={{
+        padding: '9px 20px',
+        borderRadius: '999px',
+        border: `1.5px solid ${isSelected ? 'rgba(161,82,95,0.9)' : (isDark ? 'rgba(161,82,95,0.3)' : 'rgba(73,40,61,0.2)')}`,
+        backgroundColor: isSelected
+          ? (isDark ? 'rgba(161,82,95,0.85)' : 'rgba(199,87,124,0.85)')
+          : (isDark ? 'rgba(70,32,55,0.5)' : 'rgba(255,255,255,0.6)'),
+        color: isSelected ? '#FDF3F5' : (isDark ? '#F9AAAD' : 'var(--color-mulberry)'),
+        fontSize: '14px',
+        fontWeight: isSelected ? 700 : 600,
+        fontFamily: 'var(--font-sans)',
+        letterSpacing: '0.04em',
+        cursor: 'pointer',
+        transition: 'background 0.2s ease, color 0.2s ease, border-color 0.2s ease',
+        whiteSpace: 'nowrap',
+      }}
+    >
+      {opt}
+    </button>
+  );
+
   return (
     <div
       style={{
@@ -510,7 +561,6 @@ const compressImageFile = (file: File): Promise<string> => {
         fontFamily: 'var(--font-sans)',
       }}
     >
-      {/* Clean Parchment Watercolor Foliage Background (with Cream flowers in Dark Mode) */}
       <img
         src={isDark ? '/profile-bg-dark.png' : '/profile-bg.jpg'}
         alt="VennZ Profile Setup Background"
@@ -527,7 +577,6 @@ const compressImageFile = (file: File): Promise<string> => {
         }}
       />
 
-      {/* Foreground Scrollable Content */}
       <div
         style={{
           position: 'relative',
@@ -540,11 +589,9 @@ const compressImageFile = (file: File): Promise<string> => {
           WebkitOverflowScrolling: 'touch',
         }}
       >
-        {/* Top Fixed Area: Status Bar & Back Button */}
         <div style={{ position: 'sticky', top: 0, zIndex: 20, backgroundColor: isDark ? 'rgba(20, 14, 28, 0.92)' : 'rgba(250, 241, 243, 0.92)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }}>
           {showStatusBar && <StatusBar variant={isDark ? 'light' : 'dark'} />}
 
-          {/* ← BACK & Step Indicator */}
           <div
             style={{
               padding: '6px 24px 8px 20px',
@@ -555,7 +602,7 @@ const compressImageFile = (file: File): Promise<string> => {
           >
             <button
               type="button"
-              onClick={onBack}
+              onClick={() => stage === 'about' ? onBack() : setStage('about')}
               style={{
                 background: 'transparent',
                 border: 'none',
@@ -581,7 +628,6 @@ const compressImageFile = (file: File): Promise<string> => {
               <span>BACK</span>
             </button>
 
-            {/* Subtle Step Indicator */}
             <span
               style={{
                 fontSize: '13px',
@@ -591,1145 +637,374 @@ const compressImageFile = (file: File): Promise<string> => {
                 color: isDark ? '#B3A1A8' : '#8A7A84',
               }}
             >
-              PROFILE
+              {stage === 'about' ? 'STEP 1 OF 2 · ABOUT YOU' : 'STEP 2 OF 2 · YOUR VENN'}
             </span>
           </div>
         </div>
 
-        {/* Form Container */}
         <div style={{ maxWidth: '960px', margin: '0 auto', width: '100%', padding: '24px 24px 48px 24px', textAlign: 'left', boxSizing: 'border-box' }}>
-          {/* Main Heading */}
-          <h1
-            style={{
-              fontFamily: 'var(--font-serif)',
-              fontSize: 'clamp(32px, 3.8vw, 42px)',
-              lineHeight: '1.15',
-              fontWeight: 400,
-              color: isDark ? '#FBF7F2' : 'var(--color-mulberry)',
-              margin: '0 0 8px 0',
-              letterSpacing: '-0.01em',
-            }}
-          >
-            A short profile.
-          </h1>
-
-          <p
-            style={{
-              fontSize: '16px',
-              lineHeight: '1.5',
-              color: isDark ? '#BDB0B6' : '#6E5E68',
-              margin: '0 0 26px 0',
-            }}
-          >
-            Tell us a bit about who you are and what you're looking for. Hand-reviewed before your profile goes live.
-          </p>
-
-          {/* Form */}
-          <form onSubmit={handleSubmit} noValidate>
-            {/* 1. LEGAL FULL NAME (Verified via DigiLocker - Strictly Non-Editable) */}
-            <div style={{ marginBottom: '22px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-                <label
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    fontSize: '13.5px',
-                    fontWeight: 600,
-                    letterSpacing: '0.06em',
-                    textTransform: 'uppercase',
-                    color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
-                  }}
-                >
-                  <span>FULL NAME</span>
-                </label>
-                {verifiedName && (
-                  <span
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '5px',
-                      fontSize: '11px',
-                      fontWeight: 600,
-                      letterSpacing: '0.06em',
-                      textTransform: 'uppercase',
-                      color: '#C7577C',
-                      backgroundColor: 'rgba(199, 87, 124, 0.12)',
-                      border: '1px solid rgba(199, 87, 124, 0.3)',
-                      padding: '3px 8px',
-                      borderRadius: '6px',
-                    }}
-                  >
-                    <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
-                      <path d="M2 6l3 3 5-5" stroke="#C7577C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                    VERIFIED BY DIGILOCKER
-                  </span>
-                )}
-              </div>
-
-              {verifiedName ? (
-                <div style={{ position: 'relative', width: '100%' }}>
-                  <input
-                    type="text"
-                    value={verifiedName}
-                    readOnly
-                    disabled
-                    aria-label="Verified Legal Full Name"
-                    style={{
-                      width: '100%',
-                      height: '54px',
-                      borderRadius: '13px',
-                      border: isDark ? '1px solid rgba(161, 82, 95, 0.35)' : '1px solid rgba(73, 40, 61, 0.22)',
-                      backgroundColor: isDark ? 'rgba(40, 18, 32, 0.75)' : 'rgba(240, 230, 235, 0.65)',
-                      padding: '0 44px 0 16px',
-                      fontSize: '16.5px',
-                      fontFamily: 'var(--font-sans)',
-                      color: isDark ? '#FDF3F5' : 'var(--color-espresso)',
-                      outline: 'none',
-                      boxSizing: 'border-box',
-                      cursor: 'not-allowed',
-                      opacity: 0.95,
-                    }}
-                  />
-                  <div
-                    style={{
-                      position: 'absolute',
-                      right: '14px',
-                      top: '50%',
-                      transform: 'translateY(-50%)',
-                      color: isDark ? '#A1525F' : '#8A7A84',
-                      display: 'flex',
-                      alignItems: 'center',
-                    }}
-                    title="Verified legal identity (non-editable)"
-                  >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                    </svg>
-                  </div>
-                </div>
-              ) : (
-                <input
-                  type="text"
-                  value={firstName}
-                  onChange={(e) => {
-                    setFirstName(e.target.value);
-                    if (errors.firstName) setErrors((prev) => ({ ...prev, firstName: '' }));
-                  }}
-                  placeholder="e.g. Rahul Sharma"
-                  style={{
-                    width: '100%',
-                    height: '54px',
-                    borderRadius: '13px',
-                    border: errors.firstName ? '1.5px solid #E06D6D' : isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.22)',
-                    backgroundColor: isDark ? 'rgba(70, 32, 55, 0.65)' : 'rgba(255, 255, 255, 0.65)',
-                    padding: '0 16px',
-                    fontSize: '16.5px',
-                    fontFamily: 'var(--font-sans)',
-                    color: isDark ? '#FBF7F2' : 'var(--color-espresso)',
-                    outline: 'none',
-                    boxSizing: 'border-box',
-                  }}
-                />
-              )}
-              <div style={{ fontSize: '12.5px', color: isDark ? '#B3A1A8' : '#8A7A84', marginTop: '6px' }}>
-                Legal name verified from DigiLocker. Kept private and never displayed to other users.
-              </div>
-              {errors.firstName && (
-                <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.firstName}</div>
-              )}
+          
+          {/* Venn Visual */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '26px' }}>
+            <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '18px', fontWeight: 400, color: isDark ? '#FBF7F2' : 'var(--color-mulberry)', margin: '0 0 12px 0' }}>
+              Your Venn is taking shape
+            </h2>
+            <div style={{ height: '64px', width: '100%', position: 'relative' }}>
+              <div style={{
+                position: 'absolute',
+                width: '52px',
+                height: '52px',
+                border: '1.5px solid rgba(161,82,95,0.35)',
+                borderRadius: '50%',
+                left: 'calc(50% - 44px)',
+                top: 0
+              }} />
+              <div style={{
+                position: 'absolute',
+                width: '52px',
+                height: '52px',
+                border: '1.5px solid rgba(161,82,95,0.35)',
+                borderRadius: '50%',
+                left: 'calc(50% - 20px)',
+                top: 0
+              }} />
+              <div style={{
+                position: 'absolute',
+                width: '24px',
+                height: '52px',
+                left: 'calc(50% - 24px)',
+                top: 0,
+                background: `rgba(161,82,95,${completionRatio * 0.7 + 0.05})`,
+                borderRadius: '50%',
+                filter: 'blur(2px)',
+                transition: 'background 0.6s ease'
+              }} />
             </div>
-
-            {/* 2. NAME ON VENNZ (Public Display Name) */}
-            <div style={{ marginBottom: '22px' }}>
-              <label
-                style={{
-                  display: 'block',
-                  fontSize: '13.5px',
-                  fontWeight: 600,
-                  letterSpacing: '0.06em',
-                  textTransform: 'uppercase',
-                  color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
-                  marginBottom: '8px',
-                }}
-              >
-                NAME ON VENNZ <span style={{ color: '#E06D6D' }}>*</span>
-              </label>
-              <input
-                type="text"
-                value={vennzName}
-                onChange={(e) => {
-                  setVennzName(e.target.value);
-                  if (errors.vennzName) setErrors((prev) => ({ ...prev, vennzName: '' }));
-                }}
-                placeholder="e.g. Rahul or Rahul S."
-                style={{
-                  width: '100%',
-                  height: '54px',
-                  borderRadius: '13px',
-                  border: errors.vennzName ? '1.5px solid #E06D6D' : isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.22)',
-                  backgroundColor: isDark ? 'rgba(70, 32, 55, 0.65)' : 'rgba(255, 255, 255, 0.65)',
-                  padding: '0 16px',
-                  fontSize: '16.5px',
-                  fontFamily: 'var(--font-sans)',
-                  color: isDark ? '#FBF7F2' : 'var(--color-espresso)',
-                  outline: 'none',
-                  boxSizing: 'border-box',
-                }}
-              />
-              <div style={{ fontSize: '12.5px', color: isDark ? '#B3A1A8' : '#8A7A84', marginTop: '6px' }}>
-                This is the name visible to other VennZ users. You can customize this.
-              </div>
-              {errors.vennzName && (
-                <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.vennzName}</div>
-              )}
+            <div style={{ fontSize: '12px', color: isDark ? '#B3A1A8' : '#8A7A84', marginTop: '-4px' }}>
+              {Math.round(completionRatio * 100)}% complete
             </div>
+          </div>
 
-            {/* 3. DATE OF BIRTH & AGE (Verified via DigiLocker - Strictly Non-Editable) */}
-            <div style={{ marginBottom: '22px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-                <label
-                  style={{
-                    display: 'block',
-                    fontSize: '13.5px',
-                    fontWeight: 600,
-                    letterSpacing: '0.06em',
-                    textTransform: 'uppercase',
-                    color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
-                  }}
-                >
-                  DATE OF BIRTH <span style={{ color: '#E06D6D' }}>*</span>
-                </label>
-                {verifiedDob && (
-                  <span
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '5px',
-                      fontSize: '11px',
-                      fontWeight: 600,
-                      letterSpacing: '0.06em',
-                      textTransform: 'uppercase',
-                      color: '#C7577C',
-                      backgroundColor: 'rgba(199, 87, 124, 0.12)',
-                      border: '1px solid rgba(199, 87, 124, 0.3)',
-                      padding: '3px 8px',
-                      borderRadius: '6px',
-                    }}
-                  >
-                    <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
-                      <path d="M2 6l3 3 5-5" stroke="#C7577C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                    VERIFIED BY DIGILOCKER
-                  </span>
-                )}
-              </div>
-
-              {verifiedDob ? (
-                <div style={{ position: 'relative', width: '100%' }}>
-                  <input
-                    type="text"
-                    value={formatDobForDisplay(dateOfBirth) || isoToDisplayDate(dateOfBirth)}
-                    readOnly
-                    disabled
-                    aria-label="Verified Date of Birth"
-                    style={{
-                      width: '100%',
-                      height: '56px',
-                      borderRadius: '13px',
-                      border: errors.dateOfBirth ? '1.5px solid #E06D6D' : isDark ? '1px solid rgba(161, 82, 95, 0.35)' : '1px solid rgba(73, 40, 61, 0.22)',
-                      backgroundColor: isDark ? 'rgba(40, 18, 32, 0.75)' : 'rgba(240, 230, 235, 0.65)',
-                      padding: '0 44px 0 16px',
-                      fontSize: '16px',
-                      fontFamily: 'var(--font-sans)',
-                      color: isDark ? '#FDF3F5' : 'var(--color-espresso)',
-                      letterSpacing: '0.04em',
-                      outline: 'none',
-                      boxSizing: 'border-box',
-                      cursor: 'not-allowed',
-                      opacity: 0.95,
-                    }}
-                  />
-                  <div
-                    style={{
-                      position: 'absolute',
-                      right: '14px',
-                      top: '50%',
-                      transform: 'translateY(-50%)',
-                      color: isDark ? '#A1525F' : '#8A7A84',
-                      display: 'flex',
-                      alignItems: 'center',
-                    }}
-                    title="Verified date of birth (non-editable)"
-                  >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                    </svg>
-                  </div>
-                </div>
-              ) : (
-                /* Dual Input: Manual Typing (DD / MM / YYYY) + Calendar Picker Button */
-                <div style={{ position: 'relative', width: '100%' }}>
-                  <input
-                    type="text"
-                    inputMode="numeric"
-                    value={rawDobInput}
-                    onChange={handleManualDobChange}
-                    placeholder="DD / MM / YYYY"
-                    maxLength={10}
-                    style={{
-                      width: '100%',
-                      height: '56px',
-                      borderRadius: '13px',
-                      border: errors.dateOfBirth ? '1.5px solid #E06D6D' : isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.22)',
-                      backgroundColor: isDark ? 'rgba(70, 32, 55, 0.65)' : 'rgba(255, 255, 255, 0.65)',
-                      padding: '0 52px 0 16px',
-                      fontSize: '16px',
-                      fontFamily: 'var(--font-sans)',
-                      color: isDark ? '#FBF7F2' : 'var(--color-espresso)',
-                      letterSpacing: '0.04em',
-                      outline: 'none',
-                      boxSizing: 'border-box',
-                    }}
-                  />
-
-                  {/* Hidden Native Date Input for Calendar Picker */}
-                  <input
-                    ref={datePickerRef}
-                    type="date"
-                    max={new Date().toISOString().split('T')[0]}
-                    value={dateOfBirth}
-                    onChange={handleCalendarPickerChange}
-                    style={{
-                      position: 'absolute',
-                      opacity: 0,
-                      pointerEvents: 'none',
-                      width: 0,
-                      height: 0,
-                      bottom: 0,
-                      right: 0,
-                    }}
-                    tabIndex={-1}
-                    aria-hidden="true"
-                  />
-
-                  {/* Calendar Icon Button */}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const el = datePickerRef.current;
-                      if (!el) return;
-                      try {
-                        if (typeof (el as HTMLInputElement & { showPicker?: () => void }).showPicker === 'function') {
-                          (el as HTMLInputElement & { showPicker?: () => void }).showPicker!();
-                        } else {
-                          el.click();
-                        }
-                      } catch (err) {
-                        el.click();
-                      }
-                    }}
-                    title="Choose from calendar"
-                    aria-label="Open calendar picker"
-                    style={{
-                      position: 'absolute',
-                      right: '10px',
-                      top: '50%',
-                      transform: 'translateY(-50%)',
-                      width: '38px',
-                      height: '38px',
-                      borderRadius: '10px',
-                      border: 'none',
-                      backgroundColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(73, 40, 61, 0.08)',
-                      color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      cursor: 'pointer',
-                      transition: 'background-color 0.15s ease',
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = isDark ? 'rgba(255, 255, 255, 0.18)' : 'rgba(73, 40, 61, 0.16)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(73, 40, 61, 0.08)';
-                    }}
-                  >
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
-                      <line x1="16" x2="16" y1="2" y2="6" />
-                      <line x1="8" x2="8" y1="2" y2="6" />
-                      <line x1="3" x2="21" y1="10" y2="10" />
-                      <path d="M8 14h.01" />
-                      <path d="M12 14h.01" />
-                      <path d="M16 14h.01" />
-                      <path d="M8 18h.01" />
-                      <path d="M12 18h.01" />
-                      <path d="M16 18h.01" />
-                    </svg>
-                  </button>
-                </div>
-              )}
-
-              {/* Age calculation display */}
-              {dateOfBirth && (
-                <div style={{ marginTop: '8px', lineHeight: '1.4' }}>
-                  <div
-                    style={{
-                      fontSize: '14.5px',
-                      fontWeight: 700,
-                      color: calculateAgeFromISO(dateOfBirth) >= 18 ? (isDark ? '#F9AAAD' : 'var(--color-mulberry)') : '#E06D6D',
-                      letterSpacing: '0.01em',
-                    }}
-                  >
-                    {calculateAgeFromISO(dateOfBirth)} years old
-                    {calculateAgeFromISO(dateOfBirth) < 18 && ' (Must be 18 or older to join)'}
-                  </div>
-                  <div style={{ fontSize: '12.5px', color: isDark ? '#B3A1A8' : '#8A7A84', marginTop: '2px' }}>
-                    Non-editable verification data. Your exact date of birth is kept private and never shown publicly.
-                  </div>
-                </div>
-              )}
-
-              {errors.dateOfBirth && (
-                <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '4px' }}>{errors.dateOfBirth}</div>
-              )}
-            </div>
-
-            {/* 3. CITY */}
-            <div style={{ marginBottom: '22px' }}>
-              <label
-                style={{
-                  display: 'block',
-                  fontSize: '13.5px',
-                  fontWeight: 600,
-                  letterSpacing: '0.06em',
-                  textTransform: 'uppercase',
-                  color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
-                  marginBottom: '8px',
-                }}
-              >
-                CITY <span style={{ color: '#E06D6D' }}>*</span>
-              </label>
-              <input
-                type="text"
-                value={city}
-                onChange={(e) => {
-                  setCity(e.target.value);
-                  if (errors.city) setErrors((prev) => ({ ...prev, city: '' }));
-                }}
-                placeholder="Enter your city (e.g. Mumbai)"
-                style={{
-                  width: '100%',
-                  height: '54px',
-                  borderRadius: '13px',
-                  border: errors.city ? '1.5px solid #E06D6D' : isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.22)',
-                  backgroundColor: isDark ? 'rgba(70, 32, 55, 0.65)' : 'rgba(255, 255, 255, 0.65)',
-                  padding: '0 16px',
-                  fontSize: '16.5px',
-                  fontFamily: 'var(--font-sans)',
-                  color: isDark ? '#FBF7F2' : 'var(--color-espresso)',
-                  outline: 'none',
-                  boxSizing: 'border-box',
-                }}
-              />
-              {errors.city && (
-                <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.city}</div>
-              )}
-            </div>
-
-            {/* 4. GENDER IDENTITY */}
-            <div style={{ marginBottom: '22px' }}>
-              <label
-                style={{
-                  display: 'block',
-                  fontSize: '13.5px',
-                  fontWeight: 600,
-                  letterSpacing: '0.06em',
-                  textTransform: 'uppercase',
-                  color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
-                  marginBottom: '8px',
-                }}
-              >
-                GENDER IDENTITY <span style={{ color: '#E06D6D' }}>*</span>
-              </label>
-              <select
-                value={genderIdentity}
-                onChange={(e) => {
-                  setGenderIdentity(e.target.value);
-                  if (errors.genderIdentity) setErrors((prev) => ({ ...prev, genderIdentity: '' }));
-                }}
-                style={{
-                  width: '100%',
-                  height: '54px',
-                  borderRadius: '13px',
-                  border: errors.genderIdentity ? '1.5px solid #E06D6D' : isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.22)',
-                  backgroundColor: isDark ? 'rgba(70, 32, 55, 0.65)' : 'rgba(255, 255, 255, 0.65)',
-                  padding: '0 16px',
-                  fontSize: '16.5px',
-                  fontFamily: 'var(--font-sans)',
-                  color: genderIdentity ? (isDark ? '#FBF7F2' : 'var(--color-espresso)') : (isDark ? '#8A7A84' : '#8A7A84'),
-                  outline: 'none',
-                  boxSizing: 'border-box',
-                  cursor: 'pointer',
-                }}
-              >
-                <option value="" style={{ backgroundColor: isDark ? '#1C1218' : '#FFFFFF', color: isDark ? '#FBF7F2' : '#272124' }}>Select gender identity...</option>
-                <option value="WOMAN" style={{ backgroundColor: isDark ? '#1C1218' : '#FFFFFF', color: isDark ? '#FBF7F2' : '#272124' }}>WOMAN</option>
-                <option value="MAN" style={{ backgroundColor: isDark ? '#1C1218' : '#FFFFFF', color: isDark ? '#FBF7F2' : '#272124' }}>MAN</option>
-                <option value="NON-BINARY" style={{ backgroundColor: isDark ? '#1C1218' : '#FFFFFF', color: isDark ? '#FBF7F2' : '#272124' }}>NON-BINARY</option>
-                <option value="PREFER TO SELF-DESCRIBE" style={{ backgroundColor: isDark ? '#1C1218' : '#FFFFFF', color: isDark ? '#FBF7F2' : '#272124' }}>PREFER TO SELF-DESCRIBE</option>
-              </select>
-
-              {/* Self-Describe Sub-Input */}
-              {genderIdentity === 'PREFER TO SELF-DESCRIBE' && (
-                <div style={{ marginTop: '8px' }}>
-                  <input
-                    type="text"
-                    value={selfDescribeGender}
-                    onChange={(e) => {
-                      setSelfDescribeGender(e.target.value);
-                      if (errors.selfDescribeGender) setErrors((prev) => ({ ...prev, selfDescribeGender: '' }));
-                    }}
-                    placeholder="Describe your gender identity"
-                    style={{
-                      width: '100%',
-                      height: '48px',
-                      borderRadius: '12px',
-                      border: errors.selfDescribeGender ? '1.5px solid #E06D6D' : isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.22)',
-                      backgroundColor: isDark ? 'rgba(70, 32, 55, 0.65)' : 'rgba(255, 255, 255, 0.65)',
-                      padding: '0 14px',
-                      fontSize: '16px',
-                      color: isDark ? '#FBF7F2' : 'var(--color-espresso)',
-                      outline: 'none',
-                      boxSizing: 'border-box',
-                    }}
-                  />
-                  {errors.selfDescribeGender && (
-                    <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '4px' }}>
-                      {errors.selfDescribeGender}
-                    </div>
-                  )}
-                </div>
-              )}
-              {errors.genderIdentity && (
-                <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.genderIdentity}</div>
-              )}
-            </div>
-
-            {/* 5. INTERESTED IN DATING */}
-            <div style={{ marginBottom: '22px' }}>
-              <label
-                style={{
-                  display: 'block',
-                  fontSize: '13.5px',
-                  fontWeight: 600,
-                  letterSpacing: '0.06em',
-                  textTransform: 'uppercase',
-                  color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
-                  marginBottom: '8px',
-                }}
-              >
-                INTERESTED IN DATING <span style={{ color: '#E06D6D' }}>*</span>
-              </label>
-              <select
-                value={datingPreference}
-                onChange={(e) => {
-                  setDatingPreference(e.target.value);
-                  if (errors.datingPreference) setErrors((prev) => ({ ...prev, datingPreference: '' }));
-                }}
-                style={{
-                  width: '100%',
-                  height: '54px',
-                  borderRadius: '13px',
-                  border: errors.datingPreference ? '1.5px solid #E06D6D' : isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.22)',
-                  backgroundColor: isDark ? 'rgba(70, 32, 55, 0.65)' : 'rgba(255, 255, 255, 0.65)',
-                  padding: '0 16px',
-                  fontSize: '16.5px',
-                  fontFamily: 'var(--font-sans)',
-                  color: datingPreference ? (isDark ? '#FBF7F2' : 'var(--color-espresso)') : (isDark ? '#8A7A84' : '#8A7A84'),
-                  outline: 'none',
-                  boxSizing: 'border-box',
-                  cursor: 'pointer',
-                }}
-              >
-                <option value="" style={{ backgroundColor: isDark ? '#1C1218' : '#FFFFFF', color: isDark ? '#FBF7F2' : '#272124' }}>Select dating preference...</option>
-                <option value="WOMEN" style={{ backgroundColor: isDark ? '#1C1218' : '#FFFFFF', color: isDark ? '#FBF7F2' : '#272124' }}>WOMEN</option>
-                <option value="MEN" style={{ backgroundColor: isDark ? '#1C1218' : '#FFFFFF', color: isDark ? '#FBF7F2' : '#272124' }}>MEN</option>
-                <option value="EVERYONE" style={{ backgroundColor: isDark ? '#1C1218' : '#FFFFFF', color: isDark ? '#FBF7F2' : '#272124' }}>EVERYONE</option>
-              </select>
-              {errors.datingPreference && (
-                <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.datingPreference}</div>
-              )}
-            </div>
-
-            {/* 6. CURRENT STATUS */}
-            <div style={{ marginBottom: '22px' }}>
-              <label
-                style={{
-                  display: 'block',
-                  fontSize: '13.5px',
-                  fontWeight: 600,
-                  letterSpacing: '0.06em',
-                  textTransform: 'uppercase',
-                  color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
-                  marginBottom: '8px',
-                }}
-              >
-                CURRENT STATUS <span style={{ color: '#E06D6D' }}>*</span>
-              </label>
-              <select
-                value={currentStatus}
-                onChange={(e) => {
-                  setCurrentStatus(e.target.value);
-                  if (errors.currentStatus) setErrors((prev) => ({ ...prev, currentStatus: '' }));
-                }}
-                style={{
-                  width: '100%',
-                  height: '54px',
-                  borderRadius: '13px',
-                  border: errors.currentStatus ? '1.5px solid #E06D6D' : isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.22)',
-                  backgroundColor: isDark ? 'rgba(70, 32, 55, 0.65)' : 'rgba(255, 255, 255, 0.65)',
-                  padding: '0 16px',
-                  fontSize: '16.5px',
-                  fontFamily: 'var(--font-sans)',
-                  color: currentStatus ? (isDark ? '#FBF7F2' : 'var(--color-espresso)') : (isDark ? '#8A7A84' : '#8A7A84'),
-                  outline: 'none',
-                  boxSizing: 'border-box',
-                  cursor: 'pointer',
-                }}
-              >
-                <option value="" style={{ backgroundColor: isDark ? '#1C1218' : '#FFFFFF', color: isDark ? '#FBF7F2' : '#272124' }}>Select current status...</option>
-                <option value="WORKING" style={{ backgroundColor: isDark ? '#1C1218' : '#FFFFFF', color: isDark ? '#FBF7F2' : '#272124' }}>WORKING</option>
-                <option value="FOUNDER / ENTREPRENEUR" style={{ backgroundColor: isDark ? '#1C1218' : '#FFFFFF', color: isDark ? '#FBF7F2' : '#272124' }}>FOUNDER / ENTREPRENEUR</option>
-                <option value="STUDENT" style={{ backgroundColor: isDark ? '#1C1218' : '#FFFFFF', color: isDark ? '#FBF7F2' : '#272124' }}>STUDENT</option>
-                <option value="SELF-EMPLOYED / FREELANCER" style={{ backgroundColor: isDark ? '#1C1218' : '#FFFFFF', color: isDark ? '#FBF7F2' : '#272124' }}>SELF-EMPLOYED / FREELANCER</option>
-                <option value="OTHER" style={{ backgroundColor: isDark ? '#1C1218' : '#FFFFFF', color: isDark ? '#FBF7F2' : '#272124' }}>OTHER</option>
-              </select>
-              {errors.currentStatus && (
-                <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.currentStatus}</div>
-              )}
-            </div>
-
-            {/* 7. DESIGNATION OR ROLE (COMPULSORY) */}
-            <div style={{ marginBottom: '22px' }}>
-              <label
-                style={{
-                  display: 'block',
-                  fontSize: '13.5px',
-                  fontWeight: 600,
-                  letterSpacing: '0.06em',
-                  textTransform: 'uppercase',
-                  color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
-                  marginBottom: '8px',
-                }}
-              >
-                DESIGNATION OR ROLE <span style={{ color: '#E06D6D' }}>*</span>
-              </label>
-              <input
-                type="text"
-                value={designation}
-                onChange={(e) => {
-                  setDesignation(e.target.value);
-                  if (errors.designation) setErrors((prev) => ({ ...prev, designation: '' }));
-                }}
-                placeholder="e.g. Product Manager"
-                style={{
-                  width: '100%',
-                  height: '54px',
-                  borderRadius: '13px',
-                  border: errors.designation ? '1.5px solid #E06D6D' : isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.22)',
-                  backgroundColor: isDark ? 'rgba(70, 32, 55, 0.65)' : 'rgba(255, 255, 255, 0.65)',
-                  padding: '0 16px',
-                  fontSize: '16.5px',
-                  fontFamily: 'var(--font-sans)',
-                  color: isDark ? '#FBF7F2' : 'var(--color-espresso)',
-                  outline: 'none',
-                  boxSizing: 'border-box',
-                }}
-              />
-              {errors.designation && (
-                <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.designation}</div>
-              )}
-            </div>
-
-            {/* 8. COMPANY (OPTIONAL) */}
-            <div style={{ marginBottom: '28px' }}>
-              <label
-                style={{
-                  display: 'block',
-                  fontSize: '13.5px',
-                  fontWeight: 600,
-                  letterSpacing: '0.06em',
-                  textTransform: 'uppercase',
-                  color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
-                  marginBottom: '8px',
-                }}
-              >
-                COMPANY <span style={{ color: isDark ? '#B3A1A8' : '#8A7A84', fontWeight: 400 }}>(OPTIONAL)</span>
-              </label>
-              <input
-                type="text"
-                value={company}
-                onChange={(e) => setCompany(e.target.value)}
-                placeholder="e.g. Google"
-                style={{
-                  width: '100%',
-                  height: '54px',
-                  borderRadius: '13px',
-                  border: isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.22)',
-                  backgroundColor: isDark ? 'rgba(70, 32, 55, 0.65)' : 'rgba(255, 255, 255, 0.65)',
-                  padding: '0 16px',
-                  fontSize: '16.5px',
-                  fontFamily: 'var(--font-sans)',
-                  color: isDark ? '#FBF7F2' : 'var(--color-espresso)',
-                  outline: 'none',
-                  boxSizing: 'border-box',
-                }}
-              />
-            </div>
-
-            {/* DIVIDER */}
-            <div style={{ height: '1px', backgroundColor: isDark ? 'rgba(243, 238, 233, 0.08)' : 'rgba(73, 40, 61, 0.12)', margin: '28px 0' }} />
-
-            {/* 9. PHOTOGRAPHS SECTION */}
-            <div ref={photosSectionRef} style={{ marginBottom: '28px' }}>
-              {isUpdatingPhotosMode && (
-                <div
-                  style={{
-                    backgroundColor: isDark ? 'rgba(217, 119, 6, 0.2)' : 'rgba(217, 119, 6, 0.12)',
-                    border: '1.5px solid rgba(217, 119, 6, 0.4)',
-                    borderRadius: '12px',
-                    padding: '12px 14px',
-                    marginBottom: '16px',
-                    display: 'flex',
-                    alignItems: 'flex-start',
-                    gap: '10px',
-                  }}
-                >
-                  <span style={{ fontSize: '18px', lineHeight: 1 }}>📸</span>
-                  <div>
-                    <div
-                      style={{
-                        fontSize: '12px',
-                        fontWeight: 700,
-                        letterSpacing: '0.04em',
-                        color: isDark ? '#FBBF24' : '#B45309',
-                        marginBottom: '2px',
-                        textTransform: 'uppercase',
-                      }}
-                    >
-                      Photo Update Requested
-                    </div>
-                    <div style={{ fontSize: '12.5px', color: isDark ? '#FDE68A' : '#78350F', lineHeight: '1.4' }}>
-                      Add or replace with a clearer photograph to continue your membership review.
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
-                <label
-                  style={{
-                    fontSize: '13.5px',
-                    fontWeight: 700,
-                    letterSpacing: '0.06em',
-                    textTransform: 'uppercase',
-                    color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
-                  }}
-                >
-                  PHOTOGRAPHS <span style={{ color: '#E06D6D' }}>*</span>
-                </label>
-                <span
-                  style={{
-                    fontSize: '13px',
-                    fontWeight: 600,
-                    color: photos.length >= 2 ? (isDark ? '#86EFAC' : '#2E7D32') : (isDark ? '#F9AAAD' : 'var(--color-mulberry)'),
-                  }}
-                >
-                  {photos.length} / 6 added
-                </span>
-              </div>
-
-              <p
-                style={{
-                  fontSize: '14.5px',
-                  lineHeight: '1.45',
-                  color: isDark ? '#BDB0B6' : '#6E5E68',
-                  margin: '0 0 14px 0',
-                }}
-              >
-                Between two and six clear photographs of you. Reviewed by hand before your profile goes live.
-              </p>
-
-              {/* Hidden File Input */}
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                multiple
-                onChange={handlePhotoUpload}
-                style={{ display: 'none' }}
-              />
-
-              {/* Photo Upload Grid */}
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(3, 1fr)',
-                  gap: '10px',
-                  marginBottom: '12px',
-                }}
-              >
-                {photos.map((photoUrl, index) => (
-                  <div
-                    key={index}
-                    style={{
-                      position: 'relative',
-                      aspectRatio: '3/4',
-                      borderRadius: '14px',
-                      overflow: 'hidden',
-                      backgroundColor: isDark ? 'rgba(70, 32, 55, 0.65)' : 'rgba(73, 40, 61, 0.08)',
-                      border: isDark ? '1.5px solid rgba(243, 238, 233, 0.18)' : '1.5px solid rgba(73, 40, 61, 0.15)',
-                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.06)',
-                    }}
-                  >
-                    <img
-                      src={photoUrl}
-                      alt={`Uploaded profile ${index + 1}`}
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                      }}
-                    />
-
-                    {/* Primary Badge for Photo 1 */}
-                    {index === 0 && (
-                      <span
-                        style={{
-                          position: 'absolute',
-                          top: '6px',
-                          left: '6px',
-                          backgroundColor: 'rgba(73, 40, 61, 0.85)',
-                          color: '#FFFFFF',
-                          fontSize: '10px',
-                          fontWeight: 700,
-                          letterSpacing: '0.06em',
-                          padding: '2px 6px',
-                          borderRadius: '4px',
-                          textTransform: 'uppercase',
-                        }}
-                      >
-                        MAIN
+          <div style={{ position: 'relative', width: '100%' }}>
+            {/* STAGE 1 */}
+            <div style={{
+              position: stage === 'about' ? 'relative' : 'absolute',
+              opacity: stage === 'about' ? 1 : 0,
+              pointerEvents: stage === 'about' ? 'auto' : 'none',
+              transform: stage === 'about' ? 'translateY(0)' : 'translateY(-12px)',
+              transition: 'opacity 0.4s ease, transform 0.4s ease',
+              width: '100%'
+            }}>
+              <form onSubmit={handleContinue} noValidate>
+                {/* 1. LEGAL FULL NAME */}
+                <div style={{ marginBottom: '22px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor }}>
+                      <span>FULL NAME</span>
+                    </label>
+                    {verifiedName && (
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '11px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#C7577C', backgroundColor: 'rgba(199, 87, 124, 0.12)', border: '1px solid rgba(199, 87, 124, 0.3)', padding: '3px 8px', borderRadius: '6px' }}>
+                        <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
+                          <path d="M2 6l3 3 5-5" stroke="#C7577C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                        VERIFIED BY DIGILOCKER
                       </span>
                     )}
-
-                    {/* Remove Photo Button */}
-                    <button
-                      type="button"
-                      onClick={() => handleRemovePhoto(index)}
-                      aria-label="Remove photo"
-                      style={{
-                        position: 'absolute',
-                        top: '6px',
-                        right: '6px',
-                        width: '26px',
-                        height: '26px',
-                        borderRadius: '50%',
-                        backgroundColor: 'rgba(0, 0, 0, 0.65)',
-                        color: '#FFFFFF',
-                        border: 'none',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        cursor: 'pointer',
-                        fontSize: '14px',
-                        lineHeight: 1,
-                      }}
-                    >
-                      ✕
-                    </button>
                   </div>
-                ))}
-
-                {/* Empty / Add Tile (if < 6 photos) */}
-                {photos.length < 6 && (
-                  <div
-                    onClick={() => fileInputRef.current?.click()}
-                    style={{
-                      aspectRatio: '3/4',
-                      borderRadius: '14px',
-                      border: isDark ? '1.5px dashed rgba(243, 238, 233, 0.35)' : '1.5px dashed rgba(73, 40, 61, 0.35)',
-                      backgroundColor: isDark ? 'rgba(70, 32, 55, 0.45)' : 'rgba(255, 255, 255, 0.45)',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      cursor: 'pointer',
-                      transition: 'background-color 0.15s ease, border-color 0.15s ease',
-                      padding: '8px',
-                      textAlign: 'center',
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = isDark ? 'rgba(70, 32, 55, 0.75)' : 'rgba(255, 255, 255, 0.75)';
-                      e.currentTarget.style.borderColor = isDark ? '#F9AAAD' : 'var(--color-mulberry)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = isDark ? 'rgba(70, 32, 55, 0.45)' : 'rgba(255, 255, 255, 0.45)';
-                      e.currentTarget.style.borderColor = isDark ? 'rgba(243, 238, 233, 0.35)' : 'rgba(73, 40, 61, 0.35)';
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: '34px',
-                        height: '34px',
-                        borderRadius: '50%',
-                        backgroundColor: isDark ? 'rgba(240, 212, 184, 0.15)' : 'rgba(73, 40, 61, 0.1)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
-                        fontSize: '20px',
-                        marginBottom: '4px',
-                      }}
-                    >
-                      +
+                  {verifiedName ? (
+                    <div style={{ position: 'relative', width: '100%' }}>
+                      <input type="text" value={verifiedName} readOnly disabled aria-label="Verified Legal Full Name"
+                        style={{ width: '100%', height: '54px', borderRadius: '13px', border: isDark ? '1px solid rgba(161, 82, 95, 0.35)' : '1px solid rgba(73, 40, 61, 0.22)', backgroundColor: isDark ? 'rgba(40, 18, 32, 0.75)' : 'rgba(240, 230, 235, 0.65)', padding: '0 44px 0 16px', fontSize: '16.5px', fontFamily: 'var(--font-sans)', color: textColor, outline: 'none', boxSizing: 'border-box', cursor: 'not-allowed', opacity: 0.95 }}
+                      />
+                      <div style={{ position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)', color: isDark ? '#A1525F' : '#8A7A84', display: 'flex', alignItems: 'center' }} title="Verified legal identity">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                          <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                        </svg>
+                      </div>
                     </div>
-                    <span
-                      style={{
-                        fontSize: '12.5px',
-                        fontWeight: 600,
-                        color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
-                        letterSpacing: '0.04em',
-                      }}
-                    >
-                      ADD
+                  ) : (
+                    <input type="text" value={firstName} onChange={(e) => { setFirstName(e.target.value); if (errors.firstName) setErrors((prev) => ({ ...prev, firstName: '' })); }} placeholder="e.g. Rahul Sharma"
+                      style={{ width: '100%', height: '54px', borderRadius: '13px', border: errors.firstName ? '1.5px solid #E06D6D' : `1px solid ${inputBorderColor}`, backgroundColor: inputBgColor, padding: '0 16px', fontSize: '16.5px', fontFamily: 'var(--font-sans)', color: textColor, outline: 'none', boxSizing: 'border-box' }}
+                    />
+                  )}
+                  <div style={{ fontSize: '12.5px', color: isDark ? '#B3A1A8' : '#8A7A84', marginTop: '6px' }}>
+                    Legal name verified from DigiLocker. Kept private and never displayed to other users.
+                  </div>
+                  {errors.firstName && <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.firstName}</div>}
+                </div>
+
+                {/* 2. NAME ON VENNZ */}
+                <div style={{ marginBottom: '22px' }}>
+                  <label style={{ display: 'block', fontSize: '13.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor, marginBottom: '8px' }}>
+                    NAME ON VENNZ <span style={{ color: '#E06D6D' }}>*</span>
+                  </label>
+                  <input type="text" value={vennzName} onChange={(e) => { setVennzName(e.target.value); if (errors.vennzName) setErrors((prev) => ({ ...prev, vennzName: '' })); }} placeholder="e.g. Rahul or Rahul S."
+                    style={{ width: '100%', height: '54px', borderRadius: '13px', border: errors.vennzName ? '1.5px solid #E06D6D' : `1px solid ${inputBorderColor}`, backgroundColor: inputBgColor, padding: '0 16px', fontSize: '16.5px', fontFamily: 'var(--font-sans)', color: textColor, outline: 'none', boxSizing: 'border-box' }}
+                  />
+                  {errors.vennzName && <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.vennzName}</div>}
+                </div>
+
+                {/* 3. DATE OF BIRTH */}
+                <div style={{ marginBottom: '22px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                    <label style={{ display: 'block', fontSize: '13.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor }}>
+                      DATE OF BIRTH <span style={{ color: '#E06D6D' }}>*</span>
+                    </label>
+                    {verifiedDob && (
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '11px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#C7577C', backgroundColor: 'rgba(199, 87, 124, 0.12)', border: '1px solid rgba(199, 87, 124, 0.3)', padding: '3px 8px', borderRadius: '6px' }}>
+                        <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
+                          <path d="M2 6l3 3 5-5" stroke="#C7577C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                        VERIFIED BY DIGILOCKER
+                      </span>
+                    )}
+                  </div>
+                  {verifiedDob ? (
+                    <div style={{ position: 'relative', width: '100%' }}>
+                      <input type="text" value={isoToDisplayDate(verifiedDob)} readOnly disabled
+                        style={{ width: '100%', height: '54px', borderRadius: '13px', border: isDark ? '1px solid rgba(161, 82, 95, 0.35)' : '1px solid rgba(73, 40, 61, 0.22)', backgroundColor: isDark ? 'rgba(40, 18, 32, 0.75)' : 'rgba(240, 230, 235, 0.65)', padding: '0 44px 0 16px', fontSize: '16.5px', fontFamily: 'var(--font-sans)', color: textColor, outline: 'none', boxSizing: 'border-box', cursor: 'not-allowed', opacity: 0.95 }}
+                      />
+                      <div style={{ position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)', color: isDark ? '#A1525F' : '#8A7A84', display: 'flex', alignItems: 'center' }}>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                          <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                        </svg>
+                      </div>
+                    </div>
+                  ) : (
+                    <div style={{ position: 'relative' }}>
+                      <input type="text" value={rawDobInput} onChange={handleManualDobChange} placeholder="DD / MM / YYYY"
+                        style={{ width: '100%', height: '54px', borderRadius: '13px', border: errors.dateOfBirth ? '1.5px solid #E06D6D' : `1px solid ${inputBorderColor}`, backgroundColor: inputBgColor, padding: '0 48px 0 16px', fontSize: '16.5px', fontFamily: 'var(--font-sans)', color: textColor, outline: 'none', boxSizing: 'border-box' }}
+                      />
+                      <div style={{ position: 'absolute', right: '0', top: '0', width: '54px', height: '54px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', overflow: 'hidden' }} onClick={() => datePickerRef.current?.showPicker && datePickerRef.current.showPicker()}>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={isDark ? '#F9AAAD' : '#C7577C'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                          <line x1="16" y1="2" x2="16" y2="6" />
+                          <line x1="8" y1="2" x2="8" y2="6" />
+                          <line x1="3" y1="10" x2="21" y2="10" />
+                        </svg>
+                        <input type="date" ref={datePickerRef} value={dateOfBirth || ''} onChange={handleCalendarPickerChange} style={{ position: 'absolute', opacity: 0, width: '100%', height: '100%', cursor: 'pointer', pointerEvents: 'none' }} />
+                      </div>
+                    </div>
+                  )}
+                  {dateOfBirth && (
+                    <div style={{ fontSize: '13.5px', color: isDark ? '#A1525F' : '#C7577C', marginTop: '8px', fontWeight: 500 }}>
+                      Age: {calculateAge(dateOfBirth)} years old
+                    </div>
+                  )}
+                  {errors.dateOfBirth && <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.dateOfBirth}</div>}
+                </div>
+
+                {/* 4. CITY */}
+                <div style={{ marginBottom: '22px' }}>
+                  <label style={{ display: 'block', fontSize: '13.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor, marginBottom: '8px' }}>
+                    CITY <span style={{ color: '#E06D6D' }}>*</span>
+                  </label>
+                  <input type="text" value={city} onChange={(e) => { setCity(e.target.value); if (errors.city) setErrors((prev) => ({ ...prev, city: '' })); }} placeholder="e.g. Mumbai"
+                    style={{ width: '100%', height: '54px', borderRadius: '13px', border: errors.city ? '1.5px solid #E06D6D' : `1px solid ${inputBorderColor}`, backgroundColor: inputBgColor, padding: '0 16px', fontSize: '16.5px', fontFamily: 'var(--font-sans)', color: textColor, outline: 'none', boxSizing: 'border-box' }}
+                  />
+                  {errors.city && <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.city}</div>}
+                </div>
+
+                {/* 5. GENDER IDENTITY */}
+                <div style={{ marginBottom: '22px' }}>
+                  <label style={{ display: 'block', fontSize: '13.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor, marginBottom: '8px' }}>
+                    GENDER IDENTITY <span style={{ color: '#E06D6D' }}>*</span>
+                  </label>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                    {GENDER_OPTIONS.map(opt => renderChip(opt, genderIdentity === opt, () => {
+                      setGenderIdentity(opt);
+                      if (errors.genderIdentity) setErrors(prev => ({...prev, genderIdentity: ''}));
+                    }))}
+                  </div>
+                  {genderIdentity === 'PREFER TO SELF-DESCRIBE' && (
+                    <div style={{ marginTop: '12px' }}>
+                      <input type="text" value={selfDescribeGender} onChange={(e) => { setSelfDescribeGender(e.target.value); if (errors.selfDescribeGender) setErrors((prev) => ({ ...prev, selfDescribeGender: '' })); }} placeholder="Please specify"
+                        style={{ width: '100%', height: '54px', borderRadius: '13px', border: errors.selfDescribeGender ? '1.5px solid #E06D6D' : `1px solid ${inputBorderColor}`, backgroundColor: inputBgColor, padding: '0 16px', fontSize: '16.5px', fontFamily: 'var(--font-sans)', color: textColor, outline: 'none', boxSizing: 'border-box' }}
+                      />
+                      {errors.selfDescribeGender && <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.selfDescribeGender}</div>}
+                    </div>
+                  )}
+                  {errors.genderIdentity && <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.genderIdentity}</div>}
+                </div>
+
+                {/* 6. INTERESTED IN DATING */}
+                <div style={{ marginBottom: '22px' }}>
+                  <label style={{ display: 'block', fontSize: '13.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor, marginBottom: '8px' }}>
+                    INTERESTED IN DATING <span style={{ color: '#E06D6D' }}>*</span>
+                  </label>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                    {DATING_PREF_OPTIONS.map(opt => renderChip(opt, datingPreference === opt, () => {
+                      setDatingPreference(opt);
+                      if (errors.datingPreference) setErrors(prev => ({...prev, datingPreference: ''}));
+                    }))}
+                  </div>
+                  {errors.datingPreference && <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.datingPreference}</div>}
+                </div>
+
+                {/* 7. CURRENT STATUS */}
+                <div style={{ marginBottom: '22px' }}>
+                  <label style={{ display: 'block', fontSize: '13.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor, marginBottom: '8px' }}>
+                    CURRENT STATUS <span style={{ color: '#E06D6D' }}>*</span>
+                  </label>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                    {STATUS_OPTIONS.map(opt => renderChip(opt, currentStatus === opt, () => {
+                      setCurrentStatus(opt);
+                      if (errors.currentStatus) setErrors(prev => ({...prev, currentStatus: ''}));
+                    }))}
+                  </div>
+                  {errors.currentStatus && <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.currentStatus}</div>}
+                </div>
+
+                {/* 8. DESIGNATION / ROLE */}
+                <div style={{ marginBottom: '22px' }}>
+                  <label style={{ display: 'block', fontSize: '13.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor, marginBottom: '8px' }}>
+                    DESIGNATION / ROLE <span style={{ color: '#E06D6D' }}>*</span>
+                  </label>
+                  <input type="text" value={designation} onChange={(e) => { setDesignation(e.target.value); if (errors.designation) setErrors((prev) => ({ ...prev, designation: '' })); }} placeholder="e.g. Software Engineer"
+                    style={{ width: '100%', height: '54px', borderRadius: '13px', border: errors.designation ? '1.5px solid #E06D6D' : `1px solid ${inputBorderColor}`, backgroundColor: inputBgColor, padding: '0 16px', fontSize: '16.5px', fontFamily: 'var(--font-sans)', color: textColor, outline: 'none', boxSizing: 'border-box' }}
+                  />
+                  {errors.designation && <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.designation}</div>}
+                </div>
+
+                {/* 9. COMPANY */}
+                <div style={{ marginBottom: '32px' }}>
+                  <label style={{ display: 'block', fontSize: '13.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor, marginBottom: '8px' }}>
+                    COMPANY (OPTIONAL)
+                  </label>
+                  <input type="text" value={company} onChange={(e) => setCompany(e.target.value)} placeholder="e.g. Google"
+                    style={{ width: '100%', height: '54px', borderRadius: '13px', border: `1px solid ${inputBorderColor}`, backgroundColor: inputBgColor, padding: '0 16px', fontSize: '16.5px', fontFamily: 'var(--font-sans)', color: textColor, outline: 'none', boxSizing: 'border-box' }}
+                  />
+                </div>
+
+                <button type="submit"
+                  style={{ width: '100%', height: '56px', borderRadius: '28px', background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)', color: '#fff', border: 'none', fontSize: '16px', fontWeight: 600, fontFamily: 'var(--font-sans)', letterSpacing: '0.04em', cursor: 'pointer', boxShadow: '0 8px 24px rgba(161, 82, 95, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+                >
+                  Continue to Your Venn →
+                </button>
+              </form>
+            </div>
+
+            {/* STAGE 2 */}
+            <div style={{
+              position: stage === 'venn' ? 'relative' : 'absolute',
+              opacity: stage === 'venn' ? 1 : 0,
+              pointerEvents: stage === 'venn' ? 'auto' : 'none',
+              transform: stage === 'venn' ? 'translateY(0)' : 'translateY(12px)',
+              transition: 'opacity 0.4s ease, transform 0.4s ease',
+              width: '100%'
+            }}>
+              <form onSubmit={handleSubmit} noValidate>
+                {/* 10. INTERESTS */}
+                <div style={{ marginBottom: '22px' }}>
+                  <label style={{ display: 'block', fontSize: '13.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor, marginBottom: '8px' }}>
+                    INTERESTS <span style={{ color: '#E06D6D' }}>*</span>
+                  </label>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                    {INTEREST_OPTIONS.map(opt => renderChip(opt, interests.includes(opt), () => {
+                      setInterests(prev => prev.includes(opt) ? prev.filter(x => x !== opt) : [...prev, opt]);
+                      if (errors.interests) setErrors(prev => ({...prev, interests: ''}));
+                    }))}
+                  </div>
+                  {errors.interests && <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.interests}</div>}
+                </div>
+
+                {/* 11. YOUR VIBE */}
+                <div style={{ marginBottom: '22px' }}>
+                  <label style={{ display: 'block', fontSize: '13.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor, marginBottom: '8px' }}>
+                    YOUR VIBE <span style={{ color: '#E06D6D' }}>*</span>
+                  </label>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                    {VIBE_OPTIONS.map(opt => renderChip(opt, vibes.includes(opt), () => {
+                      setVibes(prev => prev.includes(opt) ? prev.filter(x => x !== opt) : [...prev, opt]);
+                      if (errors.vibes) setErrors(prev => ({...prev, vibes: ''}));
+                    }))}
+                  </div>
+                  {errors.vibes && <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.vibes}</div>}
+                </div>
+
+                {/* 12. PHOTOS */}
+                <div ref={photosSectionRef} style={{ marginBottom: '22px' }}>
+                  <label style={{ display: 'block', fontSize: '13.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor, marginBottom: '8px' }}>
+                    PHOTOGRAPHS <span style={{ color: '#E06D6D' }}>*</span>
+                  </label>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
+                    {photos.map((photo, index) => (
+                      <div key={index} style={{ position: 'relative', width: '100%', aspectRatio: '3/4', borderRadius: '12px', overflow: 'hidden', backgroundColor: 'rgba(0,0,0,0.1)', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
+                        <img src={photo} alt={`Upload ${index + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        {index === 0 && (
+                          <div style={{ position: 'absolute', bottom: '8px', left: '50%', transform: 'translateX(-50%)', backgroundColor: 'rgba(20, 14, 28, 0.75)', backdropFilter: 'blur(4px)', color: '#fff', fontSize: '10px', fontWeight: 700, padding: '4px 10px', borderRadius: '12px', letterSpacing: '0.08em', boxShadow: '0 2px 8px rgba(0,0,0,0.2)' }}>
+                            MAIN
+                          </div>
+                        )}
+                        <button type="button" onClick={() => handleRemovePhoto(index)} style={{ position: 'absolute', top: '8px', right: '8px', width: '24px', height: '24px', borderRadius: '12px', backgroundColor: 'rgba(20, 14, 28, 0.65)', backdropFilter: 'blur(4px)', color: '#fff', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: 0 }} aria-label="Remove photo">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                          </svg>
+                        </button>
+                      </div>
+                    ))}
+                    {photos.length < 6 && (
+                      <div style={{ position: 'relative', width: '100%', aspectRatio: '3/4', borderRadius: '12px', border: errors.photos ? '1.5px dashed #E06D6D' : (isDark ? '1.5px dashed rgba(243, 238, 233, 0.3)' : '1.5px dashed rgba(73, 40, 61, 0.3)'), backgroundColor: isDark ? 'rgba(40, 18, 32, 0.4)' : 'rgba(255, 255, 255, 0.4)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.2s ease' }} onClick={() => fileInputRef.current?.click()}>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={isDark ? '#F9AAAD' : '#C7577C'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: '8px' }}>
+                          <line x1="12" y1="5" x2="12" y2="19"></line>
+                          <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        <span style={{ fontSize: '12px', fontWeight: 600, color: isDark ? '#B3A1A8' : '#8A7A84' }}>Add Photo</span>
+                        <input type="file" ref={fileInputRef} onChange={handlePhotoUpload} accept="image/jpeg, image/png, image/webp" multiple style={{ display: 'none' }} />
+                      </div>
+                    )}
+                  </div>
+                  {errors.photos && <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '8px' }}>{errors.photos}</div>}
+                  <button type="button" onClick={handleAddSamplePhotos} style={{ marginTop: '16px', padding: '8px 16px', backgroundColor: 'rgba(161, 82, 95, 0.15)', color: isDark ? '#F9AAAD' : '#C7577C', border: '1px solid rgba(161, 82, 95, 0.3)', borderRadius: '8px', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>
+                    {isUpdatingPhotosMode ? 'Demo: Add 1 Sample Photo' : 'Demo: Auto-fill 3 Sample Photos'}
+                  </button>
+                </div>
+
+                {/* 13. INVITATION CODE */}
+                <div style={{ marginBottom: '22px' }}>
+                  <label style={{ display: 'block', fontSize: '13.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor, marginBottom: '8px' }}>
+                    INVITATION CODE (OPTIONAL)
+                  </label>
+                  <input type="text" value={invitationCode} onChange={(e) => setInvitationCode(e.target.value)} placeholder="If you have one"
+                    style={{ width: '100%', height: '54px', borderRadius: '13px', border: `1px solid ${inputBorderColor}`, backgroundColor: inputBgColor, padding: '0 16px', fontSize: '16.5px', fontFamily: 'var(--font-sans)', color: textColor, outline: 'none', boxSizing: 'border-box' }}
+                  />
+                </div>
+
+                {/* 14. ABOUT YOU / DESCRIPTION */}
+                <div style={{ marginBottom: '32px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                    <label style={{ display: 'block', fontSize: '13.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor }}>
+                      ABOUT YOU <span style={{ color: '#E06D6D' }}>*</span>
+                    </label>
+                    <span style={{ fontSize: '12px', color: wordCount > 150 ? '#E06D6D' : (isDark ? '#B3A1A8' : '#8A7A84') }}>
+                      {wordCount} / 150 words
                     </span>
                   </div>
-                )}
-              </div>
+                  <textarea value={introduction} onChange={(e) => { setIntroduction(e.target.value); if (errors.introduction) setErrors((prev) => ({ ...prev, introduction: '' })); }} placeholder="Tell us a bit about yourself..." rows={4}
+                    style={{ width: '100%', borderRadius: '13px', border: errors.introduction || wordCount > 150 ? '1.5px solid #E06D6D' : `1px solid ${inputBorderColor}`, backgroundColor: inputBgColor, padding: '16px', fontSize: '16.5px', fontFamily: 'var(--font-sans)', color: textColor, outline: 'none', boxSizing: 'border-box', resize: 'vertical', minHeight: '100px' }}
+                  />
+                  {errors.introduction && <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.introduction}</div>}
+                </div>
 
-              {/* Fast Demo Sample Photos Helper */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <button
-                  type="button"
-                  onClick={handleAddSamplePhotos}
-                  style={{
-                    background: isDark ? 'rgba(240, 212, 184, 0.12)' : 'rgba(73, 40, 61, 0.08)',
-                    border: isDark ? '1px solid rgba(240, 212, 184, 0.3)' : '1px solid rgba(73, 40, 61, 0.2)',
-                    borderRadius: '8px',
-                    padding: '6px 12px',
-                    fontSize: '13px',
-                    color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                  }}
+                {errors.general && <div style={{ color: '#E06D6D', fontSize: '14px', marginBottom: '20px', padding: '12px', backgroundColor: 'rgba(224, 109, 109, 0.1)', borderRadius: '8px', border: '1px solid rgba(224, 109, 109, 0.3)' }}>{errors.general}</div>}
+
+                <button type="submit" disabled={wordCount > 150}
+                  style={{ width: '100%', height: '56px', borderRadius: '28px', background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)', color: '#fff', border: 'none', fontSize: '16px', fontWeight: 600, fontFamily: 'var(--font-sans)', letterSpacing: '0.04em', cursor: wordCount > 150 ? 'not-allowed' : 'pointer', opacity: wordCount > 150 ? 0.6 : 1, boxShadow: wordCount > 150 ? 'none' : '0 8px 24px rgba(161, 82, 95, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
                 >
-                  {isUpdatingPhotosMode ? '✦ Demo: Add 1 New Sample Photo' : '✦ Demo: Fill 3 Sample Photos'}
+                  {isUpdatingPhotosMode ? 'Submit Updated Photographs' : 'Your Venn is ready →'}
                 </button>
-                {photos.length > 0 && (
-                  <button
-                    type="button"
-                    onClick={() => setPhotos([])}
-                    style={{
-                      background: 'transparent',
-                      border: 'none',
-                      fontSize: '13px',
-                      color: isDark ? '#B3A1A8' : '#8A7A84',
-                      textDecoration: 'underline',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    Clear all
-                  </button>
-                )}
-              </div>
-
-              {errors.photos && (
-                <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '6px' }}>{errors.photos}</div>
-              )}
+              </form>
             </div>
-
-            {/* DIVIDER */}
-            <div style={{ height: '1px', backgroundColor: isDark ? 'rgba(243, 238, 233, 0.08)' : 'rgba(73, 40, 61, 0.12)', margin: '28px 0' }} />
-
-            {/* 10. INVITATION CODE (OPTIONAL) */}
-            <div style={{ marginBottom: '24px' }}>
-              <label
-                style={{
-                  display: 'block',
-                  fontSize: '13.5px',
-                  fontWeight: 600,
-                  letterSpacing: '0.06em',
-                  textTransform: 'uppercase',
-                  color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
-                  marginBottom: '5px',
-                }}
-              >
-                INVITATION CODE <span style={{ color: isDark ? '#B3A1A8' : '#8A7A84', fontWeight: 400 }}>(OPTIONAL)</span>
-              </label>
-              <p style={{ fontSize: '14px', lineHeight: '1.45', color: isDark ? '#BDB0B6' : '#6E5E68', margin: '0 0 10px 0' }}>
-                Were you invited by a member? Add their code for priority review. Leave it blank if you weren't — every application is read either way.
-              </p>
-              <input
-                type="text"
-                value={invitationCode}
-                onChange={(e) => setInvitationCode(e.target.value.toUpperCase())}
-                placeholder="e.g. IC-MUM-4820"
-                style={{
-                  width: '100%',
-                  height: '52px',
-                  borderRadius: '13px',
-                  border: isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.22)',
-                  backgroundColor: isDark ? 'rgba(70, 32, 55, 0.65)' : 'rgba(255, 255, 255, 0.65)',
-                  padding: '0 16px',
-                  fontSize: '16px',
-                  fontFamily: 'monospace',
-                  color: isDark ? '#FBF7F2' : 'var(--color-espresso)',
-                  outline: 'none',
-                  boxSizing: 'border-box',
-                  letterSpacing: '0.05em',
-                }}
-              />
-            </div>
-
-            {/* 11. TWO-LINE INTRODUCTION (COMPULSORY) */}
-            <div style={{ marginBottom: '32px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
-                <label
-                  style={{
-                    fontSize: '13.5px',
-                    fontWeight: 600,
-                    letterSpacing: '0.06em',
-                    textTransform: 'uppercase',
-                    color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
-                  }}
-                >
-                  TWO-LINE INTRODUCTION <span style={{ color: '#E06D6D', fontWeight: 700 }}>*</span>
-                </label>
-                <span style={{ fontSize: '13px', color: introduction.length === 140 ? '#E06D6D' : (isDark ? '#B3A1A8' : '#8A7A84'), fontFamily: 'monospace' }}>
-                  {introduction.length}/140
-                </span>
-              </div>
-
-              <p style={{ fontSize: '13px', color: isDark ? '#B3A1A8' : '#8A7A84', margin: '0 0 8px 0', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                SHOWN ON YOUR PROFILE AND CURATED INTRODUCTIONS
-              </p>
-
-              <textarea
-                rows={3}
-                maxLength={140}
-                value={introduction}
-                onChange={(e) => {
-                  setIntroduction(e.target.value.slice(0, 140));
-                  if (errors.introduction) {
-                    setErrors((prev) => ({ ...prev, introduction: '' }));
-                  }
-                }}
-                placeholder="A thoughtful note about what drives you, favorite conversation starters, or ideal Sunday afternoons..."
-                style={{
-                  width: '100%',
-                  borderRadius: '13px',
-                  border: errors.introduction ? '1.5px solid #E06D6D' : (isDark ? '1px solid rgba(243, 238, 233, 0.18)' : '1px solid rgba(73, 40, 61, 0.22)'),
-                  backgroundColor: isDark ? 'rgba(70, 32, 55, 0.65)' : 'rgba(255, 255, 255, 0.65)',
-                  padding: '12px 16px',
-                  fontSize: '16px',
-                  fontFamily: 'var(--font-sans)',
-                  color: isDark ? '#FBF7F2' : 'var(--color-espresso)',
-                  outline: 'none',
-                  boxSizing: 'border-box',
-                  resize: 'none',
-                  lineHeight: '1.5',
-                }}
-              />
-              {errors.introduction && (
-                <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '6px' }}>{errors.introduction}</div>
-              )}
-            </div>
-
-            {/* General Validation Error Alert */}
-            {errors.general && (
-              <div style={{ color: '#E06D6D', fontSize: '14px', marginBottom: '16px', fontWeight: 600 }}>
-                {errors.general}
-              </div>
-            )}
-
-            {/* 12. CONTINUE TO VERIFICATION / SUBMIT UPDATED PHOTOS BUTTON */}
-            <button
-              type="submit"
-              style={{
-                width: '100%',
-                height: '56px',
-                background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
-                color: '#FDF3F5',
-                fontFamily: 'var(--font-sans)',
-                fontSize: '16.5px',
-                fontWeight: 600,
-                letterSpacing: '0.04em',
-                borderRadius: '9999px',
-                border: 'none',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                boxShadow: '0 8px 24px rgba(161, 82, 95, 0.4)',
-                transition: 'transform 0.15s ease, background 0.2s ease, box-shadow 0.2s ease',
-              }}
-              onMouseDown={(e) => {
-                e.currentTarget.style.transform = 'scale(0.98)';
-              }}
-              onMouseUp={(e) => {
-                e.currentTarget.style.transform = 'scale(1)';
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'linear-gradient(135deg, #C7577C 0%, #F9AAAD 100%)';
-                e.currentTarget.style.boxShadow = '0 10px 28px rgba(199, 87, 124, 0.55)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)';
-                e.currentTarget.style.boxShadow = '0 8px 24px rgba(161, 82, 95, 0.4)';
-                e.currentTarget.style.transform = 'scale(1)';
-              }}
-            >
-              <span>
-                {isUpdatingPhotosMode
-                  ? 'SUBMIT UPDATED PHOTOGRAPHS'
-                  : 'CONTINUE TO VERIFICATION'}
-              </span>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M5 12h14" />
-                <path d="m12 5 7 7-7 7" />
-              </svg>
-            </button>
-          </form>
+          </div>
         </div>
 
-        {/* Bottom Home Indicator */}
+        {/* Home Indicator */}
         {showHomeIndicator && (
-          <div style={{ paddingBottom: '12px', marginTop: 'auto' }}>
-            <div
-              style={{
-                width: '134px',
-                height: '5px',
-                backgroundColor: isDark ? 'rgba(243, 238, 233, 0.3)' : 'rgba(73, 40, 61, 0.3)',
-                borderRadius: '9999px',
-                margin: '0 auto',
-              }}
-            />
+          <div style={{ position: 'fixed', bottom: 0, left: 0, width: '100%', height: '34px', display: 'flex', justifyContent: 'center', alignItems: 'flex-end', paddingBottom: '8px', zIndex: 100, pointerEvents: 'none' }}>
+            <div style={{ width: '134px', height: '5px', borderRadius: '100px', backgroundColor: isDark ? 'rgba(255, 255, 255, 0.8)' : 'rgba(0, 0, 0, 0.8)' }}></div>
           </div>
         )}
       </div>
