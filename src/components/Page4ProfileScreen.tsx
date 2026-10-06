@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { StatusBar } from './StatusBar';
 import { useAuth } from '../context/AuthContext';
-import { calculateAgeFromISO, getNameInitial } from '../utils/ageCalculation';
+import { calculateAgeFromISO } from '../utils/ageCalculation';
 
 interface Page4ProfileScreenProps {
   onBack: () => void;
@@ -88,8 +88,8 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
   );
 
   const [vennzName, setVennzName] = useState<string>(() => {
-    if (verifiedName) return getNameInitial(verifiedName);
-    return profile.firstName ? getNameInitial(profile.firstName) : '';
+    if (verifiedName) return verifiedName.charAt(0).toUpperCase();
+    return profile.firstName ? profile.firstName.charAt(0).toUpperCase() : '';
   });
 
   const datePickerRef = useRef<HTMLInputElement | null>(null);
@@ -110,6 +110,7 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const photosSectionRef = useRef<HTMLDivElement | null>(null);
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (isUpdatingPhotosMode && photosSectionRef.current) {
@@ -118,6 +119,14 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
       }, 300);
     }
   }, [isUpdatingPhotosMode]);
+
+  // Scroll to top of this page's container whenever the stage changes
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = 0;
+    }
+    window.scrollTo(0, 0);
+  }, [stage]);
 
   useEffect(() => {
     updateProfile({
@@ -240,26 +249,24 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
   const validateStep1 = (): boolean => {
     const newErrors: { [key: string]: string } = {};
 
-    if (verifiedName) {
-      const trimmedVennz = vennzName.trim();
-      if (!trimmedVennz) {
-        newErrors.vennzName = 'Name on VennZ is required.';
-      } else if (trimmedVennz.endsWith('...') || trimmedVennz.length < 2) {
-        newErrors.vennzName = 'Please enter your complete public name on VennZ.';
-      } else if (/\d/.test(trimmedVennz)) {
-        newErrors.vennzName = 'Name cannot contain numbers.';
-      } else if (!/^[A-Za-z\s'.-]{2,50}$/.test(trimmedVennz)) {
-        newErrors.vennzName = 'Please enter a valid alphabetic name.';
-      }
-    } else {
+    if (!verifiedName) {
       const trimmedName = firstName.trim();
       if (!trimmedName) {
         newErrors.firstName = 'Public first name is required.';
       } else if (/\d/.test(trimmedName)) {
         newErrors.firstName = 'Please enter a valid name (cannot contain numbers).';
-      } else if (!/^[A-Za-z\s'-]{2,50}$/.test(trimmedName)) {
+      } else if (!/^[A-Za-z\s'-]{1,50}$/.test(trimmedName)) {
         newErrors.firstName = 'Please enter a valid alphabetic name.';
       }
+    }
+
+    const trimmedVennz = vennzName.trim();
+    if (!trimmedVennz) {
+      newErrors.vennzName = 'Name on VennZ is required.';
+    } else if (/\d/.test(trimmedVennz)) {
+      newErrors.vennzName = 'Name cannot contain numbers.';
+    } else if (!/^[A-Za-z\s'.-]{1,50}$/.test(trimmedVennz)) {
+      newErrors.vennzName = 'Please enter a valid alphabetic name.';
     }
 
     if (!dateOfBirth) {
@@ -500,20 +507,31 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
     });
   };
 
-  const completionRatio = useMemo(() => {
-    let filledCount = 0;
-    if ((vennzName.trim() || firstName).trim().length >= 2) filledCount++;
-    if (city.trim()) filledCount++;
-    if (genderIdentity) filledCount++;
-    if (datingPreference) filledCount++;
-    if (currentStatus) filledCount++;
-    if (designation.trim()) filledCount++;
-    if (interests.length >= 1) filledCount++;
-    if (vibes.length >= 1) filledCount++;
-    if (photos.length >= 2) filledCount++;
-    if (wordCount >= 1 && wordCount <= 150) filledCount++;
-    return filledCount / 10;
-  }, [vennzName, firstName, city, genderIdentity, datingPreference, currentStatus, designation, interests, vibes, photos, wordCount]);
+
+
+  const profileCompletion = {
+    aboutYou: Boolean((verifiedName || firstName.trim()) && vennzName.trim().length >= 1 && dateOfBirth),
+    basicDetails: Boolean(city.trim() && genderIdentity),
+    datingPreferences: Boolean(datingPreference && currentStatus),
+    workRole: Boolean(designation.trim()),
+    interestsVibe: Boolean(interests.length >= 1 && vibes.length >= 1),
+    presentation: Boolean(photos.length >= 2 && wordCount >= 1 && wordCount <= 150),
+  };
+
+  const completedCount = Object.values(profileCompletion).filter(Boolean).length;
+  let completionText = 'Your Venn is beginning';
+  if (completedCount === 6) completionText = 'Your Venn is complete';
+  else if (completedCount >= 3) completionText = 'Your Venn is becoming yours';
+  else if (completedCount >= 1) completionText = 'Your Venn is taking shape';
+
+  const petals = [
+    { isComplete: profileCompletion.aboutYou, x: 0, y: -36 },
+    { isComplete: profileCompletion.basicDetails, x: 31.17, y: -18 },
+    { isComplete: profileCompletion.datingPreferences, x: 31.17, y: 18 },
+    { isComplete: profileCompletion.workRole, x: 0, y: 36 },
+    { isComplete: profileCompletion.interestsVibe, x: -31.17, y: 18 },
+    { isComplete: profileCompletion.presentation, x: -31.17, y: -18 },
+  ];
 
   const labelColor = isDark ? '#F9AAAD' : 'var(--color-mulberry)';
   const inputBgColor = isDark ? 'rgba(70, 32, 55, 0.65)' : 'rgba(255,255,255,0.65)';
@@ -561,23 +579,22 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
         fontFamily: 'var(--font-sans)',
       }}
     >
-      <img
-        src={isDark ? '/profile-bg-dark.png' : '/profile-bg.jpg'}
-        alt="VennZ Profile Setup Background"
+      <div
         style={{
           position: 'absolute',
           top: 0,
           left: 0,
           width: '100%',
           height: '100%',
-          objectFit: 'cover',
-          objectPosition: 'center top',
+          background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
+          opacity: isDark ? 0.2 : 0.1,
           zIndex: 1,
           pointerEvents: 'none',
         }}
       />
 
       <div
+        ref={scrollContainerRef}
         style={{
           position: 'relative',
           zIndex: 10,
@@ -589,7 +606,7 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
           WebkitOverflowScrolling: 'touch',
         }}
       >
-        <div style={{ position: 'sticky', top: 0, zIndex: 20, backgroundColor: isDark ? 'rgba(20, 14, 28, 0.92)' : 'rgba(250, 241, 243, 0.92)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }}>
+        <div style={{ position: 'sticky', top: 0, zIndex: 20, background: 'transparent' }}>
           {showStatusBar && <StatusBar variant={isDark ? 'light' : 'dark'} />}
 
           <div
@@ -644,44 +661,58 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
 
         <div style={{ maxWidth: '960px', margin: '0 auto', width: '100%', padding: '24px 24px 48px 24px', textAlign: 'left', boxSizing: 'border-box' }}>
           
-          {/* Venn Visual */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '26px' }}>
-            <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '18px', fontWeight: 400, color: isDark ? '#FBF7F2' : 'var(--color-mulberry)', margin: '0 0 12px 0' }}>
-              Your Venn is taking shape
-            </h2>
-            <div style={{ height: '64px', width: '100%', position: 'relative' }}>
-              <div style={{
-                position: 'absolute',
-                width: '52px',
-                height: '52px',
-                border: '1.5px solid rgba(161,82,95,0.35)',
-                borderRadius: '50%',
-                left: 'calc(50% - 44px)',
-                top: 0
-              }} />
-              <div style={{
-                position: 'absolute',
-                width: '52px',
-                height: '52px',
-                border: '1.5px solid rgba(161,82,95,0.35)',
-                borderRadius: '50%',
-                left: 'calc(50% - 20px)',
-                top: 0
-              }} />
-              <div style={{
-                position: 'absolute',
-                width: '24px',
-                height: '52px',
-                left: 'calc(50% - 24px)',
-                top: 0,
-                background: `rgba(161,82,95,${completionRatio * 0.7 + 0.05})`,
-                borderRadius: '50%',
-                filter: 'blur(2px)',
-                transition: 'background 0.6s ease'
-              }} />
+          {/* Venn Flower Visual */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '32px' }}>
+            <div style={{ height: '140px', width: '140px', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              
+              {/* Petals */}
+              {petals.map((petal, i) => (
+                <div
+                  key={i}
+                  style={{
+                    position: 'absolute',
+                    width: '64px',
+                    height: '64px',
+                    borderRadius: '50%',
+                    border: `1.5px solid ${isDark ? 'rgba(161,82,95,0.45)' : 'rgba(161,82,95,0.35)'}`,
+                    background: isDark ? 'rgba(161,82,95,0.12)' : 'rgba(199,87,124,0.08)',
+                    transform: petal.isComplete ? `translate(${petal.x}px, ${petal.y}px) scale(1)` : 'translate(0px, 0px) scale(0.3)',
+                    opacity: petal.isComplete ? 1 : 0,
+                    transition: 'transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease',
+                    zIndex: 1,
+                  }}
+                />
+              ))}
+
+              {/* Center Circle */}
+              <div
+                style={{
+                  position: 'absolute',
+                  width: '64px',
+                  height: '64px',
+                  borderRadius: '50%',
+                  border: `1.5px solid ${isDark ? 'rgba(161,82,95,0.85)' : 'rgba(161,82,95,0.75)'}`,
+                  background: isDark ? 'rgba(20,14,28,0.85)' : 'rgba(250,241,243,0.85)',
+                  backdropFilter: 'blur(8px)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  zIndex: 10,
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+                }}
+              >
+                <span style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.12em', color: isDark ? '#F9AAAD' : '#A1525F' }}>
+                  VENNZ
+                </span>
+              </div>
             </div>
-            <div style={{ fontSize: '12px', color: isDark ? '#B3A1A8' : '#8A7A84', marginTop: '-4px' }}>
-              {Math.round(completionRatio * 100)}% complete
+
+            {/* Completion Text */}
+            <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '18px', fontWeight: 400, color: isDark ? '#FBF7F2' : 'var(--color-mulberry)', margin: '16px 0 4px 0', transition: 'all 0.3s ease' }}>
+              {completionText}
+            </h2>
+            <div style={{ fontSize: '12px', fontWeight: 600, letterSpacing: '0.04em', color: isDark ? '#B3A1A8' : '#8A7A84', textTransform: 'uppercase' }}>
+              {completedCount} of 6 connected
             </div>
           </div>
 
@@ -691,8 +722,11 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
               position: stage === 'about' ? 'relative' : 'absolute',
               opacity: stage === 'about' ? 1 : 0,
               pointerEvents: stage === 'about' ? 'auto' : 'none',
+              visibility: stage === 'about' ? 'visible' : 'hidden',
               transform: stage === 'about' ? 'translateY(0)' : 'translateY(-12px)',
               transition: 'opacity 0.4s ease, transform 0.4s ease',
+              height: stage === 'about' ? 'auto' : '0px',
+              overflow: 'hidden',
               width: '100%'
             }}>
               <form onSubmit={handleContinue} noValidate>
@@ -891,8 +925,11 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
               position: stage === 'venn' ? 'relative' : 'absolute',
               opacity: stage === 'venn' ? 1 : 0,
               pointerEvents: stage === 'venn' ? 'auto' : 'none',
+              visibility: stage === 'venn' ? 'visible' : 'hidden',
               transform: stage === 'venn' ? 'translateY(0)' : 'translateY(12px)',
               transition: 'opacity 0.4s ease, transform 0.4s ease',
+              height: stage === 'venn' ? 'auto' : '0px',
+              overflow: 'hidden',
               width: '100%'
             }}>
               <form onSubmit={handleSubmit} noValidate>
