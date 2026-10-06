@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { IntroAnimation } from './components/IntroAnimation';
 import { SplashScreen } from './components/SplashScreen';
 import { Page2AuthScreen } from './components/Page2AuthScreen';
@@ -78,6 +78,9 @@ export const App: React.FC = () => {
     membershipStatus === 'complimentary'
   );
 
+  // Ref to the main content wrapper — used to reset internal scroll on navigation
+  const mainRef = useRef<HTMLDivElement>(null);
+
   const [currentPath, setCurrentPath] = useState<RoutePath>(() => {
     // If URL has an explicit direct route that is not root, support it
     const path = window.location.pathname as RoutePath;
@@ -93,6 +96,29 @@ export const App: React.FC = () => {
     const path = window.location.pathname;
     return path === '/' || path === '';
   });
+
+  // ── Scroll-to-top on every page/route change ──────────────────────────────
+  // Pages use internal overflow containers (not window), so we reset all of them.
+  useEffect(() => {
+    // Reset window scroll
+    window.scrollTo(0, 0);
+    // Reset main wrapper
+    if (mainRef.current) {
+      mainRef.current.scrollTop = 0;
+    }
+    // Reset any internal overflow containers inside the newly rendered page
+    const timer = setTimeout(() => {
+      if (mainRef.current) {
+        const scrollables = mainRef.current.querySelectorAll<HTMLElement>(
+          '[style*="overflow"]'
+        );
+        scrollables.forEach((el) => {
+          el.scrollTop = 0;
+        });
+      }
+    }, 10);
+    return () => clearTimeout(timer);
+  }, [currentPath]);
 
   const [learnModalOpen, setLearnModalOpen] = useState(false);
   const [isUpdatingPhotosMode, setIsUpdatingPhotosMode] = useState<boolean>(false);
@@ -609,6 +635,7 @@ export const App: React.FC = () => {
 
       {/* Main Responsive Web Content Area */}
       <main
+        ref={mainRef}
         key={currentPath}
         className="page-transition-enter"
         style={{
