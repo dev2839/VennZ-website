@@ -1,5 +1,22 @@
 export type MixerEventStatus = 'PLANNING' | 'FINALIZED' | 'SOLD OUT' | 'COMPLETED';
 
+export interface EventReadinessChecklist {
+  venueConfirmed: boolean;
+  eventPartnerReady: boolean;
+  safetyProtocolsReady: boolean;
+  refundCancellationTermsReady: boolean;
+  attendeeTermsReady: boolean;
+  vendorContractsReady: boolean;
+  businessLegalSetupReady: boolean;
+}
+
+export interface EventPartnerRoleDefinition {
+  partnerName: string;
+  partnerLicenseInfo?: string;
+  partnerOperationalScope: string[];
+  vennzPlatformScope: string[];
+}
+
 export interface MixerEvent {
   id: string;
   eventName: string;
@@ -18,6 +35,12 @@ export interface MixerEvent {
   regularPrice: number; // e.g. 5000
   memberPrice: number; // e.g. 4000
   status: MixerEventStatus;
+  // Operational Readiness and Partner Demarcation
+  readinessChecklist: EventReadinessChecklist;
+  partnerRoleDefinition: EventPartnerRoleDefinition;
+  cancellationPolicy: string;
+  waitlistCount?: number;
+  demandThreshold?: number;
 }
 
 export type MixerBookingStatus = 'Confirmed' | 'Attended' | 'Cancelled';
@@ -38,4 +61,24 @@ export interface MixerBooking {
   bookingStatus: MixerBookingStatus;
   paymentStatus: 'Paid';
   bookedAt: number;
+  partnerOperationalRole?: string;
+}
+
+export interface CityMixerDemand {
+  city: string;
+  activeMembersInterested: number;
+  demandThresholdToLaunch: number;
+  suggestedVenuesInReview: string[];
+  status: 'gauging_demand' | 'partner_vetting' | 'readiness_check' | 'scheduled';
+  estimatedTimeline: string;
+}
+
+export interface MixerWaitlistEntry {
+  id: string;
+  city: string;
+  areaPreference?: string;
+  timingPreference: string;
+  dietaryPreference?: string;
+  contactConfirmed: boolean;
+  joinedAt: number;
 }

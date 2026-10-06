@@ -1,9 +1,24 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { AppNotification } from '../types/discover';
 import type { MatchItem, IncomingRequest, SentRequest, ChatMessage } from '../types/matches';
-import type { ElevateRequest, ElevateBooking, ElevateConciergeMessage } from '../types/elevate';
-import type { MixerEvent, MixerBooking } from '../types/mixers';
-import { INITIAL_MIXER_EVENTS, INITIAL_PAST_BOOKINGS } from '../data/mixerEvents';
+import type {
+  ElevateRequest,
+  ElevateBooking,
+  ElevateConciergeMessage,
+  ElevateOrder,
+  ElevateOrderStatus,
+  ReviewerAccessScope,
+  ElevateDeliverable,
+} from '../types/elevate';
+import { ELEVATE_SERVICES } from '../data/elevateServices';
+import {
+  createDefaultElevateOrders,
+  generateDynamicScorecard,
+  generateDynamicMakeoverReport,
+  generateDynamicConversationAudit,
+} from '../utils/elevateTelemetry';
+import type { MixerEvent, MixerBooking, CityMixerDemand, MixerWaitlistEntry } from '../types/mixers';
+import { INITIAL_MIXER_EVENTS, INITIAL_PAST_BOOKINGS, CITY_MIXER_DEMANDS } from '../data/mixerEvents';
 import { DUMMY_DISCOVER_PROFILES } from '../data/dummyProfiles';
 
 export interface UserProfile {
@@ -80,14 +95,16 @@ export interface AuthState {
   matches?: MatchItem[];
   conversations?: Record<string, ChatMessage[]>;
   blockedProfileIds?: string[];
-  // Elevate Concierge state
+  // Elevate Concierge & Orders state
   elevateRequests?: ElevateRequest[];
   elevateBookings?: ElevateBooking[];
   elevateMessages?: ElevateConciergeMessage[];
-  // Mixers state
+  elevateOrders?: ElevateOrder[];
+  // Mixers state & Waitlist
   mixerEvents?: MixerEvent[];
   mixerBookings?: MixerBooking[];
   mixerInterestedEventIds?: string[];
+  mixerWaitlists?: MixerWaitlistEntry[];
 }
 
 interface AuthContextType extends AuthState {
@@ -141,20 +158,32 @@ interface AuthContextType extends AuthState {
   sendChatMessage: (matchId: string, text: string) => void;
   unmatchUser: (matchId: string) => void;
   blockUser: (matchId: string) => void;
-  // Elevate Concierge methods
+  // Elevate Concierge & Orders methods
   elevateRequests: ElevateRequest[];
   elevateBookings: ElevateBooking[];
   elevateMessages: ElevateConciergeMessage[];
+  elevateOrders: ElevateOrder[];
   submitElevateRequest: (req: Omit<ElevateRequest, 'id' | 'status' | 'createdAt'>) => ElevateRequest;
   sendElevateConciergeMessage: (text: string) => void;
   finalizeBookingProposal: (requestId?: string, serviceId?: string) => ElevateBooking;
   payElevateBooking: (bookingId: string) => void;
-  // Mixers methods
+  createElevateOrder: (
+    serviceId: string,
+    options?: { addVideoReview?: boolean; conversationAuditConsent?: boolean }
+  ) => ElevateOrder;
+  requestElevateRefund: (orderId: string, reason: string) => void;
+  applyMakeoverBio: (newBio: string) => void;
+  setConversationAuditConsent: (orderId: string, consented: boolean) => void;
+  // Mixers methods & City Demand Waitlists
   mixerEvents: MixerEvent[];
   mixerBookings: MixerBooking[];
   mixerInterestedEventIds: string[];
+  mixerWaitlists: MixerWaitlistEntry[];
+  cityDemands: CityMixerDemand[];
   expressMixerInterest: (eventId: string) => void;
   bookMixerTicket: (eventId: string, price: number, priceType: 'member' | 'first_look') => MixerBooking;
+  joinCityWaitlist: (city: string, details: { areaPreference?: string; timingPreference: string; dietaryPreference?: string }) => MixerWaitlistEntry;
+  isUserOnCityWaitlist: (city: string) => boolean;
 }
 
 const STORAGE_KEY = 'inner_circle_auth_state';
@@ -338,9 +367,17 @@ const defaultState: AuthState = {
   elevateRequests: [],
   elevateBookings: INITIAL_ELEVATE_BOOKINGS,
   elevateMessages: INITIAL_ELEVATE_MESSAGES,
+  elevateOrders: createDefaultElevateOrders(
+    defaultProfile,
+    [],
+    INITIAL_INCOMING_REQUESTS,
+    INITIAL_SENT_REQUESTS,
+    {}
+  ),
   mixerEvents: INITIAL_MIXER_EVENTS,
   mixerBookings: INITIAL_PAST_BOOKINGS,
   mixerInterestedEventIds: [],
+  mixerWaitlists: [],
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -404,9 +441,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           elevateRequests: mergedState.elevateRequests !== undefined ? mergedState.elevateRequests : [],
           elevateBookings: (mergedState.elevateBookings && mergedState.elevateBookings.length > 0) ? mergedState.elevateBookings : INITIAL_ELEVATE_BOOKINGS,
           elevateMessages: (mergedState.elevateMessages && mergedState.elevateMessages.length > 0) ? mergedState.elevateMessages : INITIAL_ELEVATE_MESSAGES,
+          elevateOrders: (mergedState.elevateOrders && mergedState.elevateOrders.length > 0)
+            ? mergedState.elevateOrders
+            : createDefaultElevateOrders(
+                mergedState.profile || defaultProfile,
+                mergedState.matches || [],
+                mergedState.incomingRequests || INITIAL_INCOMING_REQUESTS,
+                mergedState.sentRequests || INITIAL_SENT_REQUESTS,
+                mergedState.conversations || {}
+              ),
           mixerEvents: (mergedState.mixerEvents && mergedState.mixerEvents.length > 0) ? mergedState.mixerEvents : INITIAL_MIXER_EVENTS,
           mixerBookings: (mergedState.mixerBookings && mergedState.mixerBookings.length > 0) ? mergedState.mixerBookings : INITIAL_PAST_BOOKINGS,
           mixerInterestedEventIds: Array.isArray(mergedState.mixerInterestedEventIds) ? mergedState.mixerInterestedEventIds : [],
+          mixerWaitlists: Array.isArray(mergedState.mixerWaitlists) ? mergedState.mixerWaitlists : [],
           appearanceMode: savedAppearance || mergedState.appearanceMode || 'after-dark',
         };
       }
@@ -1360,6 +1407,240 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
+  const createElevateOrder = (
+    serviceId: string,
+    options?: { addVideoReview?: boolean; conversationAuditConsent?: boolean }
+  ): ElevateOrder => {
+    const service = ELEVATE_SERVICES.find((s) => s.id === serviceId) || ELEVATE_SERVICES[0];
+    const orderId = `ELV-${Math.floor(1000 + Math.random() * 9000)}`;
+    const now = Date.now();
+
+    // Determine strict least-privilege reviewer access scope based on service category
+    let accessScope: ReviewerAccessScope = 'profile_presentation_only';
+    let reviewerName = 'VennZ Editorial Desk';
+    let reviewerRole = 'Senior Curator';
+    if (service.category === 'profile-intelligence') {
+      accessScope = 'intelligence_metrics_only';
+      reviewerName = 'VennZ Telemetry Engine';
+      reviewerRole = 'Data Intelligence Lead';
+    } else if (service.category === 'conversation-audit') {
+      accessScope = 'anonymized_conversations_only';
+      reviewerName = 'Kabir Sen';
+      reviewerRole = 'Communication Dynamics Specialist';
+    } else if (service.category === 'video-review') {
+      accessScope = 'video_editorial_only';
+      reviewerName = 'Tara Mehta';
+      reviewerRole = 'Senior Editorial Director';
+    }
+
+    let finalPrice = service.startingPrice;
+    if (options?.addVideoReview && service.id !== 'video-review') {
+      finalPrice += 4999;
+    }
+
+    const isInstant = service.category === 'profile-intelligence';
+    const status: ElevateOrderStatus = isInstant ? 'deliverable_ready' : 'in_review';
+
+    let deliverable: ElevateDeliverable | undefined = undefined;
+    if (service.category === 'profile-intelligence') {
+      deliverable = {
+        title: 'VennZ Member Telemetry & Conversion Scorecard',
+        summary: 'Instant telemetry scorecard computed from verified activity, profile impressions, and match conversions.',
+        deliveredAt: now,
+        scorecard: generateDynamicScorecard(
+          state.profile,
+          state.matches || [],
+          state.incomingRequests || [],
+          state.sentRequests || [],
+          state.conversations || {}
+        ),
+        notesFromReviewer: 'Telemetry compiled successfully. Cohort benchmark updated based on active member dataset.',
+      };
+    } else if (service.category === 'profile-makeover') {
+      deliverable = {
+        title: 'Editorial Presentation Audit & Before/After Blueprint',
+        summary: '5-pillar presentation review covering photo hierarchy, 240-char bio, and conversation prompts.',
+        deliveredAt: now + 3600000 * 24,
+        makeover: generateDynamicMakeoverReport(state.profile),
+        notesFromReviewer: 'Editorial review assigned to Senior Curator. Actionable adjustments ready for review.',
+      };
+    } else if (service.category === 'conversation-audit') {
+      deliverable = {
+        title: 'VennZ-Native Conversation Diagnostic',
+        summary: 'Privacy-guarded dialogue momentum analysis with automatic partner redaction.',
+        deliveredAt: now + 3600000 * 24,
+        conversationAudit: generateDynamicConversationAudit(
+          state.conversations || {},
+          options?.conversationAuditConsent ?? true
+        ),
+        notesFromReviewer: 'Conversations analyzed natively in VennZ. Partner identifiers strictly tokenized.',
+      };
+    } else if (service.category === 'video-review') {
+      deliverable = {
+        title: '10-Minute Confidential Screen Recording',
+        summary: 'Private editorial video walkthrough discussing visual positioning and messaging cadence.',
+        deliveredAt: now + 3600000 * 48,
+        videoReviewUrl: 'https://media.vennz.vip/elevate/walkthrough-confidential.mp4',
+        notesFromReviewer: 'Private encrypted video walkthrough prepared by Senior Editorial Director.',
+      };
+    }
+
+    const newOrder: ElevateOrder = {
+      id: orderId,
+      serviceId: service.id,
+      serviceName: service.name,
+      serviceCategory: service.category,
+      price: finalPrice,
+      status,
+      createdAt: now,
+      updatedAt: now,
+      reviewerAccess: {
+        reviewerId: `rev-${Math.floor(100 + Math.random() * 900)}`,
+        reviewerName,
+        reviewerRole,
+        accessScope,
+        accessStatus: 'active',
+        grantedAt: now,
+        lastAccessedAt: now,
+      },
+      deliverable,
+      refundState: {
+        status: 'eligible',
+      },
+      addVideoReview: options?.addVideoReview,
+      conversationAuditConsent: options?.conversationAuditConsent,
+    };
+
+    setState((prev) => {
+      const orderNotif: AppNotification = {
+        id: `notif-order-${Date.now()}`,
+        category: 'ELEVATE',
+        sourcePage: 'ELEVATE',
+        title: `Elevate Order Confirmed: ${service.name}`,
+        message: `Order #${orderId} confirmed · Strict staff access scope: ${accessScope.replace(/_/g, ' ')}`,
+        timestamp: 'Just now',
+        isRead: false,
+        type: 'membership',
+        targetRoute: '/member/elevate',
+      };
+
+      const conciergeMsg: ElevateConciergeMessage = {
+        id: `msg-order-${Date.now()}`,
+        sender: 'team',
+        text: `Order #${orderId} for "${service.name}" (₹${finalPrice.toLocaleString('en-IN')}) has been confirmed. Assigned staff access is restricted strictly to: ${accessScope.replace(/_/g, ' ')}. ${isInstant ? 'Your live deliverable is now available in the Scorecard tab.' : 'Our editorial desk is preparing your deliverables.'}`,
+        timestamp: Date.now(),
+        orderReferenceId: orderId,
+      };
+
+      return {
+        ...prev,
+        elevateOrders: [newOrder, ...(prev.elevateOrders || [])],
+        elevateMessages: [...(prev.elevateMessages || []), conciergeMsg],
+        notifications: [orderNotif, ...(prev.notifications || [])],
+      };
+    });
+
+    return newOrder;
+  };
+
+  const requestElevateRefund = (orderId: string, reason: string) => {
+    setState((prev) => {
+      const orders = prev.elevateOrders || [];
+      const target = orders.find((o) => o.id === orderId);
+      if (!target) return prev;
+
+      const updatedOrders: ElevateOrder[] = orders.map((o) => {
+        if (o.id === orderId) {
+          return {
+            ...o,
+            status: 'refund_requested' as const,
+            updatedAt: Date.now(),
+            refundState: {
+              status: 'requested' as const,
+              requestedAt: Date.now(),
+              reason,
+              refundAmount: o.price,
+            },
+          };
+        }
+        return o;
+      });
+
+      const refundNotif: AppNotification = {
+        id: `notif-refund-${Date.now()}`,
+        category: 'ELEVATE',
+        sourcePage: 'ELEVATE',
+        title: `Refund Requested: #${orderId}`,
+        message: `Your request for ₹${target.price.toLocaleString('en-IN')} is under review by VennZ Member Desk.`,
+        timestamp: 'Just now',
+        isRead: false,
+        type: 'membership',
+        targetRoute: '/member/elevate',
+      };
+
+      const refundMsg: ElevateConciergeMessage = {
+        id: `msg-refund-${Date.now()}`,
+        sender: 'team',
+        text: `Refund request received for Order #${orderId} (${target.serviceName}). Reason: "${reason}". Our concierge desk will review this within 24 hours.`,
+        timestamp: Date.now(),
+        orderReferenceId: orderId,
+      };
+
+      return {
+        ...prev,
+        elevateOrders: updatedOrders,
+        elevateMessages: [...(prev.elevateMessages || []), refundMsg],
+        notifications: [refundNotif, ...(prev.notifications || [])],
+      };
+    });
+  };
+
+  const applyMakeoverBio = (newBio: string) => {
+    setState((prev) => {
+      const updatedProfile = {
+        ...prev.profile,
+        introduction: newBio.slice(0, 240),
+      };
+
+      const bioNotif: AppNotification = {
+        id: `notif-bio-${Date.now()}`,
+        category: 'MEMBERSHIP',
+        sourcePage: 'YOU',
+        title: 'Profile Bio Updated',
+        message: 'Elevate Makeover recommendation applied successfully.',
+        timestamp: 'Just now',
+        isRead: false,
+        type: 'membership',
+        targetRoute: '/member/you',
+      };
+
+      return {
+        ...prev,
+        profile: updatedProfile,
+        notifications: [bioNotif, ...(prev.notifications || [])],
+      };
+    });
+  };
+
+  const setConversationAuditConsent = (orderId: string, consented: boolean) => {
+    setState((prev) => {
+      const orders = (prev.elevateOrders || []).map((o) => {
+        if (o.id === orderId) {
+          return {
+            ...o,
+            conversationAuditConsent: consented,
+            updatedAt: Date.now(),
+          };
+        }
+        return o;
+      });
+      return {
+        ...prev,
+        elevateOrders: orders,
+      };
+    });
+  };
+
   const expressMixerInterest = (eventId: string) => {
     setState((prev) => {
       const currentInterested = prev.mixerInterestedEventIds || [];
@@ -1457,6 +1738,51 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return newBooking;
   };
 
+  const joinCityWaitlist = (
+    city: string,
+    details: { areaPreference?: string; timingPreference: string; dietaryPreference?: string }
+  ): MixerWaitlistEntry => {
+    const entryId = `MWL-${Math.floor(1000 + Math.random() * 9000)}`;
+    const newEntry: MixerWaitlistEntry = {
+      id: entryId,
+      city,
+      areaPreference: details.areaPreference,
+      timingPreference: details.timingPreference,
+      dietaryPreference: details.dietaryPreference,
+      contactConfirmed: true,
+      joinedAt: Date.now(),
+    };
+
+    setState((prev) => {
+      const existing = prev.mixerWaitlists || [];
+      const updated = [newEntry, ...existing.filter((e) => e.city.toLowerCase() !== city.toLowerCase())];
+
+      const notif: AppNotification = {
+        id: `notif-waitlist-${Date.now()}`,
+        category: 'MIXERS',
+        sourcePage: 'MIXERS',
+        title: `Added to ${city} Mixer Waitlist`,
+        message: `You're on the priority notification list for upcoming vetted mixers in ${city}.`,
+        timestamp: 'Just now',
+        isRead: false,
+        type: 'discover',
+        targetRoute: '/member/mixers',
+      };
+
+      return {
+        ...prev,
+        mixerWaitlists: updated,
+        notifications: [notif, ...(prev.notifications || [])],
+      };
+    });
+
+    return newEntry;
+  };
+
+  const isUserOnCityWaitlist = (city: string): boolean => {
+    return (state.mixerWaitlists || []).some((w) => w.city.toLowerCase() === city.toLowerCase());
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -1513,16 +1839,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         elevateRequests: state.elevateRequests || [],
         elevateBookings: state.elevateBookings || INITIAL_ELEVATE_BOOKINGS,
         elevateMessages: state.elevateMessages || INITIAL_ELEVATE_MESSAGES,
+        elevateOrders: state.elevateOrders || [],
         submitElevateRequest,
         sendElevateConciergeMessage,
         finalizeBookingProposal,
         payElevateBooking,
-        // Mixers
+        createElevateOrder,
+        requestElevateRefund,
+        applyMakeoverBio,
+        setConversationAuditConsent,
+        // Mixers & City Demand Waitlists
         mixerEvents: state.mixerEvents || INITIAL_MIXER_EVENTS,
         mixerBookings: state.mixerBookings || INITIAL_PAST_BOOKINGS,
         mixerInterestedEventIds: state.mixerInterestedEventIds || [],
+        mixerWaitlists: state.mixerWaitlists || [],
+        cityDemands: CITY_MIXER_DEMANDS,
         expressMixerInterest,
         bookMixerTicket,
+        joinCityWaitlist,
+        isUserOnCityWaitlist,
       }}
     >
       {children}

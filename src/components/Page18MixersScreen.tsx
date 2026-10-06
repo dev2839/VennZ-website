@@ -3,7 +3,7 @@ import { StatusBar } from './StatusBar';
 import { MemberTopBar } from './MemberTopBar';
 import { MemberBottomNav, type MemberTab } from './MemberBottomNav';
 import { useAuth } from '../context/AuthContext';
-import type { MixerEvent, MixerBooking } from '../types/mixers';
+import type { MixerEvent, MixerBooking, CityMixerDemand } from '../types/mixers';
 import { useLightbox } from '../context/LightboxContext';
 
 interface Page18MixersScreenProps {
@@ -35,8 +35,12 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
     mixerEvents,
     mixerBookings,
     mixerInterestedEventIds,
+    mixerWaitlists,
+    cityDemands,
     expressMixerInterest,
     bookMixerTicket,
+    joinCityWaitlist,
+    isUserOnCityWaitlist,
     setMembershipStatus,
   } = useAuth();
   const { openLightbox } = useLightbox();
@@ -51,6 +55,45 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
   const [myEventsTab, setMyEventsTab] = useState<'upcoming' | 'interested' | 'past'>('upcoming');
   const [bookingSource, setBookingSource] = useState<'home' | 'event-detail'>('home');
   const [passReturnView, setPassReturnView] = useState<'my-events' | 'home' | 'event-detail'>('my-events');
+
+  // City demand waitlist & operational readiness state
+  const [homeSubTab, setHomeSubTab] = useState<'events' | 'demand'>('events');
+  const [selectedWaitlistCity, setSelectedWaitlistCity] = useState<CityMixerDemand | null>(null);
+  const [waitlistArea, setWaitlistArea] = useState('');
+  const [waitlistTiming, setWaitlistTiming] = useState('Saturday Sunset (6:30 PM - 9:30 PM)');
+  const [waitlistDietary, setWaitlistDietary] = useState("Flexible / Chef's Selection");
+  const [waitlistSuccessToast, setWaitlistSuccessToast] = useState<string | null>(null);
+
+  const isEventReadyForPaidLaunch = (event: MixerEvent): boolean => {
+    if (event.status !== 'FINALIZED') return false;
+    const c = event.readinessChecklist;
+    if (!c) return false;
+    return (
+      c.venueConfirmed &&
+      c.eventPartnerReady &&
+      c.safetyProtocolsReady &&
+      c.refundCancellationTermsReady &&
+      c.attendeeTermsReady &&
+      c.vendorContractsReady &&
+      c.businessLegalSetupReady
+    );
+  };
+
+  const handleJoinCityWaitlistSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedWaitlistCity) return;
+    joinCityWaitlist(selectedWaitlistCity.city, {
+      areaPreference: waitlistArea.trim() || undefined,
+      timingPreference: waitlistTiming,
+      dietaryPreference: waitlistDietary,
+    });
+    setWaitlistSuccessToast(`You have joined the priority waitlist for ${selectedWaitlistCity.city}.`);
+    setSelectedWaitlistCity(null);
+    setWaitlistArea('');
+    setTimeout(() => {
+      setWaitlistSuccessToast(null);
+    }, 3200);
+  };
 
   // Scroll position tracking & management
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
@@ -531,7 +574,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                       My Events Hub
                     </div>
                     <div style={{ fontSize: '11px', fontWeight: 300, color: themeMuted }}>
-                      {upcomingBookings.length} confirmed · {interestedEvents.length} interested
+                      {upcomingBookings.length} confirmed · {interestedEvents.length} interested · {mixerWaitlists.length} waitlists
                     </div>
                   </div>
                 </div>
@@ -540,20 +583,218 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                 </span>
               </div>
 
-              {/* Section Header: UPCOMING */}
+              {/* Toast when waitlist is joined */}
+              {waitlistSuccessToast && (
+                <div
+                  style={{
+                    padding: '12px 16px',
+                    borderRadius: '12px',
+                    backgroundColor: 'rgba(56, 142, 60, 0.16)',
+                    border: '1px solid rgba(56, 142, 60, 0.4)',
+                    color: isDark ? '#A5D6A7' : '#2E7D32',
+                    fontSize: '12.5px',
+                    fontWeight: 600,
+                    marginBottom: '18px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                  }}
+                >
+                  <span>✓</span> {waitlistSuccessToast}
+                </div>
+              )}
+
+              {/* Sub-tab Pill Switcher: Upcoming Mixers vs City Demand & Waitlists */}
               <div
                 style={{
-                  fontSize: '11px',
-                  fontWeight: 400,
-                  letterSpacing: '0.16em',
-                  textTransform: 'uppercase',
-                  color: isDark ? '#D88A9F' : '#9B4D6E',
-                  marginBottom: '14px',
-                  padding: '0 2px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  marginBottom: '18px',
                 }}
               >
-                UPCOMING
+                <button
+                  type="button"
+                  onClick={() => setHomeSubTab('events')}
+                  style={{
+                    padding: '8px 18px',
+                    borderRadius: '999px',
+                    border: homeSubTab === 'events' ? '1px solid rgba(199, 87, 124, 0.8)' : `1px solid ${themeBorder}`,
+                    background: homeSubTab === 'events' ? themeButtonBg : (isDark ? 'rgba(42, 20, 34, 0.45)' : 'rgba(255, 255, 255, 0.65)'),
+                    color: homeSubTab === 'events' ? '#FFFFFF' : themeMulberry,
+                    fontSize: '12px',
+                    fontWeight: homeSubTab === 'events' ? 700 : 500,
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                  }}
+                >
+                  Upcoming Mixers ({mixerEvents.filter((e) => e.status !== 'COMPLETED').length})
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setHomeSubTab('demand')}
+                  style={{
+                    padding: '8px 18px',
+                    borderRadius: '999px',
+                    border: homeSubTab === 'demand' ? '1px solid rgba(199, 87, 124, 0.8)' : `1px solid ${themeBorder}`,
+                    background: homeSubTab === 'demand' ? themeButtonBg : (isDark ? 'rgba(42, 20, 34, 0.45)' : 'rgba(255, 255, 255, 0.65)'),
+                    color: homeSubTab === 'demand' ? '#FFFFFF' : themeMulberry,
+                    fontSize: '12px',
+                    fontWeight: homeSubTab === 'demand' ? 700 : 500,
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                  }}
+                >
+                  City Demand & Waitlists ({cityDemands?.length || 6})
+                </button>
               </div>
+
+              {/* CITY DEMAND & WAITLISTS SUB-VIEW */}
+              {homeSubTab === 'demand' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '24px' }}>
+                  <div
+                    style={{
+                      padding: '14px 16px',
+                      borderRadius: '14px',
+                      backgroundColor: isDark ? 'rgba(161, 82, 95, 0.12)' : 'rgba(161, 82, 95, 0.06)',
+                      border: `1px solid ${themeBorder}`,
+                      fontSize: '12.5px',
+                      color: themeMuted,
+                      lineHeight: '1.5',
+                    }}
+                  >
+                    <strong style={{ color: themeTextColor }}>Demand-Gated Physical Launch:</strong> VennZ starts mixers as city-based demand waitlists. We do not unlock paid physical reservations in any city until venue leases, licensed event partners, safety protocols, cancellation terms, and vendor contracts are fully certified.
+                  </div>
+
+                  {(cityDemands || []).map((demandItem) => {
+                    const isOnWaitlist = isUserOnCityWaitlist(demandItem.city);
+                    const percent = Math.min(100, Math.round((demandItem.activeMembersInterested / demandItem.demandThresholdToLaunch) * 100));
+
+                    return (
+                      <div
+                        key={demandItem.city}
+                        style={{
+                          padding: '18px 20px',
+                          borderRadius: '18px',
+                          backgroundColor: themeCardBg,
+                          border: themeCardBorder,
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '12px',
+                          boxShadow: isDark ? '0 4px 18px rgba(0,0,0,0.3)' : '0 4px 14px rgba(73,40,61,0.05)',
+                        }}
+                      >
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                          <div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '18px', fontWeight: 600, color: themeTextColor, margin: 0 }}>
+                                {demandItem.city}
+                              </h3>
+                              <span
+                                style={{
+                                  fontSize: '10px',
+                                  padding: '2px 8px',
+                                  borderRadius: '999px',
+                                  backgroundColor:
+                                    demandItem.status === 'scheduled'
+                                      ? 'rgba(46, 125, 50, 0.16)'
+                                      : demandItem.status === 'partner_vetting'
+                                      ? 'rgba(217, 119, 6, 0.16)'
+                                      : 'rgba(161, 82, 95, 0.14)',
+                                  color:
+                                    demandItem.status === 'scheduled'
+                                      ? (isDark ? '#A5D6A7' : '#2E7D32')
+                                      : demandItem.status === 'partner_vetting'
+                                      ? '#FFB74D'
+                                      : themeMulberry,
+                                  fontWeight: 600,
+                                  textTransform: 'uppercase',
+                                }}
+                              >
+                                {demandItem.status.replace(/_/g, ' ')}
+                              </span>
+                            </div>
+                            <div style={{ fontSize: '11.5px', color: themeMuted, marginTop: '4px' }}>
+                              Venues in Review: {demandItem.suggestedVenuesInReview.join(' · ')}
+                            </div>
+                          </div>
+
+                          <span style={{ fontSize: '12px', fontWeight: 600, color: themeTextColor }}>
+                            {demandItem.activeMembersInterested} / {demandItem.demandThresholdToLaunch} Members
+                          </span>
+                        </div>
+
+                        {/* Progress bar */}
+                        <div>
+                          <div
+                            style={{
+                              height: '6px',
+                              borderRadius: '999px',
+                              backgroundColor: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(73, 40, 61, 0.08)',
+                              overflow: 'hidden',
+                            }}
+                          >
+                            <div
+                              style={{
+                                height: '100%',
+                                width: `${percent}%`,
+                                borderRadius: '999px',
+                                background: themeButtonBg,
+                                transition: 'width 0.4s ease',
+                              }}
+                            />
+                          </div>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10.5px', color: themeMuted, marginTop: '4px' }}>
+                            <span>{demandItem.estimatedTimeline}</span>
+                            <span>{percent}% of threshold</span>
+                          </div>
+                        </div>
+
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: '4px' }}>
+                          <button
+                            type="button"
+                            onClick={() => setSelectedWaitlistCity(demandItem)}
+                            style={{
+                              padding: '8px 18px',
+                              borderRadius: '999px',
+                              border: isOnWaitlist ? `1px solid rgba(129, 199, 132, 0.5)` : 'none',
+                              backgroundColor: isOnWaitlist
+                                ? (isDark ? 'rgba(129, 199, 132, 0.18)' : 'rgba(46, 125, 50, 0.12)')
+                                : themeButtonBg,
+                              color: isOnWaitlist ? (isDark ? '#81C784' : '#2E7D32') : themeButtonText,
+                              fontSize: '11px',
+                              fontWeight: 600,
+                              cursor: 'pointer',
+                              letterSpacing: '0.04em',
+                            }}
+                          >
+                            {isOnWaitlist ? '✓ On City Waitlist (Update Details)' : `Join ${demandItem.city} Waitlist →`}
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* EVENTS SUB-VIEW */}
+              {homeSubTab === 'events' && (
+                <>
+                  {/* Section Header: UPCOMING */}
+                  <div
+                    style={{
+                      fontSize: '11px',
+                      fontWeight: 400,
+                      letterSpacing: '0.16em',
+                      textTransform: 'uppercase',
+                      color: isDark ? '#D88A9F' : '#9B4D6E',
+                      marginBottom: '14px',
+                      padding: '0 2px',
+                    }}
+                  >
+                    UPCOMING
+                  </div>
 
               {/* Events Feed */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
@@ -852,6 +1093,42 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                               >
                                 BOOKING IS DONE
                               </button>
+                            ) : !isEventReadyForPaidLaunch(event) ? (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const cDemand = (cityDemands || []).find(
+                                    (c) => c.city.toLowerCase() === event.city.toLowerCase()
+                                  ) || {
+                                    city: event.city,
+                                    activeMembersInterested: 76,
+                                    demandThresholdToLaunch: 80,
+                                    suggestedVenuesInReview: [event.venue],
+                                    status: 'partner_vetting' as const,
+                                    estimatedTimeline: 'Readiness certification in progress',
+                                  };
+                                  setSelectedWaitlistCity(cDemand);
+                                }}
+                                style={{
+                                  flex: 1.2,
+                                  height: '42px',
+                                  borderRadius: '21px',
+                                  backgroundColor: isUserOnCityWaitlist(event.city)
+                                    ? (isDark ? 'rgba(129, 199, 132, 0.2)' : 'rgba(46, 125, 50, 0.12)')
+                                    : (isDark ? 'rgba(161, 82, 95, 0.25)' : 'rgba(161, 82, 95, 0.12)'),
+                                  color: isUserOnCityWaitlist(event.city)
+                                    ? (isDark ? '#81C784' : '#2E7D32')
+                                    : themeMulberry,
+                                  border: `1px solid ${themeBorder}`,
+                                  fontSize: '11px',
+                                  fontWeight: 600,
+                                  letterSpacing: '0.06em',
+                                  textTransform: 'uppercase',
+                                  cursor: 'pointer',
+                                }}
+                              >
+                                {isUserOnCityWaitlist(event.city) ? 'ON WAITLIST ✓' : 'JOIN WAITLIST'}
+                              </button>
                             ) : (
                               <button
                                 type="button"
@@ -879,6 +1156,8 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                     );
                   })}
               </div>
+                </>
+              )}
             </div>
           )}
 
@@ -1140,6 +1419,169 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                 </div>
               </div>
 
+              {/* OPERATIONAL READINESS & LEGAL VERIFICATION */}
+              <div
+                style={{
+                  padding: '18px',
+                  borderRadius: '18px',
+                  backgroundColor: themeCardBg,
+                  border: themeCardBorder,
+                  marginBottom: '20px',
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                  <div style={{ fontSize: '10.5px', fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: isDark ? '#D88A9F' : '#9B4D6E' }}>
+                    OPERATIONAL READINESS & LEGAL SETUP
+                  </div>
+                  <span
+                    style={{
+                      fontSize: '10px',
+                      padding: '2px 8px',
+                      borderRadius: '8px',
+                      backgroundColor: isEventReadyForPaidLaunch(selectedEvent)
+                        ? 'rgba(46, 125, 50, 0.16)'
+                        : 'rgba(217, 119, 6, 0.16)',
+                      color: isEventReadyForPaidLaunch(selectedEvent)
+                        ? (isDark ? '#A5D6A7' : '#2E7D32')
+                        : '#FFB74D',
+                      fontWeight: 600,
+                    }}
+                  >
+                    {isEventReadyForPaidLaunch(selectedEvent) ? 'CERTIFIED FOR LAUNCH' : 'READINESS IN PROGRESS'}
+                  </span>
+                </div>
+
+                <p style={{ fontSize: '12px', color: themeMuted, margin: '0 0 12px 0', lineHeight: '1.45' }}>
+                  VennZ Compliance Protocol: Paid physical gatherings do not launch until venue leases, licensed event partners, security & medical safety, cancellation terms, attendee conduct, and vendor contracts are fully certified.
+                </p>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '8px' }}>
+                  {[
+                    { label: 'Venue Contract & Walkthrough', ready: selectedEvent.readinessChecklist?.venueConfirmed },
+                    { label: 'Licensed Event Partner Certified', ready: selectedEvent.readinessChecklist?.eventPartnerReady },
+                    { label: 'Security & Medical Safety Protocols', ready: selectedEvent.readinessChecklist?.safetyProtocolsReady },
+                    { label: 'Refund & Cancellation Policy Published', ready: selectedEvent.readinessChecklist?.refundCancellationTermsReady },
+                    { label: 'Attendee Code of Conduct & Terms', ready: selectedEvent.readinessChecklist?.attendeeTermsReady },
+                    { label: 'Catering & AV Vendor Contracts Executed', ready: selectedEvent.readinessChecklist?.vendorContractsReady },
+                    { label: 'Business & Legal Setup Compliant', ready: selectedEvent.readinessChecklist?.businessLegalSetupReady },
+                  ].map((item, idx) => (
+                    <div
+                      key={idx}
+                      style={{
+                        padding: '8px 10px',
+                        borderRadius: '10px',
+                        backgroundColor: isDark ? 'rgba(255, 255, 255, 0.03)' : 'rgba(73, 40, 61, 0.03)',
+                        border: `1px solid ${themeBorder}`,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        fontSize: '11px',
+                      }}
+                    >
+                      <span style={{ color: themeTextColor }}>{item.label}</span>
+                      <span style={{ fontWeight: 600, color: item.ready ? (isDark ? '#A5D6A7' : '#2E7D32') : '#FFB74D', fontSize: '10.5px' }}>
+                        {item.ready ? '✓ Certified' : '⏳ In Progress'}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* OPERATIONAL DEMARCATION: VENNZ VS EVENT PARTNER */}
+              <div
+                style={{
+                  padding: '18px',
+                  borderRadius: '18px',
+                  backgroundColor: themeCardBg,
+                  border: themeCardBorder,
+                  marginBottom: '20px',
+                }}
+              >
+                <div style={{ fontSize: '10.5px', fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: isDark ? '#D88A9F' : '#9B4D6E', marginBottom: '8px' }}>
+                  OPERATIONAL DEMARCATION OF ROLES
+                </div>
+                <div style={{ fontSize: '12px', color: themeMuted, marginBottom: '14px', lineHeight: '1.45' }}>
+                  VennZ clearly distinguishes platform membership & curation from our licensed event partner's on-ground physical production.
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '14px' }}>
+                  {/* VennZ Platform Role */}
+                  <div
+                    style={{
+                      padding: '14px',
+                      borderRadius: '14px',
+                      backgroundColor: isDark ? 'rgba(161, 82, 95, 0.12)' : 'rgba(161, 82, 95, 0.06)',
+                      border: `1px solid ${themeBorder}`,
+                    }}
+                  >
+                    <div style={{ fontSize: '12px', fontWeight: 700, color: themeMulberry, marginBottom: '6px' }}>
+                      VennZ Platform Role
+                    </div>
+                    <ul style={{ margin: 0, paddingLeft: '16px', fontSize: '11px', color: themeTextColor, lineHeight: '1.6' }}>
+                      {(selectedEvent.partnerRoleDefinition?.vennzPlatformScope || [
+                        'Member admission verification & DigiLocker screening',
+                        'Curated attendee room balancing',
+                        'Digital invitations & RSVP ticketing',
+                        'Attendee community code-of-conduct enforcement',
+                        'Post-mixer mutual connection unlocking',
+                      ]).map((scope, idx) => (
+                        <li key={idx}>{scope}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Event Partner Role */}
+                  <div
+                    style={{
+                      padding: '14px',
+                      borderRadius: '14px',
+                      backgroundColor: isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(73, 40, 61, 0.03)',
+                      border: `1px solid ${themeBorder}`,
+                    }}
+                  >
+                    <div style={{ fontSize: '12px', fontWeight: 700, color: themeTextColor, marginBottom: '2px' }}>
+                      Licensed Event Partner Role
+                    </div>
+                    <div style={{ fontSize: '10.5px', color: themeMuted, marginBottom: '6px' }}>
+                      {selectedEvent.partnerRoleDefinition?.partnerName || 'Licensed Hospitality Partner'}
+                      {selectedEvent.partnerRoleDefinition?.partnerLicenseInfo && (
+                        <span> · {selectedEvent.partnerRoleDefinition.partnerLicenseInfo}</span>
+                      )}
+                    </div>
+                    <ul style={{ margin: 0, paddingLeft: '16px', fontSize: '11px', color: themeTextColor, lineHeight: '1.6' }}>
+                      {(selectedEvent.partnerRoleDefinition?.partnerOperationalScope || [
+                        'Venue lease execution & spatial acoustics',
+                        'FSSAI-certified food, mixology & refreshment service',
+                        'On-ground security personnel & first-aid compliance',
+                        'Door check-in, QR ticket scanning & greeters',
+                        'Commercial general liability event insurance',
+                      ]).map((scope, idx) => (
+                        <li key={idx}>{scope}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              {/* CANCELLATION & REFUND POLICY */}
+              <div
+                style={{
+                  padding: '14px 16px',
+                  borderRadius: '16px',
+                  backgroundColor: isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(73, 40, 61, 0.03)',
+                  border: `1px solid ${themeBorder}`,
+                  marginBottom: '20px',
+                }}
+              >
+                <div style={{ fontSize: '10.5px', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: themeMuted, marginBottom: '4px' }}>
+                  CANCELLATION & REFUND POLICY
+                </div>
+                <div style={{ fontSize: '12px', fontWeight: 300, color: themeTextColor, lineHeight: '1.45' }}>
+                  {selectedEvent.cancellationPolicy ||
+                    'Full refund available up to 48 hours before mixer start. Within 48 hours, cancellations receive 100% platform credit toward future mixers or Elevate services.'}
+                </div>
+              </div>
+
               {/* PRICING & MEMBER BENEFIT CARD */}
               <div
                 style={{
@@ -1181,7 +1623,47 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
 
               {/* CTA Action Bar */}
               <div>
-                {selectedEvent.status === 'PLANNING' ? (
+                {!isEventReadyForPaidLaunch(selectedEvent) ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const cDemand = (cityDemands || []).find(
+                        (c) => c.city.toLowerCase() === selectedEvent.city.toLowerCase()
+                      ) || {
+                        city: selectedEvent.city,
+                        activeMembersInterested: 76,
+                        demandThresholdToLaunch: 80,
+                        suggestedVenuesInReview: [selectedEvent.venue],
+                        status: 'partner_vetting' as const,
+                        estimatedTimeline: 'Readiness certification in progress',
+                      };
+                      setSelectedWaitlistCity(cDemand);
+                    }}
+                    style={{
+                      width: '100%',
+                      height: '48px',
+                      borderRadius: '24px',
+                      backgroundColor: isUserOnCityWaitlist(selectedEvent.city)
+                        ? (isDark ? 'rgba(129, 199, 132, 0.2)' : 'rgba(46, 125, 50, 0.12)')
+                        : themeButtonBg,
+                      color: isUserOnCityWaitlist(selectedEvent.city)
+                        ? (isDark ? '#81C784' : '#2E7D32')
+                        : themeButtonText,
+                      border: isUserOnCityWaitlist(selectedEvent.city)
+                        ? `1px solid ${isDark ? 'rgba(129, 199, 132, 0.4)' : 'rgba(46, 125, 50, 0.35)'}`
+                        : 'none',
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      letterSpacing: '0.08em',
+                      textTransform: 'uppercase',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {isUserOnCityWaitlist(selectedEvent.city)
+                      ? 'ON PRIORITY CITY WAITLIST ✓'
+                      : `JOIN ${selectedEvent.city.toUpperCase()} PRIORITY WAITLIST`}
+                  </button>
+                ) : selectedEvent.status === 'PLANNING' ? (
                   <button
                     type="button"
                     onClick={(e) => handleShowInterest(e, selectedEvent.id)}
@@ -2310,6 +2792,213 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                 </div>
               </>
             ) : null}
+          </div>
+        </div>
+      )}
+
+      {/* CITY WAITLIST MODAL */}
+      {selectedWaitlistCity && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 100,
+            backgroundColor: 'rgba(0, 0, 0, 0.68)',
+            backdropFilter: 'blur(8px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '20px',
+          }}
+        >
+          <div
+            style={{
+              width: '100%',
+              maxWidth: '480px',
+              borderRadius: '22px',
+              backgroundColor: isDark ? '#1C1224' : '#FFFFFF',
+              border: `1px solid ${themeBorder}`,
+              padding: '24px',
+              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.45)',
+              color: themeTextColor,
+              maxHeight: '90vh',
+              overflowY: 'auto',
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <div>
+                <span
+                  style={{
+                    fontSize: '10.5px',
+                    fontWeight: 700,
+                    letterSpacing: '0.12em',
+                    textTransform: 'uppercase',
+                    color: isDark ? '#D88A9F' : '#9B4D6E',
+                  }}
+                >
+                  CITY DEMAND REGISTRATION
+                </span>
+                <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '22px', margin: '4px 0 0', color: themeMulberry }}>
+                  Join {selectedWaitlistCity.city} Waitlist
+                </h2>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSelectedWaitlistCity(null)}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  fontSize: '20px',
+                  color: themeMuted,
+                  cursor: 'pointer',
+                }}
+              >
+                ✕
+              </button>
+            </div>
+
+            <div
+              style={{
+                padding: '12px 14px',
+                borderRadius: '12px',
+                backgroundColor: isDark ? 'rgba(161, 82, 95, 0.12)' : 'rgba(161, 82, 95, 0.06)',
+                border: `1px solid ${themeBorder}`,
+                fontSize: '11.5px',
+                color: themeMuted,
+                margin: '14px 0 16px',
+                lineHeight: '1.45',
+              }}
+            >
+              🔒 <strong>VennZ Data Minimization:</strong> We collect strictly the operational information necessary for waitlist demand, room sizing, schedule timing, and dietary catering. Extraneous personal information is never solicited.
+            </div>
+
+            <form onSubmit={handleJoinCityWaitlistSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              {/* Preferred Neighborhood / Area */}
+              <div>
+                <label style={{ fontSize: '11.5px', fontWeight: 600, color: themeMulberry, display: 'block', marginBottom: '6px' }}>
+                  Preferred Neighborhood / Area in {selectedWaitlistCity.city}
+                </label>
+                <input
+                  type="text"
+                  value={waitlistArea}
+                  onChange={(e) => setWaitlistArea(e.target.value)}
+                  placeholder={`e.g. ${selectedWaitlistCity.suggestedVenuesInReview[0] || 'Central area'}, Suburbs, or Downtown`}
+                  style={{
+                    width: '100%',
+                    padding: '11px 14px',
+                    borderRadius: '11px',
+                    border: `1px solid ${themeBorder}`,
+                    backgroundColor: isDark ? 'rgba(20, 14, 28, 0.7)' : 'rgba(250, 241, 243, 0.8)',
+                    color: themeTextColor,
+                    fontSize: '13px',
+                    boxSizing: 'border-box',
+                    outline: 'none',
+                  }}
+                />
+              </div>
+
+              {/* Day & Timing Preference */}
+              <div>
+                <label style={{ fontSize: '11.5px', fontWeight: 600, color: themeMulberry, display: 'block', marginBottom: '6px' }}>
+                  Ideal Day & Schedule Timing
+                </label>
+                <select
+                  value={waitlistTiming}
+                  onChange={(e) => setWaitlistTiming(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '11px 14px',
+                    borderRadius: '11px',
+                    border: `1px solid ${themeBorder}`,
+                    backgroundColor: isDark ? 'rgba(20, 14, 28, 0.7)' : 'rgba(250, 241, 243, 0.8)',
+                    color: themeTextColor,
+                    fontSize: '13px',
+                    boxSizing: 'border-box',
+                    outline: 'none',
+                  }}
+                >
+                  <option value="Friday Evening (7:30 PM - 10:30 PM)">Friday Evening (7:30 PM - 10:30 PM)</option>
+                  <option value="Saturday Sunset (6:00 PM - 9:00 PM)">Saturday Sunset (6:00 PM - 9:00 PM)</option>
+                  <option value="Saturday Late Evening (8:30 PM - 11:30 PM)">Saturday Late Evening (8:30 PM - 11:30 PM)</option>
+                  <option value="Sunday Afternoon Social (1:00 PM - 4:00 PM)">Sunday Afternoon Social (1:00 PM - 4:00 PM)</option>
+                </select>
+              </div>
+
+              {/* Dietary Catering Logistics */}
+              <div>
+                <label style={{ fontSize: '11.5px', fontWeight: 600, color: themeMulberry, display: 'block', marginBottom: '6px' }}>
+                  Dietary Catering Preference (Operational Only)
+                </label>
+                <select
+                  value={waitlistDietary}
+                  onChange={(e) => setWaitlistDietary(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '11px 14px',
+                    borderRadius: '11px',
+                    border: `1px solid ${themeBorder}`,
+                    backgroundColor: isDark ? 'rgba(20, 14, 28, 0.7)' : 'rgba(250, 241, 243, 0.8)',
+                    color: themeTextColor,
+                    fontSize: '13px',
+                    boxSizing: 'border-box',
+                    outline: 'none',
+                  }}
+                >
+                  <option value="Flexible / Chef's Selection">Flexible / Chef's Selection</option>
+                  <option value="Vegetarian">Vegetarian</option>
+                  <option value="Non-Vegetarian">Non-Vegetarian</option>
+                  <option value="Vegan">Vegan</option>
+                  <option value="Jain">Jain</option>
+                </select>
+              </div>
+
+              {/* Notice & Disclaimer */}
+              <div
+                style={{
+                  fontSize: '11px',
+                  color: themeMuted,
+                  lineHeight: '1.45',
+                  padding: '8px 0',
+                }}
+              >
+                ✓ By joining, you receive priority notification once the {selectedWaitlistCity.city} threshold is reached and venue/partner readiness is certified. No payment is charged at waitlist stage.
+              </div>
+
+              <div style={{ display: 'flex', gap: '10px', marginTop: '6px' }}>
+                <button
+                  type="button"
+                  onClick={() => setSelectedWaitlistCity(null)}
+                  style={{
+                    flex: 1,
+                    padding: '11px',
+                    borderRadius: '10px',
+                    border: `1px solid ${themeBorder}`,
+                    backgroundColor: 'transparent',
+                    color: themeTextColor,
+                    fontSize: '12.5px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  style={{
+                    flex: 2,
+                    padding: '11px',
+                    borderRadius: '10px',
+                    border: 'none',
+                    background: themeButtonBg,
+                    color: themeButtonText,
+                    fontSize: '12.5px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                  }}
+                >
+                  Confirm Priority Waitlist →
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

@@ -1,4 +1,26 @@
-import type { MixerEvent, MixerBooking } from '../types/mixers';
+import type { MixerEvent, MixerBooking, CityMixerDemand, EventPartnerRoleDefinition } from '../types/mixers';
+
+const DEFAULT_PARTNER_ROLE: EventPartnerRoleDefinition = {
+  partnerName: 'Cirque & Courtyard Event Productions LLP',
+  partnerLicenseInfo: 'Licensed Commercial Event Operator (FSSAI & Entertainment License #MH-2024-819)',
+  partnerOperationalScope: [
+    'Venue lease contract execution & acoustics',
+    'FSSAI-certified food, mixology & refreshment service',
+    'On-ground certified security & first-aid personnel',
+    'Physical door check-in, QR verification & host greeters',
+    'Commercial general liability event insurance coverage',
+  ],
+  vennzPlatformScope: [
+    'Member admission verification & DigiLocker identity screening',
+    'Curated attendee room balancing (career, interests, vibes)',
+    'Digital invitation distribution & RSVP management',
+    'Attendee community code-of-conduct enforcement',
+    'Post-mixer mutual connection & chat unlocking',
+  ],
+};
+
+const DEFAULT_CANCELLATION_POLICY =
+  'Full refund available up to 48 hours before mixer start. Within 48 hours, cancellations receive 100% platform credit toward future mixers or Elevate services.';
 
 export const INITIAL_MIXER_EVENTS: MixerEvent[] = [
   {
@@ -10,22 +32,35 @@ export const INITIAL_MIXER_EVENTS: MixerEvent[] = [
     endTime: '10:00 PM',
     city: 'Mumbai',
     area: 'South Mumbai',
-    venue: 'Venue to be announced',
-    isVenueAnnounced: false,
+    venue: 'Colaba Heritage Courtyard',
+    isVenueAnnounced: true,
     description:
       'An intimate evening for VennZ members to step away from the app and meet in person. Expect good conversation, relaxed drinks, curated music and a carefully selected room of like-minded individuals.',
     whatToExpect: [
-      'Curated member crowd',
-      'Hosted social setting',
-      'Conversation-friendly atmosphere',
-      'Music and refreshments',
-      'A relaxed evening away from the screen',
+      'Curated member crowd with balanced gender and background representation',
+      'Hosted social setting with conversation-friendly background audio',
+      'Artisanal cocktails, wines, and chef-curated small plates',
+      'Discreet on-ground hosts facilitating natural introductions',
+      'Private heritage courtyard exclusively reserved for VennZ attendees',
     ],
     capacity: 40,
     spotsAvailable: 18,
     regularPrice: 5000,
     memberPrice: 4000,
     status: 'FINALIZED',
+    readinessChecklist: {
+      venueConfirmed: true,
+      eventPartnerReady: true,
+      safetyProtocolsReady: true,
+      refundCancellationTermsReady: true,
+      attendeeTermsReady: true,
+      vendorContractsReady: true,
+      businessLegalSetupReady: true,
+    },
+    partnerRoleDefinition: DEFAULT_PARTNER_ROLE,
+    cancellationPolicy: DEFAULT_CANCELLATION_POLICY,
+    waitlistCount: 92,
+    demandThreshold: 100,
   },
   {
     id: 'mixer-bengaluru-oct17',
@@ -36,15 +71,15 @@ export const INITIAL_MIXER_EVENTS: MixerEvent[] = [
     endTime: '9:30 PM',
     city: 'Bengaluru',
     area: 'Indiranagar',
-    venue: 'Venue to be announced',
+    venue: 'Venue announced upon readiness certification',
     isVenueAnnounced: false,
     description:
-      'A relaxed weekend gathering bringing together Bengaluru founders, creatives, and professionals in a calm, open courtyard setting. Designed for natural introductions without awkward networking tropes.',
+      'A relaxed weekend gathering bringing together Bengaluru founders, creatives, and professionals in a calm open courtyard setting. Currently in city demand verification and partner readiness vetting.',
     whatToExpect: [
-      'Warm courtyard ambiance',
-      'Handcrafted aperitifs & small bites',
-      'Low-key acoustic background set',
-      'Discreet hosts on hand for introductions',
+      'Warm courtyard ambiance with natural conversational flow',
+      'Handcrafted aperitifs & small bites curated by hospitality partners',
+      'Low-key acoustic background set conducive to dialogue',
+      'Discreet hosts on hand for natural introductions',
       'Intimate private space reserved exclusively for members',
     ],
     capacity: 35,
@@ -52,6 +87,22 @@ export const INITIAL_MIXER_EVENTS: MixerEvent[] = [
     regularPrice: 4500,
     memberPrice: 3500,
     status: 'PLANNING',
+    readinessChecklist: {
+      venueConfirmed: false,
+      eventPartnerReady: true,
+      safetyProtocolsReady: true,
+      refundCancellationTermsReady: true,
+      attendeeTermsReady: true,
+      vendorContractsReady: false,
+      businessLegalSetupReady: true,
+    },
+    partnerRoleDefinition: {
+      ...DEFAULT_PARTNER_ROLE,
+      partnerName: 'Garden City Hospitality Collective',
+    },
+    cancellationPolicy: DEFAULT_CANCELLATION_POLICY,
+    waitlistCount: 76,
+    demandThreshold: 80,
   },
   {
     id: 'mixer-delhi-oct24',
@@ -78,6 +129,22 @@ export const INITIAL_MIXER_EVENTS: MixerEvent[] = [
     regularPrice: 5500,
     memberPrice: 4500,
     status: 'FINALIZED',
+    readinessChecklist: {
+      venueConfirmed: true,
+      eventPartnerReady: true,
+      safetyProtocolsReady: true,
+      refundCancellationTermsReady: true,
+      attendeeTermsReady: true,
+      vendorContractsReady: true,
+      businessLegalSetupReady: true,
+    },
+    partnerRoleDefinition: {
+      ...DEFAULT_PARTNER_ROLE,
+      partnerName: 'Capital Epicure Events Pvt Ltd',
+    },
+    cancellationPolicy: DEFAULT_CANCELLATION_POLICY,
+    waitlistCount: 45,
+    demandThreshold: 50,
   },
   {
     id: 'mixer-mumbai-oct31',
@@ -103,6 +170,19 @@ export const INITIAL_MIXER_EVENTS: MixerEvent[] = [
     regularPrice: 5000,
     memberPrice: 4000,
     status: 'SOLD OUT',
+    readinessChecklist: {
+      venueConfirmed: true,
+      eventPartnerReady: true,
+      safetyProtocolsReady: true,
+      refundCancellationTermsReady: true,
+      attendeeTermsReady: true,
+      vendorContractsReady: true,
+      businessLegalSetupReady: true,
+    },
+    partnerRoleDefinition: DEFAULT_PARTNER_ROLE,
+    cancellationPolicy: DEFAULT_CANCELLATION_POLICY,
+    waitlistCount: 114,
+    demandThreshold: 100,
   },
   {
     id: 'mixer-bengaluru-sep12',
@@ -127,6 +207,20 @@ export const INITIAL_MIXER_EVENTS: MixerEvent[] = [
     regularPrice: 4500,
     memberPrice: 3500,
     status: 'COMPLETED',
+    readinessChecklist: {
+      venueConfirmed: true,
+      eventPartnerReady: true,
+      safetyProtocolsReady: true,
+      refundCancellationTermsReady: true,
+      attendeeTermsReady: true,
+      vendorContractsReady: true,
+      businessLegalSetupReady: true,
+    },
+    partnerRoleDefinition: {
+      ...DEFAULT_PARTNER_ROLE,
+      partnerName: 'Garden City Hospitality Collective',
+    },
+    cancellationPolicy: DEFAULT_CANCELLATION_POLICY,
   },
 ];
 
@@ -147,5 +241,57 @@ export const INITIAL_PAST_BOOKINGS: MixerBooking[] = [
     bookingStatus: 'Attended',
     paymentStatus: 'Paid',
     bookedAt: Date.now() - 25 * 86400000,
+    partnerOperationalRole: 'Garden City Hospitality Collective (Licensed Production)',
+  },
+];
+
+export const CITY_MIXER_DEMANDS: CityMixerDemand[] = [
+  {
+    city: 'Mumbai',
+    activeMembersInterested: 142,
+    demandThresholdToLaunch: 100,
+    suggestedVenuesInReview: ['Colaba Heritage Courtyard', 'Bandra Seafront Pavilion'],
+    status: 'scheduled',
+    estimatedTimeline: 'Live Mixers Active',
+  },
+  {
+    city: 'Bengaluru',
+    activeMembersInterested: 76,
+    demandThresholdToLaunch: 80,
+    suggestedVenuesInReview: ['Indiranagar Open Courtyard', 'Lavelle Road Conservatory'],
+    status: 'partner_vetting',
+    estimatedTimeline: 'Unlocking at 80 Members (4 spots left)',
+  },
+  {
+    city: 'Delhi NCR',
+    activeMembersInterested: 118,
+    demandThresholdToLaunch: 90,
+    suggestedVenuesInReview: ['Claridges Conservatory', 'Sundar Nursery Private Pavilion'],
+    status: 'scheduled',
+    estimatedTimeline: 'Live Mixers Active',
+  },
+  {
+    city: 'Hyderabad',
+    activeMembersInterested: 58,
+    demandThresholdToLaunch: 75,
+    suggestedVenuesInReview: ['Jubilee Hills Terrace', 'Old City Heritage Courtyard'],
+    status: 'gauging_demand',
+    estimatedTimeline: '17 Members Needed to Begin Partner Vetting',
+  },
+  {
+    city: 'Pune',
+    activeMembersInterested: 42,
+    demandThresholdToLaunch: 60,
+    suggestedVenuesInReview: ['Koregaon Park Garden Studio'],
+    status: 'gauging_demand',
+    estimatedTimeline: '18 Members Needed to Begin Partner Vetting',
+  },
+  {
+    city: 'Goa',
+    activeMembersInterested: 38,
+    demandThresholdToLaunch: 50,
+    suggestedVenuesInReview: ['Assagao Portuguese Villa & Pool'],
+    status: 'gauging_demand',
+    estimatedTimeline: '12 Members Needed to Begin Partner Vetting',
   },
 ];
