@@ -288,39 +288,6 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
             boxSizing: 'border-box',
           }}
         >
-          {/* Editorial Badges / Kickers */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              marginBottom: '10px',
-            }}
-          >
-            <span
-              style={{
-                fontSize: '13px',
-                fontWeight: 700,
-                letterSpacing: '0.1em',
-                textTransform: 'uppercase',
-                color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
-              }}
-            >
-              APPLICATION
-            </span>
-            <span style={{ color: isDark ? 'rgba(243, 238, 233, 0.3)' : 'rgba(73, 40, 61, 0.3)', fontSize: '13px' }}>·</span>
-            <span
-              style={{
-                fontSize: '13px',
-                fontWeight: 600,
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase',
-                color: isDark ? '#B3A1A8' : '#8A7A84',
-              }}
-            >
-              WAITLIST
-            </span>
-          </div>
 
           {/* Main Editorial Heading */}
           <h1
@@ -1115,12 +1082,12 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
       {showPopup && (
         <div
           style={{
-            position: 'absolute',
+            position: 'fixed',
             inset: 0,
             backgroundColor: 'rgba(18, 14, 17, 0.72)',
             backdropFilter: 'blur(8px)',
             WebkitBackdropFilter: 'blur(8px)',
-            zIndex: 100,
+            zIndex: 1000,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',

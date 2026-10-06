@@ -922,9 +922,9 @@ export const Page13YouScreen: React.FC<Page13YouScreenProps> = ({
       {isDeleteModalOpen && (
         <div
           style={{
-            position: 'absolute',
+            position: 'fixed',
             inset: 0,
-            zIndex: 100,
+            zIndex: 1000,
             backgroundColor: 'rgba(23, 17, 21, 0.75)',
             backdropFilter: 'blur(6px)',
             WebkitBackdropFilter: 'blur(6px)',
