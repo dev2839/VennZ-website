@@ -98,6 +98,7 @@ export interface AuthState {
   incomingRequests?: IncomingRequest[];
   sentRequests?: SentRequest[];
   matches?: MatchItem[];
+  unreadMatchIds?: string[];
   conversations?: Record<string, ChatMessage[]>;
   blockedProfileIds?: string[];
   // Elevate Concierge & Orders state
@@ -155,11 +156,13 @@ interface AuthContextType extends AuthState {
   incomingRequests: IncomingRequest[];
   sentRequests: SentRequest[];
   matches: MatchItem[];
+  unreadMatchIds: string[];
   conversations: Record<string, ChatMessage[]>;
   blockedProfileIds: string[];
   acceptRequest: (requestId: string) => void;
   declineRequest: (requestId: string) => void;
   declineAllQuietly: () => void;
+  markConversationRead: (matchId: string) => void;
   sendChatMessage: (matchId: string, text: string) => void;
   unmatchUser: (matchId: string) => void;
   blockUser: (matchId: string) => void;
@@ -371,6 +374,7 @@ const defaultState: AuthState = {
   sentRequests: INITIAL_SENT_REQUESTS,
   notifications: INITIAL_NOTIFICATIONS,
   matches: [],
+  unreadMatchIds: [],
   conversations: {},
   blockedProfileIds: [],
   elevateRequests: [],
@@ -1121,6 +1125,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         ...prev,
         incomingRequests: nextReqs,
         matches: [newMatch, ...(prev.matches || [])],
+        unreadMatchIds: [...new Set([...(prev.unreadMatchIds || []), newMatchId])],
         conversations: {
           ...existingConversations,
           [newMatchId]: currentMsgs.length > 0 ? currentMsgs : [openingMsg],
@@ -1145,6 +1150,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       ...prev,
       incomingRequests: [],
     }));
+  };
+
+  const markConversationRead = (matchId: string) => {
+    setState((prev) => {
+      const unreadMatchIds = prev.unreadMatchIds || [];
+      if (!unreadMatchIds.includes(matchId)) return prev;
+      return {
+        ...prev,
+        unreadMatchIds: unreadMatchIds.filter((id) => id !== matchId),
+      };
+    });
   };
 
   const sendChatMessage = (matchId: string, text: string) => {
@@ -1836,11 +1852,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         incomingRequests,
         sentRequests,
         matches,
+        unreadMatchIds: state.unreadMatchIds || [],
         conversations,
         blockedProfileIds,
         acceptRequest,
         declineRequest,
         declineAllQuietly,
+        markConversationRead,
         sendChatMessage,
         unmatchUser,
         blockUser,

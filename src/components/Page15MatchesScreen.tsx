@@ -1,9 +1,30 @@
 import React, { useState } from 'react';
+import { Search, X } from 'lucide-react';
 import { StatusBar } from './StatusBar';
 import { MemberTopBar } from './MemberTopBar';
 import { MemberBottomNav, type MemberTab } from './MemberBottomNav';
 import { useAuth } from '../context/AuthContext';
-import type { MatchItem } from '../types/matches';
+import type { IncomingRequest, MatchItem } from '../types/matches';
+
+const formatActivityTime = (timestamp: number): string => {
+  const date = new Date(timestamp);
+  const now = new Date();
+  if (date.toDateString() === now.toDateString()) {
+    return date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+  }
+  const yesterday = new Date(now);
+  yesterday.setDate(now.getDate() - 1);
+  if (date.toDateString() === yesterday.toDateString()) return 'Yesterday';
+  return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
+};
+
+const formatRequestTime = (timestamp: number): string => {
+  const ageMinutes = Math.max(0, Math.floor((Date.now() - timestamp) / 60000));
+  if (ageMinutes < 1) return 'Just now';
+  if (ageMinutes < 60) return `${ageMinutes}m ago`;
+  if (ageMinutes < 1440) return `${Math.floor(ageMinutes / 60)}h ago`;
+  return formatActivityTime(timestamp);
+};
 
 interface Page15MatchesScreenProps {
   onOpenChat: (match: MatchItem) => void;
@@ -27,6 +48,7 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
     incomingRequests,
     sentRequests,
     matches,
+    unreadMatchIds,
     acceptRequest,
     declineRequest,
     declineAllQuietly,
@@ -36,6 +58,11 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
 
   // Sub-tabs: 'matches' vs 'requests'
   const [activeSubTab, setActiveSubTab] = useState<'matches' | 'requests'>(initialSubTab);
+  const [activeRequestTab, setActiveRequestTab] = useState<'incoming' | 'sent'>('incoming');
+  const [selectedRequest, setSelectedRequest] = useState<IncomingRequest | null>(null);
+  const [declineAllOpen, setDeclineAllOpen] = useState(false);
+  const [acceptedProfileId, setAcceptedProfileId] = useState<string | null>(null);
+  const [matchSearch, setMatchSearch] = useState('');
 
   React.useEffect(() => {
     if (initialSubTab) {
@@ -43,6 +70,14 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
     }
   }, [initialSubTab]);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const orderedMatches = [...matches].sort(
+    (first, second) => (second.lastMessageTime || second.matchedAt) - (first.lastMessageTime || first.matchedAt)
+  );
+  const filteredMatches = orderedMatches.filter((match) =>
+    `${match.name} ${match.city} ${match.designation}`.toLowerCase().includes(matchSearch.trim().toLowerCase())
+  );
+  const acceptedMatch = matches.find((match) => match.profileId === acceptedProfileId);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -61,18 +96,28 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
   const themeCardBorder = isDark ? '1px solid rgba(161, 82, 95, 0.3)' : '1px solid rgba(161, 82, 95, 0.18)';
 
   const handleAccept = (requestId: string, name: string) => {
+    const request = incomingRequests.find((item) => item.id === requestId);
     acceptRequest(requestId);
-    showToast(`Connected with ${name}`);
+    setSelectedRequest(null);
+    setActiveSubTab('matches');
+    setAcceptedProfileId(request?.profileId || null);
+    showToast(`You're connected with ${name}`);
   };
 
   const handleDecline = (requestId: string, name: string) => {
     declineRequest(requestId);
+    setSelectedRequest(null);
     showToast(`Declined request from ${name}`);
   };
 
   const handleDeclineAll = () => {
     if (incomingRequests.length === 0) return;
+    setDeclineAllOpen(true);
+  };
+
+  const confirmDeclineAll = () => {
     declineAllQuietly();
+    setDeclineAllOpen(false);
     showToast('All pending requests declined quietly');
   };
 
@@ -231,8 +276,14 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
           {/* TAB 1: REQUESTS VIEW */}
           {activeSubTab === 'requests' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div role="group" aria-label="Request type" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', borderBottom: `1px solid ${themeBorder}` }}>
+                {([['incoming', `INCOMING · ${incomingRequests.length}`], ['sent', `SENT · ${sentRequests.length}`]] as const).map(([tab, label]) => (
+                  <button key={tab} type="button" onClick={() => setActiveRequestTab(tab)} aria-pressed={activeRequestTab === tab} style={{ minHeight: '42px', border: 0, borderBottom: activeRequestTab === tab ? `2px solid ${themeMulberry}` : '2px solid transparent', background: 'transparent', color: activeRequestTab === tab ? themeMulberry : themeMuted, cursor: 'pointer', fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em' }}>{label}</button>
+                ))}
+              </div>
+
               {/* INCOMING REQUESTS CARDS */}
-              {incomingRequests.length > 0 ? (
+              {activeRequestTab === 'incoming' && incomingRequests.length > 0 ? (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                   {incomingRequests.map((req) => (
                     <div
@@ -306,6 +357,10 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
                           {req.designation}
                         </div>
 
+                        <button type="button" onClick={() => setSelectedRequest(req)} style={{ alignSelf: 'flex-start', marginBottom: '9px', padding: '2px 0', border: 0, background: 'transparent', color: themeMuted, cursor: 'pointer', fontSize: '10px', fontWeight: 700, textDecoration: 'underline', textUnderlineOffset: '3px' }}>
+                          VIEW REQUEST PROFILE
+                        </button>
+
                         {/* Action Buttons: DECLINE / ACCEPT */}
                         <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                           <button
@@ -361,7 +416,7 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
                     </div>
                   ))}
                 </div>
-              ) : (
+              ) : activeRequestTab === 'incoming' ? (
                 <div
                   style={{
                     padding: '24px 16px',
@@ -378,20 +433,10 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
                     New handpicked introductions arrive daily.
                   </span>
                 </div>
-              )}
-
-              {/* SECTION DIVIDER */}
-              <div
-                style={{
-                  height: '1px',
-                  backgroundColor: themeBorder,
-                  marginTop: '10px',
-                  marginBottom: '10px',
-                }}
-              />
+              ) : null}
 
               {/* SENT · X SECTION */}
-              <div>
+              {activeRequestTab === 'sent' && <div>
                 <div
                   style={{
                     fontSize: '11px',
@@ -451,8 +496,9 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
                             textTransform: 'uppercase',
                             color: themeMuted,
                           }}
-                        >
-                          {sent.status}
+                          >
+                            <span style={{ display: 'block' }}>{sent.status}</span>
+                            <span style={{ display: 'block', marginTop: '4px', color: themeMuted, fontSize: '10px', fontWeight: 400, letterSpacing: 0, textTransform: 'none' }}>{formatRequestTime(sent.timestamp)}</span>
                         </span>
                       </div>
                     ))}
@@ -462,10 +508,10 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
                     No outgoing requests sent yet.
                   </div>
                 )}
-              </div>
+              </div>}
 
               {/* DECLINE ALL QUIETLY BUTTON */}
-              {incomingRequests.length > 0 && (
+              {activeRequestTab === 'incoming' && incomingRequests.length > 0 && (
                 <div style={{ textAlign: 'center', marginTop: '16px', marginBottom: '8px' }}>
                   <button
                     type="button"
@@ -499,12 +545,19 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
           {/* TAB 2: MATCHES VIEW */}
           {activeSubTab === 'matches' && (
             <div style={{ display: 'flex', flexDirection: 'column' }}>
-              {matches.length > 0 ? (
+              {matches.length > 0 && <label style={{ position: 'relative', display: 'block', margin: '0 0 12px' }}>
+                <Search size={16} aria-hidden="true" style={{ position: 'absolute', top: '13px', left: '12px', color: themeMuted }} />
+                <input type="search" aria-label="Search matches" value={matchSearch} onChange={(event) => setMatchSearch(event.target.value)} placeholder="Search matches" style={{ width: '100%', height: '42px', boxSizing: 'border-box', padding: '0 12px 0 36px', border: `1px solid ${themeBorder}`, borderRadius: '6px', background: themeCardBg, color: themeTextColor, font: 'inherit', fontSize: '13px' }} />
+              </label>}
+              {filteredMatches.length > 0 ? (
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  {matches.map((match, index) => (
-                    <div
+                  {filteredMatches.map((match, index) => {
+                    const isUnread = unreadMatchIds.includes(match.id);
+                    return <button
                       key={match.id}
                       onClick={() => onOpenChat(match)}
+                      type="button"
+                      aria-label={`Open chat with ${match.name}${isUnread ? ', unread message' : ''}`}
                       style={{
                         display: 'flex',
                         alignItems: 'center',
@@ -514,6 +567,11 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
                         borderBottom: index < matches.length - 1 ? `1px solid ${themeBorder}` : 'none',
                         cursor: 'pointer',
                         transition: 'opacity 0.15s ease',
+                        width: '100%',
+                        border: 0,
+                        background: 'transparent',
+                        textAlign: 'left',
+                        font: 'inherit',
                       }}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.opacity = '0.85';
@@ -539,16 +597,7 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
                       {/* Middle: Name & Latest Message Preview */}
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginBottom: '4px' }}>
-                          <span
-                            style={{
-                              fontFamily: 'var(--font-serif)',
-                              fontSize: '18px',
-                              fontWeight: 600,
-                              color: themeMulberry,
-                            }}
-                          >
-                            {match.name}
-                          </span>
+                          <span style={{ fontFamily: 'var(--font-serif)', fontSize: '18px', fontWeight: 600, color: themeMulberry }}>{match.name}</span>
                           {match.isVerified && (
                             <span
                               style={{
@@ -562,6 +611,7 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
                               VERIFIED
                             </span>
                           )}
+                          {isUnread && <span aria-label="Unread" style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#C94A4A', flexShrink: 0 }} />}
                         </div>
 
                         <p
@@ -577,6 +627,7 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
                         >
                           {match.lastMessage || "Thank you for accepting — I'm Meera. How has your week been?"}
                         </p>
+                        <span style={{ display: 'block', marginTop: '4px', color: themeMuted, fontSize: '10px' }}>{formatActivityTime(match.lastMessageTime || match.matchedAt)}</span>
                       </div>
 
                       {/* Right: OPEN Action */}
@@ -593,8 +644,8 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
                           OPEN
                         </span>
                       </div>
-                    </div>
-                  ))}
+                    </button>;
+                  })}
                 </div>
               ) : (
                 <div
@@ -616,7 +667,7 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
                       margin: '0 0 8px 0',
                     }}
                   >
-                    No mutual matches yet.
+                    {matches.length ? 'No matches found.' : 'No mutual matches yet.'}
                   </h4>
                   <p
                     style={{
@@ -626,9 +677,9 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
                       margin: '0 0 18px 0',
                     }}
                   >
-                    When you accept an introduction or someone accepts your request, your private conversation opens here.
+                    {matches.length ? 'Try another name or clear your search.' : 'When you accept an introduction or someone accepts your request, your private conversation opens here.'}
                   </p>
-                  <button
+                  {matches.length === 0 && <button
                     type="button"
                     onClick={() => onSelectTab('discover')}
                     style={{
@@ -646,7 +697,7 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
                     }}
                   >
                     DISCOVER INTRODUCTIONS
-                  </button>
+                  </button>}
                 </div>
               )}
             </div>
@@ -674,6 +725,35 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
           }}
         >
           {toastMessage}
+        </div>
+      )}
+
+      {(selectedRequest || declineAllOpen || acceptedProfileId) && (
+        <div role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) { setSelectedRequest(null); setDeclineAllOpen(false); setAcceptedProfileId(null); } }} style={{ position: 'fixed', inset: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', background: 'rgba(20, 14, 28, 0.72)', backdropFilter: 'blur(5px)' }}>
+          <section role="dialog" aria-modal="true" aria-labelledby="matches-dialog-title" style={{ position: 'relative', width: '100%', maxWidth: '390px', maxHeight: '85vh', overflowY: 'auto', padding: '22px', border: `1px solid ${themeBorder}`, borderRadius: '10px', background: isDark ? '#211522' : '#FFF9FA', color: themeTextColor, boxShadow: '0 20px 50px rgba(0, 0, 0, 0.35)' }}>
+            <button type="button" aria-label="Close" onClick={() => { setSelectedRequest(null); setDeclineAllOpen(false); setAcceptedProfileId(null); }} style={{ position: 'absolute', top: '12px', right: '12px', display: 'grid', placeItems: 'center', width: '32px', height: '32px', border: 'none', borderRadius: '50%', background: 'transparent', color: themeMuted, cursor: 'pointer' }}><X size={17} /></button>
+            {selectedRequest ? <>
+              <img src={selectedRequest.photo} alt={selectedRequest.name} style={{ width: '100%', maxHeight: '250px', aspectRatio: '4 / 3', objectFit: 'cover', borderRadius: '6px', background: '#1E161C' }} />
+              <h2 id="matches-dialog-title" style={{ margin: '15px 35px 4px 0', color: themeMulberry, fontFamily: 'var(--font-serif)', fontSize: '25px', fontWeight: 400 }}>{selectedRequest.name}, {selectedRequest.age}</h2>
+              <p style={{ margin: 0, color: themeMuted, fontSize: '12px' }}>{selectedRequest.city} · {selectedRequest.designation}{selectedRequest.company ? ` · ${selectedRequest.company}` : ''}</p>
+              <p style={{ margin: '10px 0 18px', color: themeMuted, fontSize: '11px' }}>Request received {formatRequestTime(selectedRequest.timestamp)}</p>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <button type="button" onClick={() => handleDecline(selectedRequest.id, selectedRequest.name)} style={{ flex: 1, minHeight: '42px', border: `1px solid ${themeBorder}`, borderRadius: '22px', background: 'transparent', color: themeMulberry, cursor: 'pointer', fontSize: '11px', fontWeight: 700 }}>DECLINE</button>
+                <button type="button" onClick={() => handleAccept(selectedRequest.id, selectedRequest.name)} style={{ flex: 1, minHeight: '42px', border: 0, borderRadius: '22px', background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)', color: '#FFF8F8', cursor: 'pointer', fontSize: '11px', fontWeight: 700 }}>ACCEPT</button>
+              </div>
+            </> : declineAllOpen ? <>
+              <h2 id="matches-dialog-title" style={{ margin: '5px 35px 10px 0', color: themeMulberry, fontFamily: 'var(--font-serif)', fontSize: '23px', fontWeight: 400 }}>Decline all requests?</h2>
+              <p style={{ color: themeMuted, fontSize: '13px', lineHeight: 1.5 }}>This will clear all {incomingRequests.length} incoming requests. You won’t be able to restore them.</p>
+              <div style={{ display: 'flex', gap: '8px', marginTop: '18px' }}>
+                <button type="button" onClick={() => setDeclineAllOpen(false)} style={{ flex: 1, minHeight: '42px', border: `1px solid ${themeBorder}`, borderRadius: '22px', background: 'transparent', color: themeMulberry, cursor: 'pointer', fontSize: '11px', fontWeight: 700 }}>CANCEL</button>
+                <button type="button" onClick={confirmDeclineAll} style={{ flex: 1, minHeight: '42px', border: 0, borderRadius: '22px', background: '#A33B4A', color: '#fff', cursor: 'pointer', fontSize: '11px', fontWeight: 700 }}>DECLINE ALL</button>
+              </div>
+            </> : <>
+              <h2 id="matches-dialog-title" style={{ margin: '5px 35px 10px 0', color: themeMulberry, fontFamily: 'var(--font-serif)', fontSize: '23px', fontWeight: 400 }}>You’re connected{acceptedMatch ? ` with ${acceptedMatch.name}` : ''}</h2>
+              <p style={{ color: themeMuted, fontSize: '13px', lineHeight: 1.5 }}>Your introduction has been accepted. Start a private conversation whenever you’re ready.</p>
+              <button type="button" disabled={!acceptedMatch} onClick={() => { if (acceptedMatch) onOpenChat(acceptedMatch); setAcceptedProfileId(null); }} style={{ width: '100%', minHeight: '44px', marginTop: '12px', border: 0, borderRadius: '22px', background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)', color: '#FFF8F8', cursor: acceptedMatch ? 'pointer' : 'default', opacity: acceptedMatch ? 1 : 0.6, fontSize: '11px', fontWeight: 700 }}>START CONVERSATION</button>
+            </>}
+          </section>
         </div>
       )}
 
