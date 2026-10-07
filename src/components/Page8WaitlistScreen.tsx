@@ -49,6 +49,16 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
     if (applicationDecision === 'approved' || applicationDecision === 'declined' || applicationDecision === 'more_info') {
       return applicationDecision;
     }
+    try {
+      const raw =
+        sessionStorage.getItem('inner_circle_active_applicant_data') ||
+        localStorage.getItem('inner_circle_active_applicant_data') ||
+        localStorage.getItem('inner_circle_auth_state');
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed.applicationDecision) return parsed.applicationDecision;
+      }
+    } catch {}
     return 'under_review';
   });
 
@@ -595,23 +605,36 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
                 marginBottom: '32px',
               }}
             >
-              {/* Intentional Tagline */}
+              {/* Prominent Attention Callout: YOU CAN HAVE YOUR FIRST LOOK AT VennZ for FREE */}
               <div
                 style={{
-                  fontSize: '14.5px',
-                  fontWeight: 500,
-                  color: isDark ? '#D9CFD5' : '#6E5E68',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  padding: '12px 18px',
+                  borderRadius: '999px',
+                  backgroundColor: isDark ? 'rgba(161, 82, 95, 0.22)' : 'rgba(199, 87, 124, 0.12)',
+                  border: isDark ? '1.5px solid rgba(161, 82, 95, 0.45)' : '1.5px solid rgba(199, 87, 124, 0.35)',
+                  color: isDark ? '#F9AAAD' : '#A1525F',
+                  fontSize: '13px',
+                  fontWeight: 700,
+                  letterSpacing: '0.05em',
                   textAlign: 'center',
-                  marginBottom: '10px',
+                  marginBottom: '4px',
+                  boxShadow: isDark ? '0 4px 14px rgba(0, 0, 0, 0.2)' : '0 4px 14px rgba(161, 82, 95, 0.1)',
                 }}
               >
-                A more intentional way to meet, connect and grow!
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                </svg>
+                <span>YOU CAN HAVE YOUR FIRST LOOK AT VennZ for FREE</span>
               </div>
 
-              {/* JOIN WITH MEMBERSHIP */}
+              {/* JOIN FOR FREE (Top Button) */}
               <button
                 type="button"
-                onClick={handleJoinMembership}
+                onClick={handleTryFree}
                 style={{
                   width: '100%',
                   height: '56px',
@@ -640,61 +663,62 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
                   e.currentTarget.style.transform = 'translateY(0)';
                 }}
               >
-                <span>JOIN WITH MEMBERSHIP</span>
+                <span>JOIN FOR FREE</span>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M5 12h14" />
                   <path d="m12 5 7 7-7 7" />
                 </svg>
               </button>
 
-              {/* BEGIN MY COMPLIMENTARY FIRST LOOK */}
-              <div>
-                <button
-                  type="button"
-                  onClick={handleTryFree}
-                  style={{
-                    width: '100%',
-                    height: '52px',
-                    borderRadius: '26px',
-                    backgroundColor: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.75)',
-                    color: isDark ? '#F5EFEB' : 'var(--color-mulberry)',
-                    border: isDark ? '1.5px solid rgba(243, 238, 233, 0.25)' : '1.5px solid rgba(73, 40, 61, 0.25)',
-                    fontSize: '15px',
-                    fontWeight: 700,
-                    letterSpacing: '0.06em',
-                    textTransform: 'uppercase',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    transition: 'background-color 0.15s ease, border-color 0.15s ease',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = isDark ? 'rgba(255, 255, 255, 0.14)' : 'rgba(255, 255, 255, 0.95)';
-                    e.currentTarget.style.borderColor = isDark ? '#F9AAAD' : 'var(--color-mulberry)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.75)';
-                    e.currentTarget.style.borderColor = isDark ? 'rgba(243, 238, 233, 0.25)' : 'rgba(73, 40, 61, 0.25)';
-                  }}
-                >
-                  BEGIN MY COMPLIMENTARY FIRST LOOK
-                </button>
+              {/* JOIN WITH MEMBERSHIP (Below Button) */}
+              <button
+                type="button"
+                onClick={handleJoinMembership}
+                style={{
+                  width: '100%',
+                  height: '52px',
+                  borderRadius: '26px',
+                  backgroundColor: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.75)',
+                  color: isDark ? '#F5EFEB' : 'var(--color-mulberry)',
+                  border: isDark ? '1.5px solid rgba(243, 238, 233, 0.25)' : '1.5px solid rgba(73, 40, 61, 0.25)',
+                  fontSize: '15px',
+                  fontWeight: 700,
+                  letterSpacing: '0.06em',
+                  textTransform: 'uppercase',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  transition: 'background-color 0.15s ease, border-color 0.15s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = isDark ? 'rgba(255, 255, 255, 0.14)' : 'rgba(255, 255, 255, 0.95)';
+                  e.currentTarget.style.borderColor = isDark ? '#F9AAAD' : 'var(--color-mulberry)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.75)';
+                  e.currentTarget.style.borderColor = isDark ? 'rgba(243, 238, 233, 0.25)' : 'rgba(73, 40, 61, 0.25)';
+                }}
+              >
+                <span>JOIN WITH MEMBERSHIP</span>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12h14" />
+                  <path d="m12 5 7 7-7 7" />
+                </svg>
+              </button>
 
-                {/* Microcopy: YOUR FIRST LOOK IS FREE · 24 HOURS · NO CARD NEEDED */}
-                <div
-                  style={{
-                    fontSize: '12px',
-                    fontWeight: 600,
-                    letterSpacing: '0.07em',
-                    textTransform: 'uppercase',
-                    color: isDark ? '#B3A1A8' : '#8A7A84',
-                    textAlign: 'center',
-                    marginTop: '8px',
-                  }}
-                >
-                  YOUR FIRST LOOK IS FREE · 24 HOURS · NO CARD NEEDED
-                </div>
+              {/* Intentional Tagline */}
+              <div
+                style={{
+                  fontSize: '13.5px',
+                  fontWeight: 500,
+                  color: isDark ? '#D9CFD5' : '#6E5E68',
+                  textAlign: 'center',
+                  marginTop: '4px',
+                }}
+              >
+                A more intentional way to meet, connect and grow!
               </div>
             </div>
           )}
