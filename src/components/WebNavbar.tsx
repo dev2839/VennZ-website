@@ -17,6 +17,7 @@ export type RoutePath =
   | '/overview'
   | '/discover'
   | '/member/profile'
+  | '/member/my-profile'
   | '/member/you'
   | '/member/help'
   | '/member/matches'
@@ -97,6 +98,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
   const isMemberArea =
     currentPath === '/discover' ||
     currentPath === '/member/profile' ||
+    currentPath === '/member/my-profile' ||
     currentPath === '/member/you' ||
     currentPath === '/member/help' ||
     currentPath === '/member/matches' ||
