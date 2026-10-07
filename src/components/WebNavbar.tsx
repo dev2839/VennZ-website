@@ -59,12 +59,10 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
   const hasIncomingRequests = Boolean(incomingRequests && incomingRequests.length > 0);
 
   const [notificationsOpen, setNotificationsOpen] = useState(false);
-  const [screensMenuOpen, setScreensMenuOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const notifRef = useRef<HTMLDivElement | null>(null);
   const notifButtonRef = useRef<HTMLButtonElement | null>(null);
-  const screensRef = useRef<HTMLDivElement | null>(null);
 
   // Outside click listener
   useEffect(() => {
@@ -77,9 +75,6 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
         !notifButtonRef.current.contains(target)
       ) {
         setNotificationsOpen(false);
-      }
-      if (screensRef.current && !screensRef.current.contains(target)) {
-        setScreensMenuOpen(false);
       }
     };
 
@@ -117,27 +112,6 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
     { path: '/member/you' as RoutePath, label: 'YOU' },
   ];
 
-  const allScreens = [
-    { path: '/' as RoutePath, label: '1. Splash Welcome' },
-    { path: '/login' as RoutePath, label: '2. Sign Up / Log In' },
-    { path: '/join/verify-code' as RoutePath, label: '3. Verify OTP' },
-    { path: '/join/profile' as RoutePath, label: '4. Profile Setup' },
-    { path: '/join/identity-verification' as RoutePath, label: '5. Verify Identity' },
-    { path: '/join/context' as RoutePath, label: '6. Social Context' },
-    { path: '/join/standards' as RoutePath, label: '7. Community Standards' },
-    { path: '/join/waitlist' as RoutePath, label: '8. Application Waitlist' },
-    { path: '/join/membership' as RoutePath, label: '9. Membership Tiers' },
-    { path: '/discover' as RoutePath, label: '10. Discover Introductions' },
-    { path: '/member/profile' as RoutePath, label: '11. Full Profile View' },
-    { path: '/member/you' as RoutePath, label: '12. You / Membership' },
-    { path: '/member/help' as RoutePath, label: '13. Help & Support' },
-    { path: '/member/matches' as RoutePath, label: '14. Matches & Requests' },
-    { path: '/member/chat' as RoutePath, label: '15. Member Chat' },
-    { path: '/member/elevate' as RoutePath, label: '16. Elevate Concierge' },
-    { path: '/member/mixers' as RoutePath, label: '17. Private Mixers' },
-  ];
-
-  const currentScreenTitle = allScreens.find((s) => s.path === currentPath)?.label || 'VennZ';
 
   const isAuthPage =
     currentPath === '/join' ||
@@ -298,118 +272,6 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
 
         {/* Right Action Suite */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          {/* Quick Screen Switcher Menu for full product evaluation */}
-          <div ref={screensRef} style={{ position: 'relative' }}>
-            <button
-              type="button"
-              onClick={() => setScreensMenuOpen(!screensMenuOpen)}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '6px 8px',
-                backgroundColor: 'transparent',
-                border: 'none',
-                color: textColor,
-                fontSize: '13.5px',
-                fontWeight: 500,
-                cursor: 'pointer',
-                fontFamily: 'var(--font-sans)',
-                transition: 'opacity 0.15s ease',
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.7')}
-              onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
-              title="Jump directly to any application screen"
-            >
-              <span style={{ maxWidth: '160px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                {currentScreenTitle}
-              </span>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="m6 9 6 6 6-6" />
-              </svg>
-            </button>
-
-            {screensMenuOpen && (
-              <div
-                style={{
-                  position: 'absolute',
-                  top: '44px',
-                  right: 0,
-                  width: '280px',
-                  maxHeight: '400px',
-                  overflowY: 'auto',
-                  backgroundColor: isDark ? '#462037' : '#FAF1F3',
-                  borderRadius: '16px',
-                  border: `1px solid ${borderBottom}`,
-                  boxShadow: isDark ? '0 16px 40px rgba(20, 14, 28, 0.6)' : '0 16px 40px rgba(70, 32, 55, 0.12)',
-                  padding: '8px 0',
-                  zIndex: 100,
-                }}
-              >
-                <div
-                  style={{
-                    padding: '8px 16px 6px',
-                    fontSize: '11px',
-                    fontWeight: 600,
-                    letterSpacing: '0.12em',
-                    textTransform: 'uppercase',
-                    color: isDark ? 'rgba(243, 238, 233, 0.5)' : '#8A7A84',
-                    borderBottom: `1px solid ${borderBottom}`,
-                  }}
-                >
-                  All 18 Product Screens
-                </div>
-                {allScreens.map((screen) => {
-                  const isCur = currentPath === screen.path;
-                  return (
-                    <button
-                      key={screen.path}
-                      type="button"
-                      onClick={() => {
-                        onNavigate(screen.path);
-                        setScreensMenuOpen(false);
-                      }}
-                      style={{
-                        width: '100%',
-                        textAlign: 'left',
-                        padding: '10px 16px',
-                        background: isCur
-                          ? isDark
-                            ? 'rgba(255, 255, 255, 0.08)'
-                            : 'rgba(73, 40, 61, 0.06)'
-                          : 'transparent',
-                        border: 'none',
-                        color: isCur ? activeColor : textColor,
-                        fontWeight: isCur ? 600 : 400,
-                        fontSize: '13.5px',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!isCur) {
-                          e.currentTarget.style.backgroundColor = isDark
-                            ? 'rgba(255, 255, 255, 0.04)'
-                            : 'rgba(73, 40, 61, 0.03)';
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!isCur) {
-                          e.currentTarget.style.backgroundColor = 'transparent';
-                        }
-                      }}
-                    >
-                      <span>{screen.label}</span>
-                      {isCur && (
-                        <span style={{ fontSize: '11px', color: 'var(--color-peach-blush)' }}>●</span>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-            )}
-          </div>
 
           {/* Notifications Bell */}
           <div style={{ position: 'relative' }}>
