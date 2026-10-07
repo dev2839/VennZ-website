@@ -9,7 +9,6 @@ import { Page6ContextScreen } from './components/Page6ContextScreen';
 import { Page7StandardsScreen } from './components/Page7StandardsScreen';
 import { Page8WaitlistScreen } from './components/Page8WaitlistScreen';
 import { Page9MembershipScreen } from './components/Page9MembershipScreen';
-import { Page10OverviewScreen } from './components/Page10OverviewScreen';
 import { Page11DiscoverScreen } from './components/Page11DiscoverScreen';
 import { Page12FullProfileScreen } from './components/Page12FullProfileScreen';
 import { Page13YouScreen } from './components/Page13YouScreen';
@@ -85,6 +84,7 @@ export const App: React.FC = () => {
     // If URL has an explicit direct route that is not root, support it
     const path = window.location.pathname as RoutePath;
     if (path && path !== '/' && VALID_PATHS.includes(path)) {
+      if (path === '/overview') return '/discover';
       return path;
     }
     // Every time website starts/opens, always start at root '/' (Welcome page)
@@ -134,6 +134,10 @@ export const App: React.FC = () => {
     const handlePopState = () => {
       const path = window.location.pathname as RoutePath;
       if (VALID_PATHS.includes(path)) {
+        if (path === '/overview') {
+          navigate('/discover');
+          return;
+        }
         setCurrentPath(path);
         try {
           sessionStorage.setItem('inner_circle_path', path);
@@ -225,7 +229,7 @@ export const App: React.FC = () => {
   };
   const handleComplimentarySuccess = () => {
     startComplimentaryFirstLook();
-    navigate('/overview');
+    navigate('/discover');
   };
   const handleUpgradeToMembership = () => navigate('/join/waitlist');
 
@@ -368,14 +372,8 @@ export const App: React.FC = () => {
     }
 
     if (currentPath === '/overview') {
-      return (
-        <Page10OverviewScreen
-          onBack={() => navigate('/join/membership')}
-          onNavigateHome={() => navigate('/discover')}
-          showStatusBar={showStatusBar}
-          showHomeIndicator={showHomeIndicator}
-        />
-      );
+      navigate('/discover');
+      return null;
     }
 
     if (currentPath === '/discover') {

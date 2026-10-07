@@ -127,15 +127,14 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
     { path: '/join/standards' as RoutePath, label: '7. Community Standards' },
     { path: '/join/waitlist' as RoutePath, label: '8. Application Waitlist' },
     { path: '/join/membership' as RoutePath, label: '9. Membership Tiers' },
-    { path: '/overview' as RoutePath, label: '10. Welcome Overview' },
-    { path: '/discover' as RoutePath, label: '11. Discover Introductions' },
-    { path: '/member/profile' as RoutePath, label: '12. Full Profile View' },
-    { path: '/member/you' as RoutePath, label: '13. You / Membership' },
-    { path: '/member/help' as RoutePath, label: '14. Help & Support' },
-    { path: '/member/matches' as RoutePath, label: '15. Matches & Requests' },
-    { path: '/member/chat' as RoutePath, label: '16. Member Chat' },
-    { path: '/member/elevate' as RoutePath, label: '17. Elevate Concierge' },
-    { path: '/member/mixers' as RoutePath, label: '18. Private Mixers' },
+    { path: '/discover' as RoutePath, label: '10. Discover Introductions' },
+    { path: '/member/profile' as RoutePath, label: '11. Full Profile View' },
+    { path: '/member/you' as RoutePath, label: '12. You / Membership' },
+    { path: '/member/help' as RoutePath, label: '13. Help & Support' },
+    { path: '/member/matches' as RoutePath, label: '14. Matches & Requests' },
+    { path: '/member/chat' as RoutePath, label: '15. Member Chat' },
+    { path: '/member/elevate' as RoutePath, label: '16. Elevate Concierge' },
+    { path: '/member/mixers' as RoutePath, label: '17. Private Mixers' },
   ];
 
   const currentScreenTitle = allScreens.find((s) => s.path === currentPath)?.label || 'VennZ';

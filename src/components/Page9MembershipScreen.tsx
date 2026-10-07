@@ -238,7 +238,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
             }}
           >
             {viewMode === 'complimentary_only'
-              ? 'Your complimentary First Look awaits. Experience curated introductions for 24 hours.'
+              ? 'Your complimentary First Look awaits.'
               : 'One membership, everything included. Cancel any time.'}
           </p>
 
@@ -437,7 +437,6 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                     letterSpacing: '0.04em',
                   }}
                 >
-                  24 HOURS
                 </span>
               </div>
 
@@ -508,7 +507,6 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                   fontWeight: 600,
                 }}
               >
-                AFTER 24 HOURS, NEW INTRODUCTIONS AND REQUESTS CLOSE. MATCHES YOU’VE ALREADY MADE, AND THEIR CONVERSATIONS, STAY OPEN.
               </div>
             </div>
           )}
@@ -599,7 +597,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                   transition: 'all 0.2s ease',
                 }}
               >
-                <span>START 24-HOUR COMPLIMENTARY ACCESS</span>
+                <span>EXPLORE THE VennZ FOR FREE</span>
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M5 12h14" />
                   <path d="m12 5 7 7-7 7" />
