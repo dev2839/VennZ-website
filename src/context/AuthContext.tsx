@@ -42,6 +42,11 @@ export interface UserProfile {
   instagramUsername?: string;
   showLinkedinPublicly?: boolean;
   showInstagramPublicly?: boolean;
+  showAgePublicly?: boolean;
+  showCityPublicly?: boolean;
+  showWorkPublicly?: boolean;
+  profileVisibility?: 'visible' | 'hidden';
+  profileUpdatedAt?: number;
 }
 
 export interface PhoneRecord {
@@ -207,6 +212,10 @@ const defaultProfile: UserProfile = {
   instagramUsername: '',
   showLinkedinPublicly: false,
   showInstagramPublicly: false,
+  showAgePublicly: true,
+  showCityPublicly: true,
+  showWorkPublicly: true,
+  profileVisibility: 'visible',
 };
 
 export const INITIAL_INCOMING_REQUESTS: IncomingRequest[] = [

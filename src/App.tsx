@@ -13,6 +13,7 @@ import { Page10OverviewScreen } from './components/Page10OverviewScreen';
 import { Page11DiscoverScreen } from './components/Page11DiscoverScreen';
 import { Page12FullProfileScreen } from './components/Page12FullProfileScreen';
 import { Page13YouScreen } from './components/Page13YouScreen';
+import { MyProfileScreen } from './components/MyProfileScreen';
 import { Page14HelpScreen } from './components/Page14HelpScreen';
 import { Page15MatchesScreen } from './components/Page15MatchesScreen';
 import { Page16ChatScreen } from './components/Page16ChatScreen';
@@ -64,6 +65,7 @@ export const App: React.FC = () => {
     '/overview',
     '/discover',
     '/member/profile',
+    '/member/my-profile',
     '/member/you',
     '/member/help',
     '/member/matches',
@@ -429,6 +431,7 @@ export const App: React.FC = () => {
       return (
         <Page13YouScreen
           onNavigateHelp={handleNavigateHelpFromYou}
+          onNavigateProfile={() => navigate('/member/my-profile')}
           onManageMembership={handleManageMembershipFromYou}
           onSignOut={handleSignOutFromYou}
           onDeleteAccount={handleDeleteAccountFromYou}
@@ -447,6 +450,30 @@ export const App: React.FC = () => {
               navigate('/member/elevate');
             } else if (tab === 'mixers') {
               navigate('/member/mixers');
+            }
+          }}
+          showStatusBar={showStatusBar}
+          showHomeIndicator={showHomeIndicator}
+        />
+      );
+    }
+
+    if (currentPath === '/member/my-profile') {
+      return (
+        <MyProfileScreen
+          onBack={() => navigate('/member/you')}
+          onSelectTab={(tab) => {
+            if (tab === 'discover') {
+              navigate('/discover');
+            } else if (tab === 'matches') {
+              setMatchesInitialSubTab('matches');
+              navigate('/member/matches');
+            } else if (tab === 'elevate') {
+              navigate('/member/elevate');
+            } else if (tab === 'mixers') {
+              navigate('/member/mixers');
+            } else {
+              navigate('/member/you');
             }
           }}
           showStatusBar={showStatusBar}

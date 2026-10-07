@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { ChevronRight } from 'lucide-react';
 import { StatusBar } from './StatusBar';
 import { MemberTopBar } from './MemberTopBar';
 import { MemberBottomNav, type MemberTab } from './MemberBottomNav';
@@ -7,6 +8,7 @@ import type { UserInvitation } from '../types/you';
 
 interface Page13YouScreenProps {
   onNavigateHelp: () => void;
+  onNavigateProfile: () => void;
   onManageMembership: () => void;
   onSignOut: () => void;
   onDeleteAccount: () => void;
@@ -22,6 +24,7 @@ const MAX_MONTHLY_INVITATIONS = 4;
 
 export const Page13YouScreen: React.FC<Page13YouScreenProps> = ({
   onNavigateHelp,
+  onNavigateProfile,
   onManageMembership,
   onSignOut,
   onDeleteAccount,
@@ -303,6 +306,28 @@ export const Page13YouScreen: React.FC<Page13YouScreenProps> = ({
             >
               {userSubtext}
             </div>
+            <button
+              type="button"
+              onClick={onNavigateProfile}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '7px',
+                marginTop: '12px',
+                padding: '8px 0',
+                border: 'none',
+                background: 'transparent',
+                color: themeMulberry,
+                fontSize: '11px',
+                fontWeight: 700,
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                cursor: 'pointer',
+              }}
+            >
+              VIEW & EDIT MY PROFILE
+              <ChevronRight size={14} aria-hidden="true" />
+            </button>
           </div>
 
           {/* 3 STATISTICS HORIZONTALLY */}

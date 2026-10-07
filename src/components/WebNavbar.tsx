@@ -17,6 +17,7 @@ export type RoutePath =
   | '/overview'
   | '/discover'
   | '/member/profile'
+  | '/member/my-profile'
   | '/member/you'
   | '/member/help'
   | '/member/matches'
@@ -102,6 +103,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
   const isMemberArea =
     currentPath === '/discover' ||
     currentPath === '/member/profile' ||
+    currentPath === '/member/my-profile' ||
     currentPath === '/member/you' ||
     currentPath === '/member/help' ||
     currentPath === '/member/matches' ||
@@ -130,6 +132,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
     { path: '/overview' as RoutePath, label: '10. Welcome Overview' },
     { path: '/discover' as RoutePath, label: '11. Discover Introductions' },
     { path: '/member/profile' as RoutePath, label: '12. Full Profile View' },
+    { path: '/member/my-profile' as RoutePath, label: 'My Profile' },
     { path: '/member/you' as RoutePath, label: '13. You / Membership' },
     { path: '/member/help' as RoutePath, label: '14. Help & Support' },
     { path: '/member/matches' as RoutePath, label: '15. Matches & Requests' },
