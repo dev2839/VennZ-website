@@ -106,24 +106,56 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
   }, [verifiedName, firstName]);
 
   const datePickerRef = useRef<HTMLInputElement | null>(null);
-  const [city, setCity] = useState(profile.city || '');
-  const [genderIdentity, setGenderIdentity] = useState(profile.genderIdentity || '');
-  const [selfDescribeGender, setSelfDescribeGender] = useState(profile.selfDescribeGender || '');
-  const [datingPreference, setDatingPreference] = useState(profile.datingPreference || '');
-  const [currentStatus, setCurrentStatus] = useState(profile.currentStatus || '');
-  const [designation, setDesignation] = useState(profile.designation || '');
-  const [company, setCompany] = useState(profile.company || '');
-  const [photos, setPhotos] = useState<string[]>(profile.photos || []);
-  const [invitationCode, setInvitationCode] = useState(profile.invitationCode || '');
-  const [introduction, setIntroduction] = useState(profile.introduction || '');
-  const [interests, setInterests] = useState<string[]>(profile.interests || []);
-  const [vibes, setVibes] = useState<string[]>(profile.vibes || []);
+
+  // Resilient fallback reader from local/session storage if state is hydrating
+  const getStorageFallbackProfile = () => {
+    try {
+      const raw =
+        sessionStorage.getItem('inner_circle_active_applicant_data') ||
+        localStorage.getItem('inner_circle_active_applicant_data') ||
+        localStorage.getItem('inner_circle_auth_state');
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        return parsed?.profile || null;
+      }
+    } catch {}
+    return null;
+  };
+
+  const fallback = getStorageFallbackProfile();
+
+  const [city, setCity] = useState(profile.city || fallback?.city || '');
+  const [genderIdentity, setGenderIdentity] = useState(profile.genderIdentity || fallback?.genderIdentity || '');
+  const [selfDescribeGender, setSelfDescribeGender] = useState(profile.selfDescribeGender || fallback?.selfDescribeGender || '');
+  const [datingPreference, setDatingPreference] = useState(profile.datingPreference || fallback?.datingPreference || '');
+  const [currentStatus, setCurrentStatus] = useState(profile.currentStatus || fallback?.currentStatus || '');
+  const [designation, setDesignation] = useState(profile.designation || fallback?.designation || '');
+  const [company, setCompany] = useState(profile.company || fallback?.company || '');
+  const [photos, setPhotos] = useState<string[]>(profile.photos?.length ? profile.photos : (fallback?.photos || []));
+  const [invitationCode, setInvitationCode] = useState(profile.invitationCode || fallback?.invitationCode || '');
+  const [introduction, setIntroduction] = useState(profile.introduction || fallback?.introduction || '');
+  const [interests, setInterests] = useState<string[]>(profile.interests?.length ? profile.interests : (fallback?.interests || []));
+  const [vibes, setVibes] = useState<string[]>(profile.vibes?.length ? profile.vibes : (fallback?.vibes || []));
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const photosSectionRef = useRef<HTMLDivElement | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+
+  // Sync state if profile loads asynchronously or upon re-hydration
+  useEffect(() => {
+    if (profile.city && !city) setCity(profile.city);
+    if (profile.designation && !designation) setDesignation(profile.designation);
+    if (profile.company && !company) setCompany(profile.company);
+    if (profile.genderIdentity && !genderIdentity) setGenderIdentity(profile.genderIdentity);
+    if (profile.datingPreference && !datingPreference) setDatingPreference(profile.datingPreference);
+    if (profile.currentStatus && !currentStatus) setCurrentStatus(profile.currentStatus);
+    if (profile.introduction && !introduction) setIntroduction(profile.introduction);
+    if (profile.interests?.length && !interests.length) setInterests(profile.interests);
+    if (profile.vibes?.length && !vibes.length) setVibes(profile.vibes);
+    if (profile.photos?.length && !photos.length) setPhotos(profile.photos);
+  }, [profile]);
 
   useEffect(() => {
     if (isUpdatingPhotosMode && photosSectionRef.current) {
@@ -893,8 +925,32 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                   <label style={{ display: 'block', fontSize: '13.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor, marginBottom: '8px' }}>
                     CITY <span style={{ color: '#E06D6D' }}>*</span>
                   </label>
-                  <input type="text" value={city} onChange={(e) => { setCity(e.target.value); if (errors.city) setErrors((prev) => ({ ...prev, city: '' })); }} placeholder="e.g. Mumbai"
-                    style={{ width: '100%', height: '54px', borderRadius: '13px', border: errors.city ? '1.5px solid #E06D6D' : `1px solid ${inputBorderColor}`, backgroundColor: inputBgColor, padding: '0 16px', fontSize: '16.5px', fontFamily: 'var(--font-sans)', color: textColor, outline: 'none', boxSizing: 'border-box' }}
+                  <input
+                    type="text"
+                    value={city}
+                    onChange={(e) => {
+                      setCity(e.target.value);
+                      if (errors.city) setErrors((prev) => ({ ...prev, city: '' }));
+                    }}
+                    placeholder="e.g. Mumbai"
+                    autoComplete="off"
+                    autoCorrect="off"
+                    spellCheck="false"
+                    style={{
+                      width: '100%',
+                      height: '54px',
+                      borderRadius: '13px',
+                      border: errors.city ? '1.5px solid #E06D6D' : `1px solid ${inputBorderColor}`,
+                      backgroundColor: inputBgColor,
+                      padding: '0 16px',
+                      fontSize: '16.5px',
+                      fontFamily: 'var(--font-sans)',
+                      color: textColor,
+                      WebkitTextFillColor: textColor,
+                      colorScheme: isDark ? 'dark' : 'light',
+                      outline: 'none',
+                      boxSizing: 'border-box',
+                    }}
                   />
                   {errors.city && <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.city}</div>}
                 </div>
@@ -912,8 +968,30 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                   </div>
                   {genderIdentity === 'PREFER TO SELF-DESCRIBE' && (
                     <div style={{ marginTop: '12px' }}>
-                      <input type="text" value={selfDescribeGender} onChange={(e) => { setSelfDescribeGender(e.target.value); if (errors.selfDescribeGender) setErrors((prev) => ({ ...prev, selfDescribeGender: '' })); }} placeholder="Please specify"
-                        style={{ width: '100%', height: '54px', borderRadius: '13px', border: errors.selfDescribeGender ? '1.5px solid #E06D6D' : `1px solid ${inputBorderColor}`, backgroundColor: inputBgColor, padding: '0 16px', fontSize: '16.5px', fontFamily: 'var(--font-sans)', color: textColor, outline: 'none', boxSizing: 'border-box' }}
+                      <input
+                        type="text"
+                        value={selfDescribeGender}
+                        onChange={(e) => {
+                          setSelfDescribeGender(e.target.value);
+                          if (errors.selfDescribeGender) setErrors((prev) => ({ ...prev, selfDescribeGender: '' }));
+                        }}
+                        placeholder="Please specify"
+                        autoComplete="off"
+                        style={{
+                          width: '100%',
+                          height: '54px',
+                          borderRadius: '13px',
+                          border: errors.selfDescribeGender ? '1.5px solid #E06D6D' : `1px solid ${inputBorderColor}`,
+                          backgroundColor: inputBgColor,
+                          padding: '0 16px',
+                          fontSize: '16.5px',
+                          fontFamily: 'var(--font-sans)',
+                          color: textColor,
+                          WebkitTextFillColor: textColor,
+                          colorScheme: isDark ? 'dark' : 'light',
+                          outline: 'none',
+                          boxSizing: 'border-box',
+                        }}
                       />
                       {errors.selfDescribeGender && <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.selfDescribeGender}</div>}
                     </div>
@@ -954,8 +1032,30 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                   <label style={{ display: 'block', fontSize: '13.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor, marginBottom: '8px' }}>
                     DESIGNATION / ROLE <span style={{ color: '#E06D6D' }}>*</span>
                   </label>
-                  <input type="text" value={designation} onChange={(e) => { setDesignation(e.target.value); if (errors.designation) setErrors((prev) => ({ ...prev, designation: '' })); }} placeholder="e.g. Software Engineer"
-                    style={{ width: '100%', height: '54px', borderRadius: '13px', border: errors.designation ? '1.5px solid #E06D6D' : `1px solid ${inputBorderColor}`, backgroundColor: inputBgColor, padding: '0 16px', fontSize: '16.5px', fontFamily: 'var(--font-sans)', color: textColor, outline: 'none', boxSizing: 'border-box' }}
+                  <input
+                    type="text"
+                    value={designation}
+                    onChange={(e) => {
+                      setDesignation(e.target.value);
+                      if (errors.designation) setErrors((prev) => ({ ...prev, designation: '' }));
+                    }}
+                    placeholder="e.g. Software Engineer"
+                    autoComplete="off"
+                    style={{
+                      width: '100%',
+                      height: '54px',
+                      borderRadius: '13px',
+                      border: errors.designation ? '1.5px solid #E06D6D' : `1px solid ${inputBorderColor}`,
+                      backgroundColor: inputBgColor,
+                      padding: '0 16px',
+                      fontSize: '16.5px',
+                      fontFamily: 'var(--font-sans)',
+                      color: textColor,
+                      WebkitTextFillColor: textColor,
+                      colorScheme: isDark ? 'dark' : 'light',
+                      outline: 'none',
+                      boxSizing: 'border-box',
+                    }}
                   />
                   {errors.designation && <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.designation}</div>}
                 </div>
@@ -965,8 +1065,27 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                   <label style={{ display: 'block', fontSize: '13.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor, marginBottom: '8px' }}>
                     COMPANY (OPTIONAL)
                   </label>
-                  <input type="text" value={company} onChange={(e) => setCompany(e.target.value)} placeholder="e.g. Google"
-                    style={{ width: '100%', height: '54px', borderRadius: '13px', border: `1px solid ${inputBorderColor}`, backgroundColor: inputBgColor, padding: '0 16px', fontSize: '16.5px', fontFamily: 'var(--font-sans)', color: textColor, outline: 'none', boxSizing: 'border-box' }}
+                  <input
+                    type="text"
+                    value={company}
+                    onChange={(e) => setCompany(e.target.value)}
+                    placeholder="e.g. Google"
+                    autoComplete="off"
+                    style={{
+                      width: '100%',
+                      height: '54px',
+                      borderRadius: '13px',
+                      border: `1px solid ${inputBorderColor}`,
+                      backgroundColor: inputBgColor,
+                      padding: '0 16px',
+                      fontSize: '16.5px',
+                      fontFamily: 'var(--font-sans)',
+                      color: textColor,
+                      WebkitTextFillColor: textColor,
+                      colorScheme: isDark ? 'dark' : 'light',
+                      outline: 'none',
+                      boxSizing: 'border-box',
+                    }}
                   />
                 </div>
 
@@ -1087,8 +1206,27 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                   <label style={{ display: 'block', fontSize: '13.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor, marginBottom: '8px' }}>
                     INVITATION CODE (OPTIONAL)
                   </label>
-                  <input type="text" value={invitationCode} onChange={(e) => setInvitationCode(e.target.value)} placeholder="If you have one"
-                    style={{ width: '100%', height: '54px', borderRadius: '13px', border: `1px solid ${inputBorderColor}`, backgroundColor: inputBgColor, padding: '0 16px', fontSize: '16.5px', fontFamily: 'var(--font-sans)', color: textColor, outline: 'none', boxSizing: 'border-box' }}
+                  <input
+                    type="text"
+                    value={invitationCode}
+                    onChange={(e) => setInvitationCode(e.target.value)}
+                    placeholder="If you have one"
+                    autoComplete="off"
+                    style={{
+                      width: '100%',
+                      height: '54px',
+                      borderRadius: '13px',
+                      border: `1px solid ${inputBorderColor}`,
+                      backgroundColor: inputBgColor,
+                      padding: '0 16px',
+                      fontSize: '16.5px',
+                      fontFamily: 'var(--font-sans)',
+                      color: textColor,
+                      WebkitTextFillColor: textColor,
+                      colorScheme: isDark ? 'dark' : 'light',
+                      outline: 'none',
+                      boxSizing: 'border-box',
+                    }}
                   />
                 </div>
 
@@ -1111,7 +1249,22 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                     }}
                     placeholder="A thoughtful note about what drives you, favorite conversation starters, or what you enjoy..."
                     rows={4}
-                    style={{ width: '100%', borderRadius: '13px', border: errors.introduction || introduction.length > 240 ? '1.5px solid #E06D6D' : `1px solid ${inputBorderColor}`, backgroundColor: inputBgColor, padding: '16px', fontSize: '16.5px', fontFamily: 'var(--font-sans)', color: textColor, outline: 'none', boxSizing: 'border-box', resize: 'vertical', minHeight: '100px' }}
+                    style={{
+                      width: '100%',
+                      borderRadius: '13px',
+                      border: errors.introduction || introduction.length > 240 ? '1.5px solid #E06D6D' : `1px solid ${inputBorderColor}`,
+                      backgroundColor: inputBgColor,
+                      padding: '16px',
+                      fontSize: '16.5px',
+                      fontFamily: 'var(--font-sans)',
+                      color: textColor,
+                      WebkitTextFillColor: textColor,
+                      colorScheme: isDark ? 'dark' : 'light',
+                      outline: 'none',
+                      boxSizing: 'border-box',
+                      resize: 'vertical',
+                      minHeight: '100px',
+                    }}
                   />
                   {errors.introduction && <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.introduction}</div>}
                 </div>

@@ -429,6 +429,72 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
                 Verified
               </span>
             </div>
+
+            {/* Row 6: LINKEDIN (PUBLIC) */}
+            {profile.showLinkedinPublicly && profile.linkedinUrl && (
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  padding: '12px 0',
+                  borderBottom: `1px solid ${themeBorder}`,
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    letterSpacing: '0.12em',
+                    textTransform: 'uppercase',
+                    color: themeMuted,
+                  }}
+                >
+                  LINKEDIN (PUBLIC)
+                </span>
+                <a
+                  href={profile.linkedinUrl.startsWith('http') ? profile.linkedinUrl : `https://${profile.linkedinUrl}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ fontSize: '13px', fontWeight: 600, color: themeMulberry, textDecoration: 'none' }}
+                >
+                  View Profile ↗
+                </a>
+              </div>
+            )}
+
+            {/* Row 7: INSTAGRAM (PUBLIC) */}
+            {profile.showInstagramPublicly && profile.instagramUsername && (
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  padding: '12px 0',
+                  borderBottom: `1px solid ${themeBorder}`,
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    letterSpacing: '0.12em',
+                    textTransform: 'uppercase',
+                    color: themeMuted,
+                  }}
+                >
+                  INSTAGRAM (PUBLIC)
+                </span>
+                <a
+                  href={`https://instagram.com/${profile.instagramUsername.replace('@', '')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ fontSize: '13px', fontWeight: 600, color: themeMulberry, textDecoration: 'none' }}
+                >
+                  {profile.instagramUsername.startsWith('@') ? profile.instagramUsername : `@${profile.instagramUsername}`} ↗
+                </a>
+              </div>
+            )}
           </div>
 
           {/* ACTION BUTTONS (PASS & SEND REQUEST) */}

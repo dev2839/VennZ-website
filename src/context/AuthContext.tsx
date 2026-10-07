@@ -421,6 +421,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (backup?.isIdentityVerified !== undefined) mergedState.isIdentityVerified = backup.isIdentityVerified;
         if (backup?.isSelfieVerified !== undefined) mergedState.isSelfieVerified = backup.isSelfieVerified;
         if (backup?.selfieImage !== undefined) mergedState.selfieImage = backup.selfieImage;
+        if (backup?.isDigiLockerVerified !== undefined) mergedState.isDigiLockerVerified = backup.isDigiLockerVerified;
+        if (backup?.digiLockerVerifiedName !== undefined) mergedState.digiLockerVerifiedName = backup.digiLockerVerifiedName;
+        if (backup?.digiLockerVerifiedDob !== undefined) mergedState.digiLockerVerifiedDob = backup.digiLockerVerifiedDob;
 
         // Sanitize notifications so that only real notifications for actual app pages (MATCHES, CHAT, DISCOVER, YOU, ELEVATE, MIXERS) are loaded
         const rawNotifs: AppNotification[] = Array.isArray(mergedState.notifications) ? mergedState.notifications : [];
@@ -454,7 +457,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           mixerBookings: (mergedState.mixerBookings && mergedState.mixerBookings.length > 0) ? mergedState.mixerBookings : INITIAL_PAST_BOOKINGS,
           mixerInterestedEventIds: Array.isArray(mergedState.mixerInterestedEventIds) ? mergedState.mixerInterestedEventIds : [],
           mixerWaitlists: Array.isArray(mergedState.mixerWaitlists) ? mergedState.mixerWaitlists : [],
-          appearanceMode: savedAppearance || mergedState.appearanceMode || 'after-dark',
+          appearanceMode: savedAppearance || mergedState.appearanceMode || 'ivory',
         };
       }
       if (savedAppearance) {
@@ -539,20 +542,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isApplicationApproved: state.isApplicationApproved,
         applicationDecision: state.applicationDecision,
         membershipStatus: state.membershipStatus,
+        isDigiLockerVerified: state.isDigiLockerVerified,
+        digiLockerVerifiedName: state.digiLockerVerifiedName,
+        digiLockerVerifiedDob: state.digiLockerVerifiedDob,
         profile: {
-          firstName: state.profile.firstName,
-          dateOfBirth: state.profile.dateOfBirth,
-          city: state.profile.city,
-          genderIdentity: state.profile.genderIdentity,
-          selfDescribeGender: state.profile.selfDescribeGender,
-          datingPreference: state.profile.datingPreference,
-          currentStatus: state.profile.currentStatus,
-          designation: state.profile.designation,
-          company: state.profile.company,
-          invitationCode: state.profile.invitationCode,
-          introduction: state.profile.introduction,
-          linkedinUrl: state.profile.linkedinUrl,
-          instagramUsername: state.profile.instagramUsername,
+          ...state.profile,
           photos: state.profile.photos || [],
         },
       };

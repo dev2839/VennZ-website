@@ -112,17 +112,47 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 }
 
 /* Form Input Color Scheme & Autofill Overrides */
-input, select, textarea {
+html[data-theme="ivory"] input,
+html[data-theme="ivory"] select,
+html[data-theme="ivory"] textarea {
+  color-scheme: light;
+}
+
+html[data-theme="after-dark"] input,
+html[data-theme="after-dark"] select,
+html[data-theme="after-dark"] textarea,
+:root:not([data-theme="ivory"]) input,
+:root:not([data-theme="ivory"]) select,
+:root:not([data-theme="ivory"]) textarea {
   color-scheme: dark;
 }
 
-input:-webkit-autofill,
-input:-webkit-autofill:hover, 
-input:-webkit-autofill:focus,
-textarea:-webkit-autofill,
-select:-webkit-autofill {
+/* Light / Ivory mode autofill overrides */
+html[data-theme="ivory"] input:-webkit-autofill,
+html[data-theme="ivory"] input:-webkit-autofill:hover, 
+html[data-theme="ivory"] input:-webkit-autofill:focus,
+html[data-theme="ivory"] textarea:-webkit-autofill,
+html[data-theme="ivory"] select:-webkit-autofill {
+  -webkit-text-fill-color: #140E1C !important;
+  -webkit-box-shadow: 0 0 0px 1000px rgba(255, 255, 255, 0.95) inset !important;
+  box-shadow: 0 0 0px 1000px rgba(255, 255, 255, 0.95) inset !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Dark / After-Dark mode autofill overrides */
+html[data-theme="after-dark"] input:-webkit-autofill,
+html[data-theme="after-dark"] input:-webkit-autofill:hover, 
+html[data-theme="after-dark"] input:-webkit-autofill:focus,
+html[data-theme="after-dark"] textarea:-webkit-autofill,
+html[data-theme="after-dark"] select:-webkit-autofill,
+:root:not([data-theme="ivory"]) input:-webkit-autofill,
+:root:not([data-theme="ivory"]) input:-webkit-autofill:hover, 
+:root:not([data-theme="ivory"]) input:-webkit-autofill:focus,
+:root:not([data-theme="ivory"]) textarea:-webkit-autofill,
+:root:not([data-theme="ivory"]) select:-webkit-autofill {
   -webkit-text-fill-color: var(--color-warm-porcelain) !important;
   -webkit-box-shadow: 0 0 0px 1000px #462037 inset !important;
+  box-shadow: 0 0 0px 1000px #462037 inset !important;
   transition: background-color 5000s ease-in-out 0s;
 }
 

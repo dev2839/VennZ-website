@@ -303,6 +303,66 @@ export const Page13YouScreen: React.FC<Page13YouScreenProps> = ({
             >
               {userSubtext}
             </div>
+
+            {/* Public Social Links Bar (shown when opted in) */}
+            {((profile.showLinkedinPublicly && profile.linkedinUrl) || (profile.showInstagramPublicly && profile.instagramUsername)) && (
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '12px' }}>
+                {profile.showLinkedinPublicly && profile.linkedinUrl && (
+                  <a
+                    href={profile.linkedinUrl.startsWith('http') ? profile.linkedinUrl : `https://${profile.linkedinUrl}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '5px 12px',
+                      borderRadius: '999px',
+                      backgroundColor: isDark ? 'rgba(161, 82, 95, 0.22)' : 'rgba(161, 82, 95, 0.1)',
+                      border: `1px solid ${themeBorder}`,
+                      color: themeMulberry,
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      textDecoration: 'none',
+                      transition: 'all 0.15s ease',
+                    }}
+                  >
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+                    </svg>
+                    <span>LinkedIn ↗</span>
+                  </a>
+                )}
+                {profile.showInstagramPublicly && profile.instagramUsername && (
+                  <a
+                    href={`https://instagram.com/${profile.instagramUsername.replace('@', '')}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '5px 12px',
+                      borderRadius: '999px',
+                      backgroundColor: isDark ? 'rgba(161, 82, 95, 0.22)' : 'rgba(161, 82, 95, 0.1)',
+                      border: `1px solid ${themeBorder}`,
+                      color: themeMulberry,
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      textDecoration: 'none',
+                      transition: 'all 0.15s ease',
+                    }}
+                  >
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                    </svg>
+                    <span>{profile.instagramUsername.startsWith('@') ? profile.instagramUsername : `@${profile.instagramUsername}`} ↗</span>
+                  </a>
+                )}
+              </div>
+            )}
           </div>
 
           {/* 3 STATISTICS HORIZONTALLY */}

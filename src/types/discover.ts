@@ -18,6 +18,11 @@ export interface DiscoverProfile {
   datingPreference?: string;
   gender: 'woman' | 'man' | 'other';
   currentStatus?: string;
+  vibes?: string[];
+  linkedinUrl?: string;
+  instagramUsername?: string;
+  showLinkedinPublicly?: boolean;
+  showInstagramPublicly?: boolean;
 }
 
 export interface AppNotification {

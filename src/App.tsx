@@ -97,6 +97,12 @@ export const App: React.FC = () => {
     return path === '/' || path === '';
   });
 
+  // ── Theme synchronization on HTML & body for native controls & autofill ─
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', appearanceMode);
+    document.body.setAttribute('data-theme', appearanceMode);
+  }, [appearanceMode]);
+
   // ── Scroll-to-top on every page/route change ──────────────────────────────
   // Pages use internal overflow containers (not window), so we reset all of them.
   useEffect(() => {

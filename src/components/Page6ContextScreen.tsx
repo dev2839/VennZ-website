@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StatusBar } from './StatusBar';
 import { useAuth } from '../context/AuthContext';
 
@@ -19,11 +19,56 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
   const { profile, updateProfile, appearanceMode } = useAuth();
   const isDark = appearanceMode === 'after-dark';
 
-  // Local state initialized from profile context
-  const [linkedinUrl, setLinkedinUrl] = useState<string>(profile.linkedinUrl || '');
-  const [instagramUsername, setInstagramUsername] = useState<string>(profile.instagramUsername || '');
-  const [showLinkedinPublicly, setShowLinkedinPublicly] = useState<boolean>(profile.showLinkedinPublicly ?? false);
-  const [showInstagramPublicly, setShowInstagramPublicly] = useState<boolean>(profile.showInstagramPublicly ?? false);
+  // Resilient fallback reader from local/session storage if state is hydrating
+  const getStorageFallbackProfile = () => {
+    try {
+      const raw =
+        sessionStorage.getItem('inner_circle_active_applicant_data') ||
+        localStorage.getItem('inner_circle_active_applicant_data') ||
+        localStorage.getItem('inner_circle_auth_state');
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        return parsed?.profile || null;
+      }
+    } catch {}
+    return null;
+  };
+  const fallback = getStorageFallbackProfile();
+
+  // Local state initialized from profile context or resilient storage
+  const [linkedinUrl, setLinkedinUrl] = useState<string>(profile.linkedinUrl || fallback?.linkedinUrl || '');
+  const [instagramUsername, setInstagramUsername] = useState<string>(profile.instagramUsername || fallback?.instagramUsername || '');
+  const [showLinkedinPublicly, setShowLinkedinPublicly] = useState<boolean>(() => {
+    const val = profile.showLinkedinPublicly ?? fallback?.showLinkedinPublicly ?? false;
+    const url = profile.linkedinUrl || fallback?.linkedinUrl || '';
+    return Boolean(url.trim() && val);
+  });
+  const [showInstagramPublicly, setShowInstagramPublicly] = useState<boolean>(() => {
+    const val = profile.showInstagramPublicly ?? fallback?.showInstagramPublicly ?? false;
+    const handle = profile.instagramUsername || fallback?.instagramUsername || '';
+    return Boolean(handle.trim() && val);
+  });
+
+  const hasLinkedin = Boolean(linkedinUrl && linkedinUrl.trim().length > 0);
+  const hasInstagram = Boolean(instagramUsername && instagramUsername.trim().length > 0);
+
+  // Sync state if profile loads asynchronously or upon re-hydration
+  useEffect(() => {
+    if (profile.linkedinUrl && !linkedinUrl) setLinkedinUrl(profile.linkedinUrl);
+    if (profile.instagramUsername && !instagramUsername) setInstagramUsername(profile.instagramUsername);
+  }, [profile]);
+
+  // Auto-sync into AuthContext and persistent storage so refresh never reverts data
+  useEffect(() => {
+    const trimmedL = linkedinUrl.trim();
+    const trimmedI = instagramUsername.trim();
+    updateProfile({
+      linkedinUrl: trimmedL,
+      instagramUsername: trimmedI,
+      showLinkedinPublicly: Boolean(trimmedL && showLinkedinPublicly),
+      showInstagramPublicly: Boolean(trimmedI && showInstagramPublicly),
+    });
+  }, [linkedinUrl, instagramUsername, showLinkedinPublicly, showInstagramPublicly]);
 
   // Validation errors
   const [errors, setErrors] = useState<{
@@ -75,12 +120,14 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
       formattedInstagram = `@${formattedInstagram}`;
     }
 
+    const trimmedLinkedin = linkedinUrl.trim();
+
     // Save values into global auth context
     updateProfile({
-      linkedinUrl: linkedinUrl.trim(),
+      linkedinUrl: trimmedLinkedin,
       instagramUsername: formattedInstagram,
-      showLinkedinPublicly,
-      showInstagramPublicly,
+      showLinkedinPublicly: Boolean(trimmedLinkedin && showLinkedinPublicly),
+      showInstagramPublicly: Boolean(formattedInstagram && showInstagramPublicly),
     });
 
     onSuccess();
@@ -296,7 +343,11 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
                 type="url"
                 value={linkedinUrl}
                 onChange={(e) => {
-                  setLinkedinUrl(e.target.value);
+                  const val = e.target.value;
+                  setLinkedinUrl(val);
+                  if (!val.trim()) {
+                    setShowLinkedinPublicly(false);
+                  }
                   if (errors.linkedinUrl) {
                     setErrors((prev) => ({ ...prev, linkedinUrl: undefined }));
                   }
@@ -321,6 +372,8 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
                   fontSize: '16.5px',
                   fontFamily: 'var(--font-sans)',
                   color: isDark ? '#FBF7F2' : 'var(--color-espresso)',
+                  WebkitTextFillColor: isDark ? '#FBF7F2' : 'var(--color-espresso)',
+                  colorScheme: isDark ? 'dark' : 'light',
                   outline: 'none',
                   boxSizing: 'border-box',
                   transition: 'border-color 0.15s ease, box-shadow 0.15s ease',
@@ -351,23 +404,30 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
                   alignItems: 'center',
                   gap: '10px',
                   marginTop: '10px',
-                  cursor: 'pointer',
+                  cursor: hasLinkedin ? 'pointer' : 'not-allowed',
+                  opacity: hasLinkedin ? 1 : 0.55,
                   userSelect: 'none',
+                  transition: 'opacity 0.2s ease',
                 }}
               >
                 <input
                   type="checkbox"
-                  checked={showLinkedinPublicly}
-                  onChange={(e) => setShowLinkedinPublicly(e.target.checked)}
+                  disabled={!hasLinkedin}
+                  checked={hasLinkedin && showLinkedinPublicly}
+                  onChange={(e) => {
+                    if (hasLinkedin) {
+                      setShowLinkedinPublicly(e.target.checked);
+                    }
+                  }}
                   style={{
                     width: '18px',
                     height: '18px',
                     accentColor: '#C7577C',
-                    cursor: 'pointer',
+                    cursor: hasLinkedin ? 'pointer' : 'not-allowed',
                   }}
                 />
                 <span style={{ fontSize: '13px', color: isDark ? '#D9CFD5' : '#5E4E58' }}>
-                  Display LinkedIn publicly on my VennZ profile
+                  Display LinkedIn publicly on my VennZ profile {!hasLinkedin && '(enter URL above to enable)'}
                 </span>
               </label>
             </div>
@@ -412,7 +472,11 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
                 type="text"
                 value={instagramUsername}
                 onChange={(e) => {
-                  setInstagramUsername(e.target.value);
+                  const val = e.target.value;
+                  setInstagramUsername(val);
+                  if (!val.trim()) {
+                    setShowInstagramPublicly(false);
+                  }
                   if (errors.instagramUsername) {
                     setErrors((prev) => ({ ...prev, instagramUsername: undefined }));
                   }
@@ -438,6 +502,8 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
                   fontSize: '16.5px',
                   fontFamily: 'var(--font-sans)',
                   color: isDark ? '#FBF7F2' : 'var(--color-espresso)',
+                  WebkitTextFillColor: isDark ? '#FBF7F2' : 'var(--color-espresso)',
+                  colorScheme: isDark ? 'dark' : 'light',
                   outline: 'none',
                   boxSizing: 'border-box',
                   transition: 'border-color 0.15s ease, box-shadow 0.15s ease',
@@ -468,23 +534,30 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
                   alignItems: 'center',
                   gap: '10px',
                   marginTop: '10px',
-                  cursor: 'pointer',
+                  cursor: hasInstagram ? 'pointer' : 'not-allowed',
+                  opacity: hasInstagram ? 1 : 0.55,
                   userSelect: 'none',
+                  transition: 'opacity 0.2s ease',
                 }}
               >
                 <input
                   type="checkbox"
-                  checked={showInstagramPublicly}
-                  onChange={(e) => setShowInstagramPublicly(e.target.checked)}
+                  disabled={!hasInstagram}
+                  checked={hasInstagram && showInstagramPublicly}
+                  onChange={(e) => {
+                    if (hasInstagram) {
+                      setShowInstagramPublicly(e.target.checked);
+                    }
+                  }}
                   style={{
                     width: '18px',
                     height: '18px',
                     accentColor: '#C7577C',
-                    cursor: 'pointer',
+                    cursor: hasInstagram ? 'pointer' : 'not-allowed',
                   }}
                 />
                 <span style={{ fontSize: '13px', color: isDark ? '#D9CFD5' : '#5E4E58' }}>
-                  Display Instagram publicly on my VennZ profile
+                  Display Instagram publicly on my VennZ profile {!hasInstagram && '(enter handle above to enable)'}
                 </span>
               </label>
             </div>
