@@ -77,8 +77,8 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
     ? availableProfiles.length
     : Math.min(availableProfiles.length, complimentaryProfilesRemaining);
 
-  // Photo Queue Animation State for Current Profile
-  const [activePhotoIndex, setActivePhotoIndex] = useState<number>(0);
+  // Photo Queue Animation & Deck Order State for Current Profile
+  const [cardOrder, setCardOrder] = useState<number[]>([]);
   const [transitionPhase, setTransitionPhase] = useState<'idle' | 'drop' | 'return'>('idle');
   const isTransitioningRef = useRef<boolean>(false);
   const timeout1Ref = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -95,27 +95,32 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
     };
   }, []);
 
-  // Preload upcoming photos in the queue
-  useEffect(() => {
-    if (!currentProfile?.photos || currentProfile.photos.length <= 1) return;
-    const nextIdx = (activePhotoIndex + 1) % currentProfile.photos.length;
-    const img1 = new Image();
-    img1.src = currentProfile.photos[nextIdx];
-    if (currentProfile.photos.length > 2) {
-      const nextNextIdx = (activePhotoIndex + 2) % currentProfile.photos.length;
-      const img2 = new Image();
-      img2.src = currentProfile.photos[nextNextIdx];
-    }
-  }, [activePhotoIndex, currentProfile]);
-
-  // Reset photo index and transition state when profile changes
+  // Initialize or reset card queue order whenever current profile changes
   useEffect(() => {
     if (timeout1Ref.current) clearTimeout(timeout1Ref.current);
     if (timeout2Ref.current) clearTimeout(timeout2Ref.current);
-    setActivePhotoIndex(0);
+    if (currentProfile?.photos && currentProfile.photos.length > 0) {
+      setCardOrder(currentProfile.photos.map((_, i) => i));
+    } else {
+      setCardOrder([]);
+    }
     setTransitionPhase('idle');
     isTransitioningRef.current = false;
   }, [currentProfile?.id]);
+
+  // Preload upcoming photos in the queue
+  useEffect(() => {
+    if (!currentProfile?.photos || currentProfile.photos.length <= 1 || cardOrder.length === 0) return;
+    const currentFront = cardOrder[0] ?? 0;
+    const nextIdx = (currentFront + 1) % currentProfile.photos.length;
+    const img1 = new Image();
+    img1.src = currentProfile.photos[nextIdx];
+    if (currentProfile.photos.length > 2) {
+      const nextNextIdx = (currentFront + 2) % currentProfile.photos.length;
+      const img2 = new Image();
+      img2.src = currentProfile.photos[nextNextIdx];
+    }
+  }, [cardOrder, currentProfile]);
 
   // Transition to next photo: slide down in front, drop behind, and glide up into the rear of the stack
   const handleNextPhotoCard = useCallback(() => {
@@ -123,21 +128,83 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
     if (isTransitioningRef.current) return;
     isTransitioningRef.current = true;
 
-    // Phase 1: Slide down in front to reveal the next card
+    // Phase 1: Slide down in front to reveal the next card (which already has its own image & text!)
     setTransitionPhase('drop');
 
-    // Phase 2: Drop behind the stack and slide up into the rear position
+    // Phase 2: Outgoing front card drops behind the deck (zIndex 1) and glides up into rear position
     timeout1Ref.current = setTimeout(() => {
       setTransitionPhase('return');
 
-      // Phase 3: Settle in back of queue and advance activePhotoIndex
+      // Phase 3: Settle smoothly into back of queue, rotate order without coordinate jump
       timeout2Ref.current = setTimeout(() => {
-        setActivePhotoIndex((prev) => (prev + 1) % currentProfile.photos.length);
+        setCardOrder((prev) => (prev.length > 1 ? [...prev.slice(1), prev[0]] : prev));
         setTransitionPhase('idle');
         isTransitioningRef.current = false;
-      }, 280);
-    }, 260);
+      }, 300);
+    }, 280);
   }, [currentProfile]);
+
+  // Active displayed photo index (during transition, the incoming front card is cardOrder[1])
+  const activePhotoIndex = (transitionPhase === 'drop' || transitionPhase === 'return')
+    ? (cardOrder.length > 1 ? cardOrder[1] : (cardOrder[0] ?? 0))
+    : (cardOrder[0] ?? 0);
+
+  // Helper to get distinct text & story details for each photo of a profile
+  const getPhotoCardDetails = (prof: DiscoverProfile, photoIndex: number) => {
+    // Photo 0: Exact same primary info as now (Name, Age, Verified, City, Role/Work)
+    if (photoIndex === 0) {
+      return {
+        type: 'primary' as const,
+        nameAge: `${prof.firstName}, ${prof.age}`,
+        isVerified: prof.isVerified,
+        city: prof.city,
+        work: [prof.designation, prof.company].filter(Boolean).join(' · '),
+      };
+    }
+
+    // Specific photo prompt if available in profile data
+    const prompt = prof.photoPrompts?.find((p) => p.photoIndex === photoIndex);
+    if (prompt) {
+      return {
+        type: 'prompt' as const,
+        title: prompt.title,
+        subtitle: prompt.subtitle,
+        content: prompt.content,
+        tags: prompt.tags || [],
+      };
+    }
+
+    // Context-rich fallbacks for subsequent photos
+    if (photoIndex === 1) {
+      return {
+        type: 'prompt' as const,
+        title: 'WEEKEND RITUAL',
+        subtitle: prof.vibes?.slice(0, 2).join(' · ') || 'Off-Hours Rhythm',
+        content: prof.weekendRitual || prof.introduction,
+        tags: prof.interests?.slice(0, 3) || [],
+      };
+    }
+
+    if (photoIndex === 2) {
+      return {
+        type: 'prompt' as const,
+        title: 'WHAT MOVES ME',
+        subtitle: prof.vibes?.slice(2, 4).join(' · ') || 'Passions & Escapes',
+        content: (prof.quirks && prof.quirks.length > 0)
+          ? prof.quirks.join(' · ')
+          : prof.introduction,
+        tags: prof.interests?.slice(2, 5) || [],
+      };
+    }
+
+    return {
+      type: 'prompt' as const,
+      title: 'LIFE BEYOND WORK',
+      subtitle: prof.city,
+      content: prof.introduction,
+      tags: prof.vibes || [],
+    };
+  };
 
   // Touch handlers for mobile / tablet horizontal flick
   const touchStartXRef = useRef<number>(0);
@@ -419,6 +486,353 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
               const photoList = currentProfile.photos || [];
               const N = photoList.length;
 
+              const currentCardOrder = cardOrder.length === N ? cardOrder : photoList.map((_, i) => i);
+              const frontIdx = currentCardOrder[0] ?? 0;
+              const nextIdx = N > 1 ? currentCardOrder[1] : null;
+              const thirdIdx = N > 2 ? currentCardOrder[2] : null;
+
+              // Helper function to render the full self-contained content of each photo card
+              const renderCardBody = (pIdx: number, isInteractiveFront: boolean) => {
+                const photoUrl = photoList[pIdx];
+                const details = getPhotoCardDetails(currentProfile, pIdx);
+
+                return (
+                  <div
+                    style={{
+                      position: 'relative',
+                      width: '100%',
+                      height: '100%',
+                      overflow: 'hidden',
+                      borderRadius: '24px',
+                    }}
+                  >
+                    {/* Photo Image */}
+                    {photoUrl ? (
+                      <img
+                        src={photoUrl}
+                        alt={`${currentProfile.firstName}'s photo ${pIdx + 1}`}
+                        draggable={false}
+                        className="ken-burns-img"
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          objectPosition: 'center top',
+                          display: 'block',
+                          pointerEvents: 'none',
+                        }}
+                      />
+                    ) : (
+                      <div
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          backgroundColor: isDark ? '#2D1B28' : '#F2E8EB',
+                          color: themeMulberry,
+                          fontSize: '48px',
+                          fontFamily: 'var(--font-serif)',
+                        }}
+                      >
+                        {currentProfile.firstName[0]}
+                      </div>
+                    )}
+
+                    {/* Top Segmented Progress Bar */}
+                    {N > 1 && (
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: '12px',
+                          left: '16px',
+                          right: '16px',
+                          display: 'flex',
+                          gap: '5px',
+                          zIndex: 25,
+                          pointerEvents: 'none',
+                        }}
+                      >
+                        {photoList.map((_, segIdx) => (
+                          <div
+                            key={segIdx}
+                            style={{
+                              height: '3px',
+                              flex: 1,
+                              borderRadius: '2px',
+                              backgroundColor: segIdx === pIdx ? '#FFFFFF' : 'rgba(255, 255, 255, 0.38)',
+                              boxShadow: segIdx === pIdx ? '0 0 6px rgba(255, 255, 255, 0.8)' : 'none',
+                              transition: 'background-color 0.25s ease',
+                            }}
+                          />
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Activity Status Badge */}
+                    {currentProfile.activeStatus && (
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: N > 1 ? '24px' : '14px',
+                          left: '16px',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          padding: '4px 10px',
+                          borderRadius: '999px',
+                          backgroundColor: 'rgba(16, 10, 18, 0.72)',
+                          backdropFilter: 'blur(8px)',
+                          border: '1px solid rgba(255, 255, 255, 0.2)',
+                          color: '#FFFFFF',
+                          fontSize: '11px',
+                          fontWeight: 600,
+                          letterSpacing: '0.04em',
+                          zIndex: 25,
+                          pointerEvents: 'none',
+                        }}
+                      >
+                        <span
+                          style={{
+                            width: '6px',
+                            height: '6px',
+                            borderRadius: '50%',
+                            backgroundColor: '#34D399',
+                            boxShadow: '0 0 8px #34D399',
+                            display: 'inline-block',
+                          }}
+                        />
+                        <span>{currentProfile.activeStatus}</span>
+                      </div>
+                    )}
+
+                    {/* Lightbox / Enlarge Trigger Button (interactive on front card) */}
+                    {photoUrl && isInteractiveFront && (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openLightbox(photoList, pIdx, `${currentProfile.firstName}, ${currentProfile.age}`);
+                        }}
+                        aria-label="View photo in full screen lightbox"
+                        title="View full screen photo"
+                        style={{
+                          position: 'absolute',
+                          top: N > 1 ? '22px' : '12px',
+                          right: '16px',
+                          width: '32px',
+                          height: '32px',
+                          borderRadius: '50%',
+                          backgroundColor: 'rgba(16, 10, 18, 0.65)',
+                          backdropFilter: 'blur(8px)',
+                          border: '1px solid rgba(255, 255, 255, 0.25)',
+                          color: '#FFFFFF',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          cursor: 'pointer',
+                          zIndex: 25,
+                          transition: 'transform 0.15s ease, background-color 0.15s ease',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.transform = 'scale(1.08)';
+                          e.currentTarget.style.backgroundColor = 'rgba(73, 40, 61, 0.9)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.transform = 'scale(1)';
+                          e.currentTarget.style.backgroundColor = 'rgba(16, 10, 18, 0.65)';
+                        }}
+                      >
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+                        </svg>
+                      </button>
+                    )}
+
+                    {/* Subtle Dark Gradient Overlay */}
+                    <div
+                      style={{
+                        position: 'absolute',
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        height: details.type === 'primary' ? '58%' : '66%',
+                        background: 'linear-gradient(to top, rgba(14, 8, 14, 0.96) 0%, rgba(14, 8, 14, 0.70) 42%, rgba(14, 8, 14, 0.16) 78%, transparent 100%)',
+                        pointerEvents: 'none',
+                      }}
+                    />
+
+                    {/* Overlay Details */}
+                    <div
+                      style={{
+                        position: 'absolute',
+                        bottom: '18px',
+                        left: '20px',
+                        right: '20px',
+                        zIndex: 15,
+                        pointerEvents: 'none',
+                      }}
+                    >
+                      {details.type === 'primary' ? (
+                        // FIRST IMAGE: EXACT SAME TEXT AS NOW
+                        <>
+                          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '3px' }}>
+                            <h2
+                              style={{
+                                fontFamily: 'var(--font-serif)',
+                                fontSize: '30px',
+                                fontWeight: 400,
+                                color: '#FFFFFF',
+                                margin: 0,
+                                letterSpacing: '-0.01em',
+                                textShadow: '0 2px 10px rgba(0, 0, 0, 0.35)',
+                              }}
+                            >
+                              {details.nameAge}
+                            </h2>
+
+                            {details.isVerified && (
+                              <span
+                                style={{
+                                  fontSize: '10.5px',
+                                  fontWeight: 700,
+                                  letterSpacing: '0.1em',
+                                  textTransform: 'uppercase',
+                                  color: '#86EFAC',
+                                  backgroundColor: 'rgba(34, 197, 94, 0.22)',
+                                  border: '1px solid rgba(74, 222, 128, 0.35)',
+                                  padding: '2px 8px',
+                                  borderRadius: '999px',
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: '4px',
+                                }}
+                              >
+                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round">
+                                  <polyline points="20 6 9 17 4 12" />
+                                </svg>
+                                VERIFIED
+                              </span>
+                            )}
+                          </div>
+
+                          {details.city && (
+                            <div
+                              style={{
+                                fontSize: '11px',
+                                fontWeight: 700,
+                                letterSpacing: '0.1em',
+                                textTransform: 'uppercase',
+                                color: 'rgba(255, 255, 255, 0.85)',
+                                marginBottom: '4px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '4px',
+                              }}
+                            >
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+                                <circle cx="12" cy="10" r="3" />
+                              </svg>
+                              <span>{details.city}</span>
+                            </div>
+                          )}
+
+                          {details.work && (
+                            <div
+                              style={{
+                                fontSize: '14px',
+                                fontFamily: 'var(--font-serif)',
+                                fontWeight: 500,
+                                color: 'rgba(255, 255, 255, 0.95)',
+                                lineHeight: '1.3',
+                              }}
+                            >
+                              {details.work}
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        // DIFFERENT TEXT ABOUT THAT PERSON ON SUBSEQUENT IMAGES
+                        <>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px', flexWrap: 'wrap' }}>
+                            <span
+                              style={{
+                                fontSize: '10px',
+                                fontWeight: 700,
+                                letterSpacing: '0.12em',
+                                textTransform: 'uppercase',
+                                color: '#F9AAAD',
+                                backgroundColor: 'rgba(161, 82, 95, 0.32)',
+                                border: '1px solid rgba(161, 82, 95, 0.45)',
+                                padding: '3px 9px',
+                                borderRadius: '999px',
+                              }}
+                            >
+                              {details.title}
+                            </span>
+                            {details.subtitle && (
+                              <span
+                                style={{
+                                  fontSize: '11px',
+                                  fontWeight: 600,
+                                  letterSpacing: '0.04em',
+                                  color: 'rgba(255, 255, 255, 0.85)',
+                                }}
+                              >
+                                {details.subtitle}
+                              </span>
+                            )}
+                          </div>
+
+                          {details.content && (
+                            <p
+                              style={{
+                                fontFamily: 'var(--font-serif)',
+                                fontSize: '15.5px',
+                                lineHeight: '1.42',
+                                color: '#FFFFFF',
+                                margin: '0 0 8px 0',
+                                textShadow: '0 2px 8px rgba(0, 0, 0, 0.4)',
+                                display: '-webkit-box',
+                                WebkitLineClamp: 3,
+                                WebkitBoxOrient: 'vertical',
+                                overflow: 'hidden',
+                              }}
+                            >
+                              {details.content}
+                            </p>
+                          )}
+
+                          {details.tags && details.tags.length > 0 && (
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                              {details.tags.map((tag, tIdx) => (
+                                <span
+                                  key={tIdx}
+                                  style={{
+                                    fontSize: '11px',
+                                    fontWeight: 600,
+                                    color: 'rgba(255, 255, 255, 0.92)',
+                                    backgroundColor: 'rgba(255, 255, 255, 0.14)',
+                                    backdropFilter: 'blur(6px)',
+                                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                                    padding: '2px 8px',
+                                    borderRadius: '999px',
+                                  }}
+                                >
+                                  {tag}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  </div>
+                );
+              };
+
               return (
                 <div
                   style={{
@@ -444,54 +858,45 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                       perspective: '1000px',
                     }}
                   >
-                    {/* 3rd Layer: Deepest Background Card (shown if N >= 3) */}
-                    {N >= 3 && (
+                    {/* Layer 3: Deepest Background Card (shown if N >= 3) */}
+                    {thirdIdx !== null && (
                       <div
+                        key={`deck-card-${thirdIdx}`}
                         style={{
                           position: 'absolute',
                           inset: 0,
                           borderRadius: '24px',
-                          overflow: 'hidden',
                           backgroundColor: '#1E161C',
                           boxShadow: isDark ? '0 8px 24px rgba(0, 0, 0, 0.45)' : '0 8px 22px rgba(73, 40, 61, 0.1)',
                           transform: transitionPhase === 'idle'
                             ? 'translate3d(0, -16px, -30px) scale(0.90) rotate(-2.8deg)'
                             : 'translate3d(0, -8px, -15px) scale(0.95) rotate(2.4deg)',
                           transformOrigin: 'bottom center',
-                          opacity: transitionPhase === 'idle' ? 0.65 : 0.85,
+                          opacity: transitionPhase === 'idle' ? 0.75 : 0.9,
                           filter: transitionPhase === 'idle'
                             ? (isDark ? 'brightness(0.68)' : 'brightness(0.78)')
                             : (isDark ? 'brightness(0.78)' : 'brightness(0.88)'),
                           zIndex: 2,
                           transition: prefersReducedMotion
                             ? 'none'
-                            : 'transform 0.28s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.28s ease, filter 0.28s ease',
+                            : transitionPhase === 'drop'
+                            ? 'transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.28s ease, filter 0.28s ease'
+                            : 'none',
                           pointerEvents: 'none',
                         }}
                       >
-                        <img
-                          src={photoList[(activePhotoIndex + 2) % N]}
-                          alt=""
-                          draggable={false}
-                          style={{
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'cover',
-                            objectPosition: 'center top',
-                            display: 'block',
-                          }}
-                        />
+                        {renderCardBody(thirdIdx, false)}
                       </div>
                     )}
 
-                    {/* 2nd Layer: Middle Background Card (shown if N >= 2) */}
-                    {N >= 2 && (
+                    {/* Layer 2: Middle Background Card (shown if N >= 2) */}
+                    {nextIdx !== null && (
                       <div
+                        key={`deck-card-${nextIdx}`}
                         style={{
                           position: 'absolute',
                           inset: 0,
                           borderRadius: '24px',
-                          overflow: 'hidden',
                           backgroundColor: '#1E161C',
                           boxShadow: transitionPhase === 'idle'
                             ? (isDark ? '0 12px 30px rgba(0, 0, 0, 0.5)' : '0 12px 28px rgba(73, 40, 61, 0.12)')
@@ -500,40 +905,31 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                             ? 'translate3d(0, -8px, -15px) scale(0.95) rotate(2.4deg)'
                             : 'translate3d(0, 0, 0) scale(1) rotate(0deg)',
                           transformOrigin: 'bottom center',
-                          opacity: transitionPhase === 'idle' ? 0.85 : 1,
+                          opacity: transitionPhase === 'idle' ? 0.9 : 1,
                           filter: transitionPhase === 'idle'
                             ? (isDark ? 'brightness(0.78)' : 'brightness(0.88)')
                             : 'brightness(1)',
                           zIndex: transitionPhase === 'idle' ? 5 : 10,
                           transition: prefersReducedMotion
                             ? 'none'
-                            : 'transform 0.28s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.28s ease, filter 0.28s ease',
+                            : transitionPhase === 'drop'
+                            ? 'transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.28s ease, filter 0.28s ease'
+                            : 'none',
                           pointerEvents: 'none',
                         }}
                       >
-                        <img
-                          src={photoList[(activePhotoIndex + 1) % N]}
-                          alt=""
-                          draggable={false}
-                          style={{
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'cover',
-                            objectPosition: 'center top',
-                            display: 'block',
-                          }}
-                        />
+                        {renderCardBody(nextIdx, false)}
                       </div>
                     )}
 
-                    {/* 1st Layer: Main Front Card */}
+                    {/* Layer 1: Front / Outgoing Card */}
                     <div
+                      key={`deck-card-${frontIdx}`}
                       onClick={handleNextPhotoCard}
                       style={{
                         position: 'absolute',
                         inset: 0,
                         borderRadius: '24px',
-                        overflow: 'hidden',
                         backgroundColor: '#1E161C',
                         boxShadow: transitionPhase === 'drop'
                           ? (isDark ? '0 24px 50px rgba(0, 0, 0, 0.7)' : '0 22px 46px rgba(73, 40, 61, 0.24)')
@@ -543,268 +939,29 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                         transform: transitionPhase === 'idle'
                           ? 'translate3d(0, 0, 0) scale(1) rotate(0deg)'
                           : transitionPhase === 'drop'
-                          ? 'translate3d(10px, 74%, 20px) scale(0.95) rotate(3.5deg)'
-                          : (N >= 3 ? 'translate3d(0, -16px, -30px) scale(0.90) rotate(-2.8deg)' : 'translate3d(0, -8px, -15px) scale(0.95) rotate(2.4deg)'),
+                          ? 'translate3d(8px, 76%, 20px) scale(0.96) rotate(3.5deg)'
+                          : (thirdIdx !== null
+                            ? 'translate3d(0, -16px, -30px) scale(0.90) rotate(-2.8deg)'
+                            : 'translate3d(0, -8px, -15px) scale(0.95) rotate(2.4deg)'),
                         transformOrigin: 'bottom center',
-                        opacity: 1,
+                        opacity: transitionPhase === 'return' ? (thirdIdx !== null ? 0.75 : 0.9) : 1,
                         filter: transitionPhase === 'return'
-                          ? (N >= 3 ? (isDark ? 'brightness(0.68)' : 'brightness(0.78)') : (isDark ? 'brightness(0.78)' : 'brightness(0.88)'))
+                          ? (thirdIdx !== null ? (isDark ? 'brightness(0.68)' : 'brightness(0.78)') : (isDark ? 'brightness(0.78)' : 'brightness(0.88)'))
                           : 'brightness(1)',
                         zIndex: transitionPhase === 'drop' ? 15 : (transitionPhase === 'return' ? 1 : 10),
                         cursor: N > 1 ? 'pointer' : 'default',
                         transition: prefersReducedMotion
                           ? 'none'
                           : transitionPhase === 'drop'
-                          ? 'transform 0.26s cubic-bezier(0.25, 1, 0.5, 1)'
-                          : 'transform 0.28s cubic-bezier(0.25, 1, 0.5, 1), filter 0.28s ease',
+                          ? 'transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1), box-shadow 0.28s ease'
+                          : transitionPhase === 'return'
+                          ? 'transform 0.30s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.30s ease, filter 0.30s ease'
+                          : 'none',
                         userSelect: 'none',
                       }}
                       title={N > 1 ? 'Click to see next photo' : undefined}
                     >
-                      {/* Photo Image */}
-                      {photoList.length > 0 ? (
-                        <img
-                          src={photoList[activePhotoIndex]}
-                          alt={`${currentProfile.firstName}'s photo ${activePhotoIndex + 1}`}
-                          draggable={false}
-                          className="ken-burns-img"
-                          style={{
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'cover',
-                            objectPosition: 'center top',
-                            display: 'block',
-                            pointerEvents: 'none',
-                          }}
-                        />
-                      ) : (
-                        <div
-                          style={{
-                            width: '100%',
-                            height: '100%',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            backgroundColor: isDark ? '#2D1B28' : '#F2E8EB',
-                            color: themeMulberry,
-                            fontSize: '48px',
-                            fontFamily: 'var(--font-serif)',
-                          }}
-                        >
-                          {currentProfile.firstName[0]}
-                        </div>
-                      )}
-
-                      {/* Top Segmented Progress Bar */}
-                      {N > 1 && (
-                        <div
-                          style={{
-                            position: 'absolute',
-                            top: '12px',
-                            left: '16px',
-                            right: '16px',
-                            display: 'flex',
-                            gap: '5px',
-                            zIndex: 25,
-                            pointerEvents: 'none',
-                          }}
-                        >
-                          {photoList.map((_, pIdx) => (
-                            <div
-                              key={pIdx}
-                              style={{
-                                height: '3px',
-                                flex: 1,
-                                borderRadius: '2px',
-                                backgroundColor: pIdx === activePhotoIndex ? '#FFFFFF' : 'rgba(255, 255, 255, 0.38)',
-                                boxShadow: pIdx === activePhotoIndex ? '0 0 6px rgba(255, 255, 255, 0.8)' : 'none',
-                                transition: 'background-color 0.25s ease',
-                              }}
-                            />
-                          ))}
-                        </div>
-                      )}
-
-                      {/* Activity Status Badge */}
-                      {currentProfile.activeStatus && (
-                        <div
-                          style={{
-                            position: 'absolute',
-                            top: N > 1 ? '24px' : '14px',
-                            left: '16px',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '6px',
-                            padding: '4px 10px',
-                            borderRadius: '999px',
-                            backgroundColor: 'rgba(16, 10, 18, 0.72)',
-                            backdropFilter: 'blur(8px)',
-                            border: '1px solid rgba(255, 255, 255, 0.2)',
-                            color: '#FFFFFF',
-                            fontSize: '11px',
-                            fontWeight: 600,
-                            letterSpacing: '0.04em',
-                            zIndex: 25,
-                            pointerEvents: 'none',
-                          }}
-                        >
-                          <span
-                            style={{
-                              width: '6px',
-                              height: '6px',
-                              borderRadius: '50%',
-                              backgroundColor: '#34D399',
-                              boxShadow: '0 0 8px #34D399',
-                              display: 'inline-block',
-                            }}
-                          />
-                          <span>{currentProfile.activeStatus}</span>
-                        </div>
-                      )}
-
-                      {/* Lightbox / Enlarge Trigger Button */}
-                      {photoList.length > 0 && (
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            openLightbox(photoList, activePhotoIndex, `${currentProfile.firstName}, ${currentProfile.age}`);
-                          }}
-                          aria-label="View photo in full screen lightbox"
-                          title="View full screen photo"
-                          style={{
-                            position: 'absolute',
-                            top: N > 1 ? '22px' : '12px',
-                            right: '16px',
-                            width: '32px',
-                            height: '32px',
-                            borderRadius: '50%',
-                            backgroundColor: 'rgba(16, 10, 18, 0.65)',
-                            backdropFilter: 'blur(8px)',
-                            border: '1px solid rgba(255, 255, 255, 0.25)',
-                            color: '#FFFFFF',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            cursor: 'pointer',
-                            zIndex: 25,
-                            transition: 'transform 0.15s ease, background-color 0.15s ease',
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.transform = 'scale(1.08)';
-                            e.currentTarget.style.backgroundColor = 'rgba(73, 40, 61, 0.9)';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.transform = 'scale(1)';
-                            e.currentTarget.style.backgroundColor = 'rgba(16, 10, 18, 0.65)';
-                          }}
-                        >
-                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
-                          </svg>
-                        </button>
-                      )}
-
-                      {/* Subtle Dark Gradient Overlay */}
-                      <div
-                        style={{
-                          position: 'absolute',
-                          bottom: 0,
-                          left: 0,
-                          right: 0,
-                          height: '58%',
-                          background: 'linear-gradient(to top, rgba(14, 8, 14, 0.95) 0%, rgba(14, 8, 14, 0.65) 42%, rgba(14, 8, 14, 0.15) 75%, transparent 100%)',
-                          pointerEvents: 'none',
-                        }}
-                      />
-
-                      {/* Overlay Profile Details */}
-                      <div
-                        style={{
-                          position: 'absolute',
-                          bottom: '18px',
-                          left: '20px',
-                          right: '20px',
-                          zIndex: 15,
-                          pointerEvents: 'none',
-                        }}
-                      >
-                        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '3px' }}>
-                          <h2
-                            style={{
-                              fontFamily: 'var(--font-serif)',
-                              fontSize: '30px',
-                              fontWeight: 400,
-                              color: '#FFFFFF',
-                              margin: 0,
-                              letterSpacing: '-0.01em',
-                              textShadow: '0 2px 10px rgba(0, 0, 0, 0.35)',
-                            }}
-                          >
-                            {currentProfile.firstName}, {currentProfile.age}
-                          </h2>
-
-                          {currentProfile.isVerified && (
-                            <span
-                              style={{
-                                fontSize: '10.5px',
-                                fontWeight: 700,
-                                letterSpacing: '0.1em',
-                                textTransform: 'uppercase',
-                                color: '#86EFAC',
-                                backgroundColor: 'rgba(34, 197, 94, 0.22)',
-                                border: '1px solid rgba(74, 222, 128, 0.35)',
-                                padding: '2px 8px',
-                                borderRadius: '999px',
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                gap: '4px',
-                              }}
-                            >
-                              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round">
-                                <polyline points="20 6 9 17 4 12" />
-                              </svg>
-                              VERIFIED
-                            </span>
-                          )}
-                        </div>
-
-                        {currentProfile.city && (
-                          <div
-                            style={{
-                              fontSize: '11px',
-                              fontWeight: 700,
-                              letterSpacing: '0.1em',
-                              textTransform: 'uppercase',
-                              color: 'rgba(255, 255, 255, 0.85)',
-                              marginBottom: '4px',
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '4px',
-                            }}
-                          >
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-                              <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
-                              <circle cx="12" cy="10" r="3" />
-                            </svg>
-                            <span>{currentProfile.city}</span>
-                          </div>
-                        )}
-
-                        {(currentProfile.designation || currentProfile.company) && (
-                          <div
-                            style={{
-                              fontSize: '14px',
-                              fontFamily: 'var(--font-serif)',
-                              fontWeight: 500,
-                              color: 'rgba(255, 255, 255, 0.95)',
-                              lineHeight: '1.3',
-                            }}
-                          >
-                            {[currentProfile.designation, currentProfile.company].filter(Boolean).join(' · ')}
-                          </div>
-                        )}
-                      </div>
+                      {renderCardBody(frontIdx, true)}
                     </div>
                   </div>
 
