@@ -79,11 +79,21 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
 
   // Photo Queue Animation State for Current Profile
   const [activePhotoIndex, setActivePhotoIndex] = useState<number>(0);
-  const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
+  const [transitionPhase, setTransitionPhase] = useState<'idle' | 'drop' | 'return'>('idle');
   const isTransitioningRef = useRef<boolean>(false);
+  const timeout1Ref = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const timeout2Ref = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Check reduced motion preference
   const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+
+  // Cleanup timers on unmount
+  useEffect(() => {
+    return () => {
+      if (timeout1Ref.current) clearTimeout(timeout1Ref.current);
+      if (timeout2Ref.current) clearTimeout(timeout2Ref.current);
+    };
+  }, []);
 
   // Preload upcoming photos in the queue
   useEffect(() => {
@@ -100,23 +110,33 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
 
   // Reset photo index and transition state when profile changes
   useEffect(() => {
+    if (timeout1Ref.current) clearTimeout(timeout1Ref.current);
+    if (timeout2Ref.current) clearTimeout(timeout2Ref.current);
     setActivePhotoIndex(0);
-    setIsTransitioning(false);
+    setTransitionPhase('idle');
     isTransitioningRef.current = false;
   }, [currentProfile?.id]);
 
-  // Transition to next photo in the queue (card shuffle / cycle to back of deck)
+  // Transition to next photo: slide down in front, drop behind, and glide up into the rear of the stack
   const handleNextPhotoCard = useCallback(() => {
-    if (!currentProfile || currentProfile.photos.length <= 1) return;
+    if (!currentProfile?.photos || currentProfile.photos.length <= 1) return;
     if (isTransitioningRef.current) return;
     isTransitioningRef.current = true;
-    setIsTransitioning(true);
 
-    setTimeout(() => {
-      setActivePhotoIndex((prev) => (prev + 1) % currentProfile.photos.length);
-      setIsTransitioning(false);
-      isTransitioningRef.current = false;
-    }, 380);
+    // Phase 1: Slide down in front to reveal the next card
+    setTransitionPhase('drop');
+
+    // Phase 2: Drop behind the stack and slide up into the rear position
+    timeout1Ref.current = setTimeout(() => {
+      setTransitionPhase('return');
+
+      // Phase 3: Settle in back of queue and advance activePhotoIndex
+      timeout2Ref.current = setTimeout(() => {
+        setActivePhotoIndex((prev) => (prev + 1) % currentProfile.photos.length);
+        setTransitionPhase('idle');
+        isTransitioningRef.current = false;
+      }, 280);
+    }, 260);
   }, [currentProfile]);
 
   // Touch handlers for mobile / tablet horizontal flick
@@ -434,16 +454,18 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                           overflow: 'hidden',
                           backgroundColor: '#1E161C',
                           boxShadow: isDark ? '0 8px 24px rgba(0, 0, 0, 0.45)' : '0 8px 22px rgba(73, 40, 61, 0.1)',
-                          transform: isTransitioning
-                            ? 'translate3d(0, -8px, -15px) scale(0.95) rotate(2.4deg)'
-                            : 'translate3d(0, -16px, -30px) scale(0.90) rotate(-2.8deg)',
+                          transform: transitionPhase === 'idle'
+                            ? 'translate3d(0, -16px, -30px) scale(0.90) rotate(-2.8deg)'
+                            : 'translate3d(0, -8px, -15px) scale(0.95) rotate(2.4deg)',
                           transformOrigin: 'bottom center',
-                          opacity: isTransitioning ? 0.85 : 0.65,
-                          filter: isDark ? 'brightness(0.68)' : 'brightness(0.78)',
-                          zIndex: 1,
+                          opacity: transitionPhase === 'idle' ? 0.65 : 0.85,
+                          filter: transitionPhase === 'idle'
+                            ? (isDark ? 'brightness(0.68)' : 'brightness(0.78)')
+                            : (isDark ? 'brightness(0.78)' : 'brightness(0.88)'),
+                          zIndex: 2,
                           transition: prefersReducedMotion
                             ? 'none'
-                            : 'transform 0.38s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.38s ease, filter 0.38s ease',
+                            : 'transform 0.28s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.28s ease, filter 0.28s ease',
                           pointerEvents: 'none',
                         }}
                       >
@@ -471,17 +493,21 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                           borderRadius: '24px',
                           overflow: 'hidden',
                           backgroundColor: '#1E161C',
-                          boxShadow: isDark ? '0 12px 30px rgba(0, 0, 0, 0.5)' : '0 12px 28px rgba(73, 40, 61, 0.12)',
-                          transform: isTransitioning
-                            ? 'translate3d(0, 0, 0) scale(1) rotate(0deg)'
-                            : 'translate3d(0, -8px, -15px) scale(0.95) rotate(2.4deg)',
+                          boxShadow: transitionPhase === 'idle'
+                            ? (isDark ? '0 12px 30px rgba(0, 0, 0, 0.5)' : '0 12px 28px rgba(73, 40, 61, 0.12)')
+                            : (isDark ? '0 18px 44px rgba(0, 0, 0, 0.6)' : '0 16px 40px rgba(73, 40, 61, 0.18)'),
+                          transform: transitionPhase === 'idle'
+                            ? 'translate3d(0, -8px, -15px) scale(0.95) rotate(2.4deg)'
+                            : 'translate3d(0, 0, 0) scale(1) rotate(0deg)',
                           transformOrigin: 'bottom center',
-                          opacity: isTransitioning ? 1 : 0.85,
-                          filter: isTransitioning ? 'brightness(1)' : (isDark ? 'brightness(0.78)' : 'brightness(0.88)'),
-                          zIndex: isTransitioning ? 9 : 3,
+                          opacity: transitionPhase === 'idle' ? 0.85 : 1,
+                          filter: transitionPhase === 'idle'
+                            ? (isDark ? 'brightness(0.78)' : 'brightness(0.88)')
+                            : 'brightness(1)',
+                          zIndex: transitionPhase === 'idle' ? 5 : 10,
                           transition: prefersReducedMotion
                             ? 'none'
-                            : 'transform 0.38s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.38s ease, filter 0.38s ease',
+                            : 'transform 0.28s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.28s ease, filter 0.28s ease',
                           pointerEvents: 'none',
                         }}
                       >
@@ -509,17 +535,28 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                         borderRadius: '24px',
                         overflow: 'hidden',
                         backgroundColor: '#1E161C',
-                        boxShadow: isDark ? '0 18px 44px rgba(0, 0, 0, 0.6)' : '0 16px 40px rgba(73, 40, 61, 0.18)',
-                        transform: isTransitioning
-                          ? 'translate3d(14px, 60px, 10px) scale(0.92) rotate(4.2deg)'
-                          : 'translate3d(0, 0, 0) scale(1) rotate(0deg)',
+                        boxShadow: transitionPhase === 'drop'
+                          ? (isDark ? '0 24px 50px rgba(0, 0, 0, 0.7)' : '0 22px 46px rgba(73, 40, 61, 0.24)')
+                          : transitionPhase === 'return'
+                          ? (isDark ? '0 8px 24px rgba(0, 0, 0, 0.45)' : '0 8px 22px rgba(73, 40, 61, 0.1)')
+                          : (isDark ? '0 18px 44px rgba(0, 0, 0, 0.6)' : '0 16px 40px rgba(73, 40, 61, 0.18)'),
+                        transform: transitionPhase === 'idle'
+                          ? 'translate3d(0, 0, 0) scale(1) rotate(0deg)'
+                          : transitionPhase === 'drop'
+                          ? 'translate3d(10px, 74%, 20px) scale(0.95) rotate(3.5deg)'
+                          : (N >= 3 ? 'translate3d(0, -16px, -30px) scale(0.90) rotate(-2.8deg)' : 'translate3d(0, -8px, -15px) scale(0.95) rotate(2.4deg)'),
                         transformOrigin: 'bottom center',
-                        opacity: isTransitioning ? 0.35 : 1,
-                        zIndex: isTransitioning ? 2 : 10,
+                        opacity: 1,
+                        filter: transitionPhase === 'return'
+                          ? (N >= 3 ? (isDark ? 'brightness(0.68)' : 'brightness(0.78)') : (isDark ? 'brightness(0.78)' : 'brightness(0.88)'))
+                          : 'brightness(1)',
+                        zIndex: transitionPhase === 'drop' ? 15 : (transitionPhase === 'return' ? 1 : 10),
                         cursor: N > 1 ? 'pointer' : 'default',
                         transition: prefersReducedMotion
                           ? 'none'
-                          : 'transform 0.38s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.38s ease',
+                          : transitionPhase === 'drop'
+                          ? 'transform 0.26s cubic-bezier(0.25, 1, 0.5, 1)'
+                          : 'transform 0.28s cubic-bezier(0.25, 1, 0.5, 1), filter 0.28s ease',
                         userSelect: 'none',
                       }}
                       title={N > 1 ? 'Click to see next photo' : undefined}
