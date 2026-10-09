@@ -9,6 +9,7 @@ import {
   generateDynamicScorecard,
   generateDynamicMakeoverReport,
 } from '../utils/elevateTelemetry';
+import { ElevateCircularNav, type ElevateNavTab } from './ElevateCircularNav';
 
 interface Page17ElevateScreenProps {
   onSelectTab: (tab: MemberTab) => void;
@@ -17,8 +18,6 @@ interface Page17ElevateScreenProps {
   showStatusBar?: boolean;
   showHomeIndicator?: boolean;
 }
-
-type ElevateNavTab = 'catalog' | 'scorecard' | 'makeover' | 'orders' | 'concierge';
 
 export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
   onSelectTab,
@@ -168,7 +167,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
         }}
       />
 
-      {/* Top Header & Navigation */}
+      {/* Top Header */}
       <div
         style={{
           position: 'sticky',
@@ -182,58 +181,6 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
       >
         {showStatusBar && <StatusBar />}
         <MemberTopBar onConciergeClick={onNavigateHelp} />
-
-        {/* Elevate Sub-navigation Tabs */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            overflowX: 'auto',
-            padding: '10px 16px',
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none',
-          }}
-        >
-          {[
-            { id: 'catalog', label: 'Offerings' },
-            { id: 'scorecard', label: 'Profile Intelligence' },
-            { id: 'makeover', label: 'Makeover Studio' },
-            { id: 'orders', label: `Orders (${elevateOrders.length})` },
-            { id: 'concierge', label: 'Concierge Desk' },
-          ].map((tab) => {
-            const isActive = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => {
-                  setActiveTab(tab.id as ElevateNavTab);
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
-                style={{
-                  padding: '7px 15px',
-                  borderRadius: '999px',
-                  border: isActive ? '1px solid rgba(199, 87, 124, 0.8)' : `1px solid ${themeBorder}`,
-                  background: isActive
-                    ? themeAccentGrad
-                    : isDark
-                    ? 'rgba(42, 20, 34, 0.45)'
-                    : 'rgba(255, 255, 255, 0.65)',
-                  color: isActive ? '#FFFFFF' : themeMulberry,
-                  fontSize: '12px',
-                  fontWeight: isActive ? 700 : 500,
-                  whiteSpace: 'nowrap',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  flexShrink: 0,
-                }}
-              >
-                {tab.label}
-              </button>
-            );
-          })}
-        </div>
       </div>
 
       {/* Main Content Area */}
@@ -242,13 +189,24 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
           position: 'relative',
           zIndex: 1,
           flex: 1,
-          padding: '20px 18px 120px',
+          padding: '12px 18px 120px',
           maxWidth: '840px',
           margin: '0 auto',
           width: '100%',
           boxSizing: 'border-box',
         }}
       >
+        {/* Compact Orbit Navigation */}
+        <div style={{ margin: '4px auto 16px', width: '100%' }}>
+          <ElevateCircularNav
+            activeTab={activeTab}
+            onSelectTab={(tab) => {
+              setActiveTab(tab);
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            isDark={isDark}
+          />
+        </div>
         {/* Success Banner if order created */}
         {orderSuccessMessage && (
           <div
@@ -274,46 +232,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
             TAB 1: CATALOG OF OFFERINGS
             ========================================================================= */}
         {activeTab === 'catalog' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
-            {/* Header / Editorial Tagline */}
-            <div style={{ textAlign: 'center', margin: '8px 0 16px' }}>
-              <span
-                style={{
-                  fontSize: '11px',
-                  letterSpacing: '0.14em',
-                  fontWeight: 700,
-                  textTransform: 'uppercase',
-                  color: isDark ? '#F9AAAD' : '#A1525F',
-                }}
-              >
-                Private Editorial & Telemetry
-              </span>
-              <h1
-                style={{
-                  fontFamily: 'var(--font-serif)',
-                  fontSize: '26px',
-                  fontWeight: 500,
-                  letterSpacing: '-0.02em',
-                  margin: '8px 0 6px',
-                  color: themeTextColor,
-                }}
-              >
-                VennZ Elevate
-              </h1>
-              <p
-                style={{
-                  fontSize: '13.5px',
-                  lineHeight: '1.5',
-                  color: themeMuted,
-                  maxWidth: '560px',
-                  margin: '0 auto',
-                }}
-              >
-                Measurable member telemetry and discreet profile curation
-                governed by strict least-privilege staff access.
-              </p>
-            </div>
-
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {/* Service Cards Grid */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               {ELEVATE_SERVICES.map((service) => {
