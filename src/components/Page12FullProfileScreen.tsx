@@ -34,7 +34,6 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
   const themeTextColor = isDark ? '#FDF3F5' : '#462037';
   const themeMulberry = isDark ? '#F9AAAD' : '#462037';
   const themeMuted = isDark ? '#D4A2AC' : '#683A46';
-  const themeBorder = isDark ? 'rgba(161, 82, 95, 0.28)' : 'rgba(161, 82, 95, 0.18)';
   const cardBg = isDark ? 'rgba(32, 17, 28, 0.72)' : 'rgba(255, 255, 255, 0.78)';
   const cardBorder = isDark ? 'rgba(161, 82, 95, 0.32)' : 'rgba(161, 82, 95, 0.16)';
   const chipBg = isDark ? 'rgba(70, 32, 55, 0.55)' : 'rgba(255, 255, 255, 0.85)';
@@ -461,33 +460,6 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
               >
                 "{profile.introduction}"
               </p>
-
-              {/* Weekend Ritual highlight if available */}
-              {profile.weekendRitual && (
-                <div
-                  style={{
-                    marginTop: '8px',
-                    padding: '12px 14px',
-                    borderRadius: '12px',
-                    backgroundColor: isDark ? 'rgba(70, 32, 55, 0.4)' : 'rgba(247, 243, 238, 0.7)',
-                    border: `1px solid ${themeBorder}`,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '4px',
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', fontWeight: 700, color: themeMulberry, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                      <circle cx="12" cy="12" r="4" />
-                      <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
-                    </svg>
-                    <span>Weekend Ritual</span>
-                  </div>
-                  <span style={{ fontSize: '13px', lineHeight: '1.45', color: isDark ? '#E5D8DF' : '#523B49' }}>
-                    {profile.weekendRitual}
-                  </span>
-                </div>
-              )}
             </div>
 
             {/* Card 2: Vibes & Energy */}
@@ -559,32 +531,6 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
                   </span>
                 ))}
               </div>
-
-              {/* Conversational Quirks if present */}
-              {profile.quirks && profile.quirks.length > 0 && (
-                <div style={{ marginTop: '6px' }}>
-                  <div style={{ fontSize: '11px', fontWeight: 700, color: themeMuted, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '8px' }}>
-                    Conversation Starters
-                  </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                    {profile.quirks.map((quirk, qIdx) => (
-                      <div
-                        key={qIdx}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'flex-start',
-                          gap: '8px',
-                          fontSize: '13px',
-                          color: isDark ? '#E5D8DF' : '#523B49',
-                        }}
-                      >
-                        <span style={{ color: themeMulberry, fontWeight: 700 }}>•</span>
-                        <span>{quirk}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
 
             {/* Card 3: Passions & Interests */}
@@ -658,7 +604,7 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
               </div>
             </div>
 
-            {/* Card 4: Career & Education */}
+            {/* Card 4: Career & Background */}
             <div
               style={{
                 backgroundColor: cardBg,
@@ -704,8 +650,8 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
                 </h3>
               </div>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                {/* Role and Company */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {/* Designation / Role */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <div style={{ color: themeMulberry, flexShrink: 0 }}>
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -714,16 +660,42 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
                     </svg>
                   </div>
                   <div>
+                    <div style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.06em', color: themeMuted, fontWeight: 700 }}>
+                      Designation
+                    </div>
                     <div style={{ fontSize: '14px', fontWeight: 600, color: themeTextColor }}>
                       {profile.designation}
-                    </div>
-                    <div style={{ fontSize: '13px', color: themeMuted }}>
-                      {profile.company}
                     </div>
                   </div>
                 </div>
 
-                {/* Status */}
+                {/* Company (if user entered company) */}
+                {profile.company && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <div style={{ color: themeMulberry, flexShrink: 0 }}>
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M3 21h18" />
+                        <path d="M9 8h1" />
+                        <path d="M9 12h1" />
+                        <path d="M9 16h1" />
+                        <path d="M14 8h1" />
+                        <path d="M14 12h1" />
+                        <path d="M14 16h1" />
+                        <path d="M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16" />
+                      </svg>
+                    </div>
+                    <div>
+                      <div style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.06em', color: themeMuted, fontWeight: 700 }}>
+                        Company
+                      </div>
+                      <div style={{ fontSize: '14px', fontWeight: 600, color: themeTextColor }}>
+                        {profile.company}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Current Status */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <div style={{ color: themeMulberry, flexShrink: 0 }}>
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -740,26 +712,6 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
                     </div>
                   </div>
                 </div>
-
-                {/* Education if available */}
-                {(profile.education || profile.careerAndEducation?.education) && (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <div style={{ color: themeMulberry, flexShrink: 0 }}>
-                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-                        <path d="M6 12v5c3 3 9 3 12 0v-5" />
-                      </svg>
-                    </div>
-                    <div>
-                      <div style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.06em', color: themeMuted, fontWeight: 700 }}>
-                        Education
-                      </div>
-                      <div style={{ fontSize: '13.5px', fontWeight: 600, color: themeTextColor }}>
-                        {profile.education || profile.careerAndEducation?.education}
-                      </div>
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
           </div>

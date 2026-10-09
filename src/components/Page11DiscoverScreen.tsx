@@ -5,7 +5,6 @@ import { StatusBar } from './StatusBar';
 import { useAuth } from '../context/AuthContext';
 import { DUMMY_DISCOVER_PROFILES } from '../data/dummyProfiles';
 import type { DiscoverProfile } from '../types/discover';
-import { useLightbox } from '../context/LightboxContext';
 
 interface Page11DiscoverScreenProps {
   onViewFullProfile: (profile: DiscoverProfile) => void;
@@ -40,7 +39,6 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
     canSendMoreRequests,
     setMembershipStatus,
   } = useAuth();
-  const { openLightbox } = useLightbox();
   const isDark = appearanceMode === 'after-dark';
 
   // Active tab for bottom navigation (5 buttons: discover, matches, elevate, mixers, you)
@@ -149,9 +147,14 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
     ? (cardOrder.length > 1 ? cardOrder[1] : (cardOrder[0] ?? 0))
     : (cardOrder[0] ?? 0);
 
-  // Helper to get distinct text & story details for each photo of a profile
+  // Helper to get distinct text & story details for each photo of a profile:
+  // - 1st photo (index 0): First page is perfect -> Name, Age, Verified, City, Role/Work
+  // - 2nd photo (index 1): Bio -> user's bio/introduction, no dummy titles
+  // - 3rd photo (index 2): Interests -> user's interests, no dummy titles
+  // - 4th photo (index 3): Vibes -> user's vibes (if 4th photo added)
+  // - 5th & 6th photos (index >= 4): Don't show anything (clean photo)
   const getPhotoCardDetails = (prof: DiscoverProfile, photoIndex: number) => {
-    // Photo 0: Exact same primary info as now (Name, Age, Verified, City, Role/Work)
+    // 1st photo: Primary Info
     if (photoIndex === 0) {
       return {
         type: 'primary' as const,
@@ -162,47 +165,36 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
       };
     }
 
-    // Specific photo prompt if available in profile data
-    const prompt = prof.photoPrompts?.find((p) => p.photoIndex === photoIndex);
-    if (prompt) {
-      return {
-        type: 'prompt' as const,
-        title: prompt.title,
-        subtitle: prompt.subtitle,
-        content: prompt.content,
-        tags: prompt.tags || [],
-      };
-    }
-
-    // Context-rich fallbacks for subsequent photos
+    // 2nd photo: Bio
     if (photoIndex === 1) {
       return {
-        type: 'prompt' as const,
-        title: 'WEEKEND RITUAL',
-        subtitle: prof.vibes?.slice(0, 2).join(' · ') || 'Off-Hours Rhythm',
-        content: prof.weekendRitual || prof.introduction,
-        tags: prof.interests?.slice(0, 3) || [],
+        type: 'bio' as const,
+        title: 'BIO',
+        content: prof.introduction,
       };
     }
 
+    // 3rd photo: Interests
     if (photoIndex === 2) {
       return {
-        type: 'prompt' as const,
-        title: 'WHAT MOVES ME',
-        subtitle: prof.vibes?.slice(2, 4).join(' · ') || 'Passions & Escapes',
-        content: (prof.quirks && prof.quirks.length > 0)
-          ? prof.quirks.join(' · ')
-          : prof.introduction,
-        tags: prof.interests?.slice(2, 5) || [],
+        type: 'interests' as const,
+        title: 'INTERESTS',
+        tags: prof.interests && prof.interests.length > 0 ? prof.interests : [],
       };
     }
 
+    // 4th photo: Vibes (if person adds 4th photo)
+    if (photoIndex === 3) {
+      return {
+        type: 'vibes' as const,
+        title: 'VIBES',
+        tags: prof.vibes && prof.vibes.length > 0 ? prof.vibes : [],
+      };
+    }
+
+    // 5th & 6th photo (index >= 4): Don't show anything
     return {
-      type: 'prompt' as const,
-      title: 'LIFE BEYOND WORK',
-      subtitle: prof.city,
-      content: prof.introduction,
-      tags: prof.vibes || [],
+      type: 'empty' as const,
     };
   };
 
@@ -492,7 +484,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
               const thirdIdx = N > 2 ? currentCardOrder[2] : null;
 
               // Helper function to render the full self-contained content of each photo card
-              const renderCardBody = (pIdx: number, isInteractiveFront: boolean) => {
+              const renderCardBody = (pIdx: number, _isInteractiveFront?: boolean) => {
                 const photoUrl = photoList[pIdx];
                 const details = getPhotoCardDetails(currentProfile, pIdx);
 
@@ -607,193 +599,142 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                       </div>
                     )}
 
-                    {/* Lightbox / Enlarge Trigger Button (interactive on front card) */}
-                    {photoUrl && isInteractiveFront && (
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          openLightbox(photoList, pIdx, `${currentProfile.firstName}, ${currentProfile.age}`);
-                        }}
-                        aria-label="View photo in full screen lightbox"
-                        title="View full screen photo"
+                    {/* Subtle Dark Gradient Overlay (only if there are details to show) */}
+                    {details.type !== 'empty' && (
+                      <div
                         style={{
                           position: 'absolute',
-                          top: N > 1 ? '22px' : '12px',
-                          right: '16px',
-                          width: '32px',
-                          height: '32px',
-                          borderRadius: '50%',
-                          backgroundColor: 'rgba(16, 10, 18, 0.65)',
-                          backdropFilter: 'blur(8px)',
-                          border: '1px solid rgba(255, 255, 255, 0.25)',
-                          color: '#FFFFFF',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          cursor: 'pointer',
-                          zIndex: 25,
-                          transition: 'transform 0.15s ease, background-color 0.15s ease',
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          height: details.type === 'primary' ? '58%' : '66%',
+                          background: 'linear-gradient(to top, rgba(14, 8, 14, 0.96) 0%, rgba(14, 8, 14, 0.70) 42%, rgba(14, 8, 14, 0.16) 78%, transparent 100%)',
+                          pointerEvents: 'none',
                         }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.transform = 'scale(1.08)';
-                          e.currentTarget.style.backgroundColor = 'rgba(73, 40, 61, 0.9)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.transform = 'scale(1)';
-                          e.currentTarget.style.backgroundColor = 'rgba(16, 10, 18, 0.65)';
-                        }}
-                      >
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
-                        </svg>
-                      </button>
+                      />
                     )}
 
-                    {/* Subtle Dark Gradient Overlay */}
-                    <div
-                      style={{
-                        position: 'absolute',
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        height: details.type === 'primary' ? '58%' : '66%',
-                        background: 'linear-gradient(to top, rgba(14, 8, 14, 0.96) 0%, rgba(14, 8, 14, 0.70) 42%, rgba(14, 8, 14, 0.16) 78%, transparent 100%)',
-                        pointerEvents: 'none',
-                      }}
-                    />
-
                     {/* Overlay Details */}
-                    <div
-                      style={{
-                        position: 'absolute',
-                        bottom: '18px',
-                        left: '20px',
-                        right: '20px',
-                        zIndex: 15,
-                        pointerEvents: 'none',
-                      }}
-                    >
-                      {details.type === 'primary' ? (
-                        // FIRST IMAGE: EXACT SAME TEXT AS NOW
-                        <>
-                          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '3px' }}>
-                            <h2
-                              style={{
-                                fontFamily: 'var(--font-serif)',
-                                fontSize: '30px',
-                                fontWeight: 400,
-                                color: '#FFFFFF',
-                                margin: 0,
-                                letterSpacing: '-0.01em',
-                                textShadow: '0 2px 10px rgba(0, 0, 0, 0.35)',
-                              }}
-                            >
-                              {details.nameAge}
-                            </h2>
-
-                            {details.isVerified && (
-                              <span
+                    {details.type !== 'empty' && (
+                      <div
+                        style={{
+                          position: 'absolute',
+                          bottom: '18px',
+                          left: '20px',
+                          right: '20px',
+                          zIndex: 15,
+                          pointerEvents: 'none',
+                        }}
+                      >
+                        {details.type === 'primary' && (
+                          // 1st photo details: Name, Age, Verified, City, Role
+                          <>
+                            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '3px' }}>
+                              <h2
                                 style={{
-                                  fontSize: '10.5px',
+                                  fontFamily: 'var(--font-serif)',
+                                  fontSize: '30px',
+                                  fontWeight: 400,
+                                  color: '#FFFFFF',
+                                  margin: 0,
+                                  letterSpacing: '-0.01em',
+                                  textShadow: '0 2px 10px rgba(0, 0, 0, 0.35)',
+                                }}
+                              >
+                                {details.nameAge}
+                              </h2>
+
+                              {details.isVerified && (
+                                <span
+                                  style={{
+                                    fontSize: '10.5px',
+                                    fontWeight: 700,
+                                    letterSpacing: '0.1em',
+                                    textTransform: 'uppercase',
+                                    color: '#86EFAC',
+                                    backgroundColor: 'rgba(34, 197, 94, 0.22)',
+                                    border: '1px solid rgba(74, 222, 128, 0.35)',
+                                    padding: '2px 8px',
+                                    borderRadius: '999px',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '4px',
+                                  }}
+                                >
+                                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round">
+                                    <polyline points="20 6 9 17 4 12" />
+                                  </svg>
+                                  VERIFIED
+                                </span>
+                              )}
+                            </div>
+
+                            {details.city && (
+                              <div
+                                style={{
+                                  fontSize: '11px',
                                   fontWeight: 700,
                                   letterSpacing: '0.1em',
                                   textTransform: 'uppercase',
-                                  color: '#86EFAC',
-                                  backgroundColor: 'rgba(34, 197, 94, 0.22)',
-                                  border: '1px solid rgba(74, 222, 128, 0.35)',
-                                  padding: '2px 8px',
-                                  borderRadius: '999px',
-                                  display: 'inline-flex',
+                                  color: 'rgba(255, 255, 255, 0.85)',
+                                  marginBottom: '4px',
+                                  display: 'flex',
                                   alignItems: 'center',
                                   gap: '4px',
                                 }}
                               >
-                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round">
-                                  <polyline points="20 6 9 17 4 12" />
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                                  <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+                                  <circle cx="12" cy="10" r="3" />
                                 </svg>
-                                VERIFIED
-                              </span>
+                                <span>{details.city}</span>
+                              </div>
                             )}
-                          </div>
 
-                          {details.city && (
-                            <div
-                              style={{
-                                fontSize: '11px',
-                                fontWeight: 700,
-                                letterSpacing: '0.1em',
-                                textTransform: 'uppercase',
-                                color: 'rgba(255, 255, 255, 0.85)',
-                                marginBottom: '4px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '4px',
-                              }}
-                            >
-                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
-                                <circle cx="12" cy="10" r="3" />
-                              </svg>
-                              <span>{details.city}</span>
-                            </div>
-                          )}
-
-                          {details.work && (
-                            <div
-                              style={{
-                                fontSize: '14px',
-                                fontFamily: 'var(--font-serif)',
-                                fontWeight: 500,
-                                color: 'rgba(255, 255, 255, 0.95)',
-                                lineHeight: '1.3',
-                              }}
-                            >
-                              {details.work}
-                            </div>
-                          )}
-                        </>
-                      ) : (
-                        // DIFFERENT TEXT ABOUT THAT PERSON ON SUBSEQUENT IMAGES
-                        <>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px', flexWrap: 'wrap' }}>
-                            <span
-                              style={{
-                                fontSize: '10px',
-                                fontWeight: 700,
-                                letterSpacing: '0.12em',
-                                textTransform: 'uppercase',
-                                color: '#F9AAAD',
-                                backgroundColor: 'rgba(161, 82, 95, 0.32)',
-                                border: '1px solid rgba(161, 82, 95, 0.45)',
-                                padding: '3px 9px',
-                                borderRadius: '999px',
-                              }}
-                            >
-                              {details.title}
-                            </span>
-                            {details.subtitle && (
-                              <span
+                            {details.work && (
+                              <div
                                 style={{
-                                  fontSize: '11px',
-                                  fontWeight: 600,
-                                  letterSpacing: '0.04em',
-                                  color: 'rgba(255, 255, 255, 0.85)',
+                                  fontSize: '14px',
+                                  fontFamily: 'var(--font-serif)',
+                                  fontWeight: 500,
+                                  color: 'rgba(255, 255, 255, 0.95)',
+                                  lineHeight: '1.3',
                                 }}
                               >
-                                {details.subtitle}
-                              </span>
+                                {details.work}
+                              </div>
                             )}
-                          </div>
+                          </>
+                        )}
 
-                          {details.content && (
+                        {details.type === 'bio' && (
+                          // 2nd photo: Bio
+                          <>
+                            <div style={{ marginBottom: '6px' }}>
+                              <span
+                                style={{
+                                  fontSize: '10px',
+                                  fontWeight: 700,
+                                  letterSpacing: '0.12em',
+                                  textTransform: 'uppercase',
+                                  color: '#F9AAAD',
+                                  backgroundColor: 'rgba(161, 82, 95, 0.32)',
+                                  border: '1px solid rgba(161, 82, 95, 0.45)',
+                                  padding: '3px 9px',
+                                  borderRadius: '999px',
+                                }}
+                              >
+                                BIO
+                              </span>
+                            </div>
                             <p
                               style={{
                                 fontFamily: 'var(--font-serif)',
+                                fontStyle: 'italic',
                                 fontSize: '15.5px',
-                                lineHeight: '1.42',
+                                lineHeight: '1.45',
                                 color: '#FFFFFF',
-                                margin: '0 0 8px 0',
+                                margin: 0,
                                 textShadow: '0 2px 8px rgba(0, 0, 0, 0.4)',
                                 display: '-webkit-box',
                                 WebkitLineClamp: 3,
@@ -801,11 +742,31 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                                 overflow: 'hidden',
                               }}
                             >
-                              {details.content}
+                              "{details.content}"
                             </p>
-                          )}
+                          </>
+                        )}
 
-                          {details.tags && details.tags.length > 0 && (
+                        {details.type === 'interests' && (
+                          // 3rd photo: Interests
+                          <>
+                            <div style={{ marginBottom: '8px' }}>
+                              <span
+                                style={{
+                                  fontSize: '10px',
+                                  fontWeight: 700,
+                                  letterSpacing: '0.12em',
+                                  textTransform: 'uppercase',
+                                  color: '#F9AAAD',
+                                  backgroundColor: 'rgba(161, 82, 95, 0.32)',
+                                  border: '1px solid rgba(161, 82, 95, 0.45)',
+                                  padding: '3px 9px',
+                                  borderRadius: '999px',
+                                }}
+                              >
+                                INTERESTS
+                              </span>
+                            </div>
                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                               {details.tags.map((tag, tIdx) => (
                                 <span
@@ -813,22 +774,64 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                                   style={{
                                     fontSize: '11px',
                                     fontWeight: 600,
-                                    color: 'rgba(255, 255, 255, 0.92)',
-                                    backgroundColor: 'rgba(255, 255, 255, 0.14)',
+                                    color: 'rgba(255, 255, 255, 0.95)',
+                                    backgroundColor: 'rgba(255, 255, 255, 0.16)',
                                     backdropFilter: 'blur(6px)',
-                                    border: '1px solid rgba(255, 255, 255, 0.2)',
-                                    padding: '2px 8px',
+                                    border: '1px solid rgba(255, 255, 255, 0.22)',
+                                    padding: '3px 9px',
                                     borderRadius: '999px',
                                   }}
                                 >
-                                  {tag}
+                                  ✦ {tag}
                                 </span>
                               ))}
                             </div>
-                          )}
-                        </>
-                      )}
-                    </div>
+                          </>
+                        )}
+
+                        {details.type === 'vibes' && (
+                          // 4th photo: Vibes
+                          <>
+                            <div style={{ marginBottom: '8px' }}>
+                              <span
+                                style={{
+                                  fontSize: '10px',
+                                  fontWeight: 700,
+                                  letterSpacing: '0.12em',
+                                  textTransform: 'uppercase',
+                                  color: '#F9AAAD',
+                                  backgroundColor: 'rgba(161, 82, 95, 0.32)',
+                                  border: '1px solid rgba(161, 82, 95, 0.45)',
+                                  padding: '3px 9px',
+                                  borderRadius: '999px',
+                                }}
+                              >
+                                VIBES
+                              </span>
+                            </div>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                              {details.tags.map((vibe, vIdx) => (
+                                <span
+                                  key={vIdx}
+                                  style={{
+                                    fontSize: '11px',
+                                    fontWeight: 600,
+                                    color: 'rgba(255, 255, 255, 0.95)',
+                                    backgroundColor: 'rgba(255, 255, 255, 0.16)',
+                                    backdropFilter: 'blur(6px)',
+                                    border: '1px solid rgba(255, 255, 255, 0.22)',
+                                    padding: '3px 9px',
+                                    borderRadius: '999px',
+                                  }}
+                                >
+                                  ✨ {vibe}
+                                </span>
+                              ))}
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    )}
                   </div>
                 );
               };
@@ -1088,15 +1091,20 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                     </button>
                   </div>
 
-                  {/* Instruction Microcopy */}
+                  {/* Instruction Microcopy (guaranteed single line) */}
                   <div
                     style={{
-                      fontSize: '10.5px',
+                      fontSize: 'clamp(8.5px, 2.3vw, 10.5px)',
                       fontWeight: 600,
-                      letterSpacing: '0.09em',
+                      letterSpacing: '0.08em',
                       textTransform: 'uppercase',
                       color: themeMuted,
                       textAlign: 'center',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      width: '100%',
+                      marginTop: '6px',
                       marginBottom: '22px',
                     }}
                   >
@@ -1115,26 +1123,49 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
               }}
             />
 
-            {/* DYNAMIC PER-PHOTO STORY & INSIGHTS (CHANGES WITH EACH PHOTO) */}
+            {/* DYNAMIC PER-PHOTO STORY & INSIGHTS (DRIVEN BY USER'S ACTUAL PROFILE DATA) */}
             {(() => {
-              const prompt = currentProfile.photoPrompts?.find((p) => p.photoIndex === activePhotoIndex) || {
-                title:
-                  activePhotoIndex === 0
-                    ? `THE ESSENCE & INTRO`
-                    : activePhotoIndex === 1
-                    ? `PERSPECTIVE & FLOW`
-                    : `LIFE BEYOND WORK`,
-                subtitle:
-                  activePhotoIndex === 0
-                    ? `${currentProfile.designation} · ${currentProfile.city}`
-                    : undefined,
-                content:
-                  activePhotoIndex === 0
-                    ? currentProfile.introduction
-                    : activePhotoIndex === 1
-                    ? `“Drawn to meaningful moments, spontaneous plans, and effortless conversations.”`
-                    : `“Enjoying quiet corners, good design, and exploring new horizons.”`,
+              const getSectionInfo = () => {
+                if (activePhotoIndex === 0) {
+                  return {
+                    tag: 'ABOUT',
+                    subtitle: [currentProfile.designation, currentProfile.company].filter(Boolean).join(' · '),
+                    content: currentProfile.introduction || `Connecting from ${currentProfile.city}`,
+                  };
+                }
+                if (activePhotoIndex === 1) {
+                  return {
+                    tag: 'BIO',
+                    subtitle: currentProfile.city,
+                    content: currentProfile.introduction,
+                  };
+                }
+                if (activePhotoIndex === 2) {
+                  return {
+                    tag: 'INTERESTS',
+                    subtitle: 'Passions & Flow',
+                    content: currentProfile.interests && currentProfile.interests.length > 0
+                      ? currentProfile.interests.join(' · ')
+                      : currentProfile.introduction,
+                  };
+                }
+                if (activePhotoIndex === 3) {
+                  return {
+                    tag: 'VIBES',
+                    subtitle: 'Energy & Mindset',
+                    content: currentProfile.vibes && currentProfile.vibes.length > 0
+                      ? currentProfile.vibes.join(' · ')
+                      : currentProfile.introduction,
+                  };
+                }
+                return {
+                  tag: 'GALLERY',
+                  subtitle: `Photo ${activePhotoIndex + 1} of ${currentProfile.photos.length}`,
+                  content: `View full details and profile of ${currentProfile.firstName}.`,
+                };
               };
+
+              const section = getSectionInfo();
 
               return (
                 <div
@@ -1164,12 +1195,12 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                       }}
                     >
                       <span style={{ opacity: 0.65 }}>PHOTO {activePhotoIndex + 1} OF {currentProfile.photos.length} ·</span>
-                      <span>{prompt.title}</span>
+                      <span>{section.tag}</span>
                     </div>
 
-                    {prompt.subtitle && (
+                    {section.subtitle && (
                       <span style={{ fontSize: '11.5px', color: themeMuted, fontWeight: 500 }}>
-                        {prompt.subtitle}
+                        {section.subtitle}
                       </span>
                     )}
                   </div>
@@ -1185,10 +1216,10 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                       margin: 0,
                     }}
                   >
-                    {prompt.content}
+                    "{section.content}"
                   </p>
 
-                  {/* Clickable View Full Profile Button */}
+                  {/* Clickable Know More Button */}
                   <div style={{ paddingTop: '6px' }}>
                     <button
                       type="button"
@@ -1216,7 +1247,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                         e.currentTarget.style.opacity = '1';
                       }}
                     >
-                      <span>View {currentProfile.firstName}’s full profile & complete details</span>
+                      <span>Know more about {currentProfile.firstName}</span>
                       <span aria-hidden="true">→</span>
                     </button>
                   </div>
