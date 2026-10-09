@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { MemberTopBar } from './MemberTopBar';
 import { MemberBottomNav, type MemberTab } from './MemberBottomNav';
 import { StatusBar } from './StatusBar';
@@ -77,25 +77,64 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
     ? availableProfiles.length
     : Math.min(availableProfiles.length, complimentaryProfilesRemaining);
 
-  // Photo Carousel State for Current Profile
+  // Photo Queue Animation State for Current Profile
   const [activePhotoIndex, setActivePhotoIndex] = useState<number>(0);
+  const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
+  const isTransitioningRef = useRef<boolean>(false);
 
-  // Reset photo index when profile changes
+  // Check reduced motion preference
+  const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+
+  // Preload upcoming photos in the queue
+  useEffect(() => {
+    if (!currentProfile?.photos || currentProfile.photos.length <= 1) return;
+    const nextIdx = (activePhotoIndex + 1) % currentProfile.photos.length;
+    const img1 = new Image();
+    img1.src = currentProfile.photos[nextIdx];
+    if (currentProfile.photos.length > 2) {
+      const nextNextIdx = (activePhotoIndex + 2) % currentProfile.photos.length;
+      const img2 = new Image();
+      img2.src = currentProfile.photos[nextNextIdx];
+    }
+  }, [activePhotoIndex, currentProfile]);
+
+  // Reset photo index and transition state when profile changes
   useEffect(() => {
     setActivePhotoIndex(0);
-    setPhotoDragX(0);
-    setIsPhotoDragging(false);
-    setIsPhotoTouchActive(false);
+    setIsTransitioning(false);
+    isTransitioningRef.current = false;
   }, [currentProfile?.id]);
 
-  // Photo Touch, Mouse & Trackpad Slide Gesture State
-  const [photoDragX, setPhotoDragX] = useState<number>(0);
-  const [isPhotoDragging, setIsPhotoDragging] = useState<boolean>(false);
-  const [isPhotoTouchActive, setIsPhotoTouchActive] = useState<boolean>(false);
-  const photoStartXRef = React.useRef<number>(0);
-  const photoStartYRef = React.useRef<number>(0);
-  const isHorizontalSwipeRef = React.useRef<boolean | null>(null);
-  const lastWheelTimeRef = React.useRef<number>(0);
+  // Transition to next photo in the queue (card shuffle / cycle to back of deck)
+  const handleNextPhotoCard = useCallback(() => {
+    if (!currentProfile || currentProfile.photos.length <= 1) return;
+    if (isTransitioningRef.current) return;
+    isTransitioningRef.current = true;
+    setIsTransitioning(true);
+
+    setTimeout(() => {
+      setActivePhotoIndex((prev) => (prev + 1) % currentProfile.photos.length);
+      setIsTransitioning(false);
+      isTransitioningRef.current = false;
+    }, 380);
+  }, [currentProfile]);
+
+  // Touch handlers for mobile / tablet horizontal flick
+  const touchStartXRef = useRef<number>(0);
+  const touchStartYRef = useRef<number>(0);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartXRef.current = e.touches[0].clientX;
+    touchStartYRef.current = e.touches[0].clientY;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const deltaX = e.changedTouches[0].clientX - touchStartXRef.current;
+    const deltaY = e.changedTouches[0].clientY - touchStartYRef.current;
+    if (Math.abs(deltaX) > 35 && Math.abs(deltaX) > Math.abs(deltaY) * 1.4) {
+      handleNextPhotoCard();
+    }
+  };
 
   // Card dismissal animation state (only triggered via PASS / SEND REQUEST buttons)
   const [isAnimatingOut, setIsAnimatingOut] = useState<'left' | 'right' | null>(null);
@@ -108,127 +147,6 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
     setTimeout(() => {
       setToastMessage(null);
     }, 2800);
-  };
-
-  // Carousel Next/Prev Photo
-  const handleNextPhoto = (e?: React.MouseEvent | React.TouchEvent) => {
-    if (e) e.stopPropagation();
-    if (!currentProfile || currentProfile.photos.length <= 1) return;
-    setActivePhotoIndex((prev) => (prev < currentProfile.photos.length - 1 ? prev + 1 : 0));
-  };
-
-  const handlePrevPhoto = (e?: React.MouseEvent | React.TouchEvent) => {
-    if (e) e.stopPropagation();
-    if (!currentProfile || currentProfile.photos.length <= 1) return;
-    setActivePhotoIndex((prev) => (prev > 0 ? prev - 1 : currentProfile.photos.length - 1));
-  };
-
-  // Desktop / Laptop Mouse & Trackpad Click-and-Drag Window Listeners
-  useEffect(() => {
-    if (!isPhotoDragging) return;
-
-    const handleWindowMouseMove = (e: MouseEvent) => {
-      if (!currentProfile) return;
-      const deltaX = e.clientX - photoStartXRef.current;
-      const isAtFirst = activePhotoIndex === 0 && deltaX > 0;
-      const isAtLast = activePhotoIndex === currentProfile.photos.length - 1 && deltaX < 0;
-      const resistance = isAtFirst || isAtLast ? 0.25 : 1;
-      setPhotoDragX(deltaX * resistance);
-    };
-
-    const handleWindowMouseUp = () => {
-      setIsPhotoDragging(false);
-      setPhotoDragX((currentDragX) => {
-        const SWIPE_PHOTO_THRESHOLD = 35;
-        if (currentDragX < -SWIPE_PHOTO_THRESHOLD) {
-          handleNextPhoto();
-        } else if (currentDragX > SWIPE_PHOTO_THRESHOLD) {
-          handlePrevPhoto();
-        }
-        return 0;
-      });
-    };
-
-    window.addEventListener('mousemove', handleWindowMouseMove);
-    window.addEventListener('mouseup', handleWindowMouseUp);
-
-    return () => {
-      window.removeEventListener('mousemove', handleWindowMouseMove);
-      window.removeEventListener('mouseup', handleWindowMouseUp);
-    };
-  }, [isPhotoDragging, activePhotoIndex, currentProfile]);
-
-  // Touch handlers for mobile / tablet gestures
-  const handlePhotoTouchStart = (e: React.TouchEvent) => {
-    if (!currentProfile || currentProfile.photos.length <= 1) return;
-    photoStartXRef.current = e.touches[0].clientX;
-    photoStartYRef.current = e.touches[0].clientY;
-    isHorizontalSwipeRef.current = null;
-    setIsPhotoTouchActive(true);
-    setPhotoDragX(0);
-  };
-
-  const handlePhotoTouchMove = (e: React.TouchEvent) => {
-    if (!currentProfile || !isPhotoTouchActive) return;
-    const currentX = e.touches[0].clientX;
-    const currentY = e.touches[0].clientY;
-    const deltaX = currentX - photoStartXRef.current;
-    const deltaY = currentY - photoStartYRef.current;
-
-    // Detect direction on first significant movement
-    if (isHorizontalSwipeRef.current === null) {
-      if (Math.abs(deltaX) > 6 || Math.abs(deltaY) > 6) {
-        isHorizontalSwipeRef.current = Math.abs(deltaX) > Math.abs(deltaY);
-      }
-    }
-
-    if (isHorizontalSwipeRef.current === true) {
-      const isAtFirst = activePhotoIndex === 0 && deltaX > 0;
-      const isAtLast = activePhotoIndex === currentProfile.photos.length - 1 && deltaX < 0;
-      const resistance = isAtFirst || isAtLast ? 0.25 : 1;
-      setPhotoDragX(deltaX * resistance);
-    }
-  };
-
-  const handlePhotoTouchEnd = () => {
-    if (!isPhotoTouchActive) return;
-    setIsPhotoTouchActive(false);
-
-    if (isHorizontalSwipeRef.current === true) {
-      const SWIPE_PHOTO_THRESHOLD = 35;
-      if (photoDragX < -SWIPE_PHOTO_THRESHOLD) {
-        handleNextPhoto();
-      } else if (photoDragX > SWIPE_PHOTO_THRESHOLD) {
-        handlePrevPhoto();
-      }
-    }
-    setPhotoDragX(0);
-    isHorizontalSwipeRef.current = null;
-  };
-
-  // Laptop Touchpad two-finger horizontal flick / scroll (Wheel event)
-  const handlePhotoWheel = (e: React.WheelEvent) => {
-    if (!currentProfile || currentProfile.photos.length <= 1) return;
-    if (Math.abs(e.deltaX) > 20 && Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-      const now = Date.now();
-      if (now - lastWheelTimeRef.current > 360) {
-        lastWheelTimeRef.current = now;
-        if (e.deltaX > 20) {
-          handleNextPhoto();
-        } else if (e.deltaX < -20) {
-          handlePrevPhoto();
-        }
-      }
-    }
-  };
-
-  const handlePhotoMouseDown = (e: React.MouseEvent) => {
-    if (!currentProfile || currentProfile.photos.length <= 1) return;
-    if (e.button !== 0) return; // Only main left click
-    setIsPhotoDragging(true);
-    photoStartXRef.current = e.clientX;
-    photoStartYRef.current = e.clientY;
-    setPhotoDragX(0);
   };
 
   // PASS Action Handler
@@ -476,409 +394,523 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
               flexDirection: 'column',
             }}
           >
-            {/* PROFILE INTRODUCTION CARD */}
-            <div
-              style={{
-                position: 'relative',
-                width: '100%',
-                borderRadius: '24px',
-                overflow: 'hidden',
-                boxShadow: isDark ? '0 12px 36px rgba(0, 0, 0, 0.35)' : '0 10px 30px rgba(73, 40, 61, 0.12)',
-                transform: `translate3d(${cardTranslateX}px, 0, 0) rotate(${rotationDeg}deg)`,
-                transition: isAnimatingOut ? 'transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease' : 'none',
-                opacity: cardOpacity,
-                userSelect: 'none',
-                backgroundColor: themeCardBg,
-                border: `1px solid ${themeBorder}`,
-                paddingBottom: '16px',
-              }}
-            >
-              {/* Photo Viewport Container (Interactive touch, mouse drag, and laptop trackpad photo slider) */}
-              <div
-                onMouseDown={handlePhotoMouseDown}
-                onTouchStart={handlePhotoTouchStart}
-                onTouchMove={handlePhotoTouchMove}
-                onTouchEnd={handlePhotoTouchEnd}
-                onTouchCancel={handlePhotoTouchEnd}
-                onWheel={handlePhotoWheel}
-                style={{
-                  position: 'relative',
-                  width: '100%',
-                  height: '300px',
-                  backgroundColor: '#1E161C',
-                  overflow: 'hidden',
-                  cursor: isPhotoDragging ? 'grabbing' : 'grab',
-                  touchAction: 'pan-y',
-                  userSelect: 'none',
-                }}
-              >
-                {/* Real-time Activity Status Badge */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '12px',
-                    left: '12px',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    padding: '5px 12px',
-                    borderRadius: '999px',
-                    backgroundColor: 'rgba(20, 14, 28, 0.72)',
-                    backdropFilter: 'blur(8px)',
-                    border: '1px solid rgba(255, 255, 255, 0.22)',
-                    color: '#FFFFFF',
-                    fontSize: '11px',
-                    fontWeight: 600,
-                    letterSpacing: '0.04em',
-                    zIndex: 25,
-                    pointerEvents: 'none',
-                  }}
-                >
-                  <span
-                    style={{
-                      width: '7px',
-                      height: '7px',
-                      borderRadius: '50%',
-                      backgroundColor: '#4CAF50',
-                      boxShadow: '0 0 8px #4CAF50',
-                      flexShrink: 0,
-                    }}
-                  />
-                  <span>{currentProfile.activeStatus || 'Active today'}</span>
-                </div>
+            {/* CARD STACK WRAPPER WITH 4:5 PORTRAIT RATIO & CARD-QUEUE ANIMATION */}
+            {(() => {
+              const photoList = currentProfile.photos || [];
+              const N = photoList.length;
 
-                {/* Sliding Photo Track */}
+              return (
                 <div
                   style={{
-                    display: 'flex',
+                    position: 'relative',
                     width: '100%',
-                    height: '100%',
-                    transform: `translateX(calc(-${activePhotoIndex * 100}% + ${photoDragX}px))`,
-                    transition: isPhotoDragging || isPhotoTouchActive ? 'none' : 'transform 0.32s cubic-bezier(0.25, 1, 0.5, 1)',
-                    willChange: 'transform',
+                    maxWidth: '400px',
+                    margin: '0 auto',
+                    transform: `translate3d(${cardTranslateX}px, 0, 0) rotate(${rotationDeg}deg)`,
+                    transition: isAnimatingOut ? 'transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease' : 'none',
+                    opacity: cardOpacity,
+                    userSelect: 'none',
                   }}
                 >
-                  {currentProfile.photos.map((photoUrl, pIdx) => (
-                    <div
-                      key={pIdx}
-                      style={{
-                        flex: '0 0 100%',
-                        width: '100%',
-                        height: '100%',
-                        position: 'relative',
-                      }}
-                    >
-                      <img
-                        src={photoUrl}
-                        alt={`${currentProfile.firstName}'s photo ${pIdx + 1}`}
-                        draggable={false}
-                        className="ken-burns-img"
+                  {/* Photo Card Deck Container (4:5 Aspect Ratio) */}
+                  <div
+                    onTouchStart={handleTouchStart}
+                    onTouchEnd={handleTouchEnd}
+                    style={{
+                      position: 'relative',
+                      width: '100%',
+                      aspectRatio: '4 / 5',
+                      borderRadius: '24px',
+                      perspective: '1000px',
+                    }}
+                  >
+                    {/* 3rd Layer: Deepest Background Card (shown if N >= 3) */}
+                    {N >= 3 && (
+                      <div
                         style={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'cover',
-                          display: 'block',
+                          position: 'absolute',
+                          inset: 0,
+                          borderRadius: '24px',
+                          overflow: 'hidden',
+                          backgroundColor: '#1E161C',
+                          boxShadow: isDark ? '0 8px 24px rgba(0, 0, 0, 0.45)' : '0 8px 22px rgba(73, 40, 61, 0.1)',
+                          transform: isTransitioning
+                            ? 'translate3d(0, -8px, -15px) scale(0.95) rotate(2.4deg)'
+                            : 'translate3d(0, -16px, -30px) scale(0.90) rotate(-2.8deg)',
+                          transformOrigin: 'bottom center',
+                          opacity: isTransitioning ? 0.85 : 0.65,
+                          filter: isDark ? 'brightness(0.68)' : 'brightness(0.78)',
+                          zIndex: 1,
+                          transition: prefersReducedMotion
+                            ? 'none'
+                            : 'transform 0.38s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.38s ease, filter 0.38s ease',
                           pointerEvents: 'none',
-                          userSelect: 'none',
                         }}
-                      />
-                      {/* Gradient Overlay for Text Readability */}
+                      >
+                        <img
+                          src={photoList[(activePhotoIndex + 2) % N]}
+                          alt=""
+                          draggable={false}
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover',
+                            objectPosition: 'center top',
+                            display: 'block',
+                          }}
+                        />
+                      </div>
+                    )}
+
+                    {/* 2nd Layer: Middle Background Card (shown if N >= 2) */}
+                    {N >= 2 && (
+                      <div
+                        style={{
+                          position: 'absolute',
+                          inset: 0,
+                          borderRadius: '24px',
+                          overflow: 'hidden',
+                          backgroundColor: '#1E161C',
+                          boxShadow: isDark ? '0 12px 30px rgba(0, 0, 0, 0.5)' : '0 12px 28px rgba(73, 40, 61, 0.12)',
+                          transform: isTransitioning
+                            ? 'translate3d(0, 0, 0) scale(1) rotate(0deg)'
+                            : 'translate3d(0, -8px, -15px) scale(0.95) rotate(2.4deg)',
+                          transformOrigin: 'bottom center',
+                          opacity: isTransitioning ? 1 : 0.85,
+                          filter: isTransitioning ? 'brightness(1)' : (isDark ? 'brightness(0.78)' : 'brightness(0.88)'),
+                          zIndex: isTransitioning ? 9 : 3,
+                          transition: prefersReducedMotion
+                            ? 'none'
+                            : 'transform 0.38s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.38s ease, filter 0.38s ease',
+                          pointerEvents: 'none',
+                        }}
+                      >
+                        <img
+                          src={photoList[(activePhotoIndex + 1) % N]}
+                          alt=""
+                          draggable={false}
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover',
+                            objectPosition: 'center top',
+                            display: 'block',
+                          }}
+                        />
+                      </div>
+                    )}
+
+                    {/* 1st Layer: Main Front Card */}
+                    <div
+                      onClick={handleNextPhotoCard}
+                      style={{
+                        position: 'absolute',
+                        inset: 0,
+                        borderRadius: '24px',
+                        overflow: 'hidden',
+                        backgroundColor: '#1E161C',
+                        boxShadow: isDark ? '0 18px 44px rgba(0, 0, 0, 0.6)' : '0 16px 40px rgba(73, 40, 61, 0.18)',
+                        transform: isTransitioning
+                          ? 'translate3d(14px, 60px, 10px) scale(0.92) rotate(4.2deg)'
+                          : 'translate3d(0, 0, 0) scale(1) rotate(0deg)',
+                        transformOrigin: 'bottom center',
+                        opacity: isTransitioning ? 0.35 : 1,
+                        zIndex: isTransitioning ? 2 : 10,
+                        cursor: N > 1 ? 'pointer' : 'default',
+                        transition: prefersReducedMotion
+                          ? 'none'
+                          : 'transform 0.38s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.38s ease',
+                        userSelect: 'none',
+                      }}
+                      title={N > 1 ? 'Click to see next photo' : undefined}
+                    >
+                      {/* Photo Image */}
+                      {photoList.length > 0 ? (
+                        <img
+                          src={photoList[activePhotoIndex]}
+                          alt={`${currentProfile.firstName}'s photo ${activePhotoIndex + 1}`}
+                          draggable={false}
+                          className="ken-burns-img"
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover',
+                            objectPosition: 'center top',
+                            display: 'block',
+                            pointerEvents: 'none',
+                          }}
+                        />
+                      ) : (
+                        <div
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            backgroundColor: isDark ? '#2D1B28' : '#F2E8EB',
+                            color: themeMulberry,
+                            fontSize: '48px',
+                            fontFamily: 'var(--font-serif)',
+                          }}
+                        >
+                          {currentProfile.firstName[0]}
+                        </div>
+                      )}
+
+                      {/* Top Segmented Progress Bar */}
+                      {N > 1 && (
+                        <div
+                          style={{
+                            position: 'absolute',
+                            top: '12px',
+                            left: '16px',
+                            right: '16px',
+                            display: 'flex',
+                            gap: '5px',
+                            zIndex: 25,
+                            pointerEvents: 'none',
+                          }}
+                        >
+                          {photoList.map((_, pIdx) => (
+                            <div
+                              key={pIdx}
+                              style={{
+                                height: '3px',
+                                flex: 1,
+                                borderRadius: '2px',
+                                backgroundColor: pIdx === activePhotoIndex ? '#FFFFFF' : 'rgba(255, 255, 255, 0.38)',
+                                boxShadow: pIdx === activePhotoIndex ? '0 0 6px rgba(255, 255, 255, 0.8)' : 'none',
+                                transition: 'background-color 0.25s ease',
+                              }}
+                            />
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Activity Status Badge */}
+                      {currentProfile.activeStatus && (
+                        <div
+                          style={{
+                            position: 'absolute',
+                            top: N > 1 ? '24px' : '14px',
+                            left: '16px',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '6px',
+                            padding: '4px 10px',
+                            borderRadius: '999px',
+                            backgroundColor: 'rgba(16, 10, 18, 0.72)',
+                            backdropFilter: 'blur(8px)',
+                            border: '1px solid rgba(255, 255, 255, 0.2)',
+                            color: '#FFFFFF',
+                            fontSize: '11px',
+                            fontWeight: 600,
+                            letterSpacing: '0.04em',
+                            zIndex: 25,
+                            pointerEvents: 'none',
+                          }}
+                        >
+                          <span
+                            style={{
+                              width: '6px',
+                              height: '6px',
+                              borderRadius: '50%',
+                              backgroundColor: '#34D399',
+                              boxShadow: '0 0 8px #34D399',
+                              display: 'inline-block',
+                            }}
+                          />
+                          <span>{currentProfile.activeStatus}</span>
+                        </div>
+                      )}
+
+                      {/* Lightbox / Enlarge Trigger Button */}
+                      {photoList.length > 0 && (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            openLightbox(photoList, activePhotoIndex, `${currentProfile.firstName}, ${currentProfile.age}`);
+                          }}
+                          aria-label="View photo in full screen lightbox"
+                          title="View full screen photo"
+                          style={{
+                            position: 'absolute',
+                            top: N > 1 ? '22px' : '12px',
+                            right: '16px',
+                            width: '32px',
+                            height: '32px',
+                            borderRadius: '50%',
+                            backgroundColor: 'rgba(16, 10, 18, 0.65)',
+                            backdropFilter: 'blur(8px)',
+                            border: '1px solid rgba(255, 255, 255, 0.25)',
+                            color: '#FFFFFF',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer',
+                            zIndex: 25,
+                            transition: 'transform 0.15s ease, background-color 0.15s ease',
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.transform = 'scale(1.08)';
+                            e.currentTarget.style.backgroundColor = 'rgba(73, 40, 61, 0.9)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = 'scale(1)';
+                            e.currentTarget.style.backgroundColor = 'rgba(16, 10, 18, 0.65)';
+                          }}
+                        >
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+                          </svg>
+                        </button>
+                      )}
+
+                      {/* Subtle Dark Gradient Overlay */}
                       <div
                         style={{
                           position: 'absolute',
                           bottom: 0,
                           left: 0,
-                          width: '100%',
-                          height: '60%',
-                          background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 50%, transparent 100%)',
+                          right: 0,
+                          height: '58%',
+                          background: 'linear-gradient(to top, rgba(14, 8, 14, 0.95) 0%, rgba(14, 8, 14, 0.65) 42%, rgba(14, 8, 14, 0.15) 75%, transparent 100%)',
                           pointerEvents: 'none',
                         }}
                       />
+
+                      {/* Overlay Profile Details */}
+                      <div
+                        style={{
+                          position: 'absolute',
+                          bottom: '18px',
+                          left: '20px',
+                          right: '20px',
+                          zIndex: 15,
+                          pointerEvents: 'none',
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '3px' }}>
+                          <h2
+                            style={{
+                              fontFamily: 'var(--font-serif)',
+                              fontSize: '30px',
+                              fontWeight: 400,
+                              color: '#FFFFFF',
+                              margin: 0,
+                              letterSpacing: '-0.01em',
+                              textShadow: '0 2px 10px rgba(0, 0, 0, 0.35)',
+                            }}
+                          >
+                            {currentProfile.firstName}, {currentProfile.age}
+                          </h2>
+
+                          {currentProfile.isVerified && (
+                            <span
+                              style={{
+                                fontSize: '10.5px',
+                                fontWeight: 700,
+                                letterSpacing: '0.1em',
+                                textTransform: 'uppercase',
+                                color: '#86EFAC',
+                                backgroundColor: 'rgba(34, 197, 94, 0.22)',
+                                border: '1px solid rgba(74, 222, 128, 0.35)',
+                                padding: '2px 8px',
+                                borderRadius: '999px',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '4px',
+                              }}
+                            >
+                              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round">
+                                <polyline points="20 6 9 17 4 12" />
+                              </svg>
+                              VERIFIED
+                            </span>
+                          )}
+                        </div>
+
+                        {currentProfile.city && (
+                          <div
+                            style={{
+                              fontSize: '11px',
+                              fontWeight: 700,
+                              letterSpacing: '0.1em',
+                              textTransform: 'uppercase',
+                              color: 'rgba(255, 255, 255, 0.85)',
+                              marginBottom: '4px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '4px',
+                            }}
+                          >
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+                              <circle cx="12" cy="10" r="3" />
+                            </svg>
+                            <span>{currentProfile.city}</span>
+                          </div>
+                        )}
+
+                        {(currentProfile.designation || currentProfile.company) && (
+                          <div
+                            style={{
+                              fontSize: '14px',
+                              fontFamily: 'var(--font-serif)',
+                              fontWeight: 500,
+                              color: 'rgba(255, 255, 255, 0.95)',
+                              lineHeight: '1.3',
+                            }}
+                          >
+                            {[currentProfile.designation, currentProfile.company].filter(Boolean).join(' · ')}
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  ))}
-                </div>
+                  </div>
 
-                {/* Left and Right Navigational Arrow Buttons */}
-                <button
-                  type="button"
-                  onClick={handlePrevPhoto}
-                  onMouseDown={(e) => e.stopPropagation()}
-                  onTouchStart={(e) => e.stopPropagation()}
-                  aria-label="Previous photo"
-                  style={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '12px',
-                    transform: 'translateY(-50%)',
-                    width: '32px',
-                    height: '32px',
-                    borderRadius: '50%',
-                    backgroundColor: 'rgba(28, 22, 26, 0.5)',
-                    backdropFilter: 'blur(6px)',
-                    border: '1px solid rgba(255, 255, 255, 0.25)',
-                    color: '#FFFFFF',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    zIndex: 20,
-                  }}
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="m15 18-6-6 6-6" />
-                  </svg>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={handleNextPhoto}
-                  onMouseDown={(e) => e.stopPropagation()}
-                  onTouchStart={(e) => e.stopPropagation()}
-                  aria-label="Next photo"
-                  style={{
-                    position: 'absolute',
-                    top: '50%',
-                    right: '12px',
-                    transform: 'translateY(-50%)',
-                    width: '32px',
-                    height: '32px',
-                    borderRadius: '50%',
-                    backgroundColor: 'rgba(28, 22, 26, 0.5)',
-                    backdropFilter: 'blur(6px)',
-                    border: '1px solid rgba(255, 255, 255, 0.25)',
-                    color: '#FFFFFF',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    zIndex: 20,
-                  }}
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="m9 18 6-6-6-6" />
-                  </svg>
-                </button>
-
-                {/* Full-screen Lightbox trigger */}
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    openLightbox(currentProfile.photos, activePhotoIndex, `${currentProfile.firstName}, ${currentProfile.age}`);
-                  }}
-                  onMouseDown={(e) => e.stopPropagation()}
-                  onTouchStart={(e) => e.stopPropagation()}
-                  aria-label="View photo in full screen lightbox"
-                  title="View full screen photo"
-                  style={{
-                    position: 'absolute',
-                    top: '12px',
-                    right: '12px',
-                    width: '36px',
-                    height: '36px',
-                    borderRadius: '50%',
-                    backgroundColor: 'rgba(28, 22, 26, 0.65)',
-                    backdropFilter: 'blur(8px)',
-                    border: '1px solid rgba(255, 255, 255, 0.3)',
-                    color: '#FFFFFF',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    zIndex: 25,
-                    transition: 'transform 0.15s ease, background-color 0.15s ease',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'scale(1.08)';
-                    e.currentTarget.style.backgroundColor = 'rgba(73, 40, 61, 0.9)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'scale(1)';
-                    e.currentTarget.style.backgroundColor = 'rgba(28, 22, 26, 0.65)';
-                  }}
-                >
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
-                  </svg>
-                </button>
-              </div>
-
-              {/* Carousel Pagination Dots below the photograph */}
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '6px',
-                  marginTop: '12px',
-                  marginBottom: '10px',
-                }}
-              >
-                {currentProfile.photos.map((_, dotIdx) => (
-                  <button
-                    key={dotIdx}
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setActivePhotoIndex(dotIdx);
-                    }}
-                    aria-label={`Show photo ${dotIdx + 1}`}
+                  {/* THREE ACTION BUTTONS: PASS, NEXT PHOTO, LIKE */}
+                  <div
                     style={{
-                      width: activePhotoIndex === dotIdx ? '20px' : '6px',
-                      height: '5px',
-                      borderRadius: '3px',
-                      backgroundColor: activePhotoIndex === dotIdx ? themeMulberry : (isDark ? 'rgba(243, 238, 233, 0.3)' : 'rgba(73, 40, 61, 0.25)'),
-                      border: 'none',
-                      padding: 0,
-                      cursor: 'pointer',
-                      transition: 'all 0.2s ease',
-                    }}
-                  />
-                ))}
-              </div>
-
-              {/* Overlay Profile Details */}
-              <div style={{
-                position: 'absolute',
-                bottom: '24px',
-                left: '20px',
-                right: '20px',
-                zIndex: 10,
-                pointerEvents: 'none',
-              }}>
-                {/* Row 1: Name, Age and VERIFIED Pill */}
-                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '2px' }}>
-                  <h2
-                    style={{
-                      fontFamily: 'var(--font-serif)',
-                      fontSize: '32px',
-                      fontWeight: 400,
-                      color: '#FFFFFF',
-                      margin: 0,
-                      letterSpacing: '-0.01em',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '20px',
+                      marginTop: '22px',
+                      marginBottom: '14px',
                     }}
                   >
-                    {currentProfile.firstName}, {currentProfile.age}
-                  </h2>
-
-                  {currentProfile.isVerified && (
-                    <span
+                    {/* 1. Pass: Subtle cross icon */}
+                    <button
+                      type="button"
+                      onClick={handlePass}
+                      aria-label={`Pass on ${currentProfile.firstName}`}
+                      title="Pass"
                       style={{
-                        fontSize: '10.5px',
-                        fontWeight: 700,
-                        letterSpacing: '0.1em',
-                        textTransform: 'uppercase',
-                        color: '#66BB6A',
+                        width: '52px',
+                        height: '52px',
+                        borderRadius: '50%',
+                        backgroundColor: isDark ? 'rgba(70, 32, 55, 0.65)' : 'rgba(255, 255, 255, 0.95)',
+                        color: themeMulberry,
+                        border: isDark ? '1.5px solid rgba(161, 82, 95, 0.4)' : '1.5px solid rgba(161, 82, 95, 0.25)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        boxShadow: isDark ? '0 6px 18px rgba(0, 0, 0, 0.35)' : '0 6px 18px rgba(161, 82, 95, 0.1)',
+                        transition: 'transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'scale(1.06)';
+                        e.currentTarget.style.borderColor = themeMulberry;
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'scale(1)';
+                        e.currentTarget.style.borderColor = isDark ? 'rgba(161, 82, 95, 0.4)' : 'rgba(161, 82, 95, 0.25)';
                       }}
                     >
-                      VERIFIED
-                    </span>
-                  )}
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                      </svg>
+                    </button>
+
+                    {/* 2. Next Photo: Discreet cycle / next control */}
+                    {N > 1 && (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleNextPhotoCard();
+                        }}
+                        aria-label="Next photo"
+                        title="Next photo"
+                        style={{
+                          height: '42px',
+                          padding: '0 16px',
+                          borderRadius: '21px',
+                          backgroundColor: isDark ? 'rgba(40, 20, 32, 0.75)' : 'rgba(255, 255, 255, 0.9)',
+                          color: themeMulberry,
+                          border: isDark ? '1px solid rgba(161, 82, 95, 0.35)' : '1px solid rgba(161, 82, 95, 0.22)',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '7px',
+                          cursor: 'pointer',
+                          fontSize: '12px',
+                          fontWeight: 600,
+                          letterSpacing: '0.04em',
+                          boxShadow: isDark ? '0 4px 14px rgba(0, 0, 0, 0.25)' : '0 4px 14px rgba(161, 82, 95, 0.08)',
+                          transition: 'transform 0.16s ease, background-color 0.16s ease',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.transform = 'scale(1.05)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.transform = 'scale(1)';
+                        }}
+                      >
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M5 12h14" />
+                          <path d="m12 5 7 7-7 7" />
+                        </svg>
+                        <span>Next photo</span>
+                      </button>
+                    )}
+
+                    {/* 3. Like / Send Request: Prominent heart icon */}
+                    <button
+                      type="button"
+                      onClick={handleSendRequest}
+                      aria-label={`Send introduction request to ${currentProfile.firstName}`}
+                      title="Send Request (Like)"
+                      style={{
+                        width: '56px',
+                        height: '56px',
+                        borderRadius: '50%',
+                        background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
+                        color: '#FDF3F5',
+                        border: 'none',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        boxShadow: '0 8px 24px rgba(161, 82, 95, 0.45)',
+                        transition: 'transform 0.16s ease, box-shadow 0.16s ease',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'scale(1.06)';
+                        e.currentTarget.style.boxShadow = '0 10px 28px rgba(161, 82, 95, 0.55)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'scale(1)';
+                        e.currentTarget.style.boxShadow = '0 8px 24px rgba(161, 82, 95, 0.45)';
+                      }}
+                    >
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                      </svg>
+                    </button>
+                  </div>
+
+                  {/* Instruction Microcopy */}
+                  <div
+                    style={{
+                      fontSize: '10.5px',
+                      fontWeight: 600,
+                      letterSpacing: '0.09em',
+                      textTransform: 'uppercase',
+                      color: themeMuted,
+                      textAlign: 'center',
+                      marginBottom: '22px',
+                    }}
+                  >
+                    TAP PHOTO TO CYCLE · PASS OR REQUEST TO DECIDE · SCROLL FOR DETAILS
+                  </div>
                 </div>
-
-                {/* Subtitle Line 1: City in uppercase letterspacing */}
-                <div
-                  style={{
-                    fontSize: '11px',
-                    fontWeight: 700,
-                    letterSpacing: '0.1em',
-                    textTransform: 'uppercase',
-                    color: 'rgba(255, 255, 255, 0.85)',
-                    marginBottom: '4px',
-                  }}
-                >
-                  {currentProfile.city}
-                </div>
-
-                {/* Subtitle Line 2: Role · Company */}
-                <div
-                  style={{
-                    fontSize: '15px',
-                    fontFamily: 'var(--font-serif)',
-                    fontWeight: 600,
-                    color: 'rgba(255, 255, 255, 0.95)',
-                    lineHeight: '1.3',
-                  }}
-                >
-                  {currentProfile.designation} · {currentProfile.company}
-                </div>
-              </div>
-
-              {/* Floating Action Buttons */}
-              <div
-                style={{
-                  position: 'absolute',
-                  bottom: '24px',
-                  right: '20px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '12px',
-                  zIndex: 20,
-                }}
-              >
-                <button
-                  type="button"
-                  className="btn-tactile"
-                  onClick={handlePass}
-                  style={{
-                    width: '48px',
-                    height: '48px',
-                    borderRadius: '50%',
-                    backgroundColor: isDark ? 'rgba(20, 14, 28, 0.75)' : 'rgba(0, 0, 0, 0.4)',
-                    backdropFilter: 'blur(12px)',
-                    color: isDark ? '#F9AAAD' : '#FFFFFF',
-                    border: '1px solid ' + (isDark ? 'rgba(161, 82, 95, 0.4)' : 'rgba(255, 255, 255, 0.3)'),
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-                  }}
-                >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M18 6L6 18M6 6l12 12" />
-                  </svg>
-                </button>
-                <button
-                  type="button"
-                  className="btn-tactile"
-                  onClick={handleSendRequest}
-                  style={{
-                    width: '48px',
-                    height: '48px',
-                    borderRadius: '50%',
-                    background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
-                    color: '#FDF3F5',
-                    border: 'none',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    boxShadow: '0 4px 14px rgba(161, 82, 95, 0.45)',
-                  }}
-                >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-
-            {/* Instruction Microcopy with comfortable spacing below photo */}
-            <div
-              style={{
-                fontSize: '10.5px',
-                fontWeight: 600,
-                letterSpacing: '0.09em',
-                textTransform: 'uppercase',
-                color: themeMuted,
-                textAlign: 'center',
-                marginTop: '22px',
-                marginBottom: '22px',
-              }}
-            >
-              SWIPE RIGHT TO REQUEST, LEFT TO PASS · SCROLL FOR DETAILS
-            </div>
+              );
+            })()}
 
             {/* Subtle Divider Line */}
             <div
