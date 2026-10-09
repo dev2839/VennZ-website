@@ -367,29 +367,6 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
                 >
                   {idx + 1} / {profile.photos.length}
                 </div>
-
-                {/* Enlarge badge */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    bottom: '12px',
-                    right: '12px',
-                    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-                    backdropFilter: 'blur(6px)',
-                    color: '#FFF',
-                    padding: '4px 10px',
-                    borderRadius: '8px',
-                    fontSize: '11.5px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '5px',
-                  }}
-                >
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
-                  </svg>
-                  <span>Enlarge</span>
-                </div>
               </div>
             ))}
           </div>
