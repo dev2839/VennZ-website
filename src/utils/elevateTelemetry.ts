@@ -261,7 +261,6 @@ export function createDefaultElevateOrders(
 ): ElevateOrder[] {
   const scorecard = generateDynamicScorecard(profile, matches, incomingRequests, sentRequests, conversations);
   const makeover = generateDynamicMakeoverReport(profile);
-  const audit = generateDynamicConversationAudit(conversations, true);
 
   const now = Date.now();
   const DAY_MS = 86400000;
@@ -326,38 +325,6 @@ export function createDefaultElevateOrders(
       refundState: {
         status: 'none',
       },
-      addVideoReview: false,
-    },
-    {
-      id: 'ELV-5118',
-      serviceId: 'conversation-audit',
-      serviceName: 'Conversation Audit',
-      serviceCategory: 'conversation-audit',
-      price: 2499,
-      status: 'in_review',
-      createdAt: now - DAY_MS * 1,
-      updatedAt: now - 3600000 * 5,
-      reviewerAccess: {
-        reviewerId: 'rev-audit-02',
-        reviewerName: 'Kabir Sen',
-        reviewerRole: 'Communication Dynamics Specialist',
-        accessScope: 'anonymized_conversations_only' as ReviewerAccessScope,
-        accessStatus: 'active',
-        grantedAt: now - DAY_MS * 1,
-        lastAccessedAt: now - 3600000 * 5,
-      },
-      deliverable: {
-        title: 'VennZ-Native Conversation Diagnostic',
-        summary: 'Privacy-guarded dialogue momentum analysis with automatic partner redaction.',
-        deliveredAt: now,
-        conversationAudit: audit,
-        notesFromReviewer:
-          'Conversations are currently undergoing automated partner-data tokenization prior to cadence assessment.',
-      },
-      refundState: {
-        status: 'none',
-      },
-      conversationAuditConsent: true,
     },
   ];
 }

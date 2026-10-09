@@ -8,7 +8,6 @@ import type { ElevateService, ElevateOrder } from '../types/elevate';
 import {
   generateDynamicScorecard,
   generateDynamicMakeoverReport,
-  generateDynamicConversationAudit,
 } from '../utils/elevateTelemetry';
 
 interface Page17ElevateScreenProps {
@@ -19,7 +18,7 @@ interface Page17ElevateScreenProps {
   showHomeIndicator?: boolean;
 }
 
-type ElevateNavTab = 'catalog' | 'scorecard' | 'makeover' | 'audit' | 'orders' | 'concierge';
+type ElevateNavTab = 'catalog' | 'scorecard' | 'makeover' | 'orders' | 'concierge';
 
 export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
   onSelectTab,
@@ -39,7 +38,6 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
     createElevateOrder,
     requestElevateRefund,
     applyMakeoverBio,
-    setConversationAuditConsent,
     sendElevateConciergeMessage,
   } = useAuth();
 
@@ -50,8 +48,6 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
   const [selectedService, setSelectedService] = useState<ElevateService | null>(null);
 
   // Order creation modal options
-  const [addVideoReview, setAddVideoReview] = useState(false);
-  const [auditConsentAgreed, setAuditConsentAgreed] = useState(true);
   const [orderSuccessMessage, setOrderSuccessMessage] = useState<string | null>(null);
 
   // Refund Modal state
@@ -81,12 +77,10 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
     conversations || {}
   );
   const liveMakeover = generateDynamicMakeoverReport(profile);
-  const liveAudit = generateDynamicConversationAudit(conversations || {}, auditConsentAgreed);
 
   // Check if member already purchased or has access to particular services
   const hasIntelligenceOrder = elevateOrders.some((o) => o.serviceCategory === 'profile-intelligence');
   const hasMakeoverOrder = elevateOrders.some((o) => o.serviceCategory === 'profile-makeover');
-  const hasAuditOrder = elevateOrders.some((o) => o.serviceCategory === 'conversation-audit');
 
   // Colors & styles matching VennZ luxury editorial palette
   const themeBgColor = isDark ? '#140E1C' : '#FAF1F3';
@@ -99,14 +93,10 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
 
   // Handle Order Creation
   const handleConfirmOrder = (service: ElevateService) => {
-    const newOrder = createElevateOrder(service.id, {
-      addVideoReview: addVideoReview && service.id !== 'video-review',
-      conversationAuditConsent: service.category === 'conversation-audit' ? auditConsentAgreed : undefined,
-    });
+    const newOrder = createElevateOrder(service.id);
 
     setOrderSuccessMessage(`Order #${newOrder.id} confirmed for ${service.name}.`);
     setSelectedService(null);
-    setAddVideoReview(false);
 
     // Navigate to the respective deliverable tab
     setTimeout(() => {
@@ -115,8 +105,6 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
         setActiveTab('scorecard');
       } else if (service.category === 'profile-makeover') {
         setActiveTab('makeover');
-      } else if (service.category === 'conversation-audit') {
-        setActiveTab('audit');
       } else {
         setActiveTab('orders');
       }
@@ -211,7 +199,6 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
             { id: 'catalog', label: 'Offerings' },
             { id: 'scorecard', label: 'Profile Intelligence' },
             { id: 'makeover', label: 'Makeover Studio' },
-            { id: 'audit', label: 'Conversation Audit' },
             { id: 'orders', label: `Orders (${elevateOrders.length})` },
             { id: 'concierge', label: 'Concierge Desk' },
           ].map((tab) => {
@@ -322,7 +309,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                   margin: '0 auto',
                 }}
               >
-                Measurable member telemetry, discreet profile curation, and privacy-guarded conversation audits
+                Measurable member telemetry and discreet profile curation
                 governed by strict least-privilege staff access.
               </p>
             </div>
@@ -1001,254 +988,6 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
           </div>
         )}
 
-        {/* =========================================================================
-            TAB 4: CONVERSATION AUDIT (PRIVACY-FIRST, NATIVE CHATS ONLY)
-            ========================================================================= */}
-        {activeTab === 'audit' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-              <div>
-                <span
-                  style={{
-                    fontSize: '11px',
-                    letterSpacing: '0.12em',
-                    fontWeight: 700,
-                    textTransform: 'uppercase',
-                    color: isDark ? '#F9AAAD' : '#A1525F',
-                  }}
-                >
-                  Privacy-Guarded Diagnostic
-                </span>
-                <h1
-                  style={{
-                    fontFamily: 'var(--font-serif)',
-                    fontSize: '24px',
-                    fontWeight: 600,
-                    margin: '4px 0 0',
-                    color: themeTextColor,
-                  }}
-                >
-                  Conversation Audit
-                </h1>
-              </div>
-
-              <div
-                style={{
-                  fontSize: '11px',
-                  padding: '5px 12px',
-                  borderRadius: '999px',
-                  backgroundColor: 'rgba(56, 142, 60, 0.15)',
-                  color: isDark ? '#A5D6A7' : '#2E7D32',
-                  fontWeight: 700,
-                }}
-              >
-                ✓ Partner Data Redacted
-              </div>
-            </div>
-
-            {/* Strict Privacy Notice */}
-            <div
-              style={{
-                padding: '14px 18px',
-                borderRadius: '14px',
-                backgroundColor: isDark ? 'rgba(70, 32, 55, 0.45)' : 'rgba(255, 255, 255, 0.75)',
-                border: `1px solid ${themeBorder}`,
-                fontSize: '12.5px',
-                lineHeight: '1.5',
-                color: themeMuted,
-              }}
-            >
-              <h4 style={{ margin: '0 0 6px', fontSize: '13px', color: themeTextColor }}>
-                🔒 VennZ Strict Conversation Privacy Architecture:
-              </h4>
-              <ul style={{ margin: 0, paddingLeft: '18px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <li>
-                  <strong>Native Analysis Only:</strong> Analyzes VennZ-native chats directly. No third-party chat uploads
-                  (e.g. WhatsApp, iMessage) are supported or accepted.
-                </li>
-                <li>
-                  <strong>Automated Partner Redaction:</strong> Because conversations contain another person's personal
-                  data, partner names, phone numbers, handles, and locations are automatically tokenized and hidden from reviewers.
-                </li>
-                <li>
-                  <strong>Configurable & Consent-Driven:</strong> This service is entirely optional. Staff reviewers access
-                  only structural pacing and cadence metrics under explicit member consent.
-                </li>
-              </ul>
-            </div>
-
-            {/* Explicit Consent Control */}
-            <div
-              style={{
-                padding: '16px 18px',
-                borderRadius: '14px',
-                backgroundColor: themeCardBg,
-                border: `1px solid ${themeBorder}`,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                gap: '16px',
-              }}
-            >
-              <div>
-                <div style={{ fontSize: '13.5px', fontWeight: 600, color: themeTextColor }}>
-                  Member Diagnostic Authorization
-                </div>
-                <div style={{ fontSize: '12px', color: themeMuted, marginTop: '2px' }}>
-                  Authorize VennZ Communication Dynamics Specialist to review anonymized dialogue cadence
-                </div>
-              </div>
-
-              <input
-                type="checkbox"
-                checked={auditConsentAgreed}
-                onChange={(e) => {
-                  const val = e.target.checked;
-                  setAuditConsentAgreed(val);
-                  const auditOrder = elevateOrders.find((o) => o.serviceCategory === 'conversation-audit');
-                  if (auditOrder) {
-                    setConversationAuditConsent(auditOrder.id, val);
-                  }
-                }}
-                style={{
-                  width: '20px',
-                  height: '20px',
-                  accentColor: '#C7577C',
-                  cursor: 'pointer',
-                }}
-              />
-            </div>
-
-            {auditConsentAgreed ? (
-              <>
-                {/* Cadence & Momentum Scores */}
-                <div
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-                    gap: '12px',
-                  }}
-                >
-                  <div style={{ padding: '16px', borderRadius: '14px', backgroundColor: themeCardBg, border: `1px solid ${themeBorder}` }}>
-                    <div style={{ fontSize: '11px', color: themeMuted, textTransform: 'uppercase' }}>Cadence Pacing Score</div>
-                    <div style={{ fontSize: '26px', fontWeight: 700, margin: '6px 0 2px' }}>{liveAudit.cadenceScore}/100</div>
-                    <div style={{ fontSize: '11px', color: themeMulberry }}>Balanced response velocity</div>
-                  </div>
-
-                  <div style={{ padding: '16px', borderRadius: '14px', backgroundColor: themeCardBg, border: `1px solid ${themeBorder}` }}>
-                    <div style={{ fontSize: '11px', color: themeMuted, textTransform: 'uppercase' }}>Momentum Score</div>
-                    <div style={{ fontSize: '26px', fontWeight: 700, margin: '6px 0 2px' }}>{liveAudit.momentumScore}/100</div>
-                    <div style={{ fontSize: '11px', color: themeMulberry }}>High conversational reciprocity</div>
-                  </div>
-
-                  <div style={{ padding: '16px', borderRadius: '14px', backgroundColor: themeCardBg, border: `1px solid ${themeBorder}` }}>
-                    <div style={{ fontSize: '11px', color: themeMuted, textTransform: 'uppercase' }}>Question Ratio</div>
-                    <div style={{ fontSize: '18px', fontWeight: 700, margin: '8px 0 2px' }}>{liveAudit.questionBalanceRatio}</div>
-                    <div style={{ fontSize: '11px', color: themeMulberry }}>Healthy two-way dialogue</div>
-                  </div>
-                </div>
-
-                {/* Invitation Timing Insight */}
-                <div
-                  style={{
-                    padding: '20px',
-                    borderRadius: '16px',
-                    backgroundColor: themeCardBg,
-                    border: `1px solid ${themeBorder}`,
-                  }}
-                >
-                  <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '18px', margin: '0 0 10px', color: themeTextColor }}>
-                    Date & Mixer Invitation Timing Insight
-                  </h3>
-                  <p style={{ fontSize: '13px', lineHeight: '1.55', color: themeTextColor, margin: 0 }}>
-                    {liveAudit.invitationTimingInsight}
-                  </p>
-                </div>
-
-                {/* Recommendations */}
-                <div
-                  style={{
-                    padding: '20px',
-                    borderRadius: '16px',
-                    backgroundColor: themeCardBg,
-                    border: `1px solid ${themeBorder}`,
-                  }}
-                >
-                  <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '18px', margin: '0 0 12px', color: themeTextColor }}>
-                    Key Recommendations
-                  </h3>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    {liveAudit.keyRecommendations.map((rec, i) => (
-                      <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '13px', lineHeight: '1.5' }}>
-                        <span style={{ color: isDark ? '#F9AAAD' : '#A1525F', fontWeight: 700 }}>•</span>
-                        <span>{rec}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </>
-            ) : (
-              <div
-                style={{
-                  padding: '30px 20px',
-                  borderRadius: '16px',
-                  backgroundColor: themeCardBg,
-                  border: `1px solid ${themeBorder}`,
-                  textAlign: 'center',
-                }}
-              >
-                <div style={{ fontSize: '28px', marginBottom: '8px' }}>🛡️</div>
-                <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '18px', margin: '0 0 6px' }}>
-                  Conversation Audit Disabled
-                </h3>
-                <p style={{ fontSize: '13px', color: themeMuted, maxWidth: '420px', margin: '0 auto 16px' }}>
-                  Member authorization is currently toggled off. VennZ staff and audit engines are blocked from analyzing
-                  any chat telemetry until you explicitly check authorization above.
-                </p>
-                <button
-                  type="button"
-                  onClick={() => setAuditConsentAgreed(true)}
-                  style={{
-                    padding: '9px 20px',
-                    borderRadius: '10px',
-                    border: 'none',
-                    background: themeAccentGrad,
-                    color: '#FFFFFF',
-                    fontSize: '13px',
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                  }}
-                >
-                  Grant Confidential Authorization
-                </button>
-              </div>
-            )}
-
-            {!hasAuditOrder && (
-              <div style={{ textAlign: 'center', marginTop: '6px' }}>
-                <button
-                  type="button"
-                  onClick={() => {
-                    const svc = ELEVATE_SERVICES.find((s) => s.id === 'conversation-audit');
-                    if (svc) setSelectedService(svc);
-                  }}
-                  style={{
-                    padding: '12px 28px',
-                    borderRadius: '12px',
-                    border: 'none',
-                    background: themeAccentGrad,
-                    color: '#FFFFFF',
-                    fontSize: '14px',
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                  }}
-                >
-                  Order Conversation Audit Diagnostic (₹2,499)
-                </button>
-              </div>
-            )}
-          </div>
-        )}
 
         {/* =========================================================================
             TAB 5: ORDERS, DELIVERABLES & REFUND MANAGEMENT
@@ -1471,7 +1210,6 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                             onClick={() => {
                               if (order.serviceCategory === 'profile-intelligence') setActiveTab('scorecard');
                               else if (order.serviceCategory === 'profile-makeover') setActiveTab('makeover');
-                              else if (order.serviceCategory === 'conversation-audit') setActiveTab('audit');
                             }}
                             style={{
                               padding: '8px 16px',
@@ -1691,61 +1429,6 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
               🔒 <strong>Strict Staff Access Scope:</strong> {selectedService.privacyAccessScope}
             </div>
 
-            {/* Add-ons: Personalized Video Review */}
-            {selectedService.id !== 'video-review' && (
-              <div
-                style={{
-                  padding: '14px',
-                  borderRadius: '12px',
-                  border: `1px solid ${themeBorder}`,
-                  marginBottom: '16px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  gap: '12px',
-                }}
-              >
-                <div>
-                  <div style={{ fontSize: '13px', fontWeight: 600 }}>Personalized Video Review Add-on</div>
-                  <div style={{ fontSize: '11.5px', color: themeMuted }}>
-                    10-minute confidential screen recording by a Senior Membership Editor (+₹4,999)
-                  </div>
-                </div>
-                <input
-                  type="checkbox"
-                  checked={addVideoReview}
-                  onChange={(e) => setAddVideoReview(e.target.checked)}
-                  style={{ width: '18px', height: '18px', accentColor: '#C7577C', cursor: 'pointer' }}
-                />
-              </div>
-            )}
-
-            {/* Conversation Audit Consent Checkbox */}
-            {selectedService.category === 'conversation-audit' && (
-              <div
-                style={{
-                  padding: '14px',
-                  borderRadius: '12px',
-                  border: `1px solid ${themeBorder}`,
-                  marginBottom: '16px',
-                  display: 'flex',
-                  alignItems: 'flex-start',
-                  gap: '12px',
-                }}
-              >
-                <input
-                  type="checkbox"
-                  id="modal-consent"
-                  checked={auditConsentAgreed}
-                  onChange={(e) => setAuditConsentAgreed(e.target.checked)}
-                  style={{ width: '18px', height: '18px', accentColor: '#C7577C', cursor: 'pointer', marginTop: '2px' }}
-                />
-                <label htmlFor="modal-consent" style={{ fontSize: '12px', color: themeTextColor, lineHeight: '1.45', cursor: 'pointer' }}>
-                  I authorize VennZ to perform privacy-redacted cadence analysis on VennZ-native chats. Partner identifiers will remain completely redacted.
-                </label>
-              </div>
-            )}
-
             {/* Total Price and Confirmation */}
             <div
               style={{
@@ -1759,11 +1442,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
             >
               <span style={{ fontSize: '13px', color: themeMuted }}>Order Total:</span>
               <span style={{ fontSize: '22px', fontWeight: 700 }}>
-                ₹
-                {(
-                  selectedService.startingPrice +
-                  (addVideoReview && selectedService.id !== 'video-review' ? 4999 : 0)
-                ).toLocaleString('en-IN')}
+                ₹{selectedService.startingPrice.toLocaleString('en-IN')}
               </span>
             </div>
 
