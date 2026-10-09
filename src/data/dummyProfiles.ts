@@ -44,7 +44,7 @@ export const DUMMY_DISCOVER_PROFILES: DiscoverProfile[] = [
       },
       {
         photoIndex: 1,
-        title: 'VIBE & ENERGY',
+        title: 'PERSPECTIVE & FLOW',
         subtitle: 'Curious & Creative Mindset',
         content: '“A Sunday well-spent looks like slow breakfast, drafting furniture designs, and finding records you didn’t know you loved.”',
         tags: ['Art', 'Ceramics', 'Vinyl'],

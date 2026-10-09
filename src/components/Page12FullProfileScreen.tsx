@@ -321,7 +321,7 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
                 style={{
                   position: 'relative',
                   width: '100%',
-                  height: '350px',
+                  height: '300px',
                   borderRadius: '20px',
                   overflow: 'hidden',
                   backgroundColor: '#1E161C',
