@@ -518,7 +518,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                 style={{
                   position: 'relative',
                   width: '100%',
-                  height: '420px',
+                  height: '375px',
                   backgroundColor: '#1E161C',
                   overflow: 'hidden',
                   cursor: isPhotoDragging ? 'grabbing' : 'grab',
@@ -526,6 +526,41 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                   userSelect: 'none',
                 }}
               >
+                {/* Real-time Activity Status Badge */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: '12px',
+                    left: '12px',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '5px 12px',
+                    borderRadius: '999px',
+                    backgroundColor: 'rgba(20, 14, 28, 0.72)',
+                    backdropFilter: 'blur(8px)',
+                    border: '1px solid rgba(255, 255, 255, 0.22)',
+                    color: '#FFFFFF',
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    letterSpacing: '0.04em',
+                    zIndex: 25,
+                    pointerEvents: 'none',
+                  }}
+                >
+                  <span
+                    style={{
+                      width: '7px',
+                      height: '7px',
+                      borderRadius: '50%',
+                      backgroundColor: '#4CAF50',
+                      boxShadow: '0 0 8px #4CAF50',
+                      flexShrink: 0,
+                    }}
+                  />
+                  <span>{currentProfile.activeStatus || 'Active today'}</span>
+                </div>
+
                 {/* Sliding Photo Track */}
                 <div
                   style={{
@@ -843,16 +878,17 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
               </div>
             </div>
 
-            {/* Instruction Microcopy */}
+            {/* Instruction Microcopy with comfortable spacing below photo */}
             <div
               style={{
-                fontSize: '10px',
+                fontSize: '10.5px',
                 fontWeight: 600,
-                letterSpacing: '0.08em',
+                letterSpacing: '0.09em',
                 textTransform: 'uppercase',
                 color: themeMuted,
                 textAlign: 'center',
-                marginBottom: '18px',
+                marginTop: '22px',
+                marginBottom: '22px',
               }}
             >
               SWIPE RIGHT TO REQUEST, LEFT TO PASS · SCROLL FOR DETAILS
@@ -863,78 +899,220 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
               style={{
                 height: '1px',
                 backgroundColor: themeBorder,
-                marginBottom: '18px',
+                marginBottom: '20px',
               }}
             />
 
-            {/* MORE ABOUT [NAME] & VIEW FULL PROFILE (COMPLETELY OUT OF THE WHITE BOX) */}
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '8px',
-                padding: '0 4px',
-              }}
-            >
-              <div
-                style={{
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  letterSpacing: '0.12em',
-                  textTransform: 'uppercase',
-                  color: themeMulberry,
-                }}
-              >
-                MORE ABOUT {currentProfile.firstName.toUpperCase()}
-              </div>
+            {/* DYNAMIC PER-PHOTO STORY & INSIGHTS (CHANGES WITH EACH PHOTO) */}
+            {(() => {
+              const prompt = currentProfile.photoPrompts?.find((p) => p.photoIndex === activePhotoIndex) || {
+                title:
+                  activePhotoIndex === 0
+                    ? `ESSENCE & INTRODUCTION`
+                    : activePhotoIndex === 1
+                    ? `VIBE & PERSPECTIVE`
+                    : `PASSIONS & CURIOSITIES`,
+                subtitle:
+                  activePhotoIndex === 0
+                    ? `${currentProfile.designation} · ${currentProfile.city}`
+                    : undefined,
+                content:
+                  activePhotoIndex === 0
+                    ? currentProfile.introduction
+                    : activePhotoIndex === 1 && currentProfile.vibes
+                    ? `“Known for a ${currentProfile.vibes.join(' & ').toLowerCase()} presence.”`
+                    : `“Passionate about ${currentProfile.interests.join(', ')}.”`,
+                tags:
+                  activePhotoIndex === 1
+                    ? currentProfile.vibes
+                    : currentProfile.interests.slice(0, 4),
+              };
 
-              {/* Two-line introduction quote in italics */}
-              <p
-                style={{
-                  fontFamily: 'var(--font-serif)',
-                  fontStyle: 'italic',
-                  fontSize: '15px',
-                  lineHeight: '1.55',
-                  color: isDark ? '#E5D8DF' : '#4A3B45',
-                  margin: '0 0 8px 0',
-                }}
-              >
-                {currentProfile.introduction}
-              </p>
-
-              {/* Clickable: View [Name]'s full profile OUTSIDE of any box */}
-              <div>
-                <button
-                  type="button"
-                  onClick={() => onViewFullProfile(currentProfile)}
+              return (
+                <div
                   style={{
-                    background: 'none',
-                    border: 'none',
-                    padding: '4px 0',
-                    fontSize: '13.5px',
-                    fontWeight: 700,
-                    letterSpacing: '0.02em',
-                    color: themeMulberry,
-                    textDecoration: 'underline',
-                    textUnderlineOffset: '4px',
-                    cursor: 'pointer',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    transition: 'opacity 0.15s ease',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.opacity = '0.75';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.opacity = '1';
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '12px',
+                    padding: '18px 20px',
+                    borderRadius: '18px',
+                    backgroundColor: themeCardBg,
+                    border: `1px solid ${themeBorder}`,
+                    boxShadow: isDark ? '0 6px 20px rgba(0, 0, 0, 0.25)' : '0 6px 20px rgba(73, 40, 61, 0.06)',
+                    transition: 'all 0.25s ease',
                   }}
                 >
-                  <span>View {currentProfile.firstName}’s full profile</span>
-                  <span aria-hidden="true">→</span>
-                </button>
-              </div>
-            </div>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
+                    <div
+                      style={{
+                        fontSize: '11px',
+                        fontWeight: 700,
+                        letterSpacing: '0.12em',
+                        textTransform: 'uppercase',
+                        color: themeMulberry,
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                      }}
+                    >
+                      <span style={{ opacity: 0.65 }}>PHOTO {activePhotoIndex + 1} OF {currentProfile.photos.length} ·</span>
+                      <span>{prompt.title}</span>
+                    </div>
+
+                    {prompt.subtitle && (
+                      <span style={{ fontSize: '11.5px', color: themeMuted, fontWeight: 500 }}>
+                        {prompt.subtitle}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Distinct Quote / Narrative for this photo */}
+                  <p
+                    style={{
+                      fontFamily: 'var(--font-serif)',
+                      fontStyle: 'italic',
+                      fontSize: '15.5px',
+                      lineHeight: '1.55',
+                      color: isDark ? '#E5D8DF' : '#3E2F39',
+                      margin: 0,
+                    }}
+                  >
+                    {prompt.content}
+                  </p>
+
+                  {/* Contextual Tag Chips with Icons for this photo */}
+                  {prompt.tags && prompt.tags.length > 0 && (
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '2px' }}>
+                      {prompt.tags.map((tag, tIdx) => (
+                        <span
+                          key={tIdx}
+                          style={{
+                            fontSize: '11.5px',
+                            fontWeight: 600,
+                            letterSpacing: '0.02em',
+                            padding: '4px 11px',
+                            borderRadius: '999px',
+                            backgroundColor: isDark ? 'rgba(161, 82, 95, 0.22)' : 'rgba(161, 82, 95, 0.08)',
+                            color: themeMulberry,
+                            border: `1px solid ${themeBorder}`,
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '4px',
+                          }}
+                        >
+                          <span>✦</span>
+                          <span>{tag}</span>
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Social Context Pills (if public and allowed) */}
+                  {((currentProfile.showLinkedinPublicly && currentProfile.linkedinUrl) || (currentProfile.showInstagramPublicly && currentProfile.instagramUsername)) && (
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        flexWrap: 'wrap',
+                        gap: '10px',
+                        paddingTop: '8px',
+                        marginTop: '4px',
+                        borderTop: `1px solid ${themeBorder}`,
+                      }}
+                    >
+                      <span style={{ fontSize: '10.5px', color: themeMuted, textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 600 }}>
+                        Verified Socials:
+                      </span>
+                      {currentProfile.showLinkedinPublicly && currentProfile.linkedinUrl && (
+                        <a
+                          href={currentProfile.linkedinUrl.startsWith('http') ? currentProfile.linkedinUrl : `https://${currentProfile.linkedinUrl}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          style={{
+                            fontSize: '11.5px',
+                            fontWeight: 600,
+                            color: themeMulberry,
+                            textDecoration: 'none',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '5px',
+                            padding: '2px 8px',
+                            borderRadius: '6px',
+                            backgroundColor: isDark ? 'rgba(161, 82, 95, 0.15)' : 'rgba(161, 82, 95, 0.06)',
+                          }}
+                        >
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
+                          </svg>
+                          <span>LinkedIn ↗</span>
+                        </a>
+                      )}
+                      {currentProfile.showInstagramPublicly && currentProfile.instagramUsername && (
+                        <a
+                          href={`https://instagram.com/${currentProfile.instagramUsername.replace('@', '')}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          style={{
+                            fontSize: '11.5px',
+                            fontWeight: 600,
+                            color: themeMulberry,
+                            textDecoration: 'none',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '5px',
+                            padding: '2px 8px',
+                            borderRadius: '6px',
+                            backgroundColor: isDark ? 'rgba(161, 82, 95, 0.15)' : 'rgba(161, 82, 95, 0.06)',
+                          }}
+                        >
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                            <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+                          </svg>
+                          <span>@{currentProfile.instagramUsername.replace('@', '')} ↗</span>
+                        </a>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Clickable View Full Profile Button */}
+                  <div style={{ paddingTop: '4px' }}>
+                    <button
+                      type="button"
+                      onClick={() => onViewFullProfile(currentProfile)}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        padding: '4px 0',
+                        fontSize: '13.5px',
+                        fontWeight: 700,
+                        letterSpacing: '0.02em',
+                        color: themeMulberry,
+                        textDecoration: 'underline',
+                        textUnderlineOffset: '4px',
+                        cursor: 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        transition: 'opacity 0.15s ease',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.opacity = '0.75';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.opacity = '1';
+                      }}
+                    >
+                      <span>View {currentProfile.firstName}’s full profile & complete details</span>
+                      <span aria-hidden="true">→</span>
+                    </button>
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         ) : isTrialExpired ? (
           /* ========================================================== */

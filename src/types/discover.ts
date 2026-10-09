@@ -19,6 +19,16 @@ export interface DiscoverProfile {
   gender: 'woman' | 'man' | 'other';
   currentStatus?: string;
   vibes?: string[];
+  activeStatus?: string; // e.g. 'Active today', 'Active 2h ago', 'Active 1 day ago', 'Active 3 days ago'
+  photoPrompts?: {
+    photoIndex: number;
+    title: string;
+    subtitle?: string;
+    content: string;
+    tags?: string[];
+  }[];
+  quirks?: string[];
+  weekendRitual?: string;
   linkedinUrl?: string;
   instagramUsername?: string;
   showLinkedinPublicly?: boolean;
