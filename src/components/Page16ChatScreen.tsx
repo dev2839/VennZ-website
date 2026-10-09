@@ -26,6 +26,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
     appearanceMode,
     conversations,
     sendChatMessage,
+    markConversationRead,
     unmatchUser,
     blockUser,
   } = useAuth();
@@ -60,6 +61,10 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
     scrollToBottom();
   }, [conversationMessages.length]);
 
+  useEffect(() => {
+    markConversationRead(match.id);
+  }, [match.id, markConversationRead]);
+
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => {
@@ -74,6 +79,14 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
     sendChatMessage(match.id, trimmed);
     setMessageInput('');
   };
+
+  const openingPrompts = conversationMessages.some((message) => message.senderId === 'me')
+    ? []
+    : [
+        'What are you looking forward to lately?',
+        'What does a perfect weekend look like for you?',
+        'What have you been enjoying outside work?',
+      ];
 
   const handleUnmatch = () => {
     setIsUnmatchConfirmOpen(false);
@@ -405,6 +418,12 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                     }}
                   >
                     {msg.text}
+                    <time
+                      dateTime={new Date(msg.timestamp).toISOString()}
+                      style={{ display: 'block', marginTop: '5px', color: isMe ? 'rgba(255, 248, 248, 0.76)' : themeMuted, textAlign: 'right', fontFamily: 'var(--font-sans)', fontSize: '10px', lineHeight: 1.2 }}
+                    >
+                      {new Date(msg.timestamp).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}
+                    </time>
                   </div>
                 </div>
               );
@@ -426,6 +445,9 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
           WebkitBackdropFilter: 'blur(12px)',
         }}
       >
+        {openingPrompts.length > 0 && <div style={{ maxWidth: '820px', margin: '0 auto 10px', display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+          {openingPrompts.map((prompt) => <button key={prompt} type="button" onClick={() => setMessageInput(prompt)} style={{ minHeight: '30px', padding: '5px 10px', border: `1px solid ${themeBorder}`, borderRadius: '16px', background: 'transparent', color: themeMuted, cursor: 'pointer', fontSize: '10px', textAlign: 'left' }}>{prompt}</button>)}
+        </div>}
         <form
           onSubmit={handleSend}
           style={{
@@ -440,6 +462,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
         >
           <input
             type="text"
+            aria-label="Message"
             value={messageInput}
             onChange={(e) => setMessageInput(e.target.value)}
             placeholder="Write something"
