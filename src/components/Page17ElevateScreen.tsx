@@ -1613,10 +1613,10 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                       maxWidth: '82%',
                       padding: '12px 16px',
                       borderRadius: isMember ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
-                      backgroundColor: isMember
+                      background: isMember
                         ? themeAccentGrad
                         : isDark
-                        ? 'rgba(70, 32, 55, 0.8)'
+                        ? 'rgba(70, 32, 55, 0.85)'
                         : '#FFFFFF',
                       color: isMember ? '#FFFFFF' : isDark ? '#FDF3F5' : '#140E1C',
                       border: isMember ? 'none' : `1px solid ${themeBorder}`,
@@ -1624,17 +1624,17 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                       lineHeight: '1.5',
                       wordBreak: 'break-word',
                       boxShadow: isMember
-                        ? '0 4px 14px rgba(161, 82, 95, 0.25)'
+                        ? '0 4px 14px rgba(161, 82, 95, 0.28)'
                         : isDark
                         ? 'none'
-                        : '0 2px 6px rgba(0,0,0,0.04)',
+                        : '0 2px 8px rgba(70, 32, 55, 0.08)',
                     }}
                   >
-                    <div>{msg.text}</div>
+                    <div style={{ color: isMember ? '#FFFFFF' : isDark ? '#FDF3F5' : '#140E1C' }}>{msg.text}</div>
                     <div
                       style={{
                         fontSize: '10px',
-                        color: isMember ? 'rgba(255,255,255,0.75)' : themeMuted,
+                        color: isMember ? 'rgba(255,255,255,0.85)' : themeMuted,
                         marginTop: '4px',
                         textAlign: 'right',
                       }}
@@ -1658,8 +1658,11 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                   padding: '13px 18px',
                   borderRadius: '12px',
                   border: `1.5px solid ${themeBorder}`,
-                  backgroundColor: isDark ? 'rgba(42, 20, 34, 0.85)' : '#FFFFFF',
+                  background: isDark ? 'rgba(42, 20, 34, 0.85)' : '#FFFFFF',
                   color: isDark ? '#FFFFFF' : '#140E1C',
+                  WebkitTextFillColor: isDark ? '#FFFFFF' : '#140E1C',
+                  colorScheme: isDark ? 'dark' : 'light',
+                  caretColor: isDark ? '#F9AAAD' : '#A1525F',
                   fontSize: '14px',
                   fontFamily: 'var(--font-sans)',
                   outline: 'none',
