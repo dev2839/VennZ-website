@@ -231,6 +231,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
 
   // Makeover bio applied feedback
   const [appliedBioSuccess, setAppliedBioSuccess] = useState(false);
+  const [isApplyingBio, setIsApplyingBio] = useState(false);
 
   // Concierge chat input
   const [conciergeInput, setConciergeInput] = useState('');
@@ -251,6 +252,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
     conversations || {}
   );
   const liveMakeover = generateDynamicMakeoverReport(profile);
+  const isBioAlreadyApplied = (profile.introduction || '').trim() === liveMakeover.suggestedBioDraft.trim();
 
   // Check if member already purchased or has access to particular services
   const hasIntelligenceOrder = elevateOrders.some((o) => o.serviceCategory === 'profile-intelligence');
@@ -299,9 +301,13 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
 
   // Handle Applying Suggested Makeover Bio
   const handleApplyBio = (bioText: string) => {
-    applyMakeoverBio(bioText);
-    setAppliedBioSuccess(true);
-    setTimeout(() => setAppliedBioSuccess(false), 2800);
+    setIsApplyingBio(true);
+    setTimeout(() => {
+      applyMakeoverBio(bioText);
+      setIsApplyingBio(false);
+      setAppliedBioSuccess(true);
+      setTimeout(() => setAppliedBioSuccess(false), 3500);
+    }, 350);
   };
 
   // Handle Concierge Message Send
@@ -725,40 +731,91 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
               </span>
             </div>
 
-            {/* Key Metrics Grid */}
+            {/* Key Metrics in One Line */}
             <div
               style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-                gap: '12px',
+                width: '100%',
+                overflowX: 'auto',
+                scrollbarWidth: 'none',
+                msOverflowStyle: 'none',
+                WebkitOverflowScrolling: 'touch',
+                paddingBottom: '4px',
               }}
             >
-              {[
-                { label: 'Profile Views', value: liveScorecard.viewsTotal, sub: `${liveScorecard.viewsUnique} unique members` },
-                { label: 'Connection Requests', value: liveScorecard.requestsReceived, sub: 'Received to date' },
-                { label: 'Mutual Venn Matches', value: liveScorecard.matchesMutual, sub: 'Connected members' },
-                { label: 'View → Request Rate', value: `${liveScorecard.viewToRequestRate}%`, sub: 'Benchmark: 11.2%' },
-                { label: 'Request → Match Rate', value: `${liveScorecard.requestToMatchRate}%`, sub: 'Benchmark: 38.5%' },
-                { label: 'Response Rate', value: `${liveScorecard.responseRate}%`, sub: `${liveScorecard.averageReplyTimeMinutes}m avg reply` },
-              ].map((metric, i) => (
-                <div
-                  key={i}
-                  style={{
-                    padding: '16px',
-                    borderRadius: '14px',
-                    backgroundColor: themeCardBg,
-                    border: `1px solid ${themeBorder}`,
-                  }}
-                >
-                  <div style={{ fontSize: '11px', color: themeMuted, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                    {metric.label}
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(6, minmax(120px, 1fr))',
+                  gap: '10px',
+                  minWidth: '740px',
+                  width: '100%',
+                  boxSizing: 'border-box',
+                }}
+              >
+                {[
+                  { label: 'Profile Views', value: liveScorecard.viewsTotal, sub: `${liveScorecard.viewsUnique} unique members` },
+                  { label: 'Connection Requests', value: liveScorecard.requestsReceived, sub: 'Received to date' },
+                  { label: 'Mutual Venn Matches', value: liveScorecard.matchesMutual, sub: 'Connected members' },
+                  { label: 'View → Request Rate', value: `${liveScorecard.viewToRequestRate}%`, sub: 'Benchmark: 11.2%' },
+                  { label: 'Request → Match Rate', value: `${liveScorecard.requestToMatchRate}%`, sub: 'Benchmark: 38.5%' },
+                  { label: 'Response Rate', value: `${liveScorecard.responseRate}%`, sub: `${liveScorecard.averageReplyTimeMinutes}m avg reply` },
+                ].map((metric, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      padding: '14px 12px',
+                      borderRadius: '14px',
+                      backgroundColor: themeCardBg,
+                      border: `1px solid ${themeBorder}`,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'space-between',
+                      boxSizing: 'border-box',
+                      minHeight: '102px',
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: '9.5px',
+                        color: themeMuted,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.04em',
+                        fontWeight: 700,
+                        lineHeight: '1.25',
+                        minHeight: '24px',
+                      }}
+                    >
+                      {metric.label}
+                    </div>
+                    <div>
+                      <div
+                        style={{
+                          fontSize: '22px',
+                          fontWeight: 700,
+                          margin: '4px 0 2px',
+                          color: themeTextColor,
+                          letterSpacing: '-0.02em',
+                        }}
+                      >
+                        {metric.value}
+                      </div>
+                      <div
+                        style={{
+                          fontSize: '10.5px',
+                          color: themeMulberry,
+                          fontWeight: 500,
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                        }}
+                        title={metric.sub}
+                      >
+                        {metric.sub}
+                      </div>
+                    </div>
                   </div>
-                  <div style={{ fontSize: '24px', fontWeight: 700, margin: '6px 0 2px', color: themeTextColor }}>
-                    {metric.value}
-                  </div>
-                  <div style={{ fontSize: '11px', color: themeMulberry }}>{metric.sub}</div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
 
             {/* Conversion Funnel */}
@@ -1103,7 +1160,10 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                 padding: '20px',
                 borderRadius: '16px',
                 backgroundColor: isDark ? 'rgba(70, 32, 55, 0.5)' : 'rgba(255, 255, 255, 0.9)',
-                border: `1px solid ${themeBorder}`,
+                border: isBioAlreadyApplied || appliedBioSuccess
+                  ? '1px solid rgba(16, 185, 129, 0.45)'
+                  : `1px solid ${themeBorder}`,
+                transition: 'border-color 0.25s ease',
               }}
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
@@ -1132,21 +1192,91 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
 
               <button
                 type="button"
+                disabled={isApplyingBio}
                 onClick={() => handleApplyBio(liveMakeover.suggestedBioDraft)}
                 style={{
-                  padding: '10px 22px',
-                  borderRadius: '10px',
-                  border: 'none',
-                  background: themeAccentGrad,
-                  color: '#FFFFFF',
-                  fontSize: '13px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
+                  padding: '12px 22px',
+                  borderRadius: '12px',
+                  border: isBioAlreadyApplied || appliedBioSuccess
+                    ? '1px solid rgba(16, 185, 129, 0.45)'
+                    : 'none',
+                  background: isBioAlreadyApplied || appliedBioSuccess
+                    ? (isDark ? 'rgba(16, 185, 129, 0.22)' : 'rgba(16, 185, 129, 0.15)')
+                    : themeAccentGrad,
+                  color: isBioAlreadyApplied || appliedBioSuccess
+                    ? (isDark ? '#6EE7B7' : '#047857')
+                    : '#FFFFFF',
+                  fontSize: '13.5px',
+                  fontWeight: 700,
+                  cursor: isApplyingBio ? 'wait' : 'pointer',
                   width: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  boxShadow: isBioAlreadyApplied || appliedBioSuccess
+                    ? 'none'
+                    : '0 4px 16px rgba(161, 82, 95, 0.35)',
+                  transition: 'all 0.18s cubic-bezier(0.16, 1, 0.3, 1)',
+                  userSelect: 'none',
+                }}
+                onMouseDown={(e) => {
+                  e.currentTarget.style.transform = 'scale(0.985)';
+                }}
+                onMouseUp={(e) => {
+                  e.currentTarget.style.transform = 'scale(1)';
+                }}
+                onMouseEnter={(e) => {
+                  if (!isBioAlreadyApplied && !appliedBioSuccess) {
+                    e.currentTarget.style.boxShadow = '0 6px 20px rgba(161, 82, 95, 0.45)';
+                    e.currentTarget.style.transform = 'translateY(-1px)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'scale(1)';
+                  if (!isBioAlreadyApplied && !appliedBioSuccess) {
+                    e.currentTarget.style.boxShadow = '0 4px 16px rgba(161, 82, 95, 0.35)';
+                  }
                 }}
               >
-                Apply This Bio to My Public Profile →
+                {isApplyingBio ? (
+                  <>
+                    <span style={{ display: 'inline-block' }}>⏳</span>
+                    <span>Applying to your profile...</span>
+                  </>
+                ) : isBioAlreadyApplied || appliedBioSuccess ? (
+                  <>
+                    <span style={{ fontSize: '15px' }}>✓</span>
+                    <span>Applied to your profile</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Apply this bio to my profile</span>
+                    <span style={{ fontSize: '15px' }}>→</span>
+                  </>
+                )}
               </button>
+
+              {(appliedBioSuccess || isBioAlreadyApplied) && (
+                <div
+                  style={{
+                    marginTop: '12px',
+                    padding: '10px 14px',
+                    borderRadius: '10px',
+                    backgroundColor: isDark ? 'rgba(16, 185, 129, 0.16)' : 'rgba(16, 185, 129, 0.12)',
+                    border: '1px solid rgba(16, 185, 129, 0.35)',
+                    color: isDark ? '#A7F3D0' : '#065F46',
+                    fontSize: '12.5px',
+                    fontWeight: 600,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '7px',
+                  }}
+                >
+                  <span>✓</span>
+                  <span>This recommended bio is now live on your VennZ public profile!</span>
+                </div>
+              )}
             </div>
 
             {!hasMakeoverOrder && (
