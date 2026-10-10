@@ -233,13 +233,13 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
   const [appliedBioSuccess, setAppliedBioSuccess] = useState(false);
   const [isApplyingBio, setIsApplyingBio] = useState(false);
 
-  // Concierge chat input
+  // Concierge chat input & internal scroll
   const [conciergeInput, setConciergeInput] = useState('');
-  const conciergeEndRef = useRef<HTMLDivElement | null>(null);
+  const messagesContainerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (activeTab === 'concierge') {
-      conciergeEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
     }
   }, [activeTab, elevateMessages.length]);
 
@@ -313,9 +313,15 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
   // Handle Concierge Message Send
   const handleSendConcierge = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!conciergeInput.trim()) return;
-    sendElevateConciergeMessage(conciergeInput.trim());
+    const trimmed = conciergeInput.trim();
+    if (!trimmed) return;
+    sendElevateConciergeMessage(trimmed);
     setConciergeInput('');
+    setTimeout(() => {
+      if (messagesContainerRef.current) {
+        messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+      }
+    }, 50);
   };
 
   return (
@@ -1583,6 +1589,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
 
             {/* Messages Scroll Area */}
             <div
+              ref={messagesContainerRef}
               style={{
                 flex: 1,
                 overflowY: 'auto',
@@ -1609,19 +1616,25 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                       backgroundColor: isMember
                         ? themeAccentGrad
                         : isDark
-                        ? 'rgba(70, 32, 55, 0.7)'
-                        : 'rgba(255, 255, 255, 0.95)',
-                      color: isMember ? '#FFFFFF' : themeTextColor,
+                        ? 'rgba(70, 32, 55, 0.8)'
+                        : '#FFFFFF',
+                      color: isMember ? '#FFFFFF' : isDark ? '#FDF3F5' : '#140E1C',
                       border: isMember ? 'none' : `1px solid ${themeBorder}`,
-                      fontSize: '13px',
-                      lineHeight: '1.45',
+                      fontSize: '13.5px',
+                      lineHeight: '1.5',
+                      wordBreak: 'break-word',
+                      boxShadow: isMember
+                        ? '0 4px 14px rgba(161, 82, 95, 0.25)'
+                        : isDark
+                        ? 'none'
+                        : '0 2px 6px rgba(0,0,0,0.04)',
                     }}
                   >
                     <div>{msg.text}</div>
                     <div
                       style={{
                         fontSize: '10px',
-                        color: isMember ? 'rgba(255,255,255,0.7)' : themeMuted,
+                        color: isMember ? 'rgba(255,255,255,0.75)' : themeMuted,
                         marginTop: '4px',
                         textAlign: 'right',
                       }}
@@ -1631,7 +1644,6 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                   </div>
                 );
               })}
-              <div ref={conciergeEndRef} />
             </div>
 
             {/* Input Form */}
@@ -1643,26 +1655,34 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                 placeholder="Ask the editorial desk a question..."
                 style={{
                   flex: 1,
-                  padding: '12px 16px',
+                  padding: '13px 18px',
                   borderRadius: '12px',
-                  border: `1px solid ${themeBorder}`,
-                  backgroundColor: isDark ? 'rgba(42, 20, 34, 0.7)' : 'rgba(255, 255, 255, 0.9)',
-                  color: themeTextColor,
-                  fontSize: '13.5px',
+                  border: `1.5px solid ${themeBorder}`,
+                  backgroundColor: isDark ? 'rgba(42, 20, 34, 0.85)' : '#FFFFFF',
+                  color: isDark ? '#FFFFFF' : '#140E1C',
+                  fontSize: '14px',
+                  fontFamily: 'var(--font-sans)',
                   outline: 'none',
+                  boxShadow: isDark ? 'none' : '0 1px 4px rgba(70, 32, 55, 0.05)',
                 }}
               />
               <button
                 type="submit"
+                disabled={!conciergeInput.trim()}
                 style={{
-                  padding: '12px 22px',
+                  padding: '13px 24px',
                   borderRadius: '12px',
                   border: 'none',
-                  background: themeAccentGrad,
-                  color: '#FFFFFF',
-                  fontSize: '13.5px',
+                  background: conciergeInput.trim()
+                    ? themeAccentGrad
+                    : isDark
+                    ? 'rgba(255, 255, 255, 0.1)'
+                    : 'rgba(70, 32, 55, 0.12)',
+                  color: conciergeInput.trim() ? '#FFFFFF' : isDark ? '#888' : '#7A4D5B',
+                  fontSize: '14px',
                   fontWeight: 600,
-                  cursor: 'pointer',
+                  cursor: conciergeInput.trim() ? 'pointer' : 'default',
+                  transition: 'background 0.2s ease, opacity 0.2s ease',
                 }}
               >
                 Send

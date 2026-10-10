@@ -61,6 +61,9 @@ export interface PhoneRecord {
   isIdentityVerified?: boolean;
   isSelfieVerified?: boolean;
   selfieImage?: string | null;
+  elevateOrders?: ElevateOrder[];
+  elevateMessages?: ElevateConciergeMessage[];
+  elevateBookings?: ElevateBooking[];
 }
 
 export interface AuthState {
@@ -558,6 +561,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isDigiLockerVerified: state.isDigiLockerVerified,
         digiLockerVerifiedName: state.digiLockerVerifiedName,
         digiLockerVerifiedDob: state.digiLockerVerifiedDob,
+        elevateOrders: state.elevateOrders,
+        elevateMessages: state.elevateMessages,
+        elevateBookings: state.elevateBookings,
         profile: {
           ...state.profile,
           photos: state.profile.photos || [],
@@ -587,6 +593,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           isIdentityVerified: prev.isIdentityVerified,
           isSelfieVerified: prev.isSelfieVerified,
           selfieImage: prev.selfieImage,
+          elevateOrders: prev.elevateOrders,
+          elevateMessages: prev.elevateMessages,
+          elevateBookings: prev.elevateBookings,
+          membershipStatus: prev.membershipStatus,
         };
       }
 
@@ -635,6 +645,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           decisionTimestamp: existingRecord.decisionTimestamp || null,
           profile: userProfile || { ...defaultProfile },
           phoneRecords: updatedRecords,
+          elevateOrders: (existingRecord.elevateOrders && existingRecord.elevateOrders.length > 0) ? existingRecord.elevateOrders : prev.elevateOrders,
+          elevateMessages: (existingRecord.elevateMessages && existingRecord.elevateMessages.length > 0) ? existingRecord.elevateMessages : prev.elevateMessages,
+          elevateBookings: (existingRecord.elevateBookings && existingRecord.elevateBookings.length > 0) ? existingRecord.elevateBookings : prev.elevateBookings,
+          membershipStatus: existingRecord.membershipStatus || prev.membershipStatus,
         };
       }
 
@@ -1324,16 +1338,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const sendElevateConciergeMessage = (text: string) => {
     const trimmed = text.trim();
     if (!trimmed) return;
+    const now = Date.now();
     const newMsg: ElevateConciergeMessage = {
-      id: `msg-member-${Date.now()}`,
+      id: `msg-member-${now}`,
       sender: 'member',
       text: trimmed,
-      timestamp: Date.now(),
+      timestamp: now,
     };
     setState((prev) => ({
       ...prev,
       elevateMessages: [...(prev.elevateMessages || []), newMsg],
     }));
+
+    // Realistic concierge desk acknowledgment response
+    setTimeout(() => {
+      const deskMsg: ElevateConciergeMessage = {
+        id: `msg-team-${Date.now()}`,
+        sender: 'team',
+        text: `Thank you for contacting the Editorial Desk. Your message has been logged with our senior curation specialist and we will get back to you shortly.`,
+        timestamp: Date.now(),
+      };
+      setState((prev) => ({
+        ...prev,
+        elevateMessages: [...(prev.elevateMessages || []), deskMsg],
+      }));
+    }, 1000);
   };
 
   const finalizeBookingProposal = (requestId?: string, serviceId?: string): ElevateBooking => {

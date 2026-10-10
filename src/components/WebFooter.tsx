@@ -10,20 +10,24 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
   const isDark = appearanceMode === 'after-dark';
 
   const footerBg = isDark ? '#140E1C' : '#FAF1F3';
-  const borderTop = isDark ? 'rgba(161, 82, 95, 0.22)' : 'rgba(199, 87, 124, 0.18)';
-  const textColor = isDark ? '#D4A2AC' : '#683A46';
-  const headingColor = isDark ? '#FDF3F5' : '#462037';
+  const borderTop = isDark ? 'rgba(161, 82, 95, 0.32)' : 'rgba(161, 82, 95, 0.22)';
+  const textColor = isDark ? '#F9AAAD' : '#462037';
+  const mutedColor = isDark ? '#D4A2AC' : '#683A46';
+  const headingColor = isDark ? '#FFFFFF' : '#462037';
+  const hoverColor = isDark ? '#FFFFFF' : '#C7577C';
 
   return (
     <footer
       style={{
-        flex: 1,
+        position: 'relative',
+        zIndex: 10,
         width: '100%',
         backgroundColor: footerBg,
         borderTop: `1px solid ${borderTop}`,
         padding: '48px 24px 36px',
         boxSizing: 'border-box',
         fontFamily: 'var(--font-sans)',
+        color: textColor,
         transition: 'background-color 0.25s ease, border-color 0.25s ease',
       }}
     >
@@ -39,7 +43,7 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
         }}
       >
         {/* Brand Column */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <img
               src="/vennz-logo.png"
@@ -49,11 +53,13 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
                 width: 'auto',
                 maxWidth: '120px',
                 objectFit: 'contain',
-                filter: isDark ? 'brightness(1.1)' : 'none',
+                filter: isDark
+                  ? 'brightness(1.1) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.7))'
+                  : 'drop-shadow(0 1px 3px rgba(70, 32, 55, 0.2))',
               }}
             />
           </div>
-          <p style={{ fontSize: '14.5px', lineHeight: 1.6, color: textColor, margin: 0 }}>
+          <p style={{ fontSize: '14.5px', lineHeight: 1.6, color: textColor, margin: 0, fontWeight: 400 }}>
             An exclusive, verified community connecting ambitious individuals through rigorous standards, intentional matchmaking, and private mixer gatherings.
           </p>
         </div>
@@ -64,7 +70,7 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
             style={{
               fontFamily: 'var(--font-sans)',
               fontSize: '13px',
-              fontWeight: 600,
+              fontWeight: 700,
               letterSpacing: '0.14em',
               textTransform: 'uppercase',
               color: headingColor,
@@ -73,9 +79,9 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
           >
             Community
           </h5>
-          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
             {['Curated Introductions', 'Identity Verification', 'Private Mixers', 'Elevate Concierge'].map((item) => (
-              <li key={item} style={{ fontSize: '14.5px', color: textColor }}>
+              <li key={item} style={{ fontSize: '14.5px', color: textColor, fontWeight: 400 }}>
                 {item}
               </li>
             ))}
@@ -88,7 +94,7 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
             style={{
               fontFamily: 'var(--font-sans)',
               fontSize: '13px',
-              fontWeight: 600,
+              fontWeight: 700,
               letterSpacing: '0.14em',
               textTransform: 'uppercase',
               color: headingColor,
@@ -97,7 +103,7 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
           >
             Standards & Safety
           </h5>
-          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
             {[
               { label: 'Community Standards', path: '/join/standards' },
               { label: 'Help & Concierge Desk', path: '/member/help' },
@@ -114,11 +120,12 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
                     padding: 0,
                     fontSize: '14.5px',
                     color: textColor,
+                    fontWeight: 500,
                     cursor: 'pointer',
                     textAlign: 'left',
                     transition: 'color 0.15s ease',
                   }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = headingColor)}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = hoverColor)}
                   onMouseLeave={(e) => (e.currentTarget.style.color = textColor)}
                 >
                   {link.label}
@@ -134,7 +141,7 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
             style={{
               fontFamily: 'var(--font-sans)',
               fontSize: '13px',
-              fontWeight: 600,
+              fontWeight: 700,
               letterSpacing: '0.14em',
               textTransform: 'uppercase',
               color: headingColor,
@@ -143,7 +150,7 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
           >
             Membership
           </h5>
-          <p style={{ fontSize: '14.5px', lineHeight: 1.6, color: textColor, margin: '0' }}>
+          <p style={{ fontSize: '14.5px', lineHeight: 1.6, color: textColor, margin: '0', fontWeight: 400 }}>
             Membership is strictly by application review or peer referral. All members are verified with live biometric confirmation.
           </p>
         </div>
@@ -160,14 +167,25 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
           justifyContent: 'space-between',
           gap: '14px',
           fontSize: '13.5px',
-          color: textColor,
+          color: mutedColor,
         }}
       >
         <div>© {new Date().getFullYear()} VennZ. All rights reserved.</div>
         <div style={{ display: 'flex', gap: '20px' }}>
-          <span>Privacy Policy</span>
-          <span>Terms of Service</span>
-          <span>Code of Conduct</span>
+          {['Privacy Policy', 'Terms of Service', 'Code of Conduct'].map((item) => (
+            <span
+              key={item}
+              style={{
+                cursor: 'pointer',
+                color: mutedColor,
+                transition: 'color 0.15s ease',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = headingColor)}
+              onMouseLeave={(e) => (e.currentTarget.style.color = mutedColor)}
+            >
+              {item}
+            </span>
+          ))}
         </div>
       </div>
     </footer>
