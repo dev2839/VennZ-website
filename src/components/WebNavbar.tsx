@@ -52,6 +52,9 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
     notifications,
     unreadNotificationsCount,
     markNotificationsAsRead,
+    markNotificationAsRead,
+    showNotificationPopup,
+    triggerLiveNotificationDemo,
     incomingRequests,
   } = useAuth();
 
@@ -360,17 +363,41 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                   >
                     NOTIFICATIONS
                   </span>
-                  <span
-                    style={{
-                      fontSize: '11px',
-                      color: isDark ? '#D4A2AC' : '#8A7A84',
-                    }}
-                  >
-                    {notifications.length} updates
-                  </span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    {unreadNotificationsCount > 0 && (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          markNotificationsAsRead();
+                        }}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          fontSize: '10px',
+                          fontWeight: 700,
+                          letterSpacing: '0.04em',
+                          color: isDark ? '#F9AAAD' : '#A1525F',
+                          cursor: 'pointer',
+                          padding: '2px 6px',
+                          borderRadius: '4px',
+                        }}
+                      >
+                        Mark all read
+                      </button>
+                    )}
+                    <span
+                      style={{
+                        fontSize: '11px',
+                        color: isDark ? '#D4A2AC' : '#8A7A84',
+                      }}
+                    >
+                      {notifications.length} updates
+                    </span>
+                  </div>
                 </div>
 
-                <div style={{ overflowY: 'auto', maxHeight: '360px' }}>
+                <div style={{ overflowY: 'auto', maxHeight: '340px' }}>
                   {notifications.length === 0 ? (
                     <div style={{ padding: '24px', textAlign: 'center', color: inactiveColor, fontSize: '13px' }}>
                       No new notifications
@@ -380,6 +407,8 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                       <div
                         key={notif.id}
                         onClick={() => {
+                          markNotificationAsRead(notif.id);
+                          showNotificationPopup(notif);
                           if (notif.targetRoute) {
                             onNavigate(notif.targetRoute as RoutePath);
                           }
@@ -388,7 +417,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                         style={{
                           padding: '14px 18px',
                           borderBottom: idx < notifications.length - 1 ? `1px solid ${borderBottom}` : 'none',
-                          cursor: notif.targetRoute ? 'pointer' : 'default',
+                          cursor: 'pointer',
                           backgroundColor: !notif.isRead
                             ? isDark
                               ? 'rgba(249, 170, 173, 0.08)'
@@ -436,6 +465,45 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                       </div>
                     ))
                   )}
+                </div>
+
+                {/* Minimalist Drawer Action Suite */}
+                <div
+                  style={{
+                    padding: '10px 18px',
+                    borderTop: `1px solid ${borderBottom}`,
+                    backgroundColor: isDark ? 'rgba(20, 14, 28, 0.45)' : 'rgba(255, 255, 255, 0.65)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <span style={{ fontSize: '11px', color: isDark ? '#B3A1A8' : '#8A7A84' }}>
+                    Tap update to preview popup
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      triggerLiveNotificationDemo();
+                      setNotificationsOpen(false);
+                    }}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      fontSize: '11px',
+                      fontWeight: 600,
+                      color: isDark ? '#F9AAAD' : '#A1525F',
+                      cursor: 'pointer',
+                      padding: '4px 6px',
+                      borderRadius: '6px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                    }}
+                  >
+                    <span>Simulate alert</span>
+                    <span>→</span>
+                  </button>
                 </div>
               </div>
             )}

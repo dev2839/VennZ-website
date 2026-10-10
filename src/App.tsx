@@ -20,6 +20,7 @@ import { Page17ElevateScreen } from './components/Page17ElevateScreen';
 import { Page18MixersScreen } from './components/Page18MixersScreen';
 import { WebNavbar, type RoutePath } from './components/WebNavbar';
 import { WebFooter } from './components/WebFooter';
+import { NotificationPopup } from './components/NotificationPopup';
 import { DUMMY_DISCOVER_PROFILES } from './data/dummyProfiles';
 import type { DiscoverProfile } from './types/discover';
 import type { MatchItem } from './types/matches';
@@ -688,6 +689,9 @@ export const App: React.FC = () => {
         currentPath !== '/join/digilocker' && (
           <WebFooter onNavigate={(path) => navigate(path as RoutePath)} />
         )}
+
+      {/* Luxury Minimalist Notification Toast Popup */}
+      <NotificationPopup onNavigate={(path) => navigate(path as RoutePath)} />
 
       {/* Learn How It Works Modal (Page 1) */}
       {learnModalOpen && (

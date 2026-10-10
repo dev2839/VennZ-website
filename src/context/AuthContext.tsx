@@ -114,6 +114,7 @@ export interface AuthState {
   mixerBookings?: MixerBooking[];
   mixerInterestedEventIds?: string[];
   mixerWaitlists?: MixerWaitlistEntry[];
+  latestPopupNotification?: AppNotification | null;
 }
 
 interface AuthContextType extends AuthState {
@@ -151,9 +152,14 @@ interface AuthContextType extends AuthState {
   sentRequestProfileIds: string[];
   notifications: AppNotification[];
   unreadNotificationsCount: number;
+  latestPopupNotification: AppNotification | null;
+  showNotificationPopup: (notif: AppNotification) => void;
+  dismissNotificationPopup: () => void;
+  markNotificationsAsRead: (id?: string) => void;
+  markNotificationAsRead: (id?: string) => void;
+  triggerLiveNotificationDemo: () => void;
   passProfile: (profileId: string) => void;
   sendConnectionRequest: (profileId: string) => void;
-  markNotificationsAsRead: () => void;
   resetDiscoverQueue: () => void;
   // Matches & Chat methods
   incomingRequests: IncomingRequest[];
@@ -394,6 +400,7 @@ const defaultState: AuthState = {
   mixerBookings: INITIAL_PAST_BOOKINGS,
   mixerInterestedEventIds: [],
   mixerWaitlists: [],
+  latestPopupNotification: null,
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -1060,6 +1067,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         sentRequestProfileIds: nextSent,
         sentRequests: nextSentRequests,
         notifications: [newNotif, ...currentList],
+        latestPopupNotification: newNotif,
       };
     });
   };
@@ -1139,6 +1147,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           [newMatchId]: currentMsgs.length > 0 ? currentMsgs : [openingMsg],
         },
         notifications: [matchNotif, ...currentList],
+        latestPopupNotification: matchNotif,
       };
     });
   };
@@ -1235,17 +1244,113 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
-  const markNotificationsAsRead = () => {
+  const markNotificationsAsRead = (id?: string) => {
     setState((prev) => {
       const currentList = prev.notifications && prev.notifications.length > 0 
         ? prev.notifications 
         : INITIAL_NOTIFICATIONS;
       return {
         ...prev,
-        notifications: currentList.map((n: AppNotification) => ({ ...n, isRead: true })),
+        notifications: currentList.map((n: AppNotification) =>
+          id ? (n.id === id ? { ...n, isRead: true } : n) : { ...n, isRead: true }
+        ),
       };
     });
   };
+
+  const markNotificationAsRead = (id?: string) => {
+    markNotificationsAsRead(id);
+  };
+
+  const showNotificationPopup = (notif: AppNotification) => {
+    setState((prev) => ({
+      ...prev,
+      latestPopupNotification: notif,
+    }));
+  };
+
+  const dismissNotificationPopup = () => {
+    setState((prev) => ({
+      ...prev,
+      latestPopupNotification: null,
+    }));
+  };
+
+  const triggerLiveNotificationDemo = () => {
+    const demoItems: Array<Pick<AppNotification, 'category' | 'title' | 'message' | 'targetRoute' | 'type'>> = [
+      {
+        category: 'REQUEST',
+        title: 'New Introduction Request',
+        message: 'A verified member in Bangalore is requesting an intentional introduction.',
+        targetRoute: '/member/matches',
+        type: 'request',
+      },
+      {
+        category: 'ELEVATE',
+        title: 'Editorial Blueprint Ready',
+        message: 'Your Profile Makeover & Telemetry Scorecard has been finalized by Senior Curation.',
+        targetRoute: '/member/elevate',
+        type: 'membership',
+      },
+      {
+        category: 'MIXERS',
+        title: 'Private Mixer First Look',
+        message: 'Early access passes are open for the Indiranagar Rooftop Mixer gathering.',
+        targetRoute: '/member/mixers',
+        type: 'discover',
+      },
+      {
+        category: 'MATCH',
+        title: 'Mutual Venn Connection Confirmed',
+        message: 'You and Rhea are connected. Private confidential messaging is now open.',
+        targetRoute: '/member/chat',
+        type: 'match',
+      },
+    ];
+
+    const pick = demoItems[Math.floor(Math.random() * demoItems.length)];
+    const newNotif: AppNotification = {
+      id: `notif-live-${Date.now()}`,
+      category: pick.category,
+      sourcePage: 'NOTIFICATIONS',
+      title: pick.title,
+      message: pick.message,
+      timestamp: 'Just now',
+      isRead: false,
+      type: pick.type,
+      targetRoute: pick.targetRoute,
+    };
+
+    setState((prev) => {
+      const currentList = prev.notifications && prev.notifications.length > 0
+        ? prev.notifications
+        : INITIAL_NOTIFICATIONS;
+      return {
+        ...prev,
+        notifications: [newNotif, ...currentList],
+        latestPopupNotification: newNotif,
+      };
+    });
+  };
+
+  // Gentle initial notification popup for unread updates when landing on the platform
+  useEffect(() => {
+    const hasPopped = sessionStorage.getItem('vennz_initial_notif_popped');
+    if (hasPopped) return;
+
+    const unread = (state.notifications || INITIAL_NOTIFICATIONS).find((n) => !n.isRead);
+    if (!unread) return;
+
+    const timer = setTimeout(() => {
+      sessionStorage.setItem('vennz_initial_notif_popped', 'true');
+      setState((prev) => ({
+        ...prev,
+        latestPopupNotification: unread,
+      }));
+    }, 1800);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const resetDiscoverQueue = () => {
     setState((prev) => ({
@@ -1329,6 +1434,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         elevateRequests: [newRequest, ...currentReqs],
         elevateMessages: [...currentMsgs, teamAckMsg],
         notifications: [newNotif, ...currentNotifs],
+        latestPopupNotification: newNotif,
       };
     });
 
@@ -1451,6 +1557,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         elevateBookings: updatedBookings,
         elevateMessages: [...(prev.elevateMessages || []), teamReceiptMsg],
         notifications: [paidNotif, ...(prev.notifications || [])],
+        latestPopupNotification: paidNotif,
       };
     });
   };
@@ -1585,6 +1692,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         elevateOrders: [newOrder, ...(prev.elevateOrders || [])],
         elevateMessages: [...(prev.elevateMessages || []), conciergeMsg],
         notifications: [orderNotif, ...(prev.notifications || [])],
+        latestPopupNotification: orderNotif,
       };
     });
 
@@ -1639,6 +1747,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         elevateOrders: updatedOrders,
         elevateMessages: [...(prev.elevateMessages || []), refundMsg],
         notifications: [refundNotif, ...(prev.notifications || [])],
+        latestPopupNotification: refundNotif,
       };
     });
   };
@@ -1666,6 +1775,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         ...prev,
         profile: updatedProfile,
         notifications: [bioNotif, ...(prev.notifications || [])],
+        latestPopupNotification: bioNotif,
       };
     });
   };
@@ -1715,6 +1825,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         ...prev,
         mixerInterestedEventIds: updatedInterested,
         notifications: [notif, ...(prev.notifications || [])],
+        latestPopupNotification: notif,
       };
     });
   };
@@ -1780,6 +1891,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         mixerBookings: updatedBookings,
         mixerEvents: updatedEvents,
         notifications: [bookNotif, ...(prev.notifications || [])],
+        latestPopupNotification: bookNotif,
       };
     });
 
@@ -1821,6 +1933,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         ...prev,
         mixerWaitlists: updated,
         notifications: [notif, ...(prev.notifications || [])],
+        latestPopupNotification: notif,
       };
     });
 
@@ -1867,9 +1980,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         sentRequestProfileIds,
         notifications: notificationsList,
         unreadNotificationsCount,
+        latestPopupNotification: state.latestPopupNotification || null,
+        showNotificationPopup,
+        dismissNotificationPopup,
+        markNotificationsAsRead,
+        markNotificationAsRead,
+        triggerLiveNotificationDemo,
         passProfile,
         sendConnectionRequest,
-        markNotificationsAsRead,
         resetDiscoverQueue,
         // Matches & Chat
         incomingRequests,
