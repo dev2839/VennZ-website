@@ -9,7 +9,6 @@ import {
   generateDynamicScorecard,
   generateDynamicMakeoverReport,
 } from '../utils/elevateTelemetry';
-import { ElevateCircularNav, type ElevateNavTab } from './ElevateCircularNav';
 
 interface Page17ElevateScreenProps {
   onSelectTab: (tab: MemberTab) => void;
@@ -18,6 +17,182 @@ interface Page17ElevateScreenProps {
   showStatusBar?: boolean;
   showHomeIndicator?: boolean;
 }
+
+type ElevateNavTab = 'catalog' | 'scorecard' | 'makeover' | 'orders' | 'concierge';
+
+interface ElevateFolderTabProps {
+  id: ElevateNavTab;
+  label: string;
+  count?: number;
+  isActive: boolean;
+  zIndex: number;
+  onClick: () => void;
+  isDark: boolean;
+}
+
+const ElevateFolderTab: React.FC<ElevateFolderTabProps> = ({
+  label,
+  count,
+  isActive,
+  zIndex,
+  onClick,
+  isDark,
+}) => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  // Tab proportions (38px height, 14px wing slant)
+  const tabHeight = 38;
+  const wingWidth = 14;
+
+  // VennZ theme palette colors
+  const tabBg = isActive
+    ? (isDark ? '#3D1C2E' : '#FFFFFF')
+    : isHovered
+    ? (isDark ? 'rgba(56, 26, 44, 0.88)' : 'rgba(255, 255, 255, 0.96)')
+    : (isDark ? 'rgba(34, 16, 28, 0.65)' : 'rgba(244, 230, 234, 0.82)');
+
+  const tabBorder = isActive
+    ? (isDark ? 'rgba(220, 150, 170, 0.55)' : 'rgba(161, 82, 95, 0.38)')
+    : isHovered
+    ? (isDark ? 'rgba(199, 87, 124, 0.42)' : 'rgba(161, 82, 95, 0.30)')
+    : (isDark ? 'rgba(161, 82, 95, 0.22)' : 'rgba(161, 82, 95, 0.18)');
+
+  const textColor = isActive
+    ? (isDark ? '#FFFFFF' : '#462037')
+    : isHovered
+    ? (isDark ? '#FDF3F5' : '#462037')
+    : (isDark ? 'rgba(249, 170, 173, 0.78)' : '#7A4D5B');
+
+  return (
+    <button
+      type="button"
+      role="tab"
+      aria-selected={isActive}
+      onClick={onClick}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      style={{
+        position: 'relative',
+        zIndex,
+        display: 'inline-flex',
+        alignItems: 'flex-end',
+        background: 'none',
+        border: 'none',
+        padding: 0,
+        margin: '0 -6px',
+        cursor: 'pointer',
+        height: `${tabHeight}px`,
+        outline: 'none',
+        userSelect: 'none',
+        flexShrink: 0,
+        filter: isActive
+          ? (isDark ? 'drop-shadow(0 -3px 8px rgba(0, 0, 0, 0.35))' : 'drop-shadow(0 -2px 6px rgba(73, 40, 61, 0.08))')
+          : 'none',
+        transition: 'filter 0.2s ease',
+      }}
+    >
+      {/* Left Wing (Slanted with softly rounded top corner) */}
+      <svg
+        width={wingWidth}
+        height={tabHeight}
+        viewBox={`0 0 ${wingWidth} ${tabHeight}`}
+        style={{ display: 'block', flexShrink: 0 }}
+      >
+        <path
+          d={`M 0 ${tabHeight} L 9 8 C 10.5 3 12 0 ${wingWidth} 0 L ${wingWidth} ${tabHeight} Z`}
+          fill={tabBg}
+        />
+        <path
+          d={`M 0 ${tabHeight} L 9 8 C 10.5 3 12 0 ${wingWidth} 0`}
+          stroke={tabBorder}
+          strokeWidth="1.2"
+          fill="none"
+        />
+      </svg>
+
+      {/* Center Body */}
+      <div
+        style={{
+          height: `${tabHeight}px`,
+          backgroundColor: tabBg,
+          borderTop: `1.2px solid ${tabBorder}`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '5px',
+          padding: '0 8px',
+          whiteSpace: 'nowrap',
+          boxSizing: 'border-box',
+          transition: 'background-color 0.18s ease, border-color 0.18s ease',
+        }}
+      >
+        <span
+          style={{
+            fontFamily: 'var(--font-sans)',
+            fontSize: '12.5px',
+            fontWeight: isActive ? 700 : 500,
+            letterSpacing: '0.015em',
+            color: textColor,
+            transition: 'color 0.18s ease',
+          }}
+        >
+          {label}
+        </span>
+        {count !== undefined && count > 0 && (
+          <span
+            style={{
+              fontSize: '10px',
+              fontWeight: 700,
+              padding: '1px 5px',
+              borderRadius: '999px',
+              backgroundColor: isActive
+                ? (isDark ? 'rgba(249, 170, 173, 0.25)' : 'rgba(70, 32, 55, 0.12)')
+                : (isDark ? 'rgba(161, 82, 95, 0.25)' : 'rgba(161, 82, 95, 0.12)'),
+              color: textColor,
+              lineHeight: '1.2',
+            }}
+          >
+            {count}
+          </span>
+        )}
+      </div>
+
+      {/* Right Wing (Softly rounded top corner with slant down to baseline) */}
+      <svg
+        width={wingWidth}
+        height={tabHeight}
+        viewBox={`0 0 ${wingWidth} ${tabHeight}`}
+        style={{ display: 'block', flexShrink: 0 }}
+      >
+        <path
+          d={`M 0 0 C 2 0 3.5 3 5 8 L ${wingWidth} ${tabHeight} L 0 ${tabHeight} Z`}
+          fill={tabBg}
+        />
+        <path
+          d={`M 0 0 C 2 0 3.5 3 5 8 L ${wingWidth} ${tabHeight}`}
+          stroke={tabBorder}
+          strokeWidth="1.2"
+          fill="none"
+        />
+      </svg>
+
+      {/* Active Tab Bottom Bridge: seamlessly covers the baseline line below */}
+      {isActive && (
+        <div
+          style={{
+            position: 'absolute',
+            bottom: '-1px',
+            left: '1px',
+            right: '1px',
+            height: '2px',
+            backgroundColor: tabBg,
+            zIndex: 15,
+          }}
+        />
+      )}
+    </button>
+  );
+};
 
 export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
   onSelectTab,
@@ -167,7 +342,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
         }}
       />
 
-      {/* Top Header */}
+      {/* Top Header & Navigation */}
       <div
         style={{
           position: 'sticky',
@@ -189,24 +364,13 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
           position: 'relative',
           zIndex: 1,
           flex: 1,
-          padding: '12px 18px 120px',
+          padding: '16px 18px 120px',
           maxWidth: '840px',
           margin: '0 auto',
           width: '100%',
           boxSizing: 'border-box',
         }}
       >
-        {/* Compact Orbit Navigation */}
-        <div style={{ margin: '4px auto 16px', width: '100%' }}>
-          <ElevateCircularNav
-            activeTab={activeTab}
-            onSelectTab={(tab) => {
-              setActiveTab(tab);
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            isDark={isDark}
-          />
-        </div>
         {/* Success Banner if order created */}
         {orderSuccessMessage && (
           <div
@@ -218,7 +382,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
               color: isDark ? '#A5D6A7' : '#2E7D32',
               fontSize: '13px',
               fontWeight: 600,
-              marginBottom: '20px',
+              marginBottom: '18px',
               display: 'flex',
               alignItems: 'center',
               gap: '10px',
@@ -228,11 +392,115 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
           </div>
         )}
 
+        {/* Centered Page Header (Title & Editorial Tagline, without the removed telemetry paragraph) */}
+        <div style={{ textAlign: 'center', margin: '4px 0 18px' }}>
+          <span
+            style={{
+              fontSize: '11px',
+              letterSpacing: '0.14em',
+              fontWeight: 700,
+              textTransform: 'uppercase',
+              color: isDark ? '#F9AAAD' : '#A1525F',
+            }}
+          >
+            Private Editorial & Telemetry
+          </span>
+          <h1
+            style={{
+              fontFamily: 'var(--font-serif)',
+              fontSize: '28px',
+              fontWeight: 500,
+              letterSpacing: '-0.02em',
+              margin: '6px 0 0',
+              color: themeTextColor,
+            }}
+          >
+            VennZ Elevate
+          </h1>
+        </div>
+
+        {/* Centered Horizontal Tab Navigation (5 connected, overlapping folder tabs inspired by ref) */}
+        <div
+          style={{
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            marginBottom: '22px',
+          }}
+        >
+          {/* Scrollable on small screens, centered on desktop */}
+          <div
+            style={{
+              width: '100%',
+              overflowX: 'auto',
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none',
+              WebkitOverflowScrolling: 'touch',
+              display: 'flex',
+              justifyContent: 'center',
+              padding: '4px 8px 0',
+              boxSizing: 'border-box',
+            }}
+          >
+            <div
+              role="tablist"
+              aria-label="VennZ Elevate navigation"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'flex-end',
+                margin: '0 auto',
+                minWidth: 'max-content',
+                position: 'relative',
+                zIndex: 5,
+              }}
+            >
+              {[
+                { id: 'catalog' as const, label: 'Offerings' },
+                { id: 'scorecard' as const, label: 'Profile Intelligence' },
+                { id: 'makeover' as const, label: 'Makeover Studio' },
+                { id: 'orders' as const, label: 'My Orders', count: elevateOrders.length },
+                { id: 'concierge' as const, label: 'Concierge Desk' },
+              ].map((tab, idx) => {
+                const isActive = activeTab === tab.id;
+                const tabZIndex = isActive ? 20 : (10 - idx);
+
+                return (
+                  <ElevateFolderTab
+                    key={tab.id}
+                    id={tab.id}
+                    label={tab.label}
+                    count={tab.count}
+                    isActive={isActive}
+                    zIndex={tabZIndex}
+                    isDark={isDark}
+                    onClick={() => {
+                      setActiveTab(tab.id);
+                    }}
+                  />
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Continuous Horizontal Baseline Line */}
+          <div
+            style={{
+              width: '100%',
+              height: '1px',
+              backgroundColor: isDark ? 'rgba(161, 82, 95, 0.28)' : 'rgba(161, 82, 95, 0.2)',
+              marginTop: '-1px',
+              position: 'relative',
+              zIndex: 2,
+            }}
+          />
+        </div>
+
         {/* =========================================================================
             TAB 1: CATALOG OF OFFERINGS
             ========================================================================= */}
         {activeTab === 'catalog' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             {/* Service Cards Grid */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               {ELEVATE_SERVICES.map((service) => {
