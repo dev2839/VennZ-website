@@ -295,3 +295,18 @@ export const CITY_MIXER_DEMANDS: CityMixerDemand[] = [
     estimatedTimeline: '12 Members Needed to Begin Partner Vetting',
   },
 ];
+
+export const normalizeCity = (c?: string): string => {
+  if (!c) return '';
+  const s = c.toLowerCase().replace(/ncr/g, '').trim();
+  if (s === 'bangalore') return 'bengaluru';
+  if (s === 'bombay') return 'mumbai';
+  return s;
+};
+
+export const matchCities = (cityA?: string, cityB?: string): boolean => {
+  if (!cityA || !cityB) return false;
+  const a = normalizeCity(cityA);
+  const b = normalizeCity(cityB);
+  return a === b || a.includes(b) || b.includes(a);
+};

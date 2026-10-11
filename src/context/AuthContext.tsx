@@ -18,7 +18,7 @@ import {
   generateDynamicConversationAudit,
 } from '../utils/elevateTelemetry';
 import type { MixerEvent, MixerBooking, CityMixerDemand, MixerWaitlistEntry } from '../types/mixers';
-import { INITIAL_MIXER_EVENTS, INITIAL_PAST_BOOKINGS, CITY_MIXER_DEMANDS } from '../data/mixerEvents';
+import { INITIAL_MIXER_EVENTS, INITIAL_PAST_BOOKINGS, CITY_MIXER_DEMANDS, matchCities } from '../data/mixerEvents';
 import { DUMMY_DISCOVER_PROFILES } from '../data/dummyProfiles';
 
 export interface UserProfile {
@@ -200,6 +200,7 @@ interface AuthContextType extends AuthState {
   expressMixerInterest: (eventId: string) => void;
   bookMixerTicket: (eventId: string, price: number, priceType: 'member' | 'first_look') => MixerBooking;
   joinCityWaitlist: (city: string, details: { areaPreference?: string; timingPreference: string; dietaryPreference?: string }) => MixerWaitlistEntry;
+  leaveCityWaitlist: (city: string) => void;
   isUserOnCityWaitlist: (city: string) => boolean;
 }
 
@@ -1915,7 +1916,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     setState((prev) => {
       const existing = prev.mixerWaitlists || [];
-      const updated = [newEntry, ...existing.filter((e) => e.city.toLowerCase() !== city.toLowerCase())];
+      const updated = [newEntry, ...existing.filter((e) => !matchCities(e.city, city))];
 
       const notif: AppNotification = {
         id: `notif-waitlist-${Date.now()}`,
@@ -1940,14 +1941,40 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return newEntry;
   };
 
+  const leaveCityWaitlist = (city: string) => {
+    setState((prev) => {
+      const existing = prev.mixerWaitlists || [];
+      const updated = existing.filter((e) => !matchCities(e.city, city));
+
+      const notif: AppNotification = {
+        id: `notif-waitlist-leave-${Date.now()}`,
+        category: 'MIXERS',
+        sourcePage: 'MIXERS',
+        title: `Removed from ${city} Waitlist`,
+        message: `You have left the ${city} priority mixer waitlist. You can rejoin at any time.`,
+        timestamp: 'Just now',
+        isRead: false,
+        type: 'discover',
+        targetRoute: '/member/mixers',
+      };
+
+      return {
+        ...prev,
+        mixerWaitlists: updated,
+        notifications: [notif, ...(prev.notifications || [])],
+        latestPopupNotification: notif,
+      };
+    });
+  };
+
   const isUserOnCityWaitlist = (city: string): boolean => {
-    return (state.mixerWaitlists || []).some((w) => w.city.toLowerCase() === city.toLowerCase());
+    return (state.mixerWaitlists || []).some((w) => matchCities(w.city, city));
   };
 
   // Dynamically compute city mixer demands based on user's waitlist registrations
   const computedCityDemands: CityMixerDemand[] = CITY_MIXER_DEMANDS.map((base) => {
     const isUserJoined = (state.mixerWaitlists || []).some(
-      (w) => w.city.toLowerCase() === base.city.toLowerCase()
+      (w) => matchCities(w.city, base.city)
     );
     const activeMembersInterested = base.activeMembersInterested + (isUserJoined ? 1 : 0);
     const threshold = base.demandThresholdToLaunch;
@@ -1975,6 +2002,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       activeMembersInterested,
       status,
       estimatedTimeline,
+    };
+  });
+
+  // Dynamically compute mixer events to keep waitlistCount & demandThreshold in sync with live city demands
+  const computedMixerEvents: MixerEvent[] = (state.mixerEvents || INITIAL_MIXER_EVENTS).map((evt) => {
+    const isUserJoined = (state.mixerWaitlists || []).some((w) => matchCities(w.city, evt.city));
+    const matchedDemand = computedCityDemands.find((c) => matchCities(c.city, evt.city));
+    return {
+      ...evt,
+      waitlistCount: matchedDemand
+        ? matchedDemand.activeMembersInterested
+        : (evt.waitlistCount || 0) + (isUserJoined ? 1 : 0),
+      demandThreshold: matchedDemand
+        ? matchedDemand.demandThresholdToLaunch
+        : (evt.demandThreshold || 80),
     };
   });
 
@@ -2051,7 +2093,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         applyMakeoverBio,
         setConversationAuditConsent,
         // Mixers & City Demand Waitlists
-        mixerEvents: state.mixerEvents || INITIAL_MIXER_EVENTS,
+        mixerEvents: computedMixerEvents,
         mixerBookings: state.mixerBookings || INITIAL_PAST_BOOKINGS,
         mixerInterestedEventIds: state.mixerInterestedEventIds || [],
         mixerWaitlists: state.mixerWaitlists || [],
@@ -2059,6 +2101,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         expressMixerInterest,
         bookMixerTicket,
         joinCityWaitlist,
+        leaveCityWaitlist,
         isUserOnCityWaitlist,
       }}
     >

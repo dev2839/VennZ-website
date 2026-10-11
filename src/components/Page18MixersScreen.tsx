@@ -4,6 +4,7 @@ import { MemberTopBar } from './MemberTopBar';
 import { MemberBottomNav, type MemberTab } from './MemberBottomNav';
 import { useAuth } from '../context/AuthContext';
 import type { MixerEvent, MixerBooking, CityMixerDemand } from '../types/mixers';
+import { matchCities } from '../data/mixerEvents';
 import { useLightbox } from '../context/LightboxContext';
 
 interface Page18MixersScreenProps {
@@ -74,6 +75,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
     expressMixerInterest,
     bookMixerTicket,
     joinCityWaitlist,
+    leaveCityWaitlist,
     isUserOnCityWaitlist,
     setMembershipStatus,
   } = useAuth();
@@ -102,7 +104,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
   useEffect(() => {
     if (selectedWaitlistCity) {
       const existing = (mixerWaitlists || []).find(
-        (w) => w.city.toLowerCase() === selectedWaitlistCity.city.toLowerCase()
+        (w) => matchCities(w.city, selectedWaitlistCity.city)
       );
       if (existing) {
         setWaitlistArea(existing.areaPreference || '');
@@ -140,6 +142,16 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
       dietaryPreference: waitlistDietary,
     });
     setWaitlistSuccessToast(`You have joined the priority waitlist for ${selectedWaitlistCity.city}.`);
+    setSelectedWaitlistCity(null);
+    setWaitlistArea('');
+    setTimeout(() => {
+      setWaitlistSuccessToast(null);
+    }, 3200);
+  };
+
+  const handleLeaveCityWaitlist = (city: string) => {
+    leaveCityWaitlist(city);
+    setWaitlistSuccessToast(`You have left the priority waitlist for ${city}.`);
     setSelectedWaitlistCity(null);
     setWaitlistArea('');
     setTimeout(() => {
@@ -892,7 +904,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                               transition: 'all 0.2s ease',
                             }}
                           >
-                            {isOnWaitlist ? '✓ On City Waitlist (Update Details)' : `Join ${demandItem.city} Waitlist →`}
+                            {isOnWaitlist ? '✓ On City Waitlist (Manage / Leave)' : `Join ${demandItem.city} Waitlist →`}
                           </button>
                         </div>
                       </div>
@@ -996,8 +1008,27 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                             {event.status}
                           </div>
 
-                          {/* Spots indicator */}
-                          {event.spotsAvailable > 0 && (
+                          {/* Spots or Waitlist indicator */}
+                          {!isEventReadyForPaidLaunch(event) ? (
+                            <div
+                              style={{
+                                position: 'absolute',
+                                top: '12px',
+                                right: '12px',
+                                padding: '4px 10px',
+                                borderRadius: '12px',
+                                backgroundColor: 'rgba(0, 0, 0, 0.72)',
+                                color: '#F3EEE9',
+                                fontSize: '10px',
+                                fontWeight: 500,
+                                letterSpacing: '0.04em',
+                                backdropFilter: 'blur(6px)',
+                                border: '1px solid rgba(255, 255, 255, 0.15)',
+                              }}
+                            >
+                              {event.waitlistCount || 76} / {event.demandThreshold || 80} waitlisted
+                            </div>
+                          ) : event.spotsAvailable > 0 ? (
                             <div
                               style={{
                                 position: 'absolute',
@@ -1015,7 +1046,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                             >
                               {event.spotsAvailable} spots remaining
                             </div>
-                          )}
+                          ) : null}
 
                           {/* Event City overlay on image */}
                           <div
@@ -1221,11 +1252,11 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                                 type="button"
                                 onClick={() => {
                                   const cDemand = (cityDemands || []).find(
-                                    (c) => c.city.toLowerCase() === event.city.toLowerCase()
+                                    (c) => matchCities(c.city, event.city)
                                   ) || {
                                     city: event.city,
-                                    activeMembersInterested: 76,
-                                    demandThresholdToLaunch: 80,
+                                    activeMembersInterested: event.waitlistCount || 76,
+                                    demandThresholdToLaunch: event.demandThreshold || 80,
                                     suggestedVenuesInReview: [event.venue],
                                     status: 'partner_vetting' as const,
                                     estimatedTimeline: 'Readiness certification in progress',
@@ -1250,7 +1281,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                                   cursor: 'pointer',
                                 }}
                               >
-                                {isUserOnCityWaitlist(event.city) ? 'ON WAITLIST ✓' : 'JOIN WAITLIST'}
+                                {isUserOnCityWaitlist(event.city) ? 'ON WAITLIST ✓ (MANAGE)' : 'JOIN WAITLIST'}
                               </button>
                             ) : (
                               <button
@@ -1411,7 +1442,22 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                       {selectedEvent.startTime} – {selectedEvent.endTime}
                     </div>
                   </div>
-                  {selectedEvent.spotsAvailable > 0 && (
+                  {!isEventReadyForPaidLaunch(selectedEvent) ? (
+                    <div
+                      style={{
+                        padding: '6px 12px',
+                        borderRadius: '14px',
+                        backgroundColor: isDark ? 'rgba(161, 82, 95, 0.22)' : 'rgba(161, 82, 95, 0.1)',
+                        border: `1px solid ${themeBorder}`,
+                        fontSize: '11px',
+                        fontWeight: 600,
+                        color: themeMulberry,
+                        textAlign: 'right',
+                      }}
+                    >
+                      {selectedEvent.waitlistCount || 76} / {selectedEvent.demandThreshold || 80} on Waitlist
+                    </div>
+                  ) : selectedEvent.spotsAvailable > 0 ? (
                     <div
                       style={{
                         padding: '6px 12px',
@@ -1426,7 +1472,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                     >
                       {selectedEvent.spotsAvailable} spots remaining
                     </div>
-                  )}
+                  ) : null}
                 </div>
 
                 <div style={{ borderTop: `1px solid ${themeBorder}`, paddingTop: '10px' }}>
@@ -1751,11 +1797,11 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                     type="button"
                     onClick={() => {
                       const cDemand = (cityDemands || []).find(
-                        (c) => c.city.toLowerCase() === selectedEvent.city.toLowerCase()
+                        (c) => matchCities(c.city, selectedEvent.city)
                       ) || {
                         city: selectedEvent.city,
-                        activeMembersInterested: 76,
-                        demandThresholdToLaunch: 80,
+                        activeMembersInterested: selectedEvent.waitlistCount || 76,
+                        demandThresholdToLaunch: selectedEvent.demandThreshold || 80,
                         suggestedVenuesInReview: [selectedEvent.venue],
                         status: 'partner_vetting' as const,
                         estimatedTimeline: 'Readiness certification in progress',
@@ -1783,7 +1829,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                     }}
                   >
                     {isUserOnCityWaitlist(selectedEvent.city)
-                      ? 'ON PRIORITY CITY WAITLIST ✓'
+                      ? '✓ ON PRIORITY WAITLIST (MANAGE / LEAVE)'
                       : `JOIN ${selectedEvent.city.toUpperCase()} PRIORITY WAITLIST`}
                   </button>
                 ) : selectedEvent.status === 'PLANNING' ? (
@@ -2920,211 +2966,314 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
       )}
 
       {/* CITY WAITLIST MODAL */}
-      {selectedWaitlistCity && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            zIndex: 100,
-            backgroundColor: 'rgba(0, 0, 0, 0.68)',
-            backdropFilter: 'blur(8px)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '20px',
-          }}
-        >
+      {selectedWaitlistCity && (() => {
+        const liveDemand = (cityDemands || []).find((c) => matchCities(c.city, selectedWaitlistCity.city)) || selectedWaitlistCity;
+        const isOnWaitlist = isUserOnCityWaitlist(liveDemand.city);
+        const percent = Math.min(100, Math.round((liveDemand.activeMembersInterested / liveDemand.demandThresholdToLaunch) * 100));
+        const phase = getMixerPhaseInfo(liveDemand.status, isDark);
+
+        return (
           <div
             style={{
-              width: '100%',
-              maxWidth: '480px',
-              borderRadius: '22px',
-              backgroundColor: isDark ? '#1C1224' : '#FFFFFF',
-              border: `1px solid ${themeBorder}`,
-              padding: '24px',
-              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.45)',
-              color: themeTextColor,
-              maxHeight: '90vh',
-              overflowY: 'auto',
+              position: 'fixed',
+              inset: 0,
+              zIndex: 100,
+              backgroundColor: 'rgba(0, 0, 0, 0.68)',
+              backdropFilter: 'blur(8px)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '20px',
             }}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-              <div>
-                <span
-                  style={{
-                    fontSize: '10.5px',
-                    fontWeight: 700,
-                    letterSpacing: '0.12em',
-                    textTransform: 'uppercase',
-                    color: isDark ? '#D88A9F' : '#9B4D6E',
-                  }}
-                >
-                  CITY DEMAND REGISTRATION
-                </span>
-                <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '22px', margin: '4px 0 0', color: themeMulberry }}>
-                  Join {selectedWaitlistCity.city} Waitlist
-                </h2>
-              </div>
-              <button
-                type="button"
-                onClick={() => setSelectedWaitlistCity(null)}
-                style={{
-                  background: 'transparent',
-                  border: 'none',
-                  fontSize: '20px',
-                  color: themeMuted,
-                  cursor: 'pointer',
-                }}
-              >
-                ✕
-              </button>
-            </div>
-
             <div
               style={{
-                padding: '12px 14px',
-                borderRadius: '12px',
-                backgroundColor: isDark ? 'rgba(161, 82, 95, 0.12)' : 'rgba(161, 82, 95, 0.06)',
+                width: '100%',
+                maxWidth: '480px',
+                borderRadius: '22px',
+                backgroundColor: isDark ? '#1C1224' : '#FFFFFF',
                 border: `1px solid ${themeBorder}`,
-                fontSize: '11.5px',
-                color: themeMuted,
-                margin: '14px 0 16px',
-                lineHeight: '1.45',
+                padding: '24px',
+                boxShadow: '0 20px 60px rgba(0, 0, 0, 0.45)',
+                color: themeTextColor,
+                maxHeight: '90vh',
+                overflowY: 'auto',
               }}
             >
-              🔒 <strong>VennZ Data Minimization:</strong> We collect strictly the operational information necessary for waitlist demand, room sizing, schedule timing, and dietary catering. Extraneous personal information is never solicited.
-            </div>
-
-            <form onSubmit={handleJoinCityWaitlistSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              {/* Preferred Neighborhood / Area */}
-              <div>
-                <label style={{ fontSize: '11.5px', fontWeight: 600, color: themeMulberry, display: 'block', marginBottom: '6px' }}>
-                  Preferred Neighborhood / Area in {selectedWaitlistCity.city}
-                </label>
-                <input
-                  type="text"
-                  value={waitlistArea}
-                  onChange={(e) => setWaitlistArea(e.target.value)}
-                  placeholder={`e.g. ${selectedWaitlistCity.suggestedVenuesInReview[0] || 'Central area'}, Suburbs, or Downtown`}
-                  style={{
-                    width: '100%',
-                    padding: '11px 14px',
-                    borderRadius: '11px',
-                    border: `1px solid ${themeBorder}`,
-                    backgroundColor: isDark ? 'rgba(20, 14, 28, 0.7)' : 'rgba(250, 241, 243, 0.8)',
-                    color: themeTextColor,
-                    fontSize: '13px',
-                    boxSizing: 'border-box',
-                    outline: 'none',
-                  }}
-                />
-              </div>
-
-              {/* Day & Timing Preference */}
-              <div>
-                <label style={{ fontSize: '11.5px', fontWeight: 600, color: themeMulberry, display: 'block', marginBottom: '6px' }}>
-                  Ideal Day & Schedule Timing
-                </label>
-                <select
-                  value={waitlistTiming}
-                  onChange={(e) => setWaitlistTiming(e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: '11px 14px',
-                    borderRadius: '11px',
-                    border: `1px solid ${themeBorder}`,
-                    backgroundColor: isDark ? 'rgba(20, 14, 28, 0.7)' : 'rgba(250, 241, 243, 0.8)',
-                    color: themeTextColor,
-                    fontSize: '13px',
-                    boxSizing: 'border-box',
-                    outline: 'none',
-                  }}
-                >
-                  <option value="Friday Evening (7:30 PM - 10:30 PM)">Friday Evening (7:30 PM - 10:30 PM)</option>
-                  <option value="Saturday Sunset (6:00 PM - 9:00 PM)">Saturday Sunset (6:00 PM - 9:00 PM)</option>
-                  <option value="Saturday Late Evening (8:30 PM - 11:30 PM)">Saturday Late Evening (8:30 PM - 11:30 PM)</option>
-                  <option value="Sunday Afternoon Social (1:00 PM - 4:00 PM)">Sunday Afternoon Social (1:00 PM - 4:00 PM)</option>
-                </select>
-              </div>
-
-              {/* Dietary Catering Logistics */}
-              <div>
-                <label style={{ fontSize: '11.5px', fontWeight: 600, color: themeMulberry, display: 'block', marginBottom: '6px' }}>
-                  Dietary Catering Preference (Operational Only)
-                </label>
-                <select
-                  value={waitlistDietary}
-                  onChange={(e) => setWaitlistDietary(e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: '11px 14px',
-                    borderRadius: '11px',
-                    border: `1px solid ${themeBorder}`,
-                    backgroundColor: isDark ? 'rgba(20, 14, 28, 0.7)' : 'rgba(250, 241, 243, 0.8)',
-                    color: themeTextColor,
-                    fontSize: '13px',
-                    boxSizing: 'border-box',
-                    outline: 'none',
-                  }}
-                >
-                  <option value="Flexible / Chef's Selection">Flexible / Chef's Selection</option>
-                  <option value="Vegetarian">Vegetarian</option>
-                  <option value="Non-Vegetarian">Non-Vegetarian</option>
-                  <option value="Vegan">Vegan</option>
-                  <option value="Jain">Jain</option>
-                </select>
-              </div>
-
-              {/* Notice & Disclaimer */}
-              <div
-                style={{
-                  fontSize: '11px',
-                  color: themeMuted,
-                  lineHeight: '1.45',
-                  padding: '8px 0',
-                }}
-              >
-                ✓ By joining, you receive priority notification once the {selectedWaitlistCity.city} threshold is reached and venue/partner readiness is certified. No payment is charged at waitlist stage.
-              </div>
-
-              <div style={{ display: 'flex', gap: '10px', marginTop: '6px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div>
+                  <span
+                    style={{
+                      fontSize: '10.5px',
+                      fontWeight: 700,
+                      letterSpacing: '0.12em',
+                      textTransform: 'uppercase',
+                      color: isDark ? '#D88A9F' : '#9B4D6E',
+                    }}
+                  >
+                    CITY DEMAND REGISTRATION
+                  </span>
+                  <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '22px', margin: '4px 0 0', color: themeMulberry }}>
+                    {isOnWaitlist ? `Manage ${liveDemand.city} Waitlist` : `Join ${liveDemand.city} Waitlist`}
+                  </h2>
+                </div>
                 <button
                   type="button"
                   onClick={() => setSelectedWaitlistCity(null)}
                   style={{
-                    flex: 1,
-                    padding: '11px',
-                    borderRadius: '10px',
-                    border: `1px solid ${themeBorder}`,
-                    backgroundColor: 'transparent',
-                    color: themeTextColor,
-                    fontSize: '12.5px',
-                    cursor: 'pointer',
-                  }}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  style={{
-                    flex: 2,
-                    padding: '11px',
-                    borderRadius: '10px',
+                    background: 'transparent',
                     border: 'none',
-                    background: themeButtonBg,
-                    color: themeButtonText,
-                    fontSize: '12.5px',
-                    fontWeight: 600,
+                    fontSize: '20px',
+                    color: themeMuted,
                     cursor: 'pointer',
                   }}
                 >
-                  Confirm Priority Waitlist →
+                  ✕
                 </button>
               </div>
-            </form>
+
+              {/* Dynamic Live Counter & Phase Indicator Card */}
+              <div
+                style={{
+                  margin: '14px 0 16px',
+                  padding: '12px 14px',
+                  borderRadius: '14px',
+                  backgroundColor: isDark ? 'rgba(30, 20, 36, 0.85)' : 'rgba(250, 241, 243, 0.85)',
+                  border: `1px solid ${themeBorder}`,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '8px',
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '6px' }}>
+                  <span
+                    style={{
+                      fontSize: '10px',
+                      padding: '3px 8px',
+                      borderRadius: '999px',
+                      backgroundColor: phase.badgeBg,
+                      color: phase.badgeColor,
+                      fontWeight: 700,
+                      letterSpacing: '0.04em',
+                      textTransform: 'uppercase',
+                    }}
+                  >
+                    ● {phase.phaseTag}
+                  </span>
+                  <span style={{ fontSize: '13px', fontWeight: 700, color: themeTextColor }}>
+                    {liveDemand.activeMembersInterested} / {liveDemand.demandThresholdToLaunch} Members Registered
+                  </span>
+                </div>
+
+                <div
+                  style={{
+                    height: '6px',
+                    borderRadius: '999px',
+                    backgroundColor: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(73, 40, 61, 0.08)',
+                    overflow: 'hidden',
+                  }}
+                >
+                  <div
+                    style={{
+                      height: '100%',
+                      width: `${percent}%`,
+                      background: themeButtonBg,
+                      transition: 'width 0.4s ease',
+                      borderRadius: '999px',
+                    }}
+                  />
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: themeMuted }}>
+                  <span style={{ fontWeight: 600, color: themeTextColor }}>{liveDemand.estimatedTimeline}</span>
+                  <span>{percent}% threshold</span>
+                </div>
+              </div>
+
+              <div
+                style={{
+                  padding: '10px 12px',
+                  borderRadius: '12px',
+                  backgroundColor: isDark ? 'rgba(161, 82, 95, 0.12)' : 'rgba(161, 82, 95, 0.06)',
+                  border: `1px solid ${themeBorder}`,
+                  fontSize: '11px',
+                  color: themeMuted,
+                  marginBottom: '14px',
+                  lineHeight: '1.45',
+                }}
+              >
+                🔒 <strong>VennZ Data Minimization:</strong> We collect strictly the operational information necessary for waitlist demand, room sizing, schedule timing, and dietary catering. Extraneous personal information is never solicited.
+              </div>
+
+              <form onSubmit={handleJoinCityWaitlistSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                {/* Preferred Neighborhood / Area */}
+                <div>
+                  <label style={{ fontSize: '11.5px', fontWeight: 600, color: themeMulberry, display: 'block', marginBottom: '6px' }}>
+                    Preferred Neighborhood / Area in {liveDemand.city}
+                  </label>
+                  <input
+                    type="text"
+                    value={waitlistArea}
+                    onChange={(e) => setWaitlistArea(e.target.value)}
+                    placeholder={`e.g. ${liveDemand.suggestedVenuesInReview?.[0] || 'Central area'}, Suburbs, or Downtown`}
+                    style={{
+                      width: '100%',
+                      padding: '11px 14px',
+                      borderRadius: '11px',
+                      border: `1px solid ${themeBorder}`,
+                      backgroundColor: isDark ? 'rgba(20, 14, 28, 0.7)' : 'rgba(250, 241, 243, 0.8)',
+                      color: themeTextColor,
+                      fontSize: '13px',
+                      boxSizing: 'border-box',
+                      outline: 'none',
+                    }}
+                  />
+                </div>
+
+                {/* Day & Timing Preference */}
+                <div>
+                  <label style={{ fontSize: '11.5px', fontWeight: 600, color: themeMulberry, display: 'block', marginBottom: '6px' }}>
+                    Ideal Day & Schedule Timing
+                  </label>
+                  <select
+                    value={waitlistTiming}
+                    onChange={(e) => setWaitlistTiming(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '11px 14px',
+                      borderRadius: '11px',
+                      border: `1px solid ${themeBorder}`,
+                      backgroundColor: isDark ? 'rgba(20, 14, 28, 0.7)' : 'rgba(250, 241, 243, 0.8)',
+                      color: themeTextColor,
+                      fontSize: '13px',
+                      boxSizing: 'border-box',
+                      outline: 'none',
+                    }}
+                  >
+                    <option value="Friday Evening (7:30 PM - 10:30 PM)">Friday Evening (7:30 PM - 10:30 PM)</option>
+                    <option value="Saturday Sunset (6:00 PM - 9:00 PM)">Saturday Sunset (6:00 PM - 9:00 PM)</option>
+                    <option value="Saturday Late Evening (8:30 PM - 11:30 PM)">Saturday Late Evening (8:30 PM - 11:30 PM)</option>
+                    <option value="Sunday Afternoon Social (1:00 PM - 4:00 PM)">Sunday Afternoon Social (1:00 PM - 4:00 PM)</option>
+                  </select>
+                </div>
+
+                {/* Dietary Catering Logistics */}
+                <div>
+                  <label style={{ fontSize: '11.5px', fontWeight: 600, color: themeMulberry, display: 'block', marginBottom: '6px' }}>
+                    Dietary Catering Preference (Operational Only)
+                  </label>
+                  <select
+                    value={waitlistDietary}
+                    onChange={(e) => setWaitlistDietary(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '11px 14px',
+                      borderRadius: '11px',
+                      border: `1px solid ${themeBorder}`,
+                      backgroundColor: isDark ? 'rgba(20, 14, 28, 0.7)' : 'rgba(250, 241, 243, 0.8)',
+                      color: themeTextColor,
+                      fontSize: '13px',
+                      boxSizing: 'border-box',
+                      outline: 'none',
+                    }}
+                  >
+                    <option value="Flexible / Chef's Selection">Flexible / Chef's Selection</option>
+                    <option value="Vegetarian">Vegetarian</option>
+                    <option value="Non-Vegetarian">Non-Vegetarian</option>
+                    <option value="Vegan">Vegan</option>
+                    <option value="Jain">Jain</option>
+                  </select>
+                </div>
+
+                {/* Notice & Disclaimer */}
+                <div
+                  style={{
+                    fontSize: '11px',
+                    color: themeMuted,
+                    lineHeight: '1.45',
+                    padding: '4px 0',
+                  }}
+                >
+                  ✓ By joining, you receive priority notification once the {liveDemand.city} threshold is reached and venue/partner readiness is certified. No payment is charged at waitlist stage.
+                </div>
+
+                {isOnWaitlist ? (
+                  <div style={{ display: 'flex', gap: '10px', marginTop: '6px' }}>
+                    <button
+                      type="button"
+                      onClick={() => handleLeaveCityWaitlist(liveDemand.city)}
+                      style={{
+                        flex: 1,
+                        padding: '11px',
+                        borderRadius: '10px',
+                        border: `1px solid ${isDark ? 'rgba(239, 68, 68, 0.4)' : 'rgba(220, 38, 38, 0.3)'}`,
+                        backgroundColor: isDark ? 'rgba(239, 68, 68, 0.12)' : 'rgba(254, 242, 242, 0.85)',
+                        color: isDark ? '#FCA5A5' : '#DC2626',
+                        fontSize: '12px',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                      }}
+                    >
+                      Leave Waitlist
+                    </button>
+                    <button
+                      type="submit"
+                      style={{
+                        flex: 1.6,
+                        padding: '11px',
+                        borderRadius: '10px',
+                        border: 'none',
+                        background: themeButtonBg,
+                        color: themeButtonText,
+                        fontSize: '12px',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                      }}
+                    >
+                      Save Preferences ✓
+                    </button>
+                  </div>
+                ) : (
+                  <div style={{ display: 'flex', gap: '10px', marginTop: '6px' }}>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedWaitlistCity(null)}
+                      style={{
+                        flex: 1,
+                        padding: '11px',
+                        borderRadius: '10px',
+                        border: `1px solid ${themeBorder}`,
+                        backgroundColor: 'transparent',
+                        color: themeTextColor,
+                        fontSize: '12.5px',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      style={{
+                        flex: 2,
+                        padding: '11px',
+                        borderRadius: '10px',
+                        border: 'none',
+                        background: themeButtonBg,
+                        color: themeButtonText,
+                        fontSize: '12.5px',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                      }}
+                    >
+                      Confirm Priority Waitlist →
+                    </button>
+                  </div>
+                )}
+              </form>
+            </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       {/* 5-Button Bottom Navigation with MIXERS active */}
       <MemberBottomNav
