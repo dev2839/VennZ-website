@@ -351,7 +351,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
       {/* Background Ambience */}
       <div
         style={{
-          position: 'fixed',
+          position: 'absolute',
           inset: 0,
           pointerEvents: 'none',
           background: isDark
