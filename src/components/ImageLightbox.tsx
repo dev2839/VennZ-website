@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { ModalPortal } from './ModalPortal';
 
 export interface LightboxImage {
   src: string;
@@ -64,7 +65,8 @@ export const ImageLightbox: React.FC<ImageLightboxProps> = ({
   };
 
   return (
-    <div
+    <ModalPortal>
+      <div
       style={{
         position: 'fixed',
         inset: 0,
@@ -329,6 +331,7 @@ export const ImageLightbox: React.FC<ImageLightboxProps> = ({
           })}
         </div>
       )}
-    </div>
+      </div>
+    </ModalPortal>
   );
 };

@@ -3,6 +3,7 @@ import { ArrowDown, ArrowLeft, ArrowUp, Check, Eye, Pencil, Plus, ShieldCheck, T
 import { MemberBottomNav, type MemberTab } from './MemberBottomNav';
 import { MemberTopBar } from './MemberTopBar';
 import { StatusBar } from './StatusBar';
+import { ModalPortal } from './ModalPortal';
 import { useAuth, type UserProfile } from '../context/AuthContext';
 import { calculateAgeFromISO } from '../utils/ageCalculation';
 
@@ -372,22 +373,26 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
 
       <MemberBottomNav activeTab="you" onSelectTab={onSelectTab} showHomeIndicator={showHomeIndicator} />
 
-      {isPreviewOpen && <div role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setIsPreviewOpen(false); }} style={{ position: 'fixed', inset: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '18px', background: 'rgba(15, 8, 13, 0.76)', backdropFilter: 'blur(5px)' }}>
-        <section role="dialog" aria-modal="true" aria-labelledby="profile-preview-title" style={{ position: 'relative', width: '100%', maxWidth: '560px', maxHeight: '88vh', overflowY: 'auto', padding: '22px', border: `1px solid ${colors.border}`, borderRadius: '8px', background: colors.bg, color: colors.text }}>
-          <button type="button" aria-label="Close preview" onClick={() => setIsPreviewOpen(false)} style={{ position: 'absolute', top: '15px', right: '15px', display: 'grid', placeItems: 'center', width: '34px', height: '34px', border: `1px solid ${colors.border}`, borderRadius: '50%', background: 'transparent', color: colors.accent, cursor: 'pointer' }}><X size={16} /></button>
-          <span style={labelStyle}>PREVIEW AS OTHER MEMBERS SEE YOU</span>
-          <h2 id="profile-preview-title" style={{ margin: '8px 44px 14px 0', color: colors.accent, fontFamily: 'var(--font-serif)', fontSize: '28px', fontWeight: 400 }}>{displayName}{draft.showAgePublicly !== false && age && age > 0 ? `, ${age}` : ''}</h2>
-          {(draft.photos || []).length > 0 && <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(105px, 1fr))', gap: '8px', marginBottom: '15px' }}>{draft.photos?.map((photo, index) => <img key={`${photo.slice(0, 30)}-${index}`} src={photo} alt={`Preview photo ${index + 1}`} style={{ width: '100%', aspectRatio: '4 / 5', objectFit: 'cover', borderRadius: '5px' }} />)}</div>}
-          {draft.city && draft.showCityPublicly !== false && <p style={{ color: colors.muted, fontSize: '13px' }}>{draft.city}</p>}
-          {draft.showWorkPublicly !== false && (draft.designation || draft.company) && <p style={{ color: colors.muted, fontSize: '13px' }}>{[draft.designation, draft.company].filter(Boolean).join(' · ')}</p>}
-          {draft.introduction && <p style={{ color: colors.text, fontFamily: 'var(--font-serif)', fontSize: '16px', lineHeight: 1.6 }}>{draft.introduction}</p>}
-          {(draft.interests || []).length > 0 && <div style={{ display: 'flex', flexWrap: 'wrap', gap: '7px', margin: '12px 0 6px' }}>{draft.interests?.map((interest) => <span key={interest} style={{ padding: '6px 10px', border: `1px solid ${colors.border}`, borderRadius: '16px', color: colors.accent, fontSize: '11px' }}>{interest}</span>)}</div>}
-          {(draft.vibes || []).length > 0 && <div style={{ display: 'flex', flexWrap: 'wrap', gap: '7px', margin: '6px 0 12px' }}>{draft.vibes?.map((vibe) => <span key={vibe} style={{ padding: '5px 10px', borderRadius: '16px', background: isDark ? 'rgba(161, 82, 95, 0.25)' : 'rgba(161, 82, 95, 0.12)', border: `1px solid ${colors.border}`, color: colors.accent, fontSize: '11px' }}>✨ {vibe}</span>)}</div>}
-          {draft.showLinkedinPublicly && draft.linkedinUrl && <p style={{ fontSize: '12px' }}>LinkedIn: {draft.linkedinUrl}</p>}
-          {draft.showInstagramPublicly && draft.instagramUsername && <p style={{ fontSize: '12px' }}>Instagram: {draft.instagramUsername}</p>}
-          <p style={{ paddingTop: '12px', borderTop: `1px solid ${colors.border}`, color: colors.muted, fontSize: '10px' }}>Your legal name and full date of birth remain private.</p>
-        </section>
-      </div>}
+      {isPreviewOpen && (
+        <ModalPortal>
+          <div role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setIsPreviewOpen(false); }} style={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '18px', background: 'rgba(15, 8, 13, 0.76)', backdropFilter: 'blur(5px)', WebkitBackdropFilter: 'blur(5px)' }}>
+            <section role="dialog" aria-modal="true" aria-labelledby="profile-preview-title" style={{ position: 'relative', width: '100%', maxWidth: '560px', maxHeight: '88vh', overflowY: 'auto', padding: '22px', border: `1px solid ${colors.border}`, borderRadius: '8px', background: colors.bg, color: colors.text }}>
+              <button type="button" aria-label="Close preview" onClick={() => setIsPreviewOpen(false)} style={{ position: 'absolute', top: '15px', right: '15px', display: 'grid', placeItems: 'center', width: '34px', height: '34px', border: `1px solid ${colors.border}`, borderRadius: '50%', background: 'transparent', color: colors.accent, cursor: 'pointer' }}><X size={16} /></button>
+              <span style={labelStyle}>PREVIEW AS OTHER MEMBERS SEE YOU</span>
+              <h2 id="profile-preview-title" style={{ margin: '8px 44px 14px 0', color: colors.accent, fontFamily: 'var(--font-serif)', fontSize: '28px', fontWeight: 400 }}>{displayName}{draft.showAgePublicly !== false && age && age > 0 ? `, ${age}` : ''}</h2>
+              {(draft.photos || []).length > 0 && <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(105px, 1fr))', gap: '8px', marginBottom: '15px' }}>{draft.photos?.map((photo, index) => <img key={`${photo.slice(0, 30)}-${index}`} src={photo} alt={`Preview photo ${index + 1}`} style={{ width: '100%', aspectRatio: '4 / 5', objectFit: 'cover', borderRadius: '5px' }} />)}</div>}
+              {draft.city && draft.showCityPublicly !== false && <p style={{ color: colors.muted, fontSize: '13px' }}>{draft.city}</p>}
+              {draft.showWorkPublicly !== false && (draft.designation || draft.company) && <p style={{ color: colors.muted, fontSize: '13px' }}>{[draft.designation, draft.company].filter(Boolean).join(' · ')}</p>}
+              {draft.introduction && <p style={{ color: colors.text, fontFamily: 'var(--font-serif)', fontSize: '16px', lineHeight: 1.6 }}>{draft.introduction}</p>}
+              {(draft.interests || []).length > 0 && <div style={{ display: 'flex', flexWrap: 'wrap', gap: '7px', margin: '12px 0 6px' }}>{draft.interests?.map((interest) => <span key={interest} style={{ padding: '6px 10px', border: `1px solid ${colors.border}`, borderRadius: '16px', color: colors.accent, fontSize: '11px' }}>{interest}</span>)}</div>}
+              {(draft.vibes || []).length > 0 && <div style={{ display: 'flex', flexWrap: 'wrap', gap: '7px', margin: '6px 0 12px' }}>{draft.vibes?.map((vibe) => <span key={vibe} style={{ padding: '5px 10px', borderRadius: '16px', background: isDark ? 'rgba(161, 82, 95, 0.25)' : 'rgba(161, 82, 95, 0.12)', border: `1px solid ${colors.border}`, color: colors.accent, fontSize: '11px' }}>✨ {vibe}</span>)}</div>}
+              {draft.showLinkedinPublicly && draft.linkedinUrl && <p style={{ fontSize: '12px' }}>LinkedIn: {draft.linkedinUrl}</p>}
+              {draft.showInstagramPublicly && draft.instagramUsername && <p style={{ fontSize: '12px' }}>Instagram: {draft.instagramUsername}</p>}
+              <p style={{ paddingTop: '12px', borderTop: `1px solid ${colors.border}`, color: colors.muted, fontSize: '10px' }}>Your legal name and full date of birth remain private.</p>
+            </section>
+          </div>
+        </ModalPortal>
+      )}
     </div>
   );
 };

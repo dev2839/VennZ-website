@@ -3,6 +3,7 @@ import { Search, X } from 'lucide-react';
 import { StatusBar } from './StatusBar';
 import { MemberTopBar } from './MemberTopBar';
 import { MemberBottomNav, type MemberTab } from './MemberBottomNav';
+import { ModalPortal } from './ModalPortal';
 import { useAuth } from '../context/AuthContext';
 import type { IncomingRequest, MatchItem } from '../types/matches';
 
@@ -729,32 +730,34 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
       )}
 
       {(selectedRequest || declineAllOpen || acceptedProfileId) && (
-        <div role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) { setSelectedRequest(null); setDeclineAllOpen(false); setAcceptedProfileId(null); } }} style={{ position: 'fixed', inset: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', background: 'rgba(20, 14, 28, 0.72)', backdropFilter: 'blur(5px)' }}>
-          <section role="dialog" aria-modal="true" aria-labelledby="matches-dialog-title" style={{ position: 'relative', width: '100%', maxWidth: '390px', maxHeight: '85vh', overflowY: 'auto', padding: '22px', border: `1px solid ${themeBorder}`, borderRadius: '10px', background: isDark ? '#211522' : '#FFF9FA', color: themeTextColor, boxShadow: '0 20px 50px rgba(0, 0, 0, 0.35)' }}>
-            <button type="button" aria-label="Close" onClick={() => { setSelectedRequest(null); setDeclineAllOpen(false); setAcceptedProfileId(null); }} style={{ position: 'absolute', top: '12px', right: '12px', display: 'grid', placeItems: 'center', width: '32px', height: '32px', border: 'none', borderRadius: '50%', background: 'transparent', color: themeMuted, cursor: 'pointer' }}><X size={17} /></button>
-            {selectedRequest ? <>
-              <img src={selectedRequest.photo} alt={selectedRequest.name} style={{ width: '100%', maxHeight: '250px', aspectRatio: '4 / 3', objectFit: 'cover', borderRadius: '6px', background: '#1E161C' }} />
-              <h2 id="matches-dialog-title" style={{ margin: '15px 35px 4px 0', color: themeMulberry, fontFamily: 'var(--font-serif)', fontSize: '25px', fontWeight: 400 }}>{selectedRequest.name}, {selectedRequest.age}</h2>
-              <p style={{ margin: 0, color: themeMuted, fontSize: '12px' }}>{selectedRequest.city} · {selectedRequest.designation}{selectedRequest.company ? ` · ${selectedRequest.company}` : ''}</p>
-              <p style={{ margin: '10px 0 18px', color: themeMuted, fontSize: '11px' }}>Request received {formatRequestTime(selectedRequest.timestamp)}</p>
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <button type="button" onClick={() => handleDecline(selectedRequest.id, selectedRequest.name)} style={{ flex: 1, minHeight: '42px', border: `1px solid ${themeBorder}`, borderRadius: '22px', background: 'transparent', color: themeMulberry, cursor: 'pointer', fontSize: '11px', fontWeight: 700 }}>DECLINE</button>
-                <button type="button" onClick={() => handleAccept(selectedRequest.id, selectedRequest.name)} style={{ flex: 1, minHeight: '42px', border: 0, borderRadius: '22px', background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)', color: '#FFF8F8', cursor: 'pointer', fontSize: '11px', fontWeight: 700 }}>ACCEPT</button>
-              </div>
-            </> : declineAllOpen ? <>
-              <h2 id="matches-dialog-title" style={{ margin: '5px 35px 10px 0', color: themeMulberry, fontFamily: 'var(--font-serif)', fontSize: '23px', fontWeight: 400 }}>Decline all requests?</h2>
-              <p style={{ color: themeMuted, fontSize: '13px', lineHeight: 1.5 }}>This will clear all {incomingRequests.length} incoming requests. You won’t be able to restore them.</p>
-              <div style={{ display: 'flex', gap: '8px', marginTop: '18px' }}>
-                <button type="button" onClick={() => setDeclineAllOpen(false)} style={{ flex: 1, minHeight: '42px', border: `1px solid ${themeBorder}`, borderRadius: '22px', background: 'transparent', color: themeMulberry, cursor: 'pointer', fontSize: '11px', fontWeight: 700 }}>CANCEL</button>
-                <button type="button" onClick={confirmDeclineAll} style={{ flex: 1, minHeight: '42px', border: 0, borderRadius: '22px', background: '#A33B4A', color: '#fff', cursor: 'pointer', fontSize: '11px', fontWeight: 700 }}>DECLINE ALL</button>
-              </div>
-            </> : <>
-              <h2 id="matches-dialog-title" style={{ margin: '5px 35px 10px 0', color: themeMulberry, fontFamily: 'var(--font-serif)', fontSize: '23px', fontWeight: 400 }}>You’re connected{acceptedMatch ? ` with ${acceptedMatch.name}` : ''}</h2>
-              <p style={{ color: themeMuted, fontSize: '13px', lineHeight: 1.5 }}>Your introduction has been accepted. Start a private conversation whenever you’re ready.</p>
-              <button type="button" disabled={!acceptedMatch} onClick={() => { if (acceptedMatch) onOpenChat(acceptedMatch); setAcceptedProfileId(null); }} style={{ width: '100%', minHeight: '44px', marginTop: '12px', border: 0, borderRadius: '22px', background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)', color: '#FFF8F8', cursor: acceptedMatch ? 'pointer' : 'default', opacity: acceptedMatch ? 1 : 0.6, fontSize: '11px', fontWeight: 700 }}>START CONVERSATION</button>
-            </>}
-          </section>
-        </div>
+        <ModalPortal>
+          <div role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) { setSelectedRequest(null); setDeclineAllOpen(false); setAcceptedProfileId(null); } }} style={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', background: 'rgba(20, 14, 28, 0.72)', backdropFilter: 'blur(5px)', WebkitBackdropFilter: 'blur(5px)' }}>
+            <section role="dialog" aria-modal="true" aria-labelledby="matches-dialog-title" style={{ position: 'relative', width: '100%', maxWidth: '390px', maxHeight: '85vh', overflowY: 'auto', padding: '22px', border: `1px solid ${themeBorder}`, borderRadius: '10px', background: isDark ? '#211522' : '#FFF9FA', color: themeTextColor, boxShadow: '0 20px 50px rgba(0, 0, 0, 0.35)' }}>
+              <button type="button" aria-label="Close" onClick={() => { setSelectedRequest(null); setDeclineAllOpen(false); setAcceptedProfileId(null); }} style={{ position: 'absolute', top: '12px', right: '12px', display: 'grid', placeItems: 'center', width: '32px', height: '32px', border: 'none', borderRadius: '50%', background: 'transparent', color: themeMuted, cursor: 'pointer' }}><X size={17} /></button>
+              {selectedRequest ? <>
+                <img src={selectedRequest.photo} alt={selectedRequest.name} style={{ width: '100%', maxHeight: '250px', aspectRatio: '4 / 3', objectFit: 'cover', borderRadius: '6px', background: '#1E161C' }} />
+                <h2 id="matches-dialog-title" style={{ margin: '15px 35px 4px 0', color: themeMulberry, fontFamily: 'var(--font-serif)', fontSize: '25px', fontWeight: 400 }}>{selectedRequest.name}, {selectedRequest.age}</h2>
+                <p style={{ margin: 0, color: themeMuted, fontSize: '12px' }}>{selectedRequest.city} · {selectedRequest.designation}{selectedRequest.company ? ` · ${selectedRequest.company}` : ''}</p>
+                <p style={{ margin: '10px 0 18px', color: themeMuted, fontSize: '11px' }}>Request received {formatRequestTime(selectedRequest.timestamp)}</p>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button type="button" onClick={() => handleDecline(selectedRequest.id, selectedRequest.name)} style={{ flex: 1, minHeight: '42px', border: `1px solid ${themeBorder}`, borderRadius: '22px', background: 'transparent', color: themeMulberry, cursor: 'pointer', fontSize: '11px', fontWeight: 700 }}>DECLINE</button>
+                  <button type="button" onClick={() => handleAccept(selectedRequest.id, selectedRequest.name)} style={{ flex: 1, minHeight: '42px', border: 0, borderRadius: '22px', background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)', color: '#FFF8F8', cursor: 'pointer', fontSize: '11px', fontWeight: 700 }}>ACCEPT</button>
+                </div>
+              </> : declineAllOpen ? <>
+                <h2 id="matches-dialog-title" style={{ margin: '5px 35px 10px 0', color: themeMulberry, fontFamily: 'var(--font-serif)', fontSize: '23px', fontWeight: 400 }}>Decline all requests?</h2>
+                <p style={{ color: themeMuted, fontSize: '13px', lineHeight: 1.5 }}>This will clear all {incomingRequests.length} incoming requests. You won’t be able to restore them.</p>
+                <div style={{ display: 'flex', gap: '8px', marginTop: '18px' }}>
+                  <button type="button" onClick={() => setDeclineAllOpen(false)} style={{ flex: 1, minHeight: '42px', border: `1px solid ${themeBorder}`, borderRadius: '22px', background: 'transparent', color: themeMulberry, cursor: 'pointer', fontSize: '11px', fontWeight: 700 }}>CANCEL</button>
+                  <button type="button" onClick={confirmDeclineAll} style={{ flex: 1, minHeight: '42px', border: 0, borderRadius: '22px', background: '#A33B4A', color: '#fff', cursor: 'pointer', fontSize: '11px', fontWeight: 700 }}>DECLINE ALL</button>
+                </div>
+              </> : <>
+                <h2 id="matches-dialog-title" style={{ margin: '5px 35px 10px 0', color: themeMulberry, fontFamily: 'var(--font-serif)', fontSize: '23px', fontWeight: 400 }}>You’re connected{acceptedMatch ? ` with ${acceptedMatch.name}` : ''}</h2>
+                <p style={{ color: themeMuted, fontSize: '13px', lineHeight: 1.5 }}>Your introduction has been accepted. Start a private conversation whenever you’re ready.</p>
+                <button type="button" disabled={!acceptedMatch} onClick={() => { if (acceptedMatch) onOpenChat(acceptedMatch); setAcceptedProfileId(null); }} style={{ width: '100%', minHeight: '44px', marginTop: '12px', border: 0, borderRadius: '22px', background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)', color: '#FFF8F8', cursor: acceptedMatch ? 'pointer' : 'default', opacity: acceptedMatch ? 1 : 0.6, fontSize: '11px', fontWeight: 700 }}>START CONVERSATION</button>
+              </>}
+            </section>
+          </div>
+        </ModalPortal>
       )}
 
       {/* 5-Button Bottom Navigation with MATCHES active */}

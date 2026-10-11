@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { StatusBar } from './StatusBar';
+import { ModalPortal } from './ModalPortal';
 import { useAuth } from '../context/AuthContext';
 
 interface Page8WaitlistScreenProps {
@@ -1104,25 +1105,26 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
       {/* CONFIRMATION POPUP / MODAL (Application Submitted)         */}
       {/* ========================================================== */}
       {showPopup && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            backgroundColor: 'rgba(18, 14, 17, 0.72)',
-            backdropFilter: 'blur(8px)',
-            WebkitBackdropFilter: 'blur(8px)',
-            zIndex: 1000,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '24px',
-            boxSizing: 'border-box',
-          }}
-          onClick={() => {
-            setShowPopup(false);
-            sessionStorage.setItem('ic_has_seen_submitted_popup', 'true');
-          }}
-        >
+        <ModalPortal>
+          <div
+            style={{
+              position: 'fixed',
+              inset: 0,
+              backgroundColor: 'rgba(18, 14, 17, 0.72)',
+              backdropFilter: 'blur(8px)',
+              WebkitBackdropFilter: 'blur(8px)',
+              zIndex: 9999,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '24px',
+              boxSizing: 'border-box',
+            }}
+            onClick={() => {
+              setShowPopup(false);
+              sessionStorage.setItem('ic_has_seen_submitted_popup', 'true');
+            }}
+          >
           <div
             style={{
               position: 'relative',
@@ -1261,6 +1263,7 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
             </button>
           </div>
         </div>
+        </ModalPortal>
       )}
     </div>
   );

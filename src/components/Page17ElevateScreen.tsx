@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { StatusBar } from './StatusBar';
 import { MemberTopBar } from './MemberTopBar';
 import { MemberBottomNav, type MemberTab } from './MemberBottomNav';
+import { ModalPortal } from './ModalPortal';
 import { useAuth } from '../context/AuthContext';
 import { ELEVATE_SERVICES } from '../data/elevateServices';
 import type { ElevateService, ElevateOrder } from '../types/elevate';
@@ -1708,235 +1709,241 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
           ORDER CONFIRMATION MODAL (SERVICE DETAILS, SCOPE & ADD-ONS)
           ========================================================================= */}
       {selectedService && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            zIndex: 100,
-            backgroundColor: 'rgba(0, 0, 0, 0.65)',
-            backdropFilter: 'blur(8px)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '20px',
-          }}
-        >
+        <ModalPortal>
           <div
             style={{
-              width: '100%',
-              maxWidth: '520px',
-              borderRadius: '20px',
-              backgroundColor: isDark ? '#1C1224' : '#FFFFFF',
-              border: `1px solid ${themeBorder}`,
-              padding: '26px',
-              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.45)',
-              color: themeTextColor,
-              maxHeight: '90vh',
-              overflowY: 'auto',
+              position: 'fixed',
+              inset: 0,
+              zIndex: 9999,
+              backgroundColor: 'rgba(0, 0, 0, 0.65)',
+              backdropFilter: 'blur(8px)',
+              WebkitBackdropFilter: 'blur(8px)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '20px',
             }}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-              <div>
-                <span style={{ fontSize: '11px', fontFamily: 'monospace', color: themeMulberry, fontWeight: 700 }}>
-                  SERVICE {selectedService.number}
-                </span>
-                <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '22px', margin: '4px 0 0' }}>
-                  {selectedService.name}
-                </h2>
-              </div>
-              <button
-                type="button"
-                onClick={() => setSelectedService(null)}
-                style={{
-                  background: 'transparent',
-                  border: 'none',
-                  fontSize: '20px',
-                  color: themeMuted,
-                  cursor: 'pointer',
-                }}
-              >
-                ✕
-              </button>
-            </div>
-
-            <p style={{ fontSize: '13px', color: themeMuted, margin: '12px 0 16px', lineHeight: '1.5' }}>
-              {selectedService.description}
-            </p>
-
-            {/* Least-Privilege Scope Reminder */}
             <div
               style={{
-                padding: '12px 14px',
-                borderRadius: '12px',
-                backgroundColor: isDark ? 'rgba(161, 82, 95, 0.15)' : 'rgba(161, 82, 95, 0.08)',
+                width: '100%',
+                maxWidth: '520px',
+                borderRadius: '20px',
+                backgroundColor: isDark ? '#1C1224' : '#FFFFFF',
                 border: `1px solid ${themeBorder}`,
-                fontSize: '12px',
-                color: themeMulberry,
-                marginBottom: '16px',
+                padding: '26px',
+                boxShadow: '0 20px 60px rgba(0, 0, 0, 0.45)',
+                color: themeTextColor,
+                maxHeight: '90vh',
+                overflowY: 'auto',
               }}
             >
-              🔒 <strong>Strict Staff Access Scope:</strong> {selectedService.privacyAccessScope}
-            </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div>
+                  <span style={{ fontSize: '11px', fontFamily: 'monospace', color: themeMulberry, fontWeight: 700 }}>
+                    SERVICE {selectedService.number}
+                  </span>
+                  <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '22px', margin: '4px 0 0' }}>
+                    {selectedService.name}
+                  </h2>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setSelectedService(null)}
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    fontSize: '20px',
+                    color: themeMuted,
+                    cursor: 'pointer',
+                  }}
+                >
+                  ✕
+                </button>
+              </div>
 
-            {/* Total Price and Confirmation */}
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                margin: '20px 0 16px',
-                paddingTop: '14px',
-                borderTop: `1px solid ${themeBorder}`,
-              }}
-            >
-              <span style={{ fontSize: '13px', color: themeMuted }}>Order Total:</span>
-              <span style={{ fontSize: '22px', fontWeight: 700 }}>
-                ₹{selectedService.startingPrice.toLocaleString('en-IN')}
-              </span>
-            </div>
+              <p style={{ fontSize: '13px', color: themeMuted, margin: '12px 0 16px', lineHeight: '1.5' }}>
+                {selectedService.description}
+              </p>
 
-            <div style={{ display: 'flex', gap: '10px' }}>
-              <button
-                type="button"
-                onClick={() => setSelectedService(null)}
+              {/* Least-Privilege Scope Reminder */}
+              <div
                 style={{
-                  flex: 1,
-                  padding: '11px',
-                  borderRadius: '10px',
+                  padding: '12px 14px',
+                  borderRadius: '12px',
+                  backgroundColor: isDark ? 'rgba(161, 82, 95, 0.15)' : 'rgba(161, 82, 95, 0.08)',
                   border: `1px solid ${themeBorder}`,
-                  backgroundColor: 'transparent',
-                  color: themeTextColor,
-                  fontSize: '13px',
-                  cursor: 'pointer',
+                  fontSize: '12px',
+                  color: themeMulberry,
+                  marginBottom: '16px',
                 }}
               >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={() => handleConfirmOrder(selectedService)}
+                🔒 <strong>Strict Staff Access Scope:</strong> {selectedService.privacyAccessScope}
+              </div>
+
+              {/* Total Price and Confirmation */}
+              <div
                 style={{
-                  flex: 2,
-                  padding: '11px',
-                  borderRadius: '10px',
-                  border: 'none',
-                  background: themeAccentGrad,
-                  color: '#FFFFFF',
-                  fontSize: '13px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  margin: '20px 0 16px',
+                  paddingTop: '14px',
+                  borderTop: `1px solid ${themeBorder}`,
                 }}
               >
-                Confirm & Unlock Service →
-              </button>
+                <span style={{ fontSize: '13px', color: themeMuted }}>Order Total:</span>
+                <span style={{ fontSize: '22px', fontWeight: 700 }}>
+                  ₹{selectedService.startingPrice.toLocaleString('en-IN')}
+                </span>
+              </div>
+
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <button
+                  type="button"
+                  onClick={() => setSelectedService(null)}
+                  style={{
+                    flex: 1,
+                    padding: '11px',
+                    borderRadius: '10px',
+                    border: `1px solid ${themeBorder}`,
+                    backgroundColor: 'transparent',
+                    color: themeTextColor,
+                    fontSize: '13px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleConfirmOrder(selectedService)}
+                  style={{
+                    flex: 2,
+                    padding: '11px',
+                    borderRadius: '10px',
+                    border: 'none',
+                    background: themeAccentGrad,
+                    color: '#FFFFFF',
+                    fontSize: '13px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                  }}
+                >
+                  Confirm & Unlock Service →
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        </ModalPortal>
       )}
 
       {/* =========================================================================
           REFUND REQUEST MODAL
           ========================================================================= */}
       {refundOrderId && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            zIndex: 100,
-            backgroundColor: 'rgba(0, 0, 0, 0.65)',
-            backdropFilter: 'blur(8px)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '20px',
-          }}
-        >
+        <ModalPortal>
           <div
             style={{
-              width: '100%',
-              maxWidth: '460px',
-              borderRadius: '20px',
-              backgroundColor: isDark ? '#1C1224' : '#FFFFFF',
-              border: `1px solid ${themeBorder}`,
-              padding: '24px',
-              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.45)',
-              color: themeTextColor,
+              position: 'fixed',
+              inset: 0,
+              zIndex: 9999,
+              backgroundColor: 'rgba(0, 0, 0, 0.65)',
+              backdropFilter: 'blur(8px)',
+              WebkitBackdropFilter: 'blur(8px)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '20px',
             }}
           >
-            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '20px', margin: '0 0 8px' }}>
-              Request Elevate Refund
-            </h3>
-            <p style={{ fontSize: '13px', color: themeMuted, margin: '0 0 16px', lineHeight: '1.45' }}>
-              Order #{refundOrderId} · Please specify the reason for your refund request. Our member concierge desk reviews all requests within 24 hours.
-            </p>
+            <div
+              style={{
+                width: '100%',
+                maxWidth: '460px',
+                borderRadius: '20px',
+                backgroundColor: isDark ? '#1C1224' : '#FFFFFF',
+                border: `1px solid ${themeBorder}`,
+                padding: '24px',
+                boxShadow: '0 20px 60px rgba(0, 0, 0, 0.45)',
+                color: themeTextColor,
+              }}
+            >
+              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '20px', margin: '0 0 8px' }}>
+                Request Elevate Refund
+              </h3>
+              <p style={{ fontSize: '13px', color: themeMuted, margin: '0 0 16px', lineHeight: '1.45' }}>
+                Order #{refundOrderId} · Please specify the reason for your refund request. Our member concierge desk reviews all requests within 24 hours.
+              </p>
 
-            {refundSubmittedMessage ? (
-              <div style={{ color: isDark ? '#A5D6A7' : '#2E7D32', fontSize: '13px', fontWeight: 600, padding: '12px 0' }}>
-                ✓ {refundSubmittedMessage}
-              </div>
-            ) : (
-              <>
-                <textarea
-                  rows={3}
-                  value={refundReason}
-                  onChange={(e) => setRefundReason(e.target.value)}
-                  placeholder="Share details regarding your refund request..."
-                  style={{
-                    width: '100%',
-                    padding: '12px',
-                    borderRadius: '10px',
-                    border: `1px solid ${themeBorder}`,
-                    backgroundColor: isDark ? 'rgba(20, 14, 28, 0.7)' : 'rgba(250, 241, 243, 0.8)',
-                    color: themeTextColor,
-                    fontSize: '13px',
-                    boxSizing: 'border-box',
-                    marginBottom: '16px',
-                    outline: 'none',
-                    resize: 'none',
-                  }}
-                />
-
-                <div style={{ display: 'flex', gap: '10px' }}>
-                  <button
-                    type="button"
-                    onClick={() => setRefundOrderId(null)}
+              {refundSubmittedMessage ? (
+                <div style={{ color: isDark ? '#A5D6A7' : '#2E7D32', fontSize: '13px', fontWeight: 600, padding: '12px 0' }}>
+                  ✓ {refundSubmittedMessage}
+                </div>
+              ) : (
+                <>
+                  <textarea
+                    rows={3}
+                    value={refundReason}
+                    onChange={(e) => setRefundReason(e.target.value)}
+                    placeholder="Share details regarding your refund request..."
                     style={{
-                      flex: 1,
-                      padding: '10px',
+                      width: '100%',
+                      padding: '12px',
                       borderRadius: '10px',
                       border: `1px solid ${themeBorder}`,
-                      backgroundColor: 'transparent',
+                      backgroundColor: isDark ? 'rgba(20, 14, 28, 0.7)' : 'rgba(250, 241, 243, 0.8)',
                       color: themeTextColor,
                       fontSize: '13px',
-                      cursor: 'pointer',
+                      boxSizing: 'border-box',
+                      marginBottom: '16px',
+                      outline: 'none',
+                      resize: 'none',
                     }}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="button"
-                    disabled={!refundReason.trim()}
-                    onClick={handleProcessRefund}
-                    style={{
-                      flex: 2,
-                      padding: '10px',
-                      borderRadius: '10px',
-                      border: 'none',
-                      background: themeAccentGrad,
-                      color: '#FFFFFF',
-                      fontSize: '13px',
-                      fontWeight: 600,
-                      cursor: refundReason.trim() ? 'pointer' : 'not-allowed',
-                      opacity: refundReason.trim() ? 1 : 0.6,
-                    }}
-                  >
-                    Submit Refund Request
-                  </button>
-                </div>
-              </>
-            )}
+                  />
+
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <button
+                      type="button"
+                      onClick={() => setRefundOrderId(null)}
+                      style={{
+                        flex: 1,
+                        padding: '10px',
+                        borderRadius: '10px',
+                        border: `1px solid ${themeBorder}`,
+                        backgroundColor: 'transparent',
+                        color: themeTextColor,
+                        fontSize: '13px',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      disabled={!refundReason.trim()}
+                      onClick={handleProcessRefund}
+                      style={{
+                        flex: 2,
+                        padding: '10px',
+                        borderRadius: '10px',
+                        border: 'none',
+                        background: themeAccentGrad,
+                        color: '#FFFFFF',
+                        fontSize: '13px',
+                        fontWeight: 600,
+                        cursor: refundReason.trim() ? 'pointer' : 'not-allowed',
+                        opacity: refundReason.trim() ? 1 : 0.6,
+                      }}
+                    >
+                      Submit Refund Request
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
-        </div>
+        </ModalPortal>
       )}
 
       {/* Bottom Navigation */}

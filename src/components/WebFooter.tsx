@@ -20,7 +20,7 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
     <footer
       style={{
         position: 'relative',
-        zIndex: 10,
+        zIndex: 1,
         width: '100%',
         backgroundColor: footerBg,
         borderTop: `1px solid ${borderTop}`,

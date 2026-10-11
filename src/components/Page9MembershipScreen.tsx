@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { StatusBar } from './StatusBar';
+import { ModalPortal } from './ModalPortal';
 import { useAuth } from '../context/AuthContext';
 
 export type MembershipViewMode = 'all' | 'membership_only' | 'complimentary_only';
@@ -626,21 +627,22 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
       {/* INTERACTIVE PAYMENT DEMO POPUP MODAL                       */}
       {/* ========================================================== */}
       {showPaymentModal && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            zIndex: 100,
-            backgroundColor: 'rgba(20, 14, 28, 0.85)',
-            backdropFilter: 'blur(8px)',
-            WebkitBackdropFilter: 'blur(8px)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '20px',
-          }}
-          onClick={() => !isProcessing && setShowPaymentModal(false)}
-        >
+        <ModalPortal>
+          <div
+            style={{
+              position: 'fixed',
+              inset: 0,
+              zIndex: 9999,
+              backgroundColor: 'rgba(20, 14, 28, 0.85)',
+              backdropFilter: 'blur(8px)',
+              WebkitBackdropFilter: 'blur(8px)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '20px',
+            }}
+            onClick={() => !isProcessing && setShowPaymentModal(false)}
+          >
           <div
             style={{
               width: '100%',
@@ -912,6 +914,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
             )}
           </div>
         </div>
+        </ModalPortal>
       )}
     </div>
   );

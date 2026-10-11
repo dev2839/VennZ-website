@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { StatusBar } from './StatusBar';
 import { MemberTopBar } from './MemberTopBar';
 import { MemberBottomNav, type MemberTab } from './MemberBottomNav';
+import { ModalPortal } from './ModalPortal';
 import { useAuth } from '../context/AuthContext';
 import type { MatchItem, ChatMessage } from '../types/matches';
 
@@ -500,152 +501,158 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
 
       {/* UNMATCH CONFIRMATION MODAL */}
       {isUnmatchConfirmOpen && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            zIndex: 80,
-            backgroundColor: 'rgba(28, 22, 26, 0.65)',
-            backdropFilter: 'blur(6px)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '20px',
-          }}
-          onClick={() => setIsUnmatchConfirmOpen(false)}
-        >
+        <ModalPortal>
           <div
-            onClick={(e) => e.stopPropagation()}
             style={{
-              backgroundColor: isDark ? '#0A0209' : '#FFFFFF',
-              border: `1px solid ${themeBorder}`,
-              borderRadius: '20px',
-              padding: '24px 22px',
-              maxWidth: '340px',
-              width: '100%',
-              textAlign: 'center',
-              boxShadow: '0 16px 40px rgba(0,0,0,0.4)',
+              position: 'fixed',
+              inset: 0,
+              zIndex: 9999,
+              backgroundColor: 'rgba(28, 22, 26, 0.65)',
+              backdropFilter: 'blur(6px)',
+              WebkitBackdropFilter: 'blur(6px)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '20px',
             }}
+            onClick={() => setIsUnmatchConfirmOpen(false)}
           >
-            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '20px', color: themeMulberry, margin: '0 0 8px 0' }}>
-              Unmatch with {match.name}?
-            </h3>
-            <p style={{ fontSize: '13px', lineHeight: '1.5', color: themeMuted, margin: '0 0 20px 0' }}>
-              This conversation and match will be permanently removed for both of you.
-            </p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <button
-                type="button"
-                onClick={handleUnmatch}
-                style={{
-                  height: '42px',
-                  borderRadius: '21px',
-                  backgroundColor: '#C94A4A',
-                  color: '#FFFFFF',
-                  border: 'none',
-                  fontSize: '12px',
-                  fontWeight: 700,
-                  letterSpacing: '0.08em',
-                  textTransform: 'uppercase',
-                  cursor: 'pointer',
-                }}
-              >
-                UNMATCH
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsUnmatchConfirmOpen(false)}
-                style={{
-                  height: '40px',
-                  borderRadius: '20px',
-                  background: 'transparent',
-                  color: themeMuted,
-                  border: 'none',
-                  fontSize: '12px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                }}
-              >
-                CANCEL
-              </button>
+            <div
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                backgroundColor: isDark ? '#0A0209' : '#FFFFFF',
+                border: `1px solid ${themeBorder}`,
+                borderRadius: '20px',
+                padding: '24px 22px',
+                maxWidth: '340px',
+                width: '100%',
+                textAlign: 'center',
+                boxShadow: '0 16px 40px rgba(0,0,0,0.4)',
+              }}
+            >
+              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '20px', color: themeMulberry, margin: '0 0 8px 0' }}>
+                Unmatch with {match.name}?
+              </h3>
+              <p style={{ fontSize: '13px', lineHeight: '1.5', color: themeMuted, margin: '0 0 20px 0' }}>
+                This conversation and match will be permanently removed for both of you.
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <button
+                  type="button"
+                  onClick={handleUnmatch}
+                  style={{
+                    height: '42px',
+                    borderRadius: '21px',
+                    backgroundColor: '#C94A4A',
+                    color: '#FFFFFF',
+                    border: 'none',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                    cursor: 'pointer',
+                  }}
+                >
+                  UNMATCH
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsUnmatchConfirmOpen(false)}
+                  style={{
+                    height: '40px',
+                    borderRadius: '20px',
+                    background: 'transparent',
+                    color: themeMuted,
+                    border: 'none',
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                  }}
+                >
+                  CANCEL
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        </ModalPortal>
       )}
 
       {/* BLOCK CONFIRMATION MODAL */}
       {isBlockConfirmOpen && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            zIndex: 80,
-            backgroundColor: 'rgba(28, 22, 26, 0.65)',
-            backdropFilter: 'blur(6px)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '20px',
-          }}
-          onClick={() => setIsBlockConfirmOpen(false)}
-        >
+        <ModalPortal>
           <div
-            onClick={(e) => e.stopPropagation()}
             style={{
-              backgroundColor: isDark ? '#0A0209' : '#FFFFFF',
-              border: `1px solid ${themeBorder}`,
-              borderRadius: '20px',
-              padding: '24px 22px',
-              maxWidth: '340px',
-              width: '100%',
-              textAlign: 'center',
-              boxShadow: '0 16px 40px rgba(0,0,0,0.4)',
+              position: 'fixed',
+              inset: 0,
+              zIndex: 9999,
+              backgroundColor: 'rgba(28, 22, 26, 0.65)',
+              backdropFilter: 'blur(6px)',
+              WebkitBackdropFilter: 'blur(6px)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '20px',
             }}
+            onClick={() => setIsBlockConfirmOpen(false)}
           >
-            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '20px', color: themeMulberry, margin: '0 0 8px 0' }}>
-              Block {match.name}?
-            </h3>
-            <p style={{ fontSize: '13px', lineHeight: '1.5', color: themeMuted, margin: '0 0 20px 0' }}>
-              {match.name} will be removed and will never appear in your introductions again.
-            </p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <button
-                type="button"
-                onClick={handleBlock}
-                style={{
-                  height: '42px',
-                  borderRadius: '21px',
-                  backgroundColor: '#B91C1C',
-                  color: '#FFFFFF',
-                  border: 'none',
-                  fontSize: '12px',
-                  fontWeight: 700,
-                  letterSpacing: '0.08em',
-                  textTransform: 'uppercase',
-                  cursor: 'pointer',
-                }}
-              >
-                BLOCK MEMBER
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsBlockConfirmOpen(false)}
-                style={{
-                  height: '40px',
-                  borderRadius: '20px',
-                  background: 'transparent',
-                  color: themeMuted,
-                  border: 'none',
-                  fontSize: '12px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                }}
-              >
-                CANCEL
-              </button>
+            <div
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                backgroundColor: isDark ? '#0A0209' : '#FFFFFF',
+                border: `1px solid ${themeBorder}`,
+                borderRadius: '20px',
+                padding: '24px 22px',
+                maxWidth: '340px',
+                width: '100%',
+                textAlign: 'center',
+                boxShadow: '0 16px 40px rgba(0,0,0,0.4)',
+              }}
+            >
+              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '20px', color: themeMulberry, margin: '0 0 8px 0' }}>
+                Block {match.name}?
+              </h3>
+              <p style={{ fontSize: '13px', lineHeight: '1.5', color: themeMuted, margin: '0 0 20px 0' }}>
+                {match.name} will be removed and will never appear in your introductions again.
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <button
+                  type="button"
+                  onClick={handleBlock}
+                  style={{
+                    height: '42px',
+                    borderRadius: '21px',
+                    backgroundColor: '#B91C1C',
+                    color: '#FFFFFF',
+                    border: 'none',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                    cursor: 'pointer',
+                  }}
+                >
+                  BLOCK MEMBER
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsBlockConfirmOpen(false)}
+                  style={{
+                    height: '40px',
+                    borderRadius: '20px',
+                    background: 'transparent',
+                    color: themeMuted,
+                    border: 'none',
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                  }}
+                >
+                  CANCEL
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        </ModalPortal>
       )}
 
       {/* Floating Toast Notification */}

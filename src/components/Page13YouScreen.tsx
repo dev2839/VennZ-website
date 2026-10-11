@@ -3,6 +3,7 @@ import { ChevronRight } from 'lucide-react';
 import { StatusBar } from './StatusBar';
 import { MemberTopBar } from './MemberTopBar';
 import { MemberBottomNav, type MemberTab } from './MemberBottomNav';
+import { ModalPortal } from './ModalPortal';
 import { useAuth } from '../context/AuthContext';
 import type { UserInvitation } from '../types/you';
 
@@ -954,119 +955,121 @@ export const Page13YouScreen: React.FC<Page13YouScreenProps> = ({
 
       {/* CONFIRMATION DIALOG FOR DELETE ACCOUNT */}
       {isDeleteModalOpen && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            zIndex: 1000,
-            backgroundColor: 'rgba(23, 17, 21, 0.75)',
-            backdropFilter: 'blur(6px)',
-            WebkitBackdropFilter: 'blur(6px)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '24px',
-            boxSizing: 'border-box',
-          }}
-        >
+        <ModalPortal>
           <div
             style={{
-              width: '100%',
-              maxWidth: '360px',
-              backgroundColor: isDark ? '#210D1D' : '#FFFFFF',
-              borderRadius: '20px',
-              padding: '28px 22px 22px 22px',
-              boxShadow: '0 20px 40px rgba(0,0,0,0.4)',
-              border: `1px solid ${themeBorder}`,
-              textAlign: 'center',
+              position: 'fixed',
+              inset: 0,
+              zIndex: 9999,
+              backgroundColor: 'rgba(23, 17, 21, 0.75)',
+              backdropFilter: 'blur(6px)',
+              WebkitBackdropFilter: 'blur(6px)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '24px',
+              boxSizing: 'border-box',
             }}
           >
             <div
               style={{
-                width: '52px',
-                height: '52px',
-                borderRadius: '50%',
-                backgroundColor: 'rgba(185, 28, 28, 0.15)',
-                color: isDark ? '#FCA5A5' : '#B91C1C',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                margin: '0 auto 16px auto',
+                width: '100%',
+                maxWidth: '360px',
+                backgroundColor: isDark ? '#210D1D' : '#FFFFFF',
+                borderRadius: '20px',
+                padding: '28px 22px 22px 22px',
+                boxShadow: '0 20px 40px rgba(0,0,0,0.4)',
+                border: `1px solid ${themeBorder}`,
+                textAlign: 'center',
               }}
             >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M3 6h18" />
-                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-                <line x1="10" y1="11" x2="10" y2="17" />
-                <line x1="14" y1="11" x2="14" y2="17" />
-              </svg>
-            </div>
-
-            <h3
-              style={{
-                fontFamily: 'var(--font-serif)',
-                fontSize: '22px',
-                color: themeMulberry,
-                margin: '0 0 8px 0',
-              }}
-            >
-              Delete your account?
-            </h3>
-
-            <p
-              style={{
-                fontSize: '13px',
-                lineHeight: '1.5',
-                color: themeMuted,
-                margin: '0 0 22px 0',
-              }}
-            >
-              This action is permanent and cannot be undone. All your membership history, verifications, and private connections will be immediately erased.
-            </p>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <button
-                type="button"
-                onClick={onDeleteAccount}
+              <div
                 style={{
-                  height: '44px',
-                  borderRadius: '22px',
-                  backgroundColor: '#B91C1C',
-                  color: '#FFFFFF',
-                  border: 'none',
-                  fontSize: '12px',
-                  fontWeight: 700,
-                  letterSpacing: '0.08em',
-                  textTransform: 'uppercase',
-                  cursor: 'pointer',
-                  boxShadow: '0 4px 12px rgba(185, 28, 28, 0.28)',
+                  width: '52px',
+                  height: '52px',
+                  borderRadius: '50%',
+                  backgroundColor: 'rgba(185, 28, 28, 0.15)',
+                  color: isDark ? '#FCA5A5' : '#B91C1C',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  margin: '0 auto 16px auto',
                 }}
               >
-                PERMANENTLY DELETE
-              </button>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M3 6h18" />
+                  <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                  <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                  <line x1="10" y1="11" x2="10" y2="17" />
+                  <line x1="14" y1="11" x2="14" y2="17" />
+                </svg>
+              </div>
 
-              <button
-                type="button"
-                onClick={() => setIsDeleteModalOpen(false)}
+              <h3
                 style={{
-                  height: '44px',
-                  borderRadius: '22px',
-                  backgroundColor: 'transparent',
-                  border: `1px solid ${themeBorder}`,
+                  fontFamily: 'var(--font-serif)',
+                  fontSize: '22px',
                   color: themeMulberry,
-                  fontSize: '12px',
-                  fontWeight: 700,
-                  letterSpacing: '0.08em',
-                  textTransform: 'uppercase',
-                  cursor: 'pointer',
+                  margin: '0 0 8px 0',
                 }}
               >
-                CANCEL
-              </button>
+                Delete your account?
+              </h3>
+
+              <p
+                style={{
+                  fontSize: '13px',
+                  lineHeight: '1.5',
+                  color: themeMuted,
+                  margin: '0 0 22px 0',
+                }}
+              >
+                This action is permanent and cannot be undone. All your membership history, verifications, and private connections will be immediately erased.
+              </p>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <button
+                  type="button"
+                  onClick={onDeleteAccount}
+                  style={{
+                    height: '44px',
+                    borderRadius: '22px',
+                    backgroundColor: '#B91C1C',
+                    color: '#FFFFFF',
+                    border: 'none',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 12px rgba(185, 28, 28, 0.28)',
+                  }}
+                >
+                  PERMANENTLY DELETE
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setIsDeleteModalOpen(false)}
+                  style={{
+                    height: '44px',
+                    borderRadius: '22px',
+                    backgroundColor: 'transparent',
+                    border: `1px solid ${themeBorder}`,
+                    color: themeMulberry,
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                    cursor: 'pointer',
+                  }}
+                >
+                  CANCEL
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        </ModalPortal>
       )}
 
       {/* BOTTOM NAVIGATION: MemberBottomNav with YOU selected */}

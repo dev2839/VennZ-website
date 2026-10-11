@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { MemberTopBar } from './MemberTopBar';
 import { MemberBottomNav, type MemberTab } from './MemberBottomNav';
 import { StatusBar } from './StatusBar';
+import { ModalPortal } from './ModalPortal';
 import type { DiscoverProfile } from '../types/discover';
 import { useAuth } from '../context/AuthContext';
 import { useLightbox } from '../context/LightboxContext';
@@ -954,80 +955,83 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
 
       {/* Report / Block Modal */}
       {blockModalOpen && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            zIndex: 60,
-            backgroundColor: 'rgba(28, 22, 26, 0.55)',
-            backdropFilter: 'blur(6px)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '20px',
-          }}
-          onClick={() => setBlockModalOpen(false)}
-        >
+        <ModalPortal>
           <div
-            onClick={(e) => e.stopPropagation()}
             style={{
-              backgroundColor: isDark ? '#210D1D' : '#FFFFFF',
-              border: isDark ? '1px solid rgba(243, 238, 233, 0.18)' : 'none',
-              borderRadius: '20px',
-              padding: '24px 20px',
-              maxWidth: '340px',
-              width: '100%',
-              textAlign: 'center',
-              boxShadow: isDark ? '0 16px 36px rgba(0,0,0,0.5)' : '0 16px 36px rgba(0,0,0,0.2)',
+              position: 'fixed',
+              inset: 0,
+              zIndex: 9999,
+              backgroundColor: 'rgba(28, 22, 26, 0.55)',
+              backdropFilter: 'blur(6px)',
+              WebkitBackdropFilter: 'blur(6px)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '20px',
             }}
+            onClick={() => setBlockModalOpen(false)}
           >
-            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '20px', color: themeMulberry, margin: '0 0 8px 0' }}>
-              Member Safety
-            </h3>
-            <p style={{ fontSize: '13px', lineHeight: '1.5', color: isDark ? '#E5D8DF' : '#6E5E68', margin: '0 0 18px 0' }}>
-              Would you like to pass and block {profile.firstName}? They will no longer appear in your introductions.
-            </p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <button
-                type="button"
-                onClick={() => {
-                  setBlockModalOpen(false);
-                  handlePass();
-                }}
-                style={{
-                  height: '42px',
-                  borderRadius: '21px',
-                  backgroundColor: '#C94A4A',
-                  color: '#FFFFFF',
-                  border: 'none',
-                  fontSize: '12px',
-                  fontWeight: 700,
-                  letterSpacing: '0.06em',
-                  textTransform: 'uppercase',
-                  cursor: 'pointer',
-                }}
-              >
-                BLOCK MEMBER
-              </button>
-              <button
-                type="button"
-                onClick={() => setBlockModalOpen(false)}
-                style={{
-                  height: '40px',
-                  borderRadius: '20px',
-                  background: 'transparent',
-                  color: themeMuted,
-                  border: 'none',
-                  fontSize: '12px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                }}
-              >
-                CANCEL
-              </button>
+            <div
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                backgroundColor: isDark ? '#210D1D' : '#FFFFFF',
+                border: isDark ? '1px solid rgba(243, 238, 233, 0.18)' : 'none',
+                borderRadius: '20px',
+                padding: '24px 20px',
+                maxWidth: '340px',
+                width: '100%',
+                textAlign: 'center',
+                boxShadow: isDark ? '0 16px 36px rgba(0,0,0,0.5)' : '0 16px 36px rgba(0,0,0,0.2)',
+              }}
+            >
+              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '20px', color: themeMulberry, margin: '0 0 8px 0' }}>
+                Member Safety
+              </h3>
+              <p style={{ fontSize: '13px', lineHeight: '1.5', color: isDark ? '#E5D8DF' : '#6E5E68', margin: '0 0 18px 0' }}>
+                Would you like to pass and block {profile.firstName}? They will no longer appear in your introductions.
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setBlockModalOpen(false);
+                    handlePass();
+                  }}
+                  style={{
+                    height: '42px',
+                    borderRadius: '21px',
+                    backgroundColor: '#C94A4A',
+                    color: '#FFFFFF',
+                    border: 'none',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    letterSpacing: '0.06em',
+                    textTransform: 'uppercase',
+                    cursor: 'pointer',
+                  }}
+                >
+                  BLOCK MEMBER
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setBlockModalOpen(false)}
+                  style={{
+                    height: '40px',
+                    borderRadius: '20px',
+                    background: 'transparent',
+                    color: themeMuted,
+                    border: 'none',
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                  }}
+                >
+                  CANCEL
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        </ModalPortal>
       )}
 
       {/* 5-BUTTON BOTTOM NAVIGATION: DISCOVER, MATCHES, ELEVATE, MIXERS, YOU */}

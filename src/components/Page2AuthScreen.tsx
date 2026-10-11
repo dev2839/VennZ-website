@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { ModalPortal } from './ModalPortal';
 import { LivingCinematicBackground } from './LivingCinematicBackground';
 import { otpService } from '../services/otpService';
 import { googleAuth } from '../services/googleAuth';
@@ -1393,71 +1394,74 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
 
       {/* OAuth Information Modal */}
       {oauthModal && oauthModal.isOpen && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            zIndex: 999,
-            backgroundColor: 'rgba(20, 14, 28, 0.85)',
-            backdropFilter: 'blur(12px)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '20px',
-          }}
-          onClick={() => setOauthModal(null)}
-        >
+        <ModalPortal>
           <div
             style={{
-              backgroundColor: '#462037',
-              border: '1px solid rgba(161, 82, 95, 0.4)',
-              borderRadius: '20px',
-              padding: '28px',
-              maxWidth: '420px',
-              width: '100%',
-              boxShadow: '0 24px 60px rgba(0,0,0,0.7)',
-              color: '#FDF3F5',
+              position: 'fixed',
+              inset: 0,
+              zIndex: 9999,
+              backgroundColor: 'rgba(20, 14, 28, 0.85)',
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '20px',
             }}
-            onClick={(e) => e.stopPropagation()}
+            onClick={() => setOauthModal(null)}
           >
-            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '20px', margin: '0 0 10px 0', color: '#F9AAAD' }}>
-              Google Authentication
-            </h3>
-            <p style={{ fontSize: '14px', lineHeight: 1.5, color: '#F8E2E6', margin: '0 0 16px 0' }}>
-              {oauthModal.message}
-            </p>
-            {oauthModal.missingEnv && (
-              <div
+            <div
+              style={{
+                backgroundColor: '#462037',
+                border: '1px solid rgba(161, 82, 95, 0.4)',
+                borderRadius: '20px',
+                padding: '28px',
+                maxWidth: '420px',
+                width: '100%',
+                boxShadow: '0 24px 60px rgba(0,0,0,0.7)',
+                color: '#FDF3F5',
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '20px', margin: '0 0 10px 0', color: '#F9AAAD' }}>
+                Google Authentication
+              </h3>
+              <p style={{ fontSize: '14px', lineHeight: 1.5, color: '#F8E2E6', margin: '0 0 16px 0' }}>
+                {oauthModal.message}
+              </p>
+              {oauthModal.missingEnv && (
+                <div
+                  style={{
+                    background: 'rgba(20, 14, 28, 0.6)',
+                    padding: '8px 12px',
+                    borderRadius: '8px',
+                    fontFamily: 'monospace',
+                    fontSize: '12px',
+                    color: '#F9AAAD',
+                    marginBottom: '18px',
+                  }}
+                >
+                  Missing: {oauthModal.missingEnv}
+                </div>
+              )}
+              <button
+                onClick={() => setOauthModal(null)}
+                className="primary-action-btn"
                 style={{
-                  background: 'rgba(20, 14, 28, 0.6)',
-                  padding: '8px 12px',
-                  borderRadius: '8px',
-                  fontFamily: 'monospace',
-                  fontSize: '12px',
-                  color: '#F9AAAD',
-                  marginBottom: '18px',
+                  width: '100%',
+                  height: '44px',
+                  borderRadius: '12px',
+                  border: 'none',
+                  color: '#FDF3F5',
+                  fontWeight: 600,
+                  cursor: 'pointer',
                 }}
               >
-                Missing: {oauthModal.missingEnv}
-              </div>
-            )}
-            <button
-              onClick={() => setOauthModal(null)}
-              className="primary-action-btn"
-              style={{
-                width: '100%',
-                height: '44px',
-                borderRadius: '12px',
-                border: 'none',
-                color: '#FDF3F5',
-                fontWeight: 600,
-                cursor: 'pointer',
-              }}
-            >
-              Understood
-            </button>
+                Understood
+              </button>
+            </div>
           </div>
-        </div>
+        </ModalPortal>
       )}
     </LivingCinematicBackground>
   );

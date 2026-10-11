@@ -21,6 +21,7 @@ import { Page18MixersScreen } from './components/Page18MixersScreen';
 import { WebNavbar, type RoutePath } from './components/WebNavbar';
 import { WebFooter } from './components/WebFooter';
 import { NotificationPopup } from './components/NotificationPopup';
+import { ModalPortal } from './components/ModalPortal';
 import { DUMMY_DISCOVER_PROFILES } from './data/dummyProfiles';
 import type { DiscoverProfile } from './types/discover';
 import type { MatchItem } from './types/matches';
@@ -675,6 +676,7 @@ export const App: React.FC = () => {
           display: 'flex',
           flexDirection: 'column',
           position: 'relative',
+          zIndex: 5,
           boxSizing: 'border-box',
         }}
       >
@@ -695,20 +697,21 @@ export const App: React.FC = () => {
 
       {/* Learn How It Works Modal (Page 1) */}
       {learnModalOpen && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            zIndex: 200,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: 'rgba(20, 14, 28, 0.85)',
-            backdropFilter: 'blur(12px)',
-            padding: '24px',
-          }}
-          onClick={() => setLearnModalOpen(false)}
-        >
+        <ModalPortal>
+          <div
+            style={{
+              position: 'fixed',
+              inset: 0,
+              zIndex: 9999,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'rgba(20, 14, 28, 0.85)',
+              backdropFilter: 'blur(12px)',
+              padding: '24px',
+            }}
+            onClick={() => setLearnModalOpen(false)}
+          >
           <div
             className="modal-content-animated"
             style={{
@@ -790,6 +793,7 @@ export const App: React.FC = () => {
             </button>
           </div>
         </div>
+        </ModalPortal>
       )}
     </div>
   );

@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { StatusBar } from './StatusBar';
 import { MemberTopBar } from './MemberTopBar';
 import { MemberBottomNav, type MemberTab } from './MemberBottomNav';
+import { ModalPortal } from './ModalPortal';
 import { useAuth } from '../context/AuthContext';
 import type { MixerEvent, MixerBooking, CityMixerDemand } from '../types/mixers';
 import { matchCities } from '../data/mixerEvents';
@@ -2809,19 +2810,21 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
       {/* MOCK PAYMENT MODAL OVERLAY */}
       {/* ========================================================= */}
       {isPaymentModalOpen && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            zIndex: 80,
-            backgroundColor: 'rgba(5, 1, 4, 0.72)',
-            backdropFilter: 'blur(8px)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '20px',
-          }}
-        >
+        <ModalPortal>
+          <div
+            style={{
+              position: 'fixed',
+              inset: 0,
+              zIndex: 9999,
+              backgroundColor: 'rgba(5, 1, 4, 0.72)',
+              backdropFilter: 'blur(8px)',
+              WebkitBackdropFilter: 'blur(8px)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '20px',
+            }}
+          >
           <div
             onClick={(e) => e.stopPropagation()}
             style={{
@@ -2963,6 +2966,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
             ) : null}
           </div>
         </div>
+        </ModalPortal>
       )}
 
       {/* CITY WAITLIST MODAL */}
@@ -2973,19 +2977,21 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
         const phase = getMixerPhaseInfo(liveDemand.status, isDark);
 
         return (
-          <div
-            style={{
-              position: 'fixed',
-              inset: 0,
-              zIndex: 100,
-              backgroundColor: 'rgba(0, 0, 0, 0.68)',
-              backdropFilter: 'blur(8px)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '20px',
-            }}
-          >
+          <ModalPortal>
+            <div
+              style={{
+                position: 'fixed',
+                inset: 0,
+                zIndex: 9999,
+                backgroundColor: 'rgba(0, 0, 0, 0.68)',
+                backdropFilter: 'blur(8px)',
+                WebkitBackdropFilter: 'blur(8px)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '20px',
+              }}
+            >
             <div
               style={{
                 width: '100%',
@@ -3272,6 +3278,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
               </form>
             </div>
           </div>
+          </ModalPortal>
         );
       })()}
 
