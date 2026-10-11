@@ -12,9 +12,16 @@ export const NotificationPopup: React.FC<NotificationPopupProps> = ({ onNavigate
     dismissNotificationPopup,
     markNotificationAsRead,
     appearanceMode,
+    isAuthenticated,
+    membershipStatus,
   } = useAuth();
 
   const isDark = appearanceMode === 'after-dark';
+  const hasAccount = Boolean(
+    isAuthenticated ||
+    membershipStatus === 'member' ||
+    membershipStatus === 'complimentary'
+  );
 
   const [activeNotif, setActiveNotif] = useState<AppNotification | null>(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -25,8 +32,18 @@ export const NotificationPopup: React.FC<NotificationPopupProps> = ({ onNavigate
   const timerRef = useRef<number | null>(null);
   const closeTimeoutRef = useRef<number | null>(null);
 
-  // Sync with AuthContext's latestPopupNotification
+  // Sync with AuthContext's latestPopupNotification strictly when user has an active account
   useEffect(() => {
+    if (!hasAccount) {
+      setIsVisible(false);
+      setActiveNotif(null);
+      if (closeTimeoutRef.current) {
+        clearTimeout(closeTimeoutRef.current);
+        closeTimeoutRef.current = null;
+      }
+      return;
+    }
+
     if (latestPopupNotification) {
       setActiveNotif(latestPopupNotification);
       setIsVisible(true);
@@ -38,7 +55,7 @@ export const NotificationPopup: React.FC<NotificationPopupProps> = ({ onNavigate
         closeTimeoutRef.current = null;
       }
     }
-  }, [latestPopupNotification]);
+  }, [latestPopupNotification, hasAccount]);
 
   // Smooth timer decrement with hover pause
   useEffect(() => {
@@ -90,7 +107,7 @@ export const NotificationPopup: React.FC<NotificationPopupProps> = ({ onNavigate
     handleDismiss();
   };
 
-  if (!activeNotif) return null;
+  if (!hasAccount || !activeNotif) return null;
 
   // Render compact contextual icon matching category
   const renderCategoryIcon = (category?: string, type?: string) => {

@@ -1264,10 +1264,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const showNotificationPopup = (notif: AppNotification) => {
-    setState((prev) => ({
-      ...prev,
-      latestPopupNotification: notif,
-    }));
+    setState((prev) => {
+      const hasAccount = Boolean(
+        prev.isAuthenticated ||
+        prev.membershipStatus === 'member' ||
+        prev.membershipStatus === 'complimentary'
+      );
+      if (!hasAccount) return prev;
+      return {
+        ...prev,
+        latestPopupNotification: notif,
+      };
+    });
   };
 
   const dismissNotificationPopup = () => {
@@ -1278,6 +1286,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const triggerLiveNotificationDemo = () => {
+    const hasAccount = Boolean(
+      state.isAuthenticated ||
+      state.membershipStatus === 'member' ||
+      state.membershipStatus === 'complimentary'
+    );
+    if (!hasAccount) return;
+
     const demoItems: Array<Pick<AppNotification, 'category' | 'title' | 'message' | 'targetRoute' | 'type'>> = [
       {
         category: 'REQUEST',
@@ -1323,6 +1338,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     setState((prev) => {
+      const userHasAccount = Boolean(
+        prev.isAuthenticated ||
+        prev.membershipStatus === 'member' ||
+        prev.membershipStatus === 'complimentary'
+      );
+      if (!userHasAccount) return prev;
+
       const currentList = prev.notifications && prev.notifications.length > 0
         ? prev.notifications
         : INITIAL_NOTIFICATIONS;
@@ -1334,24 +1356,45 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
-  // Gentle initial notification popup for unread updates when landing on the platform
+  // Gentle initial notification popup for unread updates strictly when user has an active account or signs in
   useEffect(() => {
-    const hasPopped = sessionStorage.getItem('vennz_initial_notif_popped');
+    const hasAccount = Boolean(
+      state.isAuthenticated ||
+      state.membershipStatus === 'member' ||
+      state.membershipStatus === 'complimentary'
+    );
+    if (!hasAccount) return;
+
+    const accountIdentifier =
+      state.phoneNumber ||
+      state.googleUser?.email ||
+      state.profile?.vennzName ||
+      'member';
+    const storageKey = `vennz_initial_notif_popped_${accountIdentifier}`;
+    const hasPopped = sessionStorage.getItem(storageKey);
     if (hasPopped) return;
 
     const unread = (state.notifications || INITIAL_NOTIFICATIONS).find((n) => !n.isRead);
     if (!unread) return;
 
     const timer = setTimeout(() => {
-      sessionStorage.setItem('vennz_initial_notif_popped', 'true');
-      setState((prev) => ({
-        ...prev,
-        latestPopupNotification: unread,
-      }));
+      sessionStorage.setItem(storageKey, 'true');
+      setState((prev) => {
+        const stillHasAccount = Boolean(
+          prev.isAuthenticated ||
+          prev.membershipStatus === 'member' ||
+          prev.membershipStatus === 'complimentary'
+        );
+        if (!stillHasAccount) return prev;
+        return {
+          ...prev,
+          latestPopupNotification: unread,
+        };
+      });
     }, 1800);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [state.isAuthenticated, state.membershipStatus, state.phoneNumber, state.googleUser?.email, state.profile?.vennzName]);
 
   const resetDiscoverQueue = () => {
     setState((prev) => ({

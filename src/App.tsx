@@ -692,8 +692,8 @@ export const App: React.FC = () => {
           <WebFooter onNavigate={(path) => navigate(path as RoutePath)} />
         )}
 
-      {/* Luxury Minimalist Notification Toast Popup */}
-      <NotificationPopup onNavigate={(path) => navigate(path as RoutePath)} />
+      {/* Luxury Minimalist Notification Toast Popup (strictly for members with active accounts) */}
+      {isRegisteredUser && <NotificationPopup onNavigate={(path) => navigate(path as RoutePath)} />}
 
       {/* Learn How It Works Modal (Page 1) */}
       {learnModalOpen && (
