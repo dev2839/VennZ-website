@@ -1944,6 +1944,40 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return (state.mixerWaitlists || []).some((w) => w.city.toLowerCase() === city.toLowerCase());
   };
 
+  // Dynamically compute city mixer demands based on user's waitlist registrations
+  const computedCityDemands: CityMixerDemand[] = CITY_MIXER_DEMANDS.map((base) => {
+    const isUserJoined = (state.mixerWaitlists || []).some(
+      (w) => w.city.toLowerCase() === base.city.toLowerCase()
+    );
+    const activeMembersInterested = base.activeMembersInterested + (isUserJoined ? 1 : 0);
+    const threshold = base.demandThresholdToLaunch;
+    const remaining = Math.max(0, threshold - activeMembersInterested);
+
+    let status: CityMixerDemand['status'] = base.status;
+    let estimatedTimeline = base.estimatedTimeline;
+
+    if (base.status === 'scheduled') {
+      status = 'scheduled';
+      estimatedTimeline = 'Live Mixers Active';
+    } else if (remaining === 0) {
+      status = 'partner_vetting';
+      estimatedTimeline = 'Threshold Reached · Partner Vetting Underway';
+    } else if (activeMembersInterested >= Math.round(threshold * 0.75)) {
+      status = 'partner_vetting';
+      estimatedTimeline = `Unlocking at ${threshold} Members (${remaining} ${remaining === 1 ? 'spot' : 'spots'} left)`;
+    } else {
+      status = 'gauging_demand';
+      estimatedTimeline = `${remaining} Members Needed to Begin Partner Vetting`;
+    }
+
+    return {
+      ...base,
+      activeMembersInterested,
+      status,
+      estimatedTimeline,
+    };
+  });
+
   return (
     <AuthContext.Provider
       value={{
@@ -2021,7 +2055,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         mixerBookings: state.mixerBookings || INITIAL_PAST_BOOKINGS,
         mixerInterestedEventIds: state.mixerInterestedEventIds || [],
         mixerWaitlists: state.mixerWaitlists || [],
-        cityDemands: CITY_MIXER_DEMANDS,
+        cityDemands: computedCityDemands,
         expressMixerInterest,
         bookMixerTicket,
         joinCityWaitlist,

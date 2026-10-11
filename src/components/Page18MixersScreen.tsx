@@ -21,6 +21,40 @@ type MixersView =
   | 'my-events'
   | 'event-pass';
 
+const getMixerPhaseInfo = (status: CityMixerDemand['status'], isDark: boolean) => {
+  switch (status) {
+    case 'gauging_demand':
+      return {
+        phaseTag: 'Phase 1: Gauging Demand',
+        badgeColor: isDark ? '#F9AAAD' : '#A1525F',
+        badgeBg: isDark ? 'rgba(161, 82, 95, 0.24)' : 'rgba(161, 82, 95, 0.12)',
+        description: 'VennZ is actively measuring verified community demand. When this city reaches its launch threshold, Phase 2 begins.',
+      };
+    case 'partner_vetting':
+      return {
+        phaseTag: 'Phase 2: Partner Vetting',
+        badgeColor: isDark ? '#FFB74D' : '#B45309',
+        badgeBg: isDark ? 'rgba(245, 158, 11, 0.22)' : 'rgba(217, 119, 6, 0.14)',
+        description: 'Target member threshold reached! VennZ operations teams are physically vetting venues, courtyards, acoustics, and partner security.',
+      };
+    case 'readiness_check':
+      return {
+        phaseTag: 'Phase 2: Final Certification',
+        badgeColor: isDark ? '#7DD3FC' : '#0369A1',
+        badgeBg: isDark ? 'rgba(56, 189, 248, 0.22)' : 'rgba(2, 132, 199, 0.14)',
+        description: 'Hospitality partnerships, catering contracts, safety protocols, and privacy agreements are in final certification.',
+      };
+    case 'scheduled':
+    default:
+      return {
+        phaseTag: 'Phase 3: Live & Scheduled',
+        badgeColor: isDark ? '#A5D6A7' : '#2E7D32',
+        badgeBg: isDark ? 'rgba(16, 185, 129, 0.22)' : 'rgba(46, 125, 50, 0.14)',
+        description: 'Venues and safety standards fully certified. Mixer gatherings are live on the calendar and open for member bookings.',
+      };
+  }
+};
+
 export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
   onSelectTab,
   onNavigateHelp,
@@ -63,6 +97,24 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
   const [waitlistTiming, setWaitlistTiming] = useState('Saturday Sunset (6:30 PM - 9:30 PM)');
   const [waitlistDietary, setWaitlistDietary] = useState("Flexible / Chef's Selection");
   const [waitlistSuccessToast, setWaitlistSuccessToast] = useState<string | null>(null);
+
+  // Pre-fill waitlist fields if the user has already joined the selected city's waitlist
+  useEffect(() => {
+    if (selectedWaitlistCity) {
+      const existing = (mixerWaitlists || []).find(
+        (w) => w.city.toLowerCase() === selectedWaitlistCity.city.toLowerCase()
+      );
+      if (existing) {
+        setWaitlistArea(existing.areaPreference || '');
+        setWaitlistTiming(existing.timingPreference || 'Saturday Sunset (6:30 PM - 9:30 PM)');
+        setWaitlistDietary(existing.dietaryPreference || "Flexible / Chef's Selection");
+      } else {
+        setWaitlistArea('');
+        setWaitlistTiming('Saturday Sunset (6:30 PM - 9:30 PM)');
+        setWaitlistDietary("Flexible / Chef's Selection");
+      }
+    }
+  }, [selectedWaitlistCity, mixerWaitlists]);
 
   const isEventReadyForPaidLaunch = (event: MixerEvent): boolean => {
     if (event.status !== 'FINALIZED') return false;
@@ -684,23 +736,60 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
               {/* CITY DEMAND & WAITLISTS SUB-VIEW */}
               {homeSubTab === 'demand' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '24px' }}>
+                  {/* 3-Stage Operational Lifecycle Explainer */}
                   <div
                     style={{
-                      padding: '14px 16px',
-                      borderRadius: '14px',
-                      backgroundColor: isDark ? 'rgba(161, 82, 95, 0.12)' : 'rgba(161, 82, 95, 0.06)',
-                      border: `1px solid ${themeBorder}`,
-                      fontSize: '12.5px',
-                      color: themeMuted,
-                      lineHeight: '1.5',
+                      padding: '18px 20px',
+                      borderRadius: '16px',
+                      backgroundColor: isDark ? 'rgba(42, 20, 34, 0.72)' : 'rgba(255, 255, 255, 0.85)',
+                      border: themeCardBorder,
+                      boxShadow: isDark ? '0 4px 18px rgba(0,0,0,0.3)' : '0 4px 14px rgba(73,40,61,0.05)',
                     }}
                   >
-                    <strong style={{ color: themeTextColor }}>Demand-Gated Physical Launch:</strong> VennZ starts mixers as city-based demand waitlists. We do not unlock paid physical reservations in any city until venue leases, licensed event partners, safety protocols, cancellation terms, and vendor contracts are fully certified.
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                      <span style={{ fontSize: '15px' }}>📍</span>
+                      <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '17px', fontWeight: 600, color: themeTextColor, margin: 0 }}>
+                        How VennZ Mixers Launch City-by-City
+                      </h3>
+                    </div>
+                    <p style={{ fontSize: '12.5px', color: themeMuted, margin: '0 0 14px', lineHeight: '1.5' }}>
+                      To guarantee intimate attendance, security, and discrete curation, VennZ never launches physical events speculatively. Each city advances through three strict operational phases:
+                    </p>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: '10px' }}>
+                      <div style={{ padding: '12px 14px', borderRadius: '12px', backgroundColor: isDark ? 'rgba(20, 14, 28, 0.6)' : 'rgba(250, 241, 243, 0.7)', border: `1px solid ${themeBorder}` }}>
+                        <div style={{ fontSize: '11px', fontWeight: 700, color: isDark ? '#F9AAAD' : '#A1525F', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                          Phase 1: Gauging Demand
+                        </div>
+                        <p style={{ fontSize: '12px', color: themeTextColor, margin: '5px 0 0', lineHeight: '1.45' }}>
+                          Members join the city waitlist (no upfront charge). VennZ tracks community density to confirm adequate verified member numbers.
+                        </p>
+                      </div>
+
+                      <div style={{ padding: '12px 14px', borderRadius: '12px', backgroundColor: isDark ? 'rgba(20, 14, 28, 0.6)' : 'rgba(250, 241, 243, 0.7)', border: `1px solid ${themeBorder}` }}>
+                        <div style={{ fontSize: '11px', fontWeight: 700, color: isDark ? '#FFB74D' : '#B45309', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                          Phase 2: Partner Vetting
+                        </div>
+                        <p style={{ fontSize: '12px', color: themeTextColor, margin: '5px 0 0', lineHeight: '1.45' }}>
+                          Threshold reached. Ops teams physically inspect private conservatories, courtyards, acoustics, safety, and hospitality staff protocols.
+                        </p>
+                      </div>
+
+                      <div style={{ padding: '12px 14px', borderRadius: '12px', backgroundColor: isDark ? 'rgba(20, 14, 28, 0.6)' : 'rgba(250, 241, 243, 0.7)', border: `1px solid ${themeBorder}` }}>
+                        <div style={{ fontSize: '11px', fontWeight: 700, color: isDark ? '#A5D6A7' : '#2E7D32', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                          Phase 3: Scheduled & Live
+                        </div>
+                        <p style={{ fontSize: '12px', color: themeTextColor, margin: '5px 0 0', lineHeight: '1.45' }}>
+                          Venue contracts and safety standards certified. Gathering dates go live on the calendar for verified member bookings.
+                        </p>
+                      </div>
+                    </div>
                   </div>
 
                   {(cityDemands || []).map((demandItem) => {
                     const isOnWaitlist = isUserOnCityWaitlist(demandItem.city);
                     const percent = Math.min(100, Math.round((demandItem.activeMembersInterested / demandItem.demandThresholdToLaunch) * 100));
+                    const phaseInfo = getMixerPhaseInfo(demandItem.status, isDark);
 
                     return (
                       <div
@@ -716,51 +805,53 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                           boxShadow: isDark ? '0 4px 18px rgba(0,0,0,0.3)' : '0 4px 14px rgba(73,40,61,0.05)',
                         }}
                       >
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                          <div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '18px', fontWeight: 600, color: themeTextColor, margin: 0 }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '8px' }}>
+                          <div style={{ flex: 1, minWidth: '220px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '19px', fontWeight: 600, color: themeTextColor, margin: 0 }}>
                                 {demandItem.city}
                               </h3>
                               <span
                                 style={{
                                   fontSize: '10px',
-                                  padding: '2px 8px',
+                                  padding: '3px 9px',
                                   borderRadius: '999px',
-                                  backgroundColor:
-                                    demandItem.status === 'scheduled'
-                                      ? 'rgba(46, 125, 50, 0.16)'
-                                      : demandItem.status === 'partner_vetting'
-                                      ? 'rgba(217, 119, 6, 0.16)'
-                                      : 'rgba(161, 82, 95, 0.14)',
-                                  color:
-                                    demandItem.status === 'scheduled'
-                                      ? (isDark ? '#A5D6A7' : '#2E7D32')
-                                      : demandItem.status === 'partner_vetting'
-                                      ? '#FFB74D'
-                                      : themeMulberry,
-                                  fontWeight: 600,
+                                  backgroundColor: phaseInfo.badgeBg,
+                                  color: phaseInfo.badgeColor,
+                                  fontWeight: 700,
+                                  letterSpacing: '0.04em',
                                   textTransform: 'uppercase',
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: '4px',
                                 }}
                               >
-                                {demandItem.status.replace(/_/g, ' ')}
+                                <span>●</span> {phaseInfo.phaseTag}
                               </span>
                             </div>
-                            <div style={{ fontSize: '11.5px', color: themeMuted, marginTop: '4px' }}>
-                              Venues in Review: {demandItem.suggestedVenuesInReview.join(' · ')}
+                            <div style={{ fontSize: '11.5px', color: themeMuted, marginTop: '5px', lineHeight: '1.45' }}>
+                              {phaseInfo.description}
+                            </div>
+                            <div style={{ fontSize: '11px', color: themeMuted, marginTop: '3px' }}>
+                              <strong>Venues Under Review:</strong> {demandItem.suggestedVenuesInReview.join(' · ')}
                             </div>
                           </div>
 
-                          <span style={{ fontSize: '12px', fontWeight: 600, color: themeTextColor }}>
-                            {demandItem.activeMembersInterested} / {demandItem.demandThresholdToLaunch} Members
-                          </span>
+                          <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                            <div style={{ fontSize: '15px', fontWeight: 700, color: themeTextColor }}>
+                              {demandItem.activeMembersInterested} / {demandItem.demandThresholdToLaunch}
+                            </div>
+                            <div style={{ fontSize: '10.5px', color: themeMuted }}>
+                              Members Registered
+                            </div>
+                          </div>
                         </div>
 
                         {/* Progress bar */}
                         <div>
                           <div
                             style={{
-                              height: '6px',
+                              height: '7px',
                               borderRadius: '999px',
                               backgroundColor: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(73, 40, 61, 0.08)',
                               overflow: 'hidden',
@@ -776,9 +867,9 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                               }}
                             />
                           </div>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10.5px', color: themeMuted, marginTop: '4px' }}>
-                            <span>{demandItem.estimatedTimeline}</span>
-                            <span>{percent}% of threshold</span>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: themeMuted, marginTop: '5px' }}>
+                            <span style={{ fontWeight: 600, color: themeTextColor }}>{demandItem.estimatedTimeline}</span>
+                            <span>{percent}% of launch threshold</span>
                           </div>
                         </div>
 
@@ -787,17 +878,18 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                             type="button"
                             onClick={() => setSelectedWaitlistCity(demandItem)}
                             style={{
-                              padding: '8px 18px',
+                              padding: '9px 20px',
                               borderRadius: '999px',
                               border: isOnWaitlist ? `1px solid rgba(129, 199, 132, 0.5)` : 'none',
                               backgroundColor: isOnWaitlist
                                 ? (isDark ? 'rgba(129, 199, 132, 0.18)' : 'rgba(46, 125, 50, 0.12)')
                                 : themeButtonBg,
                               color: isOnWaitlist ? (isDark ? '#81C784' : '#2E7D32') : themeButtonText,
-                              fontSize: '11px',
+                              fontSize: '11.5px',
                               fontWeight: 600,
                               cursor: 'pointer',
                               letterSpacing: '0.04em',
+                              transition: 'all 0.2s ease',
                             }}
                           >
                             {isOnWaitlist ? '✓ On City Waitlist (Update Details)' : `Join ${demandItem.city} Waitlist →`}
