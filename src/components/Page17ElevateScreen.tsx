@@ -238,6 +238,12 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    if (document.documentElement) document.documentElement.scrollTop = 0;
+    if (document.body) document.body.scrollTop = 0;
+  }, [activeTab]);
+
+  useEffect(() => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
     }
@@ -261,8 +267,8 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
   // Colors & styles matching VennZ luxury editorial palette
   const themeBgColor = isDark ? '#140E1C' : '#FAF1F3';
   const themeTextColor = isDark ? '#FDF3F5' : '#462037';
-  const themeMulberry = isDark ? '#F9AAAD' : '#462037';
-  const themeMuted = isDark ? '#D4A2AC' : '#7A4D5B';
+  const themeMulberry = isDark ? '#FDF3F5' : '#462037';
+  const themeMuted = isDark ? 'rgba(253, 243, 245, 0.72)' : '#7A4D5B';
   const themeBorder = isDark ? 'rgba(161, 82, 95, 0.28)' : 'rgba(161, 82, 95, 0.2)';
   const themeCardBg = isDark ? 'rgba(42, 20, 34, 0.72)' : 'rgba(255, 255, 255, 0.85)';
   const themeAccentGrad = 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)';
@@ -1533,6 +1539,9 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                             onClick={() => {
                               if (order.serviceCategory === 'profile-intelligence') setActiveTab('scorecard');
                               else if (order.serviceCategory === 'profile-makeover') setActiveTab('makeover');
+                              window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+                              if (document.documentElement) document.documentElement.scrollTop = 0;
+                              if (document.body) document.body.scrollTop = 0;
                             }}
                             style={{
                               padding: '8px 16px',

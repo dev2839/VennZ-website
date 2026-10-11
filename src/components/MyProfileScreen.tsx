@@ -39,6 +39,11 @@ const compressPhoto = (file: File): Promise<string> => new Promise((resolve, rej
   image.src = objectUrl;
 });
 
+const VIBE_OPTIONS = [
+  'Ambitious', 'Creative', 'Curious', 'Empathetic', 'Grounded', 'Humorous',
+  'Intellectual', 'Laid-back', 'Outgoing', 'Passionate', 'Spontaneous', 'Thoughtful'
+];
+
 export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
   onBack,
   onSelectTab,
@@ -55,7 +60,12 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
     isDigiLockerVerified,
   } = useAuth();
   const isDark = appearanceMode === 'after-dark';
-  const [draft, setDraft] = useState<UserProfile>(() => ({ ...profile, photos: [...(profile.photos || [])], interests: [...(profile.interests || [])] }));
+  const [draft, setDraft] = useState<UserProfile>(() => ({
+    ...profile,
+    photos: [...(profile.photos || [])],
+    interests: [...(profile.interests || [])],
+    vibes: [...(profile.vibes || [])],
+  }));
   const [isEditing, setIsEditing] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [saveMessage, setSaveMessage] = useState('');
@@ -65,8 +75,8 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
   const colors = {
     bg: isDark ? '#140E1C' : '#FAF1F3',
     text: isDark ? '#FDF3F5' : '#462037',
-    accent: isDark ? '#F9AAAD' : '#462037',
-    muted: isDark ? '#D4A2AC' : '#683A46',
+    accent: isDark ? '#FDF3F5' : '#462037',
+    muted: isDark ? 'rgba(253, 243, 245, 0.72)' : '#683A46',
     border: isDark ? 'rgba(161, 82, 95, 0.32)' : 'rgba(161, 82, 95, 0.2)',
     surface: isDark ? 'rgba(48, 27, 43, 0.84)' : 'rgba(255, 255, 255, 0.82)',
     field: isDark ? 'rgba(20, 14, 28, 0.72)' : 'rgba(255, 255, 255, 0.8)',
@@ -81,6 +91,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
     ['Location', Boolean(draft.city?.trim())],
     ['Work', Boolean(draft.designation?.trim() || draft.company?.trim())],
     ['Interests', Boolean(draft.interests?.length)],
+    ['Vibes', Boolean(draft.vibes?.length)],
   ] as const;
   const completion = Math.round((completionItems.filter(([, complete]) => complete).length / completionItems.length) * 100);
 
@@ -98,7 +109,12 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
   };
 
   const handleCancel = () => {
-    setDraft({ ...profile, photos: [...(profile.photos || [])], interests: [...(profile.interests || [])] });
+    setDraft({
+      ...profile,
+      photos: [...(profile.photos || [])],
+      interests: [...(profile.interests || [])],
+      vibes: [...(profile.vibes || [])],
+    });
     setPhotoError('');
     setIsEditing(false);
   };
@@ -133,6 +149,13 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
     updateDraft('interests', interests.includes(interest)
       ? interests.filter((item) => item !== interest)
       : [...interests, interest]);
+  };
+
+  const toggleVibe = (vibe: string) => {
+    const vibes = draft.vibes || [];
+    updateDraft('vibes', vibes.includes(vibe)
+      ? vibes.filter((item) => item !== vibe)
+      : [...vibes, vibe]);
   };
 
   const labelStyle: React.CSSProperties = {
@@ -284,6 +307,49 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
           </section>
 
           <section style={sectionStyle}>
+            <h2 style={{ margin: '0 0 12px', color: colors.accent, fontFamily: 'var(--font-serif)', fontSize: '21px', fontWeight: 400 }}>Vibes</h2>
+            {isEditing ? (
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                {VIBE_OPTIONS.map((vibe) => {
+                  const selected = (draft.vibes || []).includes(vibe);
+                  return (
+                    <button
+                      key={vibe}
+                      type="button"
+                      aria-pressed={selected}
+                      onClick={() => toggleVibe(vibe)}
+                      style={{
+                        minHeight: '34px',
+                        padding: '0 12px',
+                        border: `1px solid ${selected ? '#A1525F' : colors.border}`,
+                        borderRadius: '18px',
+                        background: selected ? (isDark ? 'rgba(199, 87, 124, 0.28)' : 'rgba(199, 87, 124, 0.14)') : 'transparent',
+                        color: colors.accent,
+                        cursor: 'pointer',
+                        fontSize: '11px',
+                        fontWeight: selected ? 600 : 400,
+                        transition: 'all 0.15s ease',
+                      }}
+                    >
+                      {vibe}
+                    </button>
+                  );
+                })}
+              </div>
+            ) : (draft.vibes || []).length ? (
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                {draft.vibes?.map((vibe) => (
+                  <span key={vibe} style={{ padding: '7px 11px', border: `1px solid ${colors.border}`, borderRadius: '18px', color: colors.accent, fontSize: '11px' }}>
+                    {vibe}
+                  </span>
+                ))}
+              </div>
+            ) : (
+              <p style={{ color: colors.muted, fontSize: '13px' }}>No vibes added yet.</p>
+            )}
+          </section>
+
+          <section style={sectionStyle}>
             <h2 style={{ margin: '0 0 6px', color: colors.accent, fontFamily: 'var(--font-serif)', fontSize: '21px', fontWeight: 400 }}>Privacy & visibility</h2>
             <p style={{ margin: '0 0 12px', color: colors.muted, fontSize: '12px', lineHeight: 1.5 }}>Choose what other members can see. Your legal name and date of birth are never shown.</p>
             <PrivacyToggle label="Show my age" checked={draft.showAgePublicly !== false} disabled={!isEditing} onChange={(checked) => updateDraft('showAgePublicly', checked)} colors={colors} />
@@ -315,7 +381,8 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
           {draft.city && draft.showCityPublicly !== false && <p style={{ color: colors.muted, fontSize: '13px' }}>{draft.city}</p>}
           {draft.showWorkPublicly !== false && (draft.designation || draft.company) && <p style={{ color: colors.muted, fontSize: '13px' }}>{[draft.designation, draft.company].filter(Boolean).join(' · ')}</p>}
           {draft.introduction && <p style={{ color: colors.text, fontFamily: 'var(--font-serif)', fontSize: '16px', lineHeight: 1.6 }}>{draft.introduction}</p>}
-          {(draft.interests || []).length > 0 && <div style={{ display: 'flex', flexWrap: 'wrap', gap: '7px', margin: '12px 0' }}>{draft.interests?.map((interest) => <span key={interest} style={{ padding: '6px 10px', border: `1px solid ${colors.border}`, borderRadius: '16px', color: colors.accent, fontSize: '11px' }}>{interest}</span>)}</div>}
+          {(draft.interests || []).length > 0 && <div style={{ display: 'flex', flexWrap: 'wrap', gap: '7px', margin: '12px 0 6px' }}>{draft.interests?.map((interest) => <span key={interest} style={{ padding: '6px 10px', border: `1px solid ${colors.border}`, borderRadius: '16px', color: colors.accent, fontSize: '11px' }}>{interest}</span>)}</div>}
+          {(draft.vibes || []).length > 0 && <div style={{ display: 'flex', flexWrap: 'wrap', gap: '7px', margin: '6px 0 12px' }}>{draft.vibes?.map((vibe) => <span key={vibe} style={{ padding: '5px 10px', borderRadius: '16px', background: isDark ? 'rgba(161, 82, 95, 0.25)' : 'rgba(161, 82, 95, 0.12)', border: `1px solid ${colors.border}`, color: colors.accent, fontSize: '11px' }}>✨ {vibe}</span>)}</div>}
           {draft.showLinkedinPublicly && draft.linkedinUrl && <p style={{ fontSize: '12px' }}>LinkedIn: {draft.linkedinUrl}</p>}
           {draft.showInstagramPublicly && draft.instagramUsername && <p style={{ fontSize: '12px' }}>Instagram: {draft.instagramUsername}</p>}
           <p style={{ paddingTop: '12px', borderTop: `1px solid ${colors.border}`, color: colors.muted, fontSize: '10px' }}>Your legal name and full date of birth remain private.</p>

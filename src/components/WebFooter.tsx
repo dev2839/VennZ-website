@@ -11,8 +11,8 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
 
   const footerBg = isDark ? '#140E1C' : '#FAF1F3';
   const borderTop = isDark ? 'rgba(161, 82, 95, 0.32)' : 'rgba(161, 82, 95, 0.22)';
-  const textColor = isDark ? '#F9AAAD' : '#462037';
-  const mutedColor = isDark ? '#D4A2AC' : '#683A46';
+  const textColor = isDark ? '#FDF3F5' : '#462037';
+  const mutedColor = isDark ? 'rgba(253, 243, 245, 0.72)' : '#683A46';
   const headingColor = isDark ? '#FFFFFF' : '#462037';
   const hoverColor = isDark ? '#FFFFFF' : '#C7577C';
 

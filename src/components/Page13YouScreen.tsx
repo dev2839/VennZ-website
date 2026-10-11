@@ -44,8 +44,6 @@ export const Page13YouScreen: React.FC<Page13YouScreenProps> = ({
     isMember,
     isComplimentary,
     isTrialExpired,
-    expireTrialForTesting,
-    resetTrialForTesting,
     setMembershipStatus,
   } = useAuth();
   const isDark = appearanceMode === 'after-dark';
@@ -175,8 +173,8 @@ export const Page13YouScreen: React.FC<Page13YouScreenProps> = ({
   // In After Dark: Deep cinematic palette (#140E1C) and blush (#FDF3F5 / #F9AAAD)
   const themeBgColor = isDark ? '#140E1C' : '#FAF1F3';
   const themeTextColor = isDark ? '#FDF3F5' : '#462037';
-  const themeMulberry = isDark ? '#F9AAAD' : '#462037';
-  const themeMuted = isDark ? '#D4A2AC' : '#683A46';
+  const themeMulberry = isDark ? '#FDF3F5' : '#462037';
+  const themeMuted = isDark ? 'rgba(253, 243, 245, 0.72)' : '#683A46';
   const themeBorder = isDark ? 'rgba(161, 82, 95, 0.28)' : 'rgba(161, 82, 95, 0.18)';
   const themeCardBg = isDark ? 'rgba(70, 32, 55, 0.75)' : 'rgba(255, 255, 255, 0.75)';
   const themeButtonBg = isDark ? 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)' : 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)';
@@ -798,89 +796,6 @@ export const Page13YouScreen: React.FC<Page13YouScreenProps> = ({
             </div>
           </div>
 
-          {/* ACCESS MODE DEMO SWITCHER */}
-          <div style={{ marginBottom: '28px' }}>
-            <div
-              style={{
-                fontSize: '11px',
-                fontWeight: 700,
-                letterSpacing: '0.14em',
-                textTransform: 'uppercase',
-                color: themeMulberry,
-                marginBottom: '8px',
-              }}
-            >
-              ACCESS MODE DEMO SWITCHER
-            </div>
-
-            <p style={{ fontSize: '12.5px', color: themeMuted, margin: '0 0 12px 0', lineHeight: 1.5 }}>
-              Switch instantly to explore the app across different membership tiers:
-            </p>
-
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
-              <button
-                type="button"
-                onClick={() => setMembershipStatus('member')}
-                style={{
-                  padding: '10px 4px',
-                  borderRadius: '12px',
-                  background: isMember ? 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)' : (isDark ? 'rgba(70, 32, 55, 0.45)' : 'rgba(161, 82, 95, 0.08)'),
-                  color: isMember ? '#FDF3F5' : themeMulberry,
-                  border: `1px solid ${isMember ? '#C7577C' : themeBorder}`,
-                  fontSize: '10.5px',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  textAlign: 'center',
-                  boxShadow: isMember ? '0 3px 10px rgba(161, 82, 95, 0.35)' : 'none',
-                  transition: 'all 0.15s ease',
-                }}
-              >
-                Paid Member
-              </button>
-
-              <button
-                type="button"
-                onClick={resetTrialForTesting}
-                style={{
-                  padding: '10px 4px',
-                  borderRadius: '12px',
-                  background: (isComplimentary && !isTrialExpired) ? 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)' : (isDark ? 'rgba(70, 32, 55, 0.45)' : 'rgba(161, 82, 95, 0.08)'),
-                  color: (isComplimentary && !isTrialExpired) ? '#FDF3F5' : themeMulberry,
-                  border: `1px solid ${(isComplimentary && !isTrialExpired) ? '#C7577C' : themeBorder}`,
-                  fontSize: '10.5px',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  textAlign: 'center',
-                  boxShadow: (isComplimentary && !isTrialExpired) ? '0 3px 10px rgba(161, 82, 95, 0.35)' : 'none',
-                  transition: 'all 0.15s ease',
-                }}
-              >
-                Active 24h Trial
-              </button>
-
-              <button
-                type="button"
-                onClick={expireTrialForTesting}
-                style={{
-                  padding: '10px 4px',
-                  borderRadius: '12px',
-                  background: isTrialExpired ? 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)' : (isDark ? 'rgba(70, 32, 55, 0.45)' : 'rgba(161, 82, 95, 0.08)'),
-                  color: isTrialExpired ? '#FDF3F5' : themeMulberry,
-                  border: `1px solid ${isTrialExpired ? '#C7577C' : themeBorder}`,
-                  fontSize: '10.5px',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  textAlign: 'center',
-                  boxShadow: isTrialExpired ? '0 3px 10px rgba(161, 82, 95, 0.35)' : 'none',
-                  transition: 'all 0.15s ease',
-                }}
-              >
-                Expired Trial
-              </button>
-            </div>
-          </div>
-
-          <div style={{ height: '1px', backgroundColor: themeBorder, marginBottom: '26px' }} />
 
           {/* SECTION 5: HELP & CONTACT US */}
           <div style={{ marginBottom: '28px' }}>

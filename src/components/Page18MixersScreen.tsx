@@ -165,8 +165,8 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
   // Dynamic Theme Colors
   const themeBgColor = isDark ? '#140E1C' : '#FAF1F3';
   const themeTextColor = isDark ? '#FDF3F5' : '#462037';
-  const themeMulberry = isDark ? '#F9AAAD' : '#462037';
-  const themeMuted = isDark ? '#D4A2AC' : '#683A46';
+  const themeMulberry = isDark ? '#FDF3F5' : '#462037';
+  const themeMuted = isDark ? 'rgba(253, 243, 245, 0.72)' : '#683A46';
   const themeBorder = isDark ? 'rgba(161, 82, 95, 0.28)' : 'rgba(161, 82, 95, 0.18)';
   const themeCardBg = isDark ? 'rgba(70, 32, 55, 0.75)' : 'rgba(255, 255, 255, 0.75)';
   const themeCardBorder = isDark
