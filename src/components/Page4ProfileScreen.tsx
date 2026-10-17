@@ -83,21 +83,25 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
     verifiedDob ? isoToDisplayDate(verifiedDob) : (profile.dateOfBirth ? isoToDisplayDate(profile.dateOfBirth) : '')
   );
 
-  const getInitial = (name?: string | null) => {
+  const getFirstName = (name?: string | null): string => {
     if (!name) return '';
     const trimmed = name.trim();
-    return trimmed.length > 0 ? trimmed.charAt(0).toUpperCase() : '';
+    if (!trimmed) return '';
+    return trimmed.split(/\s+/)[0] || '';
   };
 
   const [vennzName, setVennzName] = useState<string>(() => {
-    return getInitial(verifiedName || profile.firstName);
+    const fetched = getFirstName(verifiedName || profile.firstName || profile.legalName);
+    if (fetched && fetched.length > 1) return fetched;
+    if (profile.vennzName && profile.vennzName.length > 1) return profile.vennzName;
+    return fetched || profile.vennzName || '';
   });
 
-  // Automatically keep vennzName locked to the first letter of legal name
+  // Automatically keep vennzName locked to the first name of legal full name
   useEffect(() => {
-    const nextInitial = getInitial(verifiedName || firstName);
-    if (nextInitial && nextInitial !== vennzName) {
-      setVennzName(nextInitial);
+    const nextFirstName = getFirstName(verifiedName || firstName);
+    if (nextFirstName && nextFirstName !== vennzName) {
+      setVennzName(nextFirstName);
     }
   }, [verifiedName, firstName]);
 
@@ -831,7 +835,7 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                       NAME ON VENNZ
                     </label>
                     <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '11px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: isDark ? '#F9AAAD' : '#A1525F', backgroundColor: isDark ? 'rgba(161, 82, 95, 0.15)' : 'rgba(161, 82, 95, 0.08)', border: isDark ? '1px solid rgba(161, 82, 95, 0.3)' : '1px solid rgba(161, 82, 95, 0.2)', padding: '3px 8px', borderRadius: '6px' }}>
-                      FIRST INITIAL ONLY
+                      FIRST NAME ONLY
                     </span>
                   </div>
                   <div style={{ position: 'relative', width: '100%' }}>
@@ -840,7 +844,7 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                       value={vennzName}
                       readOnly
                       disabled
-                      aria-label="Name on VennZ (Non-editable First Initial)"
+                      aria-label="Name on VennZ (Non-editable First Name)"
                       style={{
                         width: '100%',
                         height: '54px',
@@ -851,7 +855,7 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                         fontSize: '18px',
                         fontFamily: 'var(--font-sans)',
                         fontWeight: 700,
-                        letterSpacing: '0.08em',
+                        letterSpacing: '0.04em',
                         color: textColor,
                         outline: 'none',
                         boxSizing: 'border-box',
@@ -859,7 +863,7 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                         opacity: 0.95,
                       }}
                     />
-                    <div style={{ position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)', color: isDark ? '#A1525F' : '#8A7A84', display: 'flex', alignItems: 'center' }} title="Non-editable initial">
+                    <div style={{ position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)', color: isDark ? '#A1525F' : '#8A7A84', display: 'flex', alignItems: 'center' }} title="Non-editable first name">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                         <path d="M7 11V7a5 5 0 0 1 10 0v4" />
@@ -867,7 +871,7 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                     </div>
                   </div>
                   <div style={{ fontSize: '12.5px', color: isDark ? '#B3A1A8' : '#8A7A84', marginTop: '6px' }}>
-                    Your first initial is your public identifier on VennZ. Once you match with someone, they will see your full legal name.
+                    Your first name is your public identifier on VennZ. Once you match with someone, they will see your full legal name.
                   </div>
                   {errors.vennzName && <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.vennzName}</div>}
                 </div>

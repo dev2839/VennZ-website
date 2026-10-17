@@ -983,13 +983,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
    */
   const setDigiLockerVerified = (name: string, dateOfBirth: string) => {
     setState((prev) => {
-      const initialVennzInitial = name.trim() ? name.trim().charAt(0).toUpperCase() : '';
+      const trimmed = name.trim();
+      const extractedFirstName = trimmed ? (trimmed.split(/\s+/)[0] || '') : '';
       const updatedProfile: UserProfile = {
         ...prev.profile,
         legalName: name,
         dateOfBirth: dateOfBirth,
-        vennzName: prev.profile.vennzName || initialVennzInitial,
-        firstName: prev.profile.vennzName || initialVennzInitial || prev.profile.firstName,
+        vennzName: extractedFirstName || prev.profile.vennzName,
+        firstName: extractedFirstName || prev.profile.firstName,
       };
 
       const next = {

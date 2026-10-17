@@ -74,3 +74,17 @@ export function getNameInitial(fullName: string): string {
   if (!trimmed) return '';
   return trimmed.charAt(0).toUpperCase();
 }
+
+/**
+ * Extract the first name from a full name.
+ * Used as the public identifier on VennZ (e.g. "Rahul Sharma" -> "Rahul").
+ *
+ * @param fullName - Legal full name from DigiLocker or user input
+ * @returns First name (first word), or '' if empty
+ */
+export function getFirstNameFromFullName(fullName: string): string {
+  const trimmed = (fullName || '').trim();
+  if (!trimmed) return '';
+  return trimmed.split(/\s+/)[0] || '';
+}
+
