@@ -114,7 +114,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
     { path: '/member/matches' as RoutePath, label: 'MATCHES', hasBadge: hasIncomingRequests },
     { path: '/member/elevate' as RoutePath, label: 'ELEVATE', hasCrown: true },
     { path: '/member/mixers' as RoutePath, label: 'MIXERS' },
-    { path: '/member/you' as RoutePath, label: 'YOU' },
+    { path: '/member/my-profile' as RoutePath, label: 'PROFILE' },
   ];
 
 
@@ -214,7 +214,9 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
             className="hidden-on-mobile"
           >
             {navItems.map((item) => {
-              const isActive = currentPath === item.path;
+              const isActive =
+                currentPath === item.path ||
+                (item.path === '/member/my-profile' && (currentPath === '/member/you' || currentPath === '/member/profile'));
               return (
                 <button
                   key={item.path}
@@ -571,7 +573,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
           {isMemberArea ? (
             <button
               type="button"
-              onClick={() => onNavigate('/member/you')}
+              onClick={() => onNavigate('/member/my-profile')}
               style={{
                 background: 'transparent',
                 border: 'none',
@@ -581,7 +583,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                 padding: '4px',
                 cursor: 'pointer',
               }}
-              title="View account"
+              title="View your profile & account"
             >
               <div
                 style={{
@@ -646,7 +648,9 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
           }}
         >
           {navItems.map((item) => {
-            const isActive = currentPath === item.path;
+            const isActive =
+              currentPath === item.path ||
+              (item.path === '/member/my-profile' && (currentPath === '/member/you' || currentPath === '/member/profile'));
             return (
               <button
                 key={item.path}

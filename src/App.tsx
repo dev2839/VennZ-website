@@ -11,7 +11,6 @@ import { Page8WaitlistScreen } from './components/Page8WaitlistScreen';
 import { Page9MembershipScreen } from './components/Page9MembershipScreen';
 import { Page11DiscoverScreen } from './components/Page11DiscoverScreen';
 import { Page12FullProfileScreen } from './components/Page12FullProfileScreen';
-import { Page13YouScreen } from './components/Page13YouScreen';
 import { MyProfileScreen } from './components/MyProfileScreen';
 import { Page14HelpScreen } from './components/Page14HelpScreen';
 import { Page15MatchesScreen } from './components/Page15MatchesScreen';
@@ -237,10 +236,10 @@ export const App: React.FC = () => {
   };
   const handleUpgradeToMembership = () => navigate('/join/waitlist');
 
-  // Handlers for Page 13 (You / Membership)
+  // Handlers for Member Profile & Membership Account
   const handleNavigateHelpFromYou = () => navigate('/member/help');
   const handleManageMembershipFromYou = () => {
-    setMembershipReturnPath('/member/you');
+    setMembershipReturnPath('/member/my-profile');
     setMembershipViewMode('all');
     navigate('/join/membership');
   };
@@ -254,7 +253,7 @@ export const App: React.FC = () => {
   };
 
   // Handlers for Page 14 (Help & Contact Us)
-  const handleBackFromHelp = () => navigate('/member/you');
+  const handleBackFromHelp = () => navigate('/member/my-profile');
 
   // Render the active screen inside the responsive web container
   const renderActiveScreen = (showStatusBar: boolean, showHomeIndicator: boolean) => {
@@ -388,8 +387,8 @@ export const App: React.FC = () => {
             navigate('/member/profile');
           }}
           onSelectTab={(tab) => {
-            if (tab === 'you') {
-              navigate('/member/you');
+            if (tab === 'you' || tab === 'profile') {
+              navigate('/member/my-profile');
             } else if (tab === 'matches') {
               setMatchesInitialSubTab('matches');
               navigate('/member/matches');
@@ -414,8 +413,8 @@ export const App: React.FC = () => {
           onBack={() => navigate('/discover')}
           onActionComplete={() => navigate('/discover')}
           onSelectTab={(tab) => {
-            if (tab === 'you') {
-              navigate('/member/you');
+            if (tab === 'you' || tab === 'profile') {
+              navigate('/member/my-profile');
             } else if (tab === 'discover') {
               navigate('/discover');
             } else if (tab === 'matches') {
@@ -433,11 +432,11 @@ export const App: React.FC = () => {
       );
     }
 
-    if (currentPath === '/member/you') {
+    if (currentPath === '/member/my-profile' || currentPath === '/member/you') {
       return (
-        <Page13YouScreen
+        <MyProfileScreen
+          onBack={() => navigate('/discover')}
           onNavigateHelp={handleNavigateHelpFromYou}
-          onNavigateProfile={() => navigate('/member/my-profile')}
           onManageMembership={handleManageMembershipFromYou}
           onSignOut={handleSignOutFromYou}
           onDeleteAccount={handleDeleteAccountFromYou}
@@ -456,30 +455,8 @@ export const App: React.FC = () => {
               navigate('/member/elevate');
             } else if (tab === 'mixers') {
               navigate('/member/mixers');
-            }
-          }}
-          showStatusBar={showStatusBar}
-          showHomeIndicator={showHomeIndicator}
-        />
-      );
-    }
-
-    if (currentPath === '/member/my-profile') {
-      return (
-        <MyProfileScreen
-          onBack={() => navigate('/member/you')}
-          onSelectTab={(tab) => {
-            if (tab === 'discover') {
-              navigate('/discover');
-            } else if (tab === 'matches') {
-              setMatchesInitialSubTab('matches');
-              navigate('/member/matches');
-            } else if (tab === 'elevate') {
-              navigate('/member/elevate');
-            } else if (tab === 'mixers') {
-              navigate('/member/mixers');
             } else {
-              navigate('/member/you');
+              navigate('/member/my-profile');
             }
           }}
           showStatusBar={showStatusBar}
@@ -495,8 +472,8 @@ export const App: React.FC = () => {
           onSelectTab={(tab) => {
             if (tab === 'discover') {
               navigate('/discover');
-            } else if (tab === 'you') {
-              navigate('/member/you');
+            } else if (tab === 'you' || tab === 'profile') {
+              navigate('/member/my-profile');
             } else if (tab === 'matches') {
               setMatchesInitialSubTab('matches');
               navigate('/member/matches');
@@ -523,8 +500,8 @@ export const App: React.FC = () => {
           onSelectTab={(tab) => {
             if (tab === 'discover') {
               navigate('/discover');
-            } else if (tab === 'you') {
-              navigate('/member/you');
+            } else if (tab === 'you' || tab === 'profile') {
+              navigate('/member/my-profile');
             } else if (tab === 'elevate') {
               navigate('/member/elevate');
             } else if (tab === 'mixers') {
@@ -562,8 +539,8 @@ export const App: React.FC = () => {
               navigate('/discover');
             } else if (tab === 'matches') {
               navigate('/member/matches');
-            } else if (tab === 'you') {
-              navigate('/member/you');
+            } else if (tab === 'you' || tab === 'profile') {
+              navigate('/member/my-profile');
             } else if (tab === 'elevate') {
               navigate('/member/elevate');
             } else if (tab === 'mixers') {
@@ -585,8 +562,8 @@ export const App: React.FC = () => {
               navigate('/discover');
             } else if (tab === 'matches') {
               navigate('/member/matches');
-            } else if (tab === 'you') {
-              navigate('/member/you');
+            } else if (tab === 'you' || tab === 'profile') {
+              navigate('/member/my-profile');
             } else if (tab === 'mixers') {
               navigate('/member/mixers');
             }
@@ -609,8 +586,8 @@ export const App: React.FC = () => {
               navigate('/member/matches');
             } else if (tab === 'elevate') {
               navigate('/member/elevate');
-            } else if (tab === 'you') {
-              navigate('/member/you');
+            } else if (tab === 'you' || tab === 'profile') {
+              navigate('/member/my-profile');
             }
           }}
           onNavigateHelp={() => navigate('/member/help')}

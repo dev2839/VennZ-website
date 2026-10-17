@@ -318,13 +318,13 @@ export const INITIAL_NOTIFICATIONS: AppNotification[] = [
   {
     id: 'notif-membership-you',
     category: 'MEMBERSHIP',
-    sourcePage: 'YOU',
+    sourcePage: 'PROFILE',
     title: 'Circle Membership Active',
     message: 'Your verified credentials and standards are in good standing.',
     timestamp: '1d ago',
     isRead: true,
     type: 'membership',
-    targetRoute: '/member/you',
+    targetRoute: '/member/my-profile',
   },
 ];
 
@@ -1812,13 +1812,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const bioNotif: AppNotification = {
         id: `notif-bio-${Date.now()}`,
         category: 'MEMBERSHIP',
-        sourcePage: 'YOU',
+        sourcePage: 'PROFILE',
         title: 'Profile Bio Updated',
         message: 'Elevate Makeover recommendation applied successfully.',
         timestamp: 'Just now',
         isRead: false,
         type: 'membership',
-        targetRoute: '/member/you',
+        targetRoute: '/member/my-profile',
       };
 
       return {

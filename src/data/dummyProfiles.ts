@@ -18,7 +18,7 @@ export const DUMMY_DISCOVER_PROFILES: DiscoverProfile[] = [
     activeStatus: 'Active today',
     introduction:
       'Usually building something new or planning an escape from the city. Drawn to thoughtful craft, warm lighting, and people who listen deeply.',
-    interests: ['Design', 'Architecture', 'Art', 'Coffee', 'Travel'],
+    interests: ['Art', 'Coffee', 'Travel', 'Photography', 'Books'],
     vibes: ['Creative', 'Curious', 'Thoughtful', 'Ambitious'],
     datingPreference: 'Men',
     currentStatus: 'Working',
@@ -44,7 +44,7 @@ export const DUMMY_DISCOVER_PROFILES: DiscoverProfile[] = [
     activeStatus: 'Active 2h ago',
     introduction:
       'Telling stories visually through editorial craft. Drawn to curious minds, effortless humour, and candlelit dinners by the Arabian Sea.',
-    interests: ['Photography', 'Cinema', 'Literature', 'Pilates', 'Art'],
+    interests: ['Photography', 'Cinema', 'Art', 'Yoga', 'Books'],
     vibes: ['Passionate', 'Outgoing', 'Creative', 'Spontaneous'],
     datingPreference: 'Men',
     currentStatus: 'Never Married',
@@ -69,7 +69,7 @@ export const DUMMY_DISCOVER_PROFILES: DiscoverProfile[] = [
     activeStatus: 'Active today',
     introduction:
       'Curating modern South Asian contemporary art. Always searching for obscure vinyls, good tea, and honest writing.',
-    interests: ['Writing', 'Visual Arts', 'History', 'Yoga', 'Poetry'],
+    interests: ['Poetry', 'Books', 'Art', 'Yoga', 'Music'],
     vibes: ['Intellectual', 'Grounded', 'Thoughtful', 'Empathetic'],
     datingPreference: 'Men',
     currentStatus: 'Never Married',
@@ -94,8 +94,8 @@ export const DUMMY_DISCOVER_PROFILES: DiscoverProfile[] = [
     isVerified: true,
     activeStatus: 'Active 1 day ago',
     introduction:
-      'Building spaces that endure. Passionate about slow design, morning filter coffee, jazz vinyls, and mountain getaways.',
-    interests: ['Architecture', 'Jazz', 'Running', 'Design', 'Coffee'],
+      'Building spaces that endure. Passionate about slow design, morning filter coffee, rare vinyls, and mountain getaways.',
+    interests: ['Music', 'Coffee', 'Fitness', 'Photography', 'Travel'],
     vibes: ['Ambitious', 'Grounded', 'Creative', 'Laid-back'],
     datingPreference: 'Women',
     currentStatus: 'Never Married',
@@ -119,8 +119,8 @@ export const DUMMY_DISCOVER_PROFILES: DiscoverProfile[] = [
     isVerified: true,
     activeStatus: 'Active 3 days ago',
     introduction:
-      'Backing early deep-tech founders. Weekend squash, classical piano, and long debates over single malt.',
-    interests: ['Startups', 'Piano', 'Sports', 'History', 'Tech'],
+      'Backing early deep-tech founders. Weekend squash, classical music, and long debates over single malt.',
+    interests: ['Startups', 'Tech', 'Sports', 'Investing', 'Music'],
     vibes: ['Ambitious', 'Intellectual', 'Thoughtful', 'Humorous'],
     datingPreference: 'Women',
     currentStatus: 'Never Married',

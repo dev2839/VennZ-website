@@ -12,18 +12,14 @@ interface Page4ProfileScreenProps {
   onPhotosUpdated?: () => void;
 }
 
-const GENDER_OPTIONS = ['WOMAN', 'MAN', 'NON-BINARY', 'PREFER TO SELF-DESCRIBE'];
-const DATING_PREF_OPTIONS = ['WOMEN', 'MEN', 'EVERYONE'];
-const STATUS_OPTIONS = ['WORKING', 'FOUNDER / ENTREPRENEUR', 'STUDENT', 'SELF-EMPLOYED / FREELANCER', 'OTHER'];
-const INTEREST_OPTIONS = [
-  'Art', 'Books', 'Cooking', 'Fitness', 'Gaming', 'Hiking', 'Music', 'Photography',
-  'Startups', 'Tech', 'Travel', 'Yoga', 'Cycling', 'Coffee', 'Cinema', 'Theatre',
-  'Investing', 'Sports', 'Dancing', 'Poetry'
-];
-const VIBE_OPTIONS = [
-  'Ambitious', 'Creative', 'Curious', 'Empathetic', 'Grounded', 'Humorous',
-  'Intellectual', 'Laid-back', 'Outgoing', 'Passionate', 'Spontaneous', 'Thoughtful'
-];
+import {
+  GENDER_OPTIONS,
+  DATING_PREF_OPTIONS,
+  STATUS_OPTIONS,
+  INTEREST_OPTIONS,
+  VIBE_OPTIONS,
+} from '../constants/profileOptions';
+import { PhotoCropModal } from './PhotoCropModal';
 
 const SAMPLE_PORTRAITS = [
   'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=80',
@@ -138,6 +134,7 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
   const [vibes, setVibes] = useState<string[]>(profile.vibes?.length ? profile.vibes : (fallback?.vibes || []));
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [croppingPhoto, setCroppingPhoto] = useState<{ src: string; index?: number } | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const photosSectionRef = useRef<HTMLDivElement | null>(null);
@@ -508,14 +505,20 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
     }
 
     const filesToProcess = Array.from(files).slice(0, remainingSlots);
-    for (const file of filesToProcess) {
+    for (let i = 0; i < filesToProcess.length; i++) {
+      const file = filesToProcess[i];
       try {
         const compressedBase64 = await compressImageFile(file);
         if (compressedBase64) {
-          setPhotos((prev) => {
-            if (prev.length >= 6) return prev;
-            return [...prev, compressedBase64];
-          });
+          if (filesToProcess.length === 1) {
+            // Open crop adjust viewfinder immediately so user can frame photo
+            setCroppingPhoto({ src: compressedBase64 });
+          } else {
+            setPhotos((prev) => {
+              if (prev.length >= 6) return prev;
+              return [...prev, compressedBase64];
+            });
+          }
           setErrors((prev) => {
             const next = { ...prev };
             delete next.photos;
@@ -1176,6 +1179,37 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                             MAIN
                           </div>
                         )}
+                        {/* Adjust / Crop button */}
+                        <button
+                          type="button"
+                          onClick={() => setCroppingPhoto({ src: photo, index })}
+                          style={{
+                            position: 'absolute',
+                            top: '8px',
+                            left: '8px',
+                            height: '24px',
+                            padding: '0 8px',
+                            borderRadius: '12px',
+                            backgroundColor: 'rgba(20, 14, 28, 0.75)',
+                            backdropFilter: 'blur(4px)',
+                            color: '#fff',
+                            border: 'none',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '4px',
+                            fontSize: '10.5px',
+                            fontWeight: 600,
+                            cursor: 'pointer',
+                          }}
+                          title="Adjust framing"
+                        >
+                          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M6 2v14a2 2 0 0 0 2 2h14" />
+                            <path d="M18 22V8a2 2 0 0 0-2-2H2" />
+                          </svg>
+                          <span>Crop</span>
+                        </button>
+
                         <button type="button" onClick={() => handleRemovePhoto(index)} style={{ position: 'absolute', top: '8px', right: '8px', width: '24px', height: '24px', borderRadius: '12px', backgroundColor: 'rgba(20, 14, 28, 0.65)', backdropFilter: 'blur(4px)', color: '#fff', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: 0 }} aria-label="Remove photo">
                           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                             <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -1287,6 +1321,28 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
             <div style={{ width: '134px', height: '5px', borderRadius: '100px', backgroundColor: isDark ? 'rgba(255, 255, 255, 0.8)' : 'rgba(0, 0, 0, 0.8)' }}></div>
           </div>
         )}
+        {/* Photo Crop & Adjust Viewfinder Modal */}
+        <PhotoCropModal
+          isOpen={Boolean(croppingPhoto)}
+          imageSrc={croppingPhoto?.src || ''}
+          isDark={isDark}
+          onClose={() => setCroppingPhoto(null)}
+          onSave={(croppedDataUrl) => {
+            if (croppingPhoto?.index !== undefined) {
+              setPhotos((prev) => {
+                const next = [...prev];
+                next[croppingPhoto.index!] = croppedDataUrl;
+                return next;
+              });
+            } else {
+              setPhotos((prev) => {
+                if (prev.length >= 6) return prev;
+                return [...prev, croppedDataUrl];
+              });
+            }
+            setCroppingPhoto(null);
+          }}
+        />
       </div>
     </div>
   );

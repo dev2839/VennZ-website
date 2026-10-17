@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
 
-export type MemberTab = 'discover' | 'matches' | 'elevate' | 'mixers' | 'you';
+export type MemberTab = 'discover' | 'matches' | 'elevate' | 'mixers' | 'you' | 'profile';
 
 interface MemberBottomNavProps {
   activeTab: MemberTab;
@@ -37,7 +37,7 @@ export const MemberBottomNav: React.FC<MemberBottomNavProps> = ({
     { id: 'matches', label: 'MATCHES', hasNotification: hasIncomingRequests },
     { id: 'elevate', label: 'ELEVATE', isExclusive: true },
     { id: 'mixers', label: 'MIXERS' },
-    { id: 'you', label: 'YOU' },
+    { id: 'profile', label: 'PROFILE' },
   ];
 
   const navBg = isDark ? 'rgba(20, 14, 28, 0.98)' : 'rgba(250, 241, 243, 0.96)';
@@ -78,7 +78,7 @@ export const MemberBottomNav: React.FC<MemberBottomNavProps> = ({
         }}
       >
         {tabs.map((tab) => {
-          const isActive = activeTab === tab.id;
+          const isActive = activeTab === tab.id || (tab.id === 'profile' && activeTab === 'you');
           return (
             <button
               key={tab.id}
