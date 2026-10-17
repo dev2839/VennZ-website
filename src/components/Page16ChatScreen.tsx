@@ -501,6 +501,10 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
     pickerBg: isDark ? '#231220' : '#FFFFFF',
   };
 
+  const iconColor = isDark ? '#FDF3F5' : '#462037';
+  const iconMutedColor = isDark ? '#D4A2AC' : '#683A46';
+  const iconAccentColor = isDark ? '#F9AAAD' : '#A1525F';
+
   const formatMessageTime = (timestamp?: number) => {
     if (!timestamp) return '';
     const diffHours = (Date.now() - timestamp) / (1000 * 60 * 60);
@@ -517,6 +521,8 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
         position: 'relative',
         width: '100%',
         height: '100%',
+        minHeight: 'calc(100vh - 68px)',
+        maxHeight: 'calc(100vh - 68px)',
         display: 'flex',
         flexDirection: 'column',
         backgroundColor: colors.bg,
@@ -683,7 +689,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                 transition: 'border-color 0.2s ease',
               }}
             >
-              <Search size={15} color={colors.muted} />
+              <Search size={15} color={iconMutedColor} />
               <input
                 type="text"
                 value={searchQuery}
@@ -706,7 +712,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                   style={{
                     background: 'none',
                     border: 'none',
-                    color: colors.muted,
+                    color: iconMutedColor,
                     cursor: 'pointer',
                     padding: '2px',
                     display: 'flex',
@@ -715,7 +721,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                   }}
                   aria-label="Clear search"
                 >
-                  <X size={14} />
+                  <X size={14} color={iconMutedColor} />
                 </button>
               )}
             </div>
@@ -873,6 +879,8 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
           className={`chat-main-pane ${mobileView === 'chat' ? 'mobile-visible' : 'mobile-hidden'}`}
           style={{
             flex: 1,
+            minWidth: 0,
+            minHeight: 0,
             height: '100%',
             display: 'flex',
             flexDirection: 'column',
@@ -893,6 +901,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
               justifyContent: 'space-between',
               gap: '12px',
               zIndex: 30,
+              flexShrink: 0,
             }}
           >
             {/* Left: Avatar, Name & Status */}
@@ -909,7 +918,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                 style={{
                   background: 'transparent',
                   border: 'none',
-                  color: colors.text,
+                  color: iconColor,
                   display: 'flex',
                   alignItems: 'center',
                   gap: '4px',
@@ -918,7 +927,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                 }}
                 aria-label="Back to conversations"
               >
-                <ArrowLeft size={18} />
+                <ArrowLeft size={18} color={iconColor} />
               </button>
 
               <div style={{ position: 'relative', width: '40px', height: '40px', flexShrink: 0 }}>
@@ -980,7 +989,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                         gap: '2px',
                       }}
                     >
-                      <ShieldCheck size={9} />
+                      <ShieldCheck size={9} color="#86EFAC" />
                       VERIFIED
                     </span>
                   )}
@@ -1000,7 +1009,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                 style={{
                   background: 'transparent',
                   border: 'none',
-                  color: colors.muted,
+                  color: iconColor,
                   cursor: 'pointer',
                   padding: '6px',
                   borderRadius: '50%',
@@ -1010,7 +1019,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                   transition: 'opacity 0.15s ease',
                 }}
               >
-                <Phone size={19} />
+                <Phone size={19} color={iconColor} />
               </button>
 
               <button
@@ -1020,7 +1029,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                 style={{
                   background: 'transparent',
                   border: 'none',
-                  color: colors.muted,
+                  color: iconColor,
                   cursor: 'pointer',
                   padding: '6px',
                   borderRadius: '50%',
@@ -1030,7 +1039,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                   transition: 'opacity 0.15s ease',
                 }}
               >
-                <Video size={21} />
+                <Video size={21} color={iconColor} />
               </button>
 
               <div style={{ position: 'relative' }}>
@@ -1041,7 +1050,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                   style={{
                     background: 'transparent',
                     border: 'none',
-                    color: colors.muted,
+                    color: iconColor,
                     cursor: 'pointer',
                     padding: '6px',
                     borderRadius: '50%',
@@ -1051,7 +1060,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                     transition: 'opacity 0.15s ease',
                   }}
                 >
-                  <Info size={19} />
+                  <Info size={19} color={iconColor} />
                 </button>
 
                 {isMenuOpen && (
@@ -1103,7 +1112,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                           cursor: 'pointer',
                         }}
                       >
-                        <UserX size={14} />
+                        <UserX size={14} color={iconColor} />
                         <span>Unmatch</span>
                       </button>
                       <button
@@ -1125,7 +1134,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                           cursor: 'pointer',
                         }}
                       >
-                        <AlertTriangle size={14} />
+                        <AlertTriangle size={14} color={iconAccentColor} />
                         <span>Report member</span>
                       </button>
                       <button
@@ -1150,7 +1159,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                           cursor: 'pointer',
                         }}
                       >
-                        <Ban size={14} />
+                        <Ban size={14} color="#E06D6D" />
                         <span>Block member</span>
                       </button>
                     </div>
@@ -1164,6 +1173,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
           <div
             style={{
               flex: 1,
+              minHeight: 0,
               overflowY: 'auto',
               WebkitOverflowScrolling: 'touch',
               padding: '24px 24px 28px',
@@ -1294,6 +1304,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
             style={{
               position: 'relative',
               width: '100%',
+              flexShrink: 0,
               padding: '14px 20px 18px',
               backgroundColor: colors.headerBg,
               borderTop: `1px solid ${colors.border}`,
@@ -1339,7 +1350,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                       padding: '6px 10px',
                     }}
                   >
-                    <Search size={14} color={colors.muted} />
+                    <Search size={14} color={iconMutedColor} />
                     <input
                       type="text"
                       value={emojiSearchQuery}
@@ -1359,9 +1370,9 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                       <button
                         type="button"
                         onClick={() => setEmojiSearchQuery('')}
-                        style={{ background: 'none', border: 'none', color: colors.muted, cursor: 'pointer', padding: 0 }}
+                        style={{ background: 'none', border: 'none', color: iconMutedColor, cursor: 'pointer', padding: 0 }}
                       >
-                        <X size={12} />
+                        <X size={12} color={iconMutedColor} />
                       </button>
                     )}
                   </div>
@@ -1482,7 +1493,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                 style={{
                   background: 'none',
                   border: 'none',
-                  color: isEmojiPickerOpen ? (isDark ? '#F9AAAD' : '#A1525F') : colors.muted,
+                  color: isEmojiPickerOpen ? iconAccentColor : iconColor,
                   cursor: 'pointer',
                   padding: '4px',
                   display: 'flex',
@@ -1493,7 +1504,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                 aria-label="Insert emoji"
                 title="Choose emojis & icons"
               >
-                <Smile size={21} />
+                <Smile size={21} color={isEmojiPickerOpen ? iconAccentColor : iconColor} />
               </button>
 
               {/* Message Input with generous spacing */}
@@ -1530,7 +1541,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                     : isDark
                     ? 'rgba(70, 32, 55, 0.4)'
                     : 'rgba(161, 82, 95, 0.18)',
-                  color: messageInput.trim() ? '#FFFFFF' : colors.muted,
+                  color: messageInput.trim() ? '#FFFFFF' : iconMutedColor,
                   cursor: messageInput.trim() ? 'pointer' : 'default',
                   display: 'flex',
                   alignItems: 'center',
@@ -1542,7 +1553,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                 aria-label="Send message"
                 title="Send message"
               >
-                <Send size={16} style={{ transform: 'translateX(1px)' }} />
+                <Send size={16} color={messageInput.trim() ? '#FFFFFF' : iconMutedColor} style={{ transform: 'translateX(1px)' }} />
               </button>
             </form>
           </div>

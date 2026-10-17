@@ -1328,21 +1328,45 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
           isDark={isDark}
           onClose={() => setCroppingPhoto(null)}
           onSave={(croppedDataUrl) => {
+            let nextPhotos: string[];
             if (croppingPhoto?.index !== undefined) {
-              setPhotos((prev) => {
-                const next = [...prev];
-                next[croppingPhoto.index!] = croppedDataUrl;
-                return next;
-              });
+              const next = [...photos];
+              next[croppingPhoto.index] = croppedDataUrl;
+              nextPhotos = next;
             } else {
-              setPhotos((prev) => {
-                if (prev.length >= 6) return prev;
-                return [...prev, croppedDataUrl];
-              });
+              nextPhotos = photos.length >= 6 ? photos : [...photos, croppedDataUrl];
             }
+            setPhotos(nextPhotos);
+            initialPhotosRef.current = nextPhotos;
+            updateProfile({ photos: nextPhotos });
+            try {
+              const raw =
+                sessionStorage.getItem('inner_circle_active_applicant_data') ||
+                localStorage.getItem('inner_circle_active_applicant_data');
+              if (raw) {
+                const parsed = JSON.parse(raw);
+                if (parsed.profile) {
+                  parsed.profile.photos = nextPhotos;
+                  sessionStorage.setItem('inner_circle_active_applicant_data', JSON.stringify(parsed));
+                  localStorage.setItem('inner_circle_active_applicant_data', JSON.stringify(parsed));
+                }
+              }
+            } catch {}
             setCroppingPhoto(null);
           }}
         />
+
+        {/* Faint placeholder styles for profile setup */}
+        <style>{`
+          .profile-setup-input::placeholder,
+          .profile-setup-textarea::placeholder,
+          input::placeholder,
+          textarea::placeholder {
+            color: ${isDark ? 'rgba(249, 170, 173, 0.32)' : 'rgba(70, 32, 55, 0.32)'} !important;
+            opacity: 0.55 !important;
+            font-weight: 400 !important;
+          }
+        `}</style>
       </div>
     </div>
   );

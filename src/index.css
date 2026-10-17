@@ -393,3 +393,21 @@ html[data-theme="after-dark"] select:-webkit-autofill,
   }
 }
 
+/* Faint, elegant sample placeholder text - distinctly non-entered text */
+input::placeholder,
+textarea::placeholder {
+  color: rgba(70, 32, 55, 0.36) !important;
+  opacity: 0.55 !important;
+  font-weight: 400 !important;
+}
+
+[data-theme='after-dark'] input::placeholder,
+[data-theme='after-dark'] textarea::placeholder,
+.theme-after-dark input::placeholder,
+.theme-after-dark textarea::placeholder {
+  color: rgba(249, 170, 173, 0.36) !important;
+  opacity: 0.55 !important;
+  font-weight: 400 !important;
+}
+
+

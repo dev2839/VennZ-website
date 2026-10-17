@@ -650,11 +650,20 @@ export const App: React.FC = () => {
         className="page-transition-enter"
         style={{
           width: '100%',
+          flex: 1,
           display: 'flex',
           flexDirection: 'column',
           position: 'relative',
           zIndex: 5,
           boxSizing: 'border-box',
+          ...(currentPath === '/member/chat'
+            ? {
+                height: 'calc(100vh - 68px)',
+                minHeight: 'calc(100vh - 68px)',
+                maxHeight: 'calc(100vh - 68px)',
+                overflow: 'hidden',
+              }
+            : {}),
         }}
       >
         {renderActiveScreen(false, false)}

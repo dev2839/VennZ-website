@@ -110,8 +110,8 @@ export const PhotoCropModal: React.FC<PhotoCropModalProps> = ({
     if (!img || !container) return;
 
     const canvas = document.createElement('canvas');
-    const targetWidth = 900;
-    const targetHeight = 1200; // 3:4 ratio
+    const targetWidth = 720;
+    const targetHeight = 960; // 3:4 portrait ratio
     canvas.width = targetWidth;
     canvas.height = targetHeight;
     const ctx = canvas.getContext('2d');
@@ -169,7 +169,7 @@ export const PhotoCropModal: React.FC<PhotoCropModalProps> = ({
     ctx.restore();
 
     try {
-      const croppedDataUrl = canvas.toDataURL('image/jpeg', 0.88);
+      const croppedDataUrl = canvas.toDataURL('image/jpeg', 0.84);
       onSave(croppedDataUrl);
       onClose();
     } catch {
