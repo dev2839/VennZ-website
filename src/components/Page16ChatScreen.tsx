@@ -521,8 +521,8 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
         position: 'relative',
         width: '100%',
         height: '100%',
-        minHeight: 'calc(100vh - 68px)',
-        maxHeight: 'calc(100vh - 68px)',
+        minHeight: 0,
+        flex: 1,
         display: 'flex',
         flexDirection: 'column',
         backgroundColor: colors.bg,
@@ -578,6 +578,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
           position: 'relative',
           zIndex: 10,
           flex: 1,
+          minHeight: 0,
           display: 'flex',
           width: '100%',
           height: '100%',
@@ -594,6 +595,8 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
             minWidth: '310px',
             maxWidth: '400px',
             height: '100%',
+            minHeight: 0,
+            flexShrink: 0,
             backgroundColor: colors.sidebarBg,
             borderRight: `1px solid ${colors.border}`,
             display: 'flex',
@@ -610,6 +613,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
               alignItems: 'center',
               justifyContent: 'space-between',
               borderBottom: `1px solid ${colors.border}`,
+              flexShrink: 0,
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -676,7 +680,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
           </div>
 
           {/* Real-Time Search Box */}
-          <div style={{ padding: '14px 18px 10px' }}>
+          <div style={{ padding: '14px 18px 10px', flexShrink: 0 }}>
             <div
               style={{
                 display: 'flex',
@@ -908,6 +912,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <button
                 type="button"
+                className="chat-back-btn"
                 onClick={() => {
                   if (typeof window !== 'undefined' && window.innerWidth < 768) {
                     setMobileView('list');
@@ -1202,7 +1207,62 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
 
               {/* Message Bubbles Feed */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                {conversationMessages.map((msg, index) => {
+                {conversationMessages.length === 0 ? (
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      padding: '48px 24px',
+                      textAlign: 'center',
+                      gap: '12px',
+                    }}
+                  >
+                    <div style={{ position: 'relative', width: '68px', height: '68px' }}>
+                      <img
+                        src={activeMatch.photo}
+                        alt={activeMatch.name}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          borderRadius: '50%',
+                          objectFit: 'cover',
+                          border: isDark
+                            ? '2px solid rgba(199, 87, 124, 0.5)'
+                            : '2px solid rgba(161, 82, 95, 0.4)',
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <div
+                        style={{
+                          fontFamily: 'var(--font-serif)',
+                          fontSize: '19px',
+                          fontWeight: 600,
+                          color: colors.text,
+                        }}
+                      >
+                        {activeMatch.name}
+                      </div>
+                      <div style={{ fontSize: '12.5px', color: colors.muted, marginTop: '3px' }}>
+                        {[activeMatch.designation, activeMatch.city].filter(Boolean).join(' · ')}
+                      </div>
+                    </div>
+                    <p
+                      style={{
+                        fontSize: '13px',
+                        color: colors.muted,
+                        maxWidth: '340px',
+                        lineHeight: 1.5,
+                        margin: '6px 0 0',
+                      }}
+                    >
+                      Verified connection on VennZ. Say hello to begin your conversation.
+                    </p>
+                  </div>
+                ) : (
+                  conversationMessages.map((msg, index) => {
                   const isMe = msg.senderId === 'me';
                   const isLastInGroup =
                     index === conversationMessages.length - 1 ||
@@ -1293,7 +1353,8 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                       </div>
                     </div>
                   );
-                })}
+                })
+              )}
                 <div ref={messagesEndRef} />
               </div>
             </div>
@@ -1762,6 +1823,9 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
           }
           .chat-main-pane {
             display: flex !important;
+          }
+          .chat-back-btn {
+            display: none !important;
           }
         }
       `}</style>

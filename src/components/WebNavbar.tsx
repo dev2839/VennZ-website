@@ -136,6 +136,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
         left: 0,
         right: 0,
         zIndex: 50,
+        flexShrink: 0,
         backgroundColor: 'transparent',
         border: 'none',
         borderTop: 'none',

@@ -613,7 +613,9 @@ export const App: React.FC = () => {
   return (
     <div
       style={{
-        minHeight: '100vh',
+        height: currentPath === '/member/chat' ? '100dvh' : undefined,
+        maxHeight: currentPath === '/member/chat' ? '100dvh' : undefined,
+        minHeight: currentPath === '/member/chat' ? '100dvh' : '100vh',
         width: '100%',
         display: 'flex',
         flexDirection: 'column',
@@ -621,6 +623,7 @@ export const App: React.FC = () => {
         color: isDark ? '#FDF3F5' : '#462037',
         fontFamily: 'var(--font-sans)',
         position: 'relative',
+        overflow: currentPath === '/member/chat' ? 'hidden' : undefined,
       }}
     >
       {/* Intro Launch Animation */}
@@ -651,17 +654,17 @@ export const App: React.FC = () => {
         style={{
           width: '100%',
           flex: 1,
+          minHeight: 0,
           display: 'flex',
           flexDirection: 'column',
           position: 'relative',
           zIndex: 5,
           boxSizing: 'border-box',
+          overflow: currentPath === '/member/chat' ? 'hidden' : undefined,
           ...(currentPath === '/member/chat'
             ? {
-                height: 'calc(100vh - 68px)',
-                minHeight: 'calc(100vh - 68px)',
-                maxHeight: 'calc(100vh - 68px)',
-                overflow: 'hidden',
+                height: '100%',
+                maxHeight: '100%',
               }
             : {}),
         }}
