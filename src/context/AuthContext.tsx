@@ -281,6 +281,34 @@ export const INITIAL_SENT_REQUESTS: SentRequest[] = [
   },
 ];
 
+export const INITIAL_MATCHES: MatchItem[] = [
+  {
+    id: 'match-meera-30',
+    profileId: 'meera-30',
+    name: 'Meera Sen',
+    age: 30,
+    city: 'Pune, India',
+    designation: 'Corporate Counsel',
+    company: 'Shardul Amarchand Mangaldas',
+    photo: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=900&auto=format&fit=crop&q=85',
+    isVerified: true,
+    matchedAt: Date.now() - 3600000 * 2,
+    lastMessage: "Thank you for accepting — I'm Meera. How has your week been?",
+    lastMessageTime: Date.now() - 3600000 * 2,
+  },
+];
+
+export const INITIAL_CONVERSATIONS: Record<string, ChatMessage[]> = {
+  'match-meera-30': [
+    {
+      id: 'msg-meera-init-1',
+      senderId: 'meera-30',
+      text: "Thank you for accepting — I'm Meera. How has your week been?",
+      timestamp: Date.now() - 3600000 * 2,
+    },
+  ],
+};
+
 export const INITIAL_NOTIFICATIONS: AppNotification[] = [
   {
     id: 'notif-request-kabir',
@@ -383,9 +411,9 @@ const defaultState: AuthState = {
   incomingRequests: INITIAL_INCOMING_REQUESTS,
   sentRequests: INITIAL_SENT_REQUESTS,
   notifications: INITIAL_NOTIFICATIONS,
-  matches: [],
+  matches: INITIAL_MATCHES,
   unreadMatchIds: [],
-  conversations: {},
+  conversations: INITIAL_CONVERSATIONS,
   blockedProfileIds: [],
   elevateRequests: [],
   elevateBookings: INITIAL_ELEVATE_BOOKINGS,
@@ -462,8 +490,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           incomingRequests: mergedState.incomingRequests !== undefined ? mergedState.incomingRequests : INITIAL_INCOMING_REQUESTS,
           sentRequests: mergedState.sentRequests !== undefined ? mergedState.sentRequests : INITIAL_SENT_REQUESTS,
           notifications: sanitizedNotifs.length > 0 ? sanitizedNotifs : INITIAL_NOTIFICATIONS,
-          matches: mergedState.matches !== undefined ? mergedState.matches : [],
-          conversations: mergedState.conversations !== undefined ? mergedState.conversations : {},
+          matches: (mergedState.matches && mergedState.matches.length > 0) ? mergedState.matches : INITIAL_MATCHES,
+          conversations: (mergedState.conversations && Object.keys(mergedState.conversations).length > 0) ? mergedState.conversations : INITIAL_CONVERSATIONS,
           blockedProfileIds: mergedState.blockedProfileIds !== undefined ? mergedState.blockedProfileIds : [],
           elevateRequests: mergedState.elevateRequests !== undefined ? mergedState.elevateRequests : [],
           elevateBookings: (mergedState.elevateBookings && mergedState.elevateBookings.length > 0) ? mergedState.elevateBookings : INITIAL_ELEVATE_BOOKINGS,
