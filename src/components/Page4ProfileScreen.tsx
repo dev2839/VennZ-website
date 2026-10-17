@@ -1172,7 +1172,7 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                   </label>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
                     {photos.map((photo, index) => (
-                      <div key={index} style={{ position: 'relative', width: '100%', aspectRatio: '3/4', borderRadius: '12px', overflow: 'hidden', backgroundColor: 'rgba(0,0,0,0.1)', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
+                      <div key={`setup-photo-${index}-${photo.length}-${photo.slice(-24)}`} style={{ position: 'relative', width: '100%', aspectRatio: '3/4', borderRadius: '12px', overflow: 'hidden', backgroundColor: 'rgba(0,0,0,0.1)', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
                         <img src={photo} alt={`Upload ${index + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                         {index === 0 && (
                           <div style={{ position: 'absolute', bottom: '8px', left: '50%', transform: 'translateX(-50%)', backgroundColor: 'rgba(20, 14, 28, 0.75)', backdropFilter: 'blur(4px)', color: '#fff', fontSize: '10px', fontWeight: 700, padding: '4px 10px', borderRadius: '12px', letterSpacing: '0.08em', boxShadow: '0 2px 8px rgba(0,0,0,0.2)' }}>

@@ -464,8 +464,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           ...(backup || {}),
           profile: {
             ...defaultProfile,
-            ...(parsed?.profile || {}),
             ...(backup?.profile || {}),
+            ...(parsed?.profile || {}),
           },
         };
 
@@ -957,6 +957,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       return next;
     });
+
+    try {
+      const raw =
+        sessionStorage.getItem('inner_circle_active_applicant_data') ||
+        localStorage.getItem('inner_circle_active_applicant_data');
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed.profile) {
+          parsed.profile = {
+            ...parsed.profile,
+            ...profileUpdates,
+          };
+          sessionStorage.setItem('inner_circle_active_applicant_data', JSON.stringify(parsed));
+          localStorage.setItem('inner_circle_active_applicant_data', JSON.stringify(parsed));
+        }
+      }
+    } catch {}
   };
 
   /**

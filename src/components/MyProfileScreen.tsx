@@ -93,6 +93,18 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
   const [copySuccess, setCopySuccess] = useState(false);
   const [latestGeneratedCode, setLatestGeneratedCode] = useState<string | null>(null);
 
+  // Keep draft in sync with profile updates when not actively editing
+  useEffect(() => {
+    if (!isEditing) {
+      setDraft({
+        ...profile,
+        photos: [...(profile.photos || [])],
+        interests: [...(profile.interests || [])],
+        vibes: [...(profile.vibes || [])],
+      });
+    }
+  }, [profile, isEditing]);
+
   // Invitations
   const [invitations, setInvitations] = useState<{ code: string; createdAt: number }[]>(() => {
     try {
@@ -151,6 +163,22 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
     setDraft(updatedProfile);
     setIsEditing(false);
     setSaveMessage('Your profile is saved.');
+    try {
+      const raw =
+        sessionStorage.getItem('inner_circle_active_applicant_data') ||
+        localStorage.getItem('inner_circle_active_applicant_data');
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed.profile) {
+          parsed.profile = {
+            ...parsed.profile,
+            ...updatedProfile,
+          };
+          sessionStorage.setItem('inner_circle_active_applicant_data', JSON.stringify(parsed));
+          localStorage.setItem('inner_circle_active_applicant_data', JSON.stringify(parsed));
+        }
+      }
+    } catch {}
   };
 
   const handleCancel = () => {
@@ -703,7 +731,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                 >
                   {(draft.photos || []).map((photo: string, index: number) => (
                     <div
-                      key={`${photo.slice(0, 30)}-${index}`}
+                      key={`my-photo-${index}-${photo.length}-${photo.slice(-24)}`}
                       style={{
                         position: 'relative',
                         width: '100%',
@@ -1437,14 +1465,30 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
         isDark={isDark}
         onClose={() => setCroppingPhoto(null)}
         onSave={(croppedDataUrl) => {
+          let nextPhotos: string[];
           if (croppingPhoto?.index !== undefined) {
             const next = [...(draft.photos || [])];
             next[croppingPhoto.index] = croppedDataUrl;
-            updateDraft('photos', next);
+            nextPhotos = next;
           } else {
             const next = [...(draft.photos || []), croppedDataUrl];
-            updateDraft('photos', next.slice(0, MAX_PHOTOS));
+            nextPhotos = next.slice(0, MAX_PHOTOS);
           }
+          updateDraft('photos', nextPhotos);
+          updateProfile({ photos: nextPhotos });
+          try {
+            const raw =
+              sessionStorage.getItem('inner_circle_active_applicant_data') ||
+              localStorage.getItem('inner_circle_active_applicant_data');
+            if (raw) {
+              const parsed = JSON.parse(raw);
+              if (parsed.profile) {
+                parsed.profile.photos = nextPhotos;
+                sessionStorage.setItem('inner_circle_active_applicant_data', JSON.stringify(parsed));
+                localStorage.setItem('inner_circle_active_applicant_data', JSON.stringify(parsed));
+              }
+            }
+          } catch {}
           setCroppingPhoto(null);
         }}
       />

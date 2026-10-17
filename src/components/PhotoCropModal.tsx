@@ -103,77 +103,105 @@ export const PhotoCropModal: React.FC<PhotoCropModalProps> = ({
     setRotation(0);
   };
 
-  // Perform canvas crop in 3:4 aspect ratio (900x1200)
-  const handleApply = () => {
-    const img = imageRef.current;
+  // Perform canvas crop in 3:4 aspect ratio (720x960)
+  const handleApply = async () => {
     const container = containerRef.current;
-    if (!img || !container) return;
-
-    const canvas = document.createElement('canvas');
-    const targetWidth = 720;
-    const targetHeight = 960; // 3:4 portrait ratio
-    canvas.width = targetWidth;
-    canvas.height = targetHeight;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const containerRect = container.getBoundingClientRect();
-    const cropWidth = containerRect.width;
-    const cropHeight = containerRect.height;
-
-    // Background fill
-    ctx.fillStyle = '#000000';
-    ctx.fillRect(0, 0, targetWidth, targetHeight);
-
-    // Compute transformation matrix
-    ctx.save();
-    // Center canvas
-    ctx.translate(targetWidth / 2, targetHeight / 2);
-
-    // Translation relative to target canvas size
-    const factorX = targetWidth / cropWidth;
-    const factorY = targetHeight / cropHeight;
-
-    ctx.translate(position.x * factorX, position.y * factorY);
-    ctx.rotate((rotation * Math.PI) / 180);
-    ctx.scale(scale, scale);
-
-    // Natural image dimensions
-    const isRotatedSideways = rotation === 90 || rotation === 270;
-    const naturalW = img.naturalWidth || img.width;
-    const naturalH = img.naturalHeight || img.height;
-
-    // Draw scaled to fit container naturally
-    const imgAspect = naturalW / naturalH;
-    const containerAspect = cropWidth / cropHeight;
-
-    let drawW: number;
-    let drawH: number;
-
-    if (imgAspect > containerAspect) {
-      drawH = targetHeight;
-      drawW = targetHeight * imgAspect;
-    } else {
-      drawW = targetWidth;
-      drawH = targetWidth / imgAspect;
+    if (!container || !imageSrc) {
+      onClose();
+      return;
     }
-
-    if (isRotatedSideways) {
-      // Adjust draw dimensions when 90 or 270
-      const tmp = drawW;
-      drawW = drawH;
-      drawH = tmp;
-    }
-
-    ctx.drawImage(img, -drawW / 2, -drawH / 2, drawW, drawH);
-    ctx.restore();
 
     try {
-      const croppedDataUrl = canvas.toDataURL('image/jpeg', 0.84);
-      onSave(croppedDataUrl);
+      // Create and load a dedicated image element with crossOrigin
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+
+      await new Promise<void>((resolve) => {
+        img.onload = () => resolve();
+        img.onerror = () => resolve();
+        img.src = imageSrc;
+        if (img.complete && img.naturalWidth > 0) resolve();
+      });
+
+      const targetWidth = 720;
+      const targetHeight = 960; // 3:4 portrait ratio
+      const canvas = document.createElement('canvas');
+      canvas.width = targetWidth;
+      canvas.height = targetHeight;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        onClose();
+        return;
+      }
+
+      const containerRect = container.getBoundingClientRect();
+      const cropWidth = containerRect.width || 240;
+      const cropHeight = containerRect.height || 320;
+
+      // Draw function to render image with current scale, pan and rotation
+      const renderToCanvas = (sourceImg: CanvasImageSource, naturalW: number, naturalH: number) => {
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(0, 0, targetWidth, targetHeight);
+
+        ctx.save();
+        ctx.translate(targetWidth / 2, targetHeight / 2);
+
+        const factorX = targetWidth / cropWidth;
+        const factorY = targetHeight / cropHeight;
+
+        ctx.translate(position.x * factorX, position.y * factorY);
+        ctx.rotate((rotation * Math.PI) / 180);
+        ctx.scale(scale, scale);
+
+        const imgAspect = naturalW / naturalH;
+        const containerAspect = cropWidth / cropHeight;
+
+        let drawW: number;
+        let drawH: number;
+
+        if (imgAspect > containerAspect) {
+          drawH = targetHeight;
+          drawW = targetHeight * imgAspect;
+        } else {
+          drawW = targetWidth;
+          drawH = targetWidth / imgAspect;
+        }
+
+        ctx.drawImage(sourceImg, -drawW / 2, -drawH / 2, drawW, drawH);
+        ctx.restore();
+      };
+
+      const naturalW = img.naturalWidth || 720;
+      const naturalH = img.naturalHeight || 960;
+
+      renderToCanvas(img, naturalW, naturalH);
+
+      let croppedDataUrl = '';
+      try {
+        croppedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+      } catch {
+        // If tainted by CORS, fetch as blob and redraw (blob URLs are same-origin and never taint canvas)
+        try {
+          const res = await fetch(imageSrc);
+          const blob = await res.blob();
+          const blobUrl = URL.createObjectURL(blob);
+          const blobImg = new Image();
+          await new Promise<void>((resBlob) => {
+            blobImg.onload = () => resBlob();
+            blobImg.src = blobUrl;
+          });
+          renderToCanvas(blobImg, blobImg.naturalWidth || naturalW, blobImg.naturalHeight || naturalH);
+          URL.revokeObjectURL(blobUrl);
+          croppedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+        } catch {}
+      }
+
+      if (croppedDataUrl) {
+        onSave(croppedDataUrl);
+      }
       onClose();
-    } catch {
-      // Fallback
+    } catch (err) {
+      console.error('Failed to crop photo:', err);
       onClose();
     }
   };
@@ -307,6 +335,7 @@ export const PhotoCropModal: React.FC<PhotoCropModalProps> = ({
               <img
                 ref={imageRef}
                 src={imageSrc}
+                crossOrigin="anonymous"
                 alt="Framing preview"
                 draggable={false}
                 style={{
