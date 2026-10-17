@@ -12,16 +12,12 @@ export const NotificationPopup: React.FC<NotificationPopupProps> = ({ onNavigate
     dismissNotificationPopup,
     markNotificationAsRead,
     appearanceMode,
-    isAuthenticated,
     membershipStatus,
   } = useAuth();
 
   const isDark = appearanceMode === 'after-dark';
-  const hasAccount = Boolean(
-    isAuthenticated ||
-    membershipStatus === 'member' ||
-    membershipStatus === 'complimentary'
-  );
+  // Only show notifications when user has fully active membership — not during onboarding, DigiLocker, or before login completes
+  const hasAccount = membershipStatus === 'member' || membershipStatus === 'complimentary';
 
   const [activeNotif, setActiveNotif] = useState<AppNotification | null>(null);
   const [isVisible, setIsVisible] = useState(false);

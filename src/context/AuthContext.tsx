@@ -1265,12 +1265,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const showNotificationPopup = (notif: AppNotification) => {
     setState((prev) => {
-      const hasAccount = Boolean(
-        prev.isAuthenticated ||
+      // Only show popups once user has fully active membership — never during onboarding/DigiLocker/profile setup
+      const hasMembership =
         prev.membershipStatus === 'member' ||
-        prev.membershipStatus === 'complimentary'
-      );
-      if (!hasAccount) return prev;
+        prev.membershipStatus === 'complimentary';
+      if (!hasMembership) return prev;
       return {
         ...prev,
         latestPopupNotification: notif,
@@ -1286,12 +1285,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const triggerLiveNotificationDemo = () => {
-    const hasAccount = Boolean(
-      state.isAuthenticated ||
+    // Only works when user has fully active membership
+    const hasMembership =
       state.membershipStatus === 'member' ||
-      state.membershipStatus === 'complimentary'
-    );
-    if (!hasAccount) return;
+      state.membershipStatus === 'complimentary';
+    if (!hasMembership) return;
 
     const demoItems: Array<Pick<AppNotification, 'category' | 'title' | 'message' | 'targetRoute' | 'type'>> = [
       {
@@ -1338,12 +1336,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     setState((prev) => {
-      const userHasAccount = Boolean(
-        prev.isAuthenticated ||
+      const hasMembership =
         prev.membershipStatus === 'member' ||
-        prev.membershipStatus === 'complimentary'
-      );
-      if (!userHasAccount) return prev;
+        prev.membershipStatus === 'complimentary';
+      if (!hasMembership) return prev;
 
       const currentList = prev.notifications && prev.notifications.length > 0
         ? prev.notifications
@@ -1356,45 +1352,55 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
-  // Gentle initial notification popup for unread updates strictly when user has an active account or signs in
+  // Show "Welcome to VennZ" as the very FIRST notification when membership becomes active.
+  // After that, notifications are driven only by real-time in-app actions — never auto-popped from old unread list.
   useEffect(() => {
-    const hasAccount = Boolean(
-      state.isAuthenticated ||
+    const hasMembership =
       state.membershipStatus === 'member' ||
-      state.membershipStatus === 'complimentary'
-    );
-    if (!hasAccount) return;
+      state.membershipStatus === 'complimentary';
+    if (!hasMembership) return;
 
+    // Use a stable, per-account key stored in localStorage so welcome is shown only ONCE, ever
     const accountIdentifier =
       state.phoneNumber ||
       state.googleUser?.email ||
       state.profile?.vennzName ||
       'member';
-    const storageKey = `vennz_initial_notif_popped_${accountIdentifier}`;
-    const hasPopped = sessionStorage.getItem(storageKey);
-    if (hasPopped) return;
+    const welcomeKey = `vennz_welcome_shown_${accountIdentifier}`;
+    if (localStorage.getItem(welcomeKey)) return; // Already shown for this account
 
-    const unread = (state.notifications || INITIAL_NOTIFICATIONS).find((n) => !n.isRead);
-    if (!unread) return;
+    const welcomeNotif: AppNotification = {
+      id: `notif-welcome-${Date.now()}`,
+      category: 'VENNZ',
+      sourcePage: 'MATCHES',
+      title: 'Welcome to VennZ ✨',
+      message: "Your membership is active. You're part of an exclusive, verified community of ambitious individuals.",
+      timestamp: 'Just now',
+      isRead: false,
+      type: 'system',
+      targetRoute: '/member/matches',
+    };
 
     const timer = setTimeout(() => {
-      sessionStorage.setItem(storageKey, 'true');
+      localStorage.setItem(welcomeKey, 'true');
       setState((prev) => {
-        const stillHasAccount = Boolean(
-          prev.isAuthenticated ||
+        const stillHasMembership =
           prev.membershipStatus === 'member' ||
-          prev.membershipStatus === 'complimentary'
-        );
-        if (!stillHasAccount) return prev;
+          prev.membershipStatus === 'complimentary';
+        if (!stillHasMembership) return prev;
+        const currentList = prev.notifications && prev.notifications.length > 0
+          ? prev.notifications
+          : INITIAL_NOTIFICATIONS;
         return {
           ...prev,
-          latestPopupNotification: unread,
+          notifications: [welcomeNotif, ...currentList],
+          latestPopupNotification: welcomeNotif,
         };
       });
     }, 1800);
 
     return () => clearTimeout(timer);
-  }, [state.isAuthenticated, state.membershipStatus, state.phoneNumber, state.googleUser?.email, state.profile?.vennzName]);
+  }, [state.membershipStatus, state.phoneNumber, state.googleUser?.email, state.profile?.vennzName]);
 
   const resetDiscoverQueue = () => {
     setState((prev) => ({
