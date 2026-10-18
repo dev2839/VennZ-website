@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
 
-export type MemberTab = 'discover' | 'matches' | 'elevate' | 'mixers' | 'you' | 'profile';
+export type MemberTab = 'discover' | 'matches' | 'elevate' | 'mixers' | 'afterhours' | 'you' | 'profile';
 
 interface MemberBottomNavProps {
   activeTab: MemberTab;
@@ -22,6 +22,22 @@ const CrownIcon = ({ color, size = 10 }: { color: string; size?: number }) => (
   </svg>
 );
 
+const MoonIcon = ({ color, size = 10 }: { color: string; size?: number }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke={color}
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    style={{ display: 'inline-block', verticalAlign: 'middle', flexShrink: 0 }}
+  >
+    <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+  </svg>
+);
+
 export const MemberBottomNav: React.FC<MemberBottomNavProps> = ({
   activeTab,
   onSelectTab,
@@ -32,12 +48,12 @@ export const MemberBottomNav: React.FC<MemberBottomNavProps> = ({
 
   const hasIncomingRequests = Boolean(incomingRequests && incomingRequests.length > 0);
 
-  const tabs: { id: MemberTab; label: string; hasNotification?: boolean; isExclusive?: boolean }[] = [
+  const tabs: { id: MemberTab; label: string; hasNotification?: boolean; isExclusive?: boolean; isMoon?: boolean }[] = [
     { id: 'discover', label: 'DISCOVER' },
     { id: 'matches', label: 'MATCHES', hasNotification: hasIncomingRequests },
     { id: 'elevate', label: 'ELEVATE', isExclusive: true },
     { id: 'mixers', label: 'MIXERS' },
-    { id: 'profile', label: 'PROFILE' },
+    { id: 'afterhours', label: 'afterHOURS', isMoon: true },
   ];
 
   const navBg = isDark ? 'rgba(20, 14, 28, 0.98)' : 'rgba(250, 241, 243, 0.96)';
@@ -120,6 +136,12 @@ export const MemberBottomNav: React.FC<MemberBottomNavProps> = ({
                 {tab.isExclusive && (
                   <CrownIcon
                     color={isActive ? (isDark ? '#F5D78E' : crownColor) : (isDark ? 'rgba(223, 183, 108, 0.7)' : 'rgba(138, 75, 110, 0.65)')}
+                    size={10}
+                  />
+                )}
+                {tab.isMoon && (
+                  <MoonIcon
+                    color={isActive ? activeColor : inactiveColor}
                     size={10}
                   />
                 )}

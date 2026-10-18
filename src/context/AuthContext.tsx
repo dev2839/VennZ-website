@@ -175,6 +175,7 @@ interface AuthContextType extends AuthState {
   sendChatMessage: (matchId: string, text: string) => void;
   unmatchUser: (matchId: string) => void;
   blockUser: (matchId: string) => void;
+  addDirectMatch: (match: MatchItem) => void;
   // Elevate Concierge & Orders methods
   elevateRequests: ElevateRequest[];
   elevateBookings: ElevateBooking[];
@@ -1291,6 +1292,52 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
+  const addDirectMatch = (match: MatchItem) => {
+    setState((prev) => {
+      const matchExists = (prev.matches || []).some(
+        (m) => m.profileId === match.profileId || m.id === match.id
+      );
+      if (matchExists) return prev;
+
+      const newMatchId = match.id;
+      const openingMsg: ChatMessage = {
+        id: `msg-ah-${Date.now()}`,
+        senderId: match.profileId || match.id,
+        text: `Connected intentionally via VennZ After Hours! We both agreed to reveal our profiles.`,
+        timestamp: Date.now(),
+      };
+
+      const matchNotif: AppNotification = {
+        id: `notif-afterhours-${Date.now()}`,
+        type: 'match',
+        category: 'MATCH',
+        title: 'New Mutual Match from After Hours! 🎉',
+        message: `You and ${match.name} both agreed to reveal and connect in After Hours.`,
+        timestamp: 'Just now',
+        isRead: false,
+        targetRoute: '/member/chat',
+        avatarUrl: match.photo,
+      };
+
+      const currentList =
+        prev.notifications && prev.notifications.length > 0
+          ? prev.notifications
+          : INITIAL_NOTIFICATIONS;
+
+      return {
+        ...prev,
+        matches: [match, ...(prev.matches || [])],
+        unreadMatchIds: [...new Set([...(prev.unreadMatchIds || []), newMatchId])],
+        conversations: {
+          ...(prev.conversations || {}),
+          [newMatchId]: [openingMsg],
+        },
+        notifications: [matchNotif, ...currentList],
+        latestPopupNotification: matchNotif,
+      };
+    });
+  };
+
   const markNotificationsAsRead = (id?: string) => {
     setState((prev) => {
       const currentList = prev.notifications && prev.notifications.length > 0 
@@ -2174,6 +2221,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         sendChatMessage,
         unmatchUser,
         blockUser,
+        addDirectMatch,
         // Elevate
         elevateRequests: state.elevateRequests || [],
         elevateBookings: state.elevateBookings || INITIAL_ELEVATE_BOOKINGS,

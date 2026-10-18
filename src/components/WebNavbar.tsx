@@ -23,7 +23,8 @@ export type RoutePath =
   | '/member/matches'
   | '/member/chat'
   | '/member/elevate'
-  | '/member/mixers';
+  | '/member/mixers'
+  | '/member/afterhours';
 
 interface WebNavbarProps {
   currentPath: RoutePath;
@@ -40,6 +41,22 @@ const CrownIcon = ({ color, size = 11 }: { color: string; size?: number }) => (
     style={{ display: 'inline-block', verticalAlign: 'middle', flexShrink: 0 }}
   >
     <path d="M2.5 19h19a1 1 0 0 0 1-1v-1a1 1 0 0 0-1-1H2.5a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1zm19-14a1 1 0 0 0-1 .62l-3.24 7.42-3.8-9.04a1 1 0 0 0-1.92 0l-3.8 9.04-3.24-7.42a1 1 0 0 0-1.78.38l-1.72 9a1 1 0 0 0 .98 1.18h19a1 1 0 0 0 .98-1.18l-1.72-9a1 1 0 0 0-.46-.38z" />
+  </svg>
+);
+
+const MoonIcon = ({ color, size = 11 }: { color: string; size?: number }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke={color}
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    style={{ display: 'inline-block', verticalAlign: 'middle', flexShrink: 0 }}
+  >
+    <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
   </svg>
 );
 
@@ -107,14 +124,15 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
     currentPath === '/member/matches' ||
     currentPath === '/member/chat' ||
     currentPath === '/member/elevate' ||
-    currentPath === '/member/mixers';
+    currentPath === '/member/mixers' ||
+    currentPath === '/member/afterhours';
 
   const navItems = [
     { path: '/discover' as RoutePath, label: 'DISCOVER' },
     { path: '/member/matches' as RoutePath, label: 'MATCHES', hasBadge: hasIncomingRequests },
     { path: '/member/elevate' as RoutePath, label: 'ELEVATE', hasCrown: true },
     { path: '/member/mixers' as RoutePath, label: 'MIXERS' },
-    { path: '/member/my-profile' as RoutePath, label: 'PROFILE' },
+    { path: '/member/afterhours' as RoutePath, label: 'afterHOURS', hasMoon: true },
   ];
 
 
@@ -259,6 +277,9 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                 >
                   {item.hasCrown && (
                     <CrownIcon color={isActive ? '#E0B56A' : isDark ? '#D5A85A' : '#C7577C'} size={12} />
+                  )}
+                  {item.hasMoon && (
+                    <MoonIcon color={isActive ? activeColor : inactiveColor} size={12} />
                   )}
                   <span>{item.label}</span>
                   {item.hasBadge && (
@@ -679,6 +700,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
               >
                 <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   {item.hasCrown && <CrownIcon color="#DFB76C" size={12} />}
+                  {item.hasMoon && <MoonIcon color={isActive ? activeColor : textColor} size={12} />}
                   <span>{item.label}</span>
                 </span>
                 {item.hasBadge && (

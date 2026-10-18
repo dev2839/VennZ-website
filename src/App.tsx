@@ -17,6 +17,7 @@ import { Page15MatchesScreen } from './components/Page15MatchesScreen';
 import { Page16ChatScreen } from './components/Page16ChatScreen';
 import { Page17ElevateScreen } from './components/Page17ElevateScreen';
 import { Page18MixersScreen } from './components/Page18MixersScreen';
+import { Page19AfterHoursScreen } from './components/Page19AfterHoursScreen';
 import { WebNavbar, type RoutePath } from './components/WebNavbar';
 import { WebFooter } from './components/WebFooter';
 import { NotificationPopup } from './components/NotificationPopup';
@@ -72,6 +73,7 @@ export const App: React.FC = () => {
     '/member/chat',
     '/member/elevate',
     '/member/mixers',
+    '/member/afterhours',
   ];
 
   const isRegisteredUser = Boolean(
@@ -396,6 +398,8 @@ export const App: React.FC = () => {
               navigate('/member/elevate');
             } else if (tab === 'mixers') {
               navigate('/member/mixers');
+            } else if (tab === 'afterhours') {
+              navigate('/member/afterhours');
             }
           }}
           onUpgradeToMembership={handleUpgradeToMembership}
@@ -424,6 +428,8 @@ export const App: React.FC = () => {
               navigate('/member/elevate');
             } else if (tab === 'mixers') {
               navigate('/member/mixers');
+            } else if (tab === 'afterhours') {
+              navigate('/member/afterhours');
             }
           }}
           showStatusBar={showStatusBar}
@@ -455,6 +461,8 @@ export const App: React.FC = () => {
               navigate('/member/elevate');
             } else if (tab === 'mixers') {
               navigate('/member/mixers');
+            } else if (tab === 'afterhours') {
+              navigate('/member/afterhours');
             } else {
               navigate('/member/my-profile');
             }
@@ -481,6 +489,8 @@ export const App: React.FC = () => {
               navigate('/member/elevate');
             } else if (tab === 'mixers') {
               navigate('/member/mixers');
+            } else if (tab === 'afterhours') {
+              navigate('/member/afterhours');
             }
           }}
           showStatusBar={showStatusBar}
@@ -506,6 +516,8 @@ export const App: React.FC = () => {
               navigate('/member/elevate');
             } else if (tab === 'mixers') {
               navigate('/member/mixers');
+            } else if (tab === 'afterhours') {
+              navigate('/member/afterhours');
             }
           }}
           onNavigateHelp={() => navigate('/member/help')}
@@ -545,6 +557,8 @@ export const App: React.FC = () => {
               navigate('/member/elevate');
             } else if (tab === 'mixers') {
               navigate('/member/mixers');
+            } else if (tab === 'afterhours') {
+              navigate('/member/afterhours');
             }
           }}
           onNavigateHelp={() => navigate('/member/help')}
@@ -566,6 +580,8 @@ export const App: React.FC = () => {
               navigate('/member/my-profile');
             } else if (tab === 'mixers') {
               navigate('/member/mixers');
+            } else if (tab === 'afterhours') {
+              navigate('/member/afterhours');
             }
           }}
           onNavigateHelp={() => navigate('/member/help')}
@@ -588,10 +604,38 @@ export const App: React.FC = () => {
               navigate('/member/elevate');
             } else if (tab === 'you' || tab === 'profile') {
               navigate('/member/my-profile');
+            } else if (tab === 'afterhours') {
+              navigate('/member/afterhours');
             }
           }}
           onNavigateHelp={() => navigate('/member/help')}
           onUpgradeToMembership={handleUpgradeToMembership}
+          showStatusBar={showStatusBar}
+          showHomeIndicator={showHomeIndicator}
+        />
+      );
+    }
+
+    if (currentPath === '/member/afterhours') {
+      return (
+        <Page19AfterHoursScreen
+          onSelectTab={(tab) => {
+            if (tab === 'discover') {
+              navigate('/discover');
+            } else if (tab === 'matches') {
+              setMatchesInitialSubTab('matches');
+              navigate('/member/matches');
+            } else if (tab === 'elevate') {
+              navigate('/member/elevate');
+            } else if (tab === 'mixers') {
+              navigate('/member/mixers');
+            } else if (tab === 'you' || tab === 'profile') {
+              navigate('/member/my-profile');
+            }
+          }}
+          onNavigateHelp={() => navigate('/member/help')}
+          onUpgradeToMembership={handleUpgradeToMembership}
+          onNavigateToChat={() => navigate('/member/chat')}
           showStatusBar={showStatusBar}
           showHomeIndicator={showHomeIndicator}
         />
