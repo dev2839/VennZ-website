@@ -112,23 +112,27 @@ export const App: React.FC = () => {
   // ── Scroll-to-top on every page/route change ──────────────────────────────
   // Pages use internal overflow containers (not window), so we reset all of them.
   useEffect(() => {
-    // Reset window scroll
-    window.scrollTo(0, 0);
-    // Reset main wrapper
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    if (document.documentElement) document.documentElement.scrollTop = 0;
+    if (document.body) document.body.scrollTop = 0;
     if (mainRef.current) {
       mainRef.current.scrollTop = 0;
     }
     // Reset any internal overflow containers inside the newly rendered page
     const timer = setTimeout(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      if (document.documentElement) document.documentElement.scrollTop = 0;
+      if (document.body) document.body.scrollTop = 0;
       if (mainRef.current) {
+        mainRef.current.scrollTop = 0;
         const scrollables = mainRef.current.querySelectorAll<HTMLElement>(
-          '[style*="overflow"]'
+          '[style*="overflow"], [class*="overflow"]'
         );
         scrollables.forEach((el) => {
           el.scrollTop = 0;
         });
       }
-    }, 10);
+    }, 25);
     return () => clearTimeout(timer);
   }, [currentPath]);
 
@@ -167,7 +171,10 @@ export const App: React.FC = () => {
     } catch {
       // Ignore in environments without history API
     }
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    if (document.documentElement) document.documentElement.scrollTop = 0;
+    if (document.body) document.body.scrollTop = 0;
+    if (mainRef.current) mainRef.current.scrollTop = 0;
   };
 
   // Handlers for Page 1

@@ -46,6 +46,7 @@ export interface UserProfile {
   showCityPublicly?: boolean;
   showWorkPublicly?: boolean;
   profileVisibility?: 'visible' | 'hidden';
+  isIncognito?: boolean;
   profileUpdatedAt?: number;
 }
 
@@ -230,6 +231,7 @@ const defaultProfile: UserProfile = {
   showCityPublicly: true,
   showWorkPublicly: true,
   profileVisibility: 'visible',
+  isIncognito: false,
 };
 
 export const INITIAL_INCOMING_REQUESTS: IncomingRequest[] = [

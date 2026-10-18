@@ -15,6 +15,8 @@ import {
   HelpCircle,
   Crop,
   CheckCheck,
+  Info,
+  EyeOff,
 } from 'lucide-react';
 import { MemberBottomNav, type MemberTab } from './MemberBottomNav';
 import { MemberTopBar } from './MemberTopBar';
@@ -93,6 +95,33 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
   const [copySuccess, setCopySuccess] = useState(false);
   const [latestGeneratedCode, setLatestGeneratedCode] = useState<string | null>(null);
 
+  // Incognito Mode State
+  const [isIncognitoInfoOpen, setIsIncognitoInfoOpen] = useState(false);
+  const [incognitoToast, setIncognitoToast] = useState<string | null>(null);
+
+  const isIncognitoActive = Boolean(draft.isIncognito ?? profile.isIncognito);
+
+  const handleToggleIncognito = () => {
+    const nextState = !isIncognitoActive;
+    setDraft((prev) => ({ ...prev, isIncognito: nextState }));
+    updateProfile({ isIncognito: nextState });
+    setIncognitoToast(
+      nextState
+        ? 'Incognito Mode enabled — Only members you like can see you.'
+        : 'Incognito Mode disabled — Standard profile visibility restored.'
+    );
+    setTimeout(() => {
+      setIncognitoToast(null);
+    }, 3500);
+  };
+
+  // Scroll to top on mount and when switching between Profile Details and Account tabs
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    if (document.documentElement) document.documentElement.scrollTop = 0;
+    if (document.body) document.body.scrollTop = 0;
+  }, [activeSubTab]);
+
   // Keep draft in sync with profile updates when not actively editing
   useEffect(() => {
     if (!isEditing) {
@@ -101,6 +130,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
         photos: [...(profile.photos || [])],
         interests: [...(profile.interests || [])],
         vibes: [...(profile.vibes || [])],
+        isIncognito: profile.isIncognito || false,
       });
     }
   }, [profile, isEditing]);
@@ -420,18 +450,41 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
               >
                 MEMBER PROFILE & ACCOUNT
               </div>
-              <h1
-                style={{
-                  margin: '6px 0 0',
-                  color: colors.accent,
-                  fontFamily: 'var(--font-serif)',
-                  fontSize: '36px',
-                  fontWeight: 400,
-                  lineHeight: 1.1,
-                }}
-              >
-                {displayName}
-              </h1>
+              <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+                <h1
+                  style={{
+                    margin: '6px 0 0',
+                    color: colors.accent,
+                    fontFamily: 'var(--font-serif)',
+                    fontSize: '36px',
+                    fontWeight: 400,
+                    lineHeight: 1.1,
+                  }}
+                >
+                  {displayName}
+                </h1>
+                {isIncognitoActive && (
+                  <span
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '5px',
+                      padding: '4px 10px',
+                      borderRadius: '999px',
+                      fontSize: '11px',
+                      fontWeight: 700,
+                      letterSpacing: '0.06em',
+                      backgroundColor: isDark ? 'rgba(161, 82, 95, 0.25)' : 'rgba(161, 82, 95, 0.12)',
+                      border: '1px solid rgba(161, 82, 95, 0.35)',
+                      color: isDark ? '#F9AAAD' : '#A1525F',
+                      textTransform: 'uppercase',
+                      marginTop: '6px',
+                    }}
+                  >
+                    <EyeOff size={13} /> Incognito Mode Active
+                  </span>
+                )}
+              </div>
               <p style={{ margin: '8px 0 0', color: colors.muted, fontSize: '13.5px' }}>
                 {[draft.designation, draft.company, draft.city].filter(Boolean).join(' · ') ||
                   'Complete your profile to unlock verified introductions.'}
@@ -555,6 +608,154 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
               {saveMessage}
             </div>
           )}
+
+          {/* Incognito Mode Card (Tinder-style discreet browsing) */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '16px',
+              padding: '16px 20px',
+              marginBottom: '20px',
+              borderRadius: '16px',
+              backgroundColor: isIncognitoActive
+                ? (isDark ? 'rgba(161, 82, 95, 0.22)' : 'rgba(253, 240, 243, 0.95)')
+                : (isDark ? 'rgba(40, 20, 34, 0.65)' : 'rgba(255, 255, 255, 0.9)'),
+              border: `1.5px solid ${isIncognitoActive ? 'rgba(161, 82, 95, 0.5)' : colors.border}`,
+              boxShadow: isIncognitoActive
+                ? '0 6px 20px rgba(161, 82, 95, 0.15)'
+                : '0 4px 14px rgba(0,0,0,0.04)',
+              transition: 'all 0.3s ease',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flex: 1 }}>
+              <div
+                style={{
+                  width: '42px',
+                  height: '42px',
+                  borderRadius: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  background: isIncognitoActive
+                    ? 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)'
+                    : (isDark ? 'rgba(70, 32, 55, 0.5)' : 'rgba(240, 230, 235, 0.8)'),
+                  color: isIncognitoActive ? '#FFFFFF' : colors.muted,
+                  flexShrink: 0,
+                  boxShadow: isIncognitoActive ? '0 4px 12px rgba(161, 82, 95, 0.3)' : 'none',
+                  transition: 'all 0.3s ease',
+                }}
+              >
+                <EyeOff size={20} />
+              </div>
+
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                  <span
+                    style={{
+                      fontFamily: 'var(--font-serif)',
+                      fontSize: '18px',
+                      fontWeight: 600,
+                      color: colors.text,
+                      letterSpacing: '0.01em',
+                    }}
+                  >
+                    Incognito Mode
+                  </span>
+
+                  {/* Info Button */}
+                  <button
+                    type="button"
+                    onClick={() => setIsIncognitoInfoOpen(true)}
+                    title="Learn how Incognito Mode works"
+                    aria-label="Incognito Mode Info"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '20px',
+                      height: '20px',
+                      borderRadius: '50%',
+                      border: `1px solid ${colors.border}`,
+                      backgroundColor: isDark ? 'rgba(70, 32, 55, 0.4)' : 'rgba(235, 220, 225, 0.7)',
+                      color: colors.accent,
+                      cursor: 'pointer',
+                      padding: 0,
+                      transition: 'all 0.15s ease',
+                    }}
+                  >
+                    <Info size={12} />
+                  </button>
+
+                  {isIncognitoActive && (
+                    <span
+                      style={{
+                        fontSize: '10px',
+                        fontWeight: 700,
+                        letterSpacing: '0.08em',
+                        textTransform: 'uppercase',
+                        color: '#FFF8F8',
+                        backgroundColor: '#A1525F',
+                        padding: '2px 8px',
+                        borderRadius: '999px',
+                      }}
+                    >
+                      Active
+                    </span>
+                  )}
+                </div>
+
+                <p
+                  style={{
+                    margin: '3px 0 0',
+                    fontSize: '12.5px',
+                    color: colors.muted,
+                    lineHeight: 1.4,
+                  }}
+                >
+                  {isIncognitoActive
+                    ? 'Only individuals you like / swipe right can view your profile in their feed.'
+                    : 'Browse anonymously. Your profile is only visible to members you choose to like.'}
+                </p>
+              </div>
+            </div>
+
+            {/* iOS Style Custom Toggle Switch */}
+            <button
+              type="button"
+              role="switch"
+              aria-checked={isIncognitoActive}
+              aria-label="Toggle Incognito Mode"
+              onClick={handleToggleIncognito}
+              style={{
+                position: 'relative',
+                width: '52px',
+                height: '30px',
+                borderRadius: '999px',
+                border: 'none',
+                backgroundColor: isIncognitoActive ? '#A1525F' : (isDark ? 'rgba(255,255,255,0.18)' : '#D6CCD2'),
+                cursor: 'pointer',
+                padding: '3px',
+                transition: 'background-color 0.25s ease',
+                flexShrink: 0,
+                outline: 'none',
+                boxShadow: isIncognitoActive ? '0 2px 8px rgba(161, 82, 95, 0.4)' : 'none',
+              }}
+            >
+              <div
+                style={{
+                  width: '24px',
+                  height: '24px',
+                  borderRadius: '50%',
+                  backgroundColor: '#FFFFFF',
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.25)',
+                  transform: isIncognitoActive ? 'translateX(22px)' : 'translateX(0px)',
+                  transition: 'transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1)',
+                }}
+              />
+            </button>
+          </div>
 
           {/* Sub Navigation Pill Tabs (Profile Details vs Account & Membership) */}
           <div
@@ -1996,6 +2197,225 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
             </div>
           </div>
         </ModalPortal>
+      )}
+
+      {/* INCOGNITO INFO MODAL */}
+      {isIncognitoInfoOpen && (
+        <ModalPortal>
+          <div
+            style={{
+              position: 'fixed',
+              inset: 0,
+              zIndex: 99999,
+              backgroundColor: 'rgba(10, 5, 9, 0.78)',
+              backdropFilter: 'blur(10px)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '20px',
+            }}
+            onClick={() => setIsIncognitoInfoOpen(false)}
+          >
+            <div
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                backgroundColor: isDark ? '#1C0F19' : '#FFFFFF',
+                border: `1.5px solid ${colors.border}`,
+                borderRadius: '24px',
+                padding: '28px 24px',
+                maxWidth: '440px',
+                width: '100%',
+                boxShadow: '0 24px 60px rgba(0,0,0,0.5)',
+                position: 'relative',
+              }}
+            >
+              <button
+                type="button"
+                onClick={() => setIsIncognitoInfoOpen(false)}
+                aria-label="Close Modal"
+                style={{
+                  position: 'absolute',
+                  top: '18px',
+                  right: '18px',
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '50%',
+                  border: 'none',
+                  backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)',
+                  color: colors.muted,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <X size={18} />
+              </button>
+
+              <div
+                style={{
+                  width: '52px',
+                  height: '52px',
+                  borderRadius: '16px',
+                  background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
+                  color: '#FFFFFF',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: '16px',
+                  boxShadow: '0 8px 20px rgba(161, 82, 95, 0.35)',
+                }}
+              >
+                <EyeOff size={26} />
+              </div>
+
+              <h3
+                style={{
+                  fontFamily: 'var(--font-serif)',
+                  fontSize: '23px',
+                  color: colors.text,
+                  margin: '0 0 8px 0',
+                  lineHeight: 1.2,
+                }}
+              >
+                How Incognito Mode Works
+              </h3>
+
+              <p
+                style={{
+                  fontSize: '13.5px',
+                  lineHeight: '1.6',
+                  color: colors.muted,
+                  margin: '0 0 18px 0',
+                }}
+              >
+                Incognito Mode gives you complete discretion over who sees your presence on VennZ.
+              </p>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '22px' }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    gap: '12px',
+                    padding: '12px 14px',
+                    borderRadius: '14px',
+                    backgroundColor: isDark ? 'rgba(40, 20, 34, 0.55)' : 'rgba(247, 240, 243, 0.8)',
+                    border: `1px solid ${colors.border}`,
+                  }}
+                >
+                  <span style={{ fontSize: '18px', lineHeight: 1 }}>✨</span>
+                  <div style={{ fontSize: '12.5px', color: colors.text, lineHeight: 1.45 }}>
+                    <strong>Visible Only to Right-Swipes:</strong> Only people you like or swipe right on will see your profile in their Discover queue or request list.
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    display: 'flex',
+                    gap: '12px',
+                    padding: '12px 14px',
+                    borderRadius: '14px',
+                    backgroundColor: isDark ? 'rgba(40, 20, 34, 0.55)' : 'rgba(247, 240, 243, 0.8)',
+                    border: `1px solid ${colors.border}`,
+                  }}
+                >
+                  <span style={{ fontSize: '18px', lineHeight: 1 }}>🛡️</span>
+                  <div style={{ fontSize: '12.5px', color: colors.text, lineHeight: 1.45 }}>
+                    <strong>Completely Hidden from Public Browse:</strong> You will never appear on anyone else's screen randomly. Friends, colleagues, or strangers cannot stumble across your profile.
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    display: 'flex',
+                    gap: '12px',
+                    padding: '12px 14px',
+                    borderRadius: '14px',
+                    backgroundColor: isDark ? 'rgba(40, 20, 34, 0.55)' : 'rgba(247, 240, 243, 0.8)',
+                    border: `1px solid ${colors.border}`,
+                  }}
+                >
+                  <span style={{ fontSize: '18px', lineHeight: 1 }}>⚡</span>
+                  <div style={{ fontSize: '12.5px', color: colors.text, lineHeight: 1.45 }}>
+                    <strong>Uninterrupted Matching:</strong> You can continue exploring profiles freely. When someone you liked swipes back, it forms a mutual match immediately.
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!isIncognitoActive) {
+                      handleToggleIncognito();
+                    }
+                    setIsIncognitoInfoOpen(false);
+                  }}
+                  style={{
+                    height: '46px',
+                    borderRadius: '999px',
+                    background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
+                    color: '#FFFFFF',
+                    border: 'none',
+                    fontSize: '13px',
+                    fontWeight: 700,
+                    letterSpacing: '0.04em',
+                    cursor: 'pointer',
+                    boxShadow: '0 6px 18px rgba(161, 82, 95, 0.35)',
+                  }}
+                >
+                  {isIncognitoActive ? 'Got It, Keep Active' : 'Turn On Incognito Mode'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsIncognitoInfoOpen(false)}
+                  style={{
+                    height: '38px',
+                    borderRadius: '999px',
+                    background: 'transparent',
+                    color: colors.muted,
+                    border: 'none',
+                    fontSize: '12.5px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                  }}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </ModalPortal>
+      )}
+
+      {/* Floating Incognito Toast Notification */}
+      {incognitoToast && (
+        <div
+          style={{
+            position: 'fixed',
+            bottom: '86px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 99999,
+            backgroundColor: isDark ? 'rgba(30, 15, 26, 0.95)' : 'rgba(56, 28, 48, 0.95)',
+            color: '#FFFFFF',
+            border: '1px solid rgba(249, 170, 173, 0.4)',
+            boxShadow: '0 8px 24px rgba(0,0,0,0.35)',
+            padding: '12px 22px',
+            borderRadius: '999px',
+            fontSize: '13px',
+            fontWeight: 600,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            backdropFilter: 'blur(10px)',
+            maxWidth: '90vw',
+            textAlign: 'center',
+          }}
+        >
+          <EyeOff size={16} color="#F9AAAD" />
+          <span>{incognitoToast}</span>
+        </div>
       )}
     </div>
   );

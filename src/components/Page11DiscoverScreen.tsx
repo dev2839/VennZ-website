@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { EyeOff } from 'lucide-react';
 import { MemberTopBar } from './MemberTopBar';
 import { MemberBottomNav, type MemberTab } from './MemberBottomNav';
 import { StatusBar } from './StatusBar';
@@ -40,6 +41,13 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
     setMembershipStatus,
   } = useAuth();
   const isDark = appearanceMode === 'after-dark';
+
+  // Scroll to top on mount
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    if (document.documentElement) document.documentElement.scrollTop = 0;
+    if (document.body) document.body.scrollTop = 0;
+  }, []);
 
   // Active tab for bottom navigation (5 buttons: discover, matches, elevate, mixers, you)
   const [activeTab, setActiveTab] = useState<MemberTab>('discover');
@@ -487,6 +495,40 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
           flexDirection: 'column',
         }}
       >
+        {/* Incognito Status Pill (Tinder-style stealth badge) */}
+        {profile.isIncognito && (
+          <div
+            style={{
+              maxWidth: '1080px',
+              margin: '12px auto 0',
+              width: '100%',
+              padding: '0 24px',
+              boxSizing: 'border-box',
+            }}
+          >
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '6px 14px',
+                borderRadius: '999px',
+                backgroundColor: isDark ? 'rgba(161, 82, 95, 0.28)' : 'rgba(253, 235, 239, 0.95)',
+                border: '1px solid rgba(161, 82, 95, 0.35)',
+                color: isDark ? '#F9AAAD' : '#A1525F',
+                fontSize: '11.5px',
+                fontWeight: 600,
+                boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+              }}
+            >
+              <EyeOff size={13} />
+              <span>
+                <strong>Incognito Active:</strong> Only members you swipe right on will see your profile.
+              </span>
+            </div>
+          </div>
+        )}
+
         {/* Dynamic Introductions Sub-header */}
         <div
           style={{
