@@ -90,6 +90,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
     return () => {
       if (timeout1Ref.current) clearTimeout(timeout1Ref.current);
       if (timeout2Ref.current) clearTimeout(timeout2Ref.current);
+      if (wheelResetTimerRef.current) clearTimeout(wheelResetTimerRef.current);
     };
   }, []);
 
@@ -97,6 +98,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
   useEffect(() => {
     if (timeout1Ref.current) clearTimeout(timeout1Ref.current);
     if (timeout2Ref.current) clearTimeout(timeout2Ref.current);
+    if (wheelResetTimerRef.current) clearTimeout(wheelResetTimerRef.current);
     if (currentProfile?.photos && currentProfile.photos.length > 0) {
       setCardOrder(currentProfile.photos.map((_, i) => i));
     } else {
@@ -104,6 +106,8 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
     }
     setTransitionPhase('idle');
     isTransitioningRef.current = false;
+    setDragOffset({ x: 0, y: 0 });
+    setIsDragging(false);
   }, [currentProfile?.id]);
 
   // Preload upcoming photos in the queue
@@ -198,24 +202,21 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
     };
   };
 
-  // Touch handlers for mobile / tablet horizontal flick
-  const touchStartXRef = useRef<number>(0);
-  const touchStartYRef = useRef<number>(0);
+  // Gesture & Swipe State for Accept (Right) / Pass (Left)
+  const [dragOffset, setDragOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+  const isPointerDownRef = useRef<boolean>(false);
+  const pointerStartPosRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+  const hasMovedRef = useRef<boolean>(false);
+  const isHorizontalSwipeRef = useRef<boolean | null>(null);
+  const activePointerIdRef = useRef<number | null>(null);
+  const ignoreNextClickRef = useRef<boolean>(false);
 
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartXRef.current = e.touches[0].clientX;
-    touchStartYRef.current = e.touches[0].clientY;
-  };
+  // Wheel gesture accumulator for laptop touchpads
+  const wheelAccumulatorRef = useRef<number>(0);
+  const wheelResetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    const deltaX = e.changedTouches[0].clientX - touchStartXRef.current;
-    const deltaY = e.changedTouches[0].clientY - touchStartYRef.current;
-    if (Math.abs(deltaX) > 35 && Math.abs(deltaX) > Math.abs(deltaY) * 1.4) {
-      handleNextPhotoCard();
-    }
-  };
-
-  // Card dismissal animation state (only triggered via PASS / SEND REQUEST buttons)
+  // Card dismissal animation state (triggered via swipe or PASS / SEND REQUEST buttons)
   const [isAnimatingOut, setIsAnimatingOut] = useState<'left' | 'right' | null>(null);
 
   // Notification / toast feedback
@@ -228,7 +229,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
     }, 2800);
   };
 
-  // PASS Action Handler
+  // PASS Action Handler (Swipe Left or Click Pass Button)
   const handlePass = () => {
     if (!currentProfile || isAnimatingOut) return;
     if (!isMember && !canDiscoverMore) {
@@ -239,11 +240,13 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
     setTimeout(() => {
       passProfile(currentProfile.id);
       setIsAnimatingOut(null);
+      setDragOffset({ x: 0, y: 0 });
+      setIsDragging(false);
       showToast(`Passed ${currentProfile.firstName}`);
     }, 320);
   };
 
-  // SEND REQUEST Action Handler
+  // SEND REQUEST Action Handler (Swipe Right or Click Connect Button)
   const handleSendRequest = () => {
     if (!currentProfile || isAnimatingOut) return;
     if (!isMember && !canSendMoreRequests) {
@@ -254,8 +257,135 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
     setTimeout(() => {
       sendConnectionRequest(currentProfile.id);
       setIsAnimatingOut(null);
+      setDragOffset({ x: 0, y: 0 });
+      setIsDragging(false);
       showToast(`Introduction request sent to ${currentProfile.firstName}`);
     }, 320);
+  };
+
+  // Pointer / Touch Swipe Handlers (Works on phones, tablets, mouse, and trackpads)
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (isAnimatingOut || !currentProfile) return;
+    if (e.button !== 0 && e.pointerType === 'mouse') return;
+
+    isPointerDownRef.current = true;
+    hasMovedRef.current = false;
+    isHorizontalSwipeRef.current = null;
+    activePointerIdRef.current = e.pointerId;
+    pointerStartPosRef.current = { x: e.clientX, y: e.clientY };
+  };
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!isPointerDownRef.current || activePointerIdRef.current !== e.pointerId) return;
+
+    const dx = e.clientX - pointerStartPosRef.current.x;
+    const dy = e.clientY - pointerStartPosRef.current.y;
+
+    if (isHorizontalSwipeRef.current === null) {
+      const dist = Math.hypot(dx, dy);
+      if (dist > 7) {
+        // If movement is predominantly vertical on mobile, let native page scrolling occur
+        if (Math.abs(dy) > Math.abs(dx) * 1.3 && e.pointerType === 'touch') {
+          isHorizontalSwipeRef.current = false;
+          isPointerDownRef.current = false;
+          return;
+        }
+        isHorizontalSwipeRef.current = true;
+        hasMovedRef.current = true;
+        setIsDragging(true);
+        try {
+          e.currentTarget.setPointerCapture(e.pointerId);
+        } catch {}
+      }
+    }
+
+    if (isHorizontalSwipeRef.current) {
+      // Natural horizontal tracking with subtle dampened vertical movement
+      setDragOffset({ x: dx, y: dy * 0.18 });
+    }
+  };
+
+  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (activePointerIdRef.current !== e.pointerId) return;
+
+    try {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    } catch {}
+
+    const wasDragging = hasMovedRef.current && isHorizontalSwipeRef.current;
+    isPointerDownRef.current = false;
+    activePointerIdRef.current = null;
+    isHorizontalSwipeRef.current = null;
+
+    if (wasDragging) {
+      ignoreNextClickRef.current = true;
+      setIsDragging(false);
+
+      const dx = dragOffset.x;
+      const SWIPE_THRESHOLD = 85;
+
+      if (dx > SWIPE_THRESHOLD) {
+        // Swipe Right -> CONNECT / ACCEPT
+        handleSendRequest();
+      } else if (dx < -SWIPE_THRESHOLD) {
+        // Swipe Left -> PASS / REJECT
+        handlePass();
+      } else {
+        // Did not cross threshold -> smooth spring back
+        setDragOffset({ x: 0, y: 0 });
+      }
+    } else {
+      setIsDragging(false);
+      setDragOffset({ x: 0, y: 0 });
+    }
+  };
+
+  const handlePointerCancel = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (activePointerIdRef.current === e.pointerId) {
+      try {
+        e.currentTarget.releasePointerCapture(e.pointerId);
+      } catch {}
+      isPointerDownRef.current = false;
+      activePointerIdRef.current = null;
+      isHorizontalSwipeRef.current = null;
+      hasMovedRef.current = false;
+      setIsDragging(false);
+      setDragOffset({ x: 0, y: 0 });
+    }
+  };
+
+  // Laptop Trackpad / Touchpad horizontal swipe gesture (Wheel)
+  const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
+    // Only capture if swipe is predominantly horizontal
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY) * 1.15 && Math.abs(e.deltaX) > 6) {
+      if (isAnimatingOut || !currentProfile) return;
+
+      // In natural scrolling: two fingers right has deltaX < 0, two fingers left has deltaX > 0
+      wheelAccumulatorRef.current -= e.deltaX;
+      const currentAccum = wheelAccumulatorRef.current;
+
+      setDragOffset({
+        x: Math.max(-220, Math.min(220, currentAccum * 0.9)),
+        y: 0,
+      });
+
+      if (wheelResetTimerRef.current) clearTimeout(wheelResetTimerRef.current);
+
+      const WHEEL_THRESHOLD = 85;
+
+      if (currentAccum > WHEEL_THRESHOLD) {
+        wheelAccumulatorRef.current = 0;
+        handleSendRequest();
+      } else if (currentAccum < -WHEEL_THRESHOLD) {
+        wheelAccumulatorRef.current = 0;
+        handlePass();
+      } else {
+        wheelResetTimerRef.current = setTimeout(() => {
+          wheelAccumulatorRef.current = 0;
+          setDragOffset({ x: 0, y: 0 });
+        }, 180);
+      }
+    }
   };
 
   // Handle Tab Switch (5 buttons: Discover, Matches, Elevate, Mixers, You)
@@ -266,9 +396,14 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
     }
   };
 
-  // Rotation and translation during button-triggered dismissal
-  const rotationDeg = isAnimatingOut === 'left' ? -18 : isAnimatingOut === 'right' ? 18 : 0;
-  const cardTranslateX = isAnimatingOut === 'left' ? -420 : isAnimatingOut === 'right' ? 420 : 0;
+  // Dynamic rotation and translation during button-triggered dismissal or real-time swipe drag
+  const currentTranslateX = isAnimatingOut === 'left' ? -520 : isAnimatingOut === 'right' ? 520 : dragOffset.x;
+  const currentTranslateY = isAnimatingOut ? 0 : dragOffset.y;
+  const rotationDeg = isAnimatingOut === 'left'
+    ? -20
+    : isAnimatingOut === 'right'
+    ? 20
+    : (dragOffset.x / 400) * 16;
   const cardOpacity = isAnimatingOut ? 0 : 1;
 
   // Dynamic theme styling
@@ -843,22 +978,26 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                     width: '100%',
                     maxWidth: '400px',
                     margin: '0 auto',
-                    transform: `translate3d(${cardTranslateX}px, 0, 0) rotate(${rotationDeg}deg)`,
-                    transition: isAnimatingOut ? 'transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease' : 'none',
+                    transform: `translate3d(${currentTranslateX}px, ${currentTranslateY}px, 0) rotate(${rotationDeg}deg)`,
+                    transition: isDragging
+                      ? 'none'
+                      : isAnimatingOut
+                      ? 'transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease'
+                      : 'transform 0.28s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.28s ease',
                     opacity: cardOpacity,
                     userSelect: 'none',
                   }}
                 >
                   {/* Photo Card Deck Container (4:5 Aspect Ratio) */}
                   <div
-                    onTouchStart={handleTouchStart}
-                    onTouchEnd={handleTouchEnd}
+                    onWheel={handleWheel}
                     style={{
                       position: 'relative',
                       width: '100%',
                       aspectRatio: '4 / 5',
                       borderRadius: '24px',
                       perspective: '1000px',
+                      touchAction: 'pan-y',
                     }}
                   >
                     {/* Layer 3: Deepest Background Card (shown if N >= 3) */}
@@ -928,13 +1067,25 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                     {/* Layer 1: Front / Outgoing Card */}
                     <div
                       key={`deck-card-${frontIdx}`}
-                      onClick={handleNextPhotoCard}
+                      onPointerDown={handlePointerDown}
+                      onPointerMove={handlePointerMove}
+                      onPointerUp={handlePointerUp}
+                      onPointerCancel={handlePointerCancel}
+                      onClick={() => {
+                        if (ignoreNextClickRef.current) {
+                          ignoreNextClickRef.current = false;
+                          return;
+                        }
+                        handleNextPhotoCard();
+                      }}
                       style={{
                         position: 'absolute',
                         inset: 0,
                         borderRadius: '24px',
                         backgroundColor: '#1E161C',
-                        boxShadow: transitionPhase === 'drop'
+                        boxShadow: isDragging
+                          ? (isDark ? '0 24px 50px rgba(0, 0, 0, 0.8)' : '0 22px 46px rgba(73, 40, 61, 0.28)')
+                          : transitionPhase === 'drop'
                           ? (isDark ? '0 24px 50px rgba(0, 0, 0, 0.7)' : '0 22px 46px rgba(73, 40, 61, 0.24)')
                           : transitionPhase === 'return'
                           ? (isDark ? '0 8px 24px rgba(0, 0, 0, 0.45)' : '0 8px 22px rgba(73, 40, 61, 0.1)')
@@ -952,8 +1103,11 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                           ? (thirdIdx !== null ? (isDark ? 'brightness(0.68)' : 'brightness(0.78)') : (isDark ? 'brightness(0.78)' : 'brightness(0.88)'))
                           : 'brightness(1)',
                         zIndex: transitionPhase === 'drop' ? 15 : (transitionPhase === 'return' ? 1 : 10),
-                        cursor: N > 1 ? 'pointer' : 'default',
-                        transition: prefersReducedMotion
+                        cursor: isDragging ? 'grabbing' : (N > 1 ? 'pointer' : 'grab'),
+                        touchAction: 'pan-y',
+                        transition: isDragging
+                          ? 'none'
+                          : prefersReducedMotion
                           ? 'none'
                           : transitionPhase === 'drop'
                           ? 'transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1), box-shadow 0.28s ease'
@@ -962,9 +1116,66 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                           : 'none',
                         userSelect: 'none',
                       }}
-                      title={N > 1 ? 'Click to see next photo' : undefined}
+                      title={N > 1 ? 'Click to see next photo · Swipe right to connect, left to pass' : 'Swipe right to connect, left to pass'}
                     >
                       {renderCardBody(frontIdx, true)}
+
+                      {/* Visual Swipe Stamp Overlays */}
+                      {/* CONNECT / ACCEPT STAMP (Swipe Right) */}
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: '28px',
+                          left: '24px',
+                          padding: '6px 16px',
+                          borderRadius: '10px',
+                          border: '3px solid #48BB78',
+                          color: '#48BB78',
+                          backgroundColor: 'rgba(20, 14, 28, 0.65)',
+                          backdropFilter: 'blur(8px)',
+                          fontFamily: 'var(--font-sans)',
+                          fontSize: '17px',
+                          fontWeight: 800,
+                          letterSpacing: '0.12em',
+                          textTransform: 'uppercase',
+                          transform: 'rotate(-12deg)',
+                          opacity: isAnimatingOut === 'right' ? 1 : Math.min(1, Math.max(0, (dragOffset.x - 25) / 75)),
+                          pointerEvents: 'none',
+                          zIndex: 35,
+                          transition: isDragging ? 'none' : 'opacity 0.2s ease',
+                          boxShadow: '0 4px 16px rgba(72, 187, 120, 0.35)',
+                        }}
+                      >
+                        CONNECT
+                      </div>
+
+                      {/* PASS / REJECT STAMP (Swipe Left) */}
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: '28px',
+                          right: '24px',
+                          padding: '6px 16px',
+                          borderRadius: '10px',
+                          border: '3px solid #E53E3E',
+                          color: '#E53E3E',
+                          backgroundColor: 'rgba(20, 14, 28, 0.65)',
+                          backdropFilter: 'blur(8px)',
+                          fontFamily: 'var(--font-sans)',
+                          fontSize: '17px',
+                          fontWeight: 800,
+                          letterSpacing: '0.12em',
+                          textTransform: 'uppercase',
+                          transform: 'rotate(12deg)',
+                          opacity: isAnimatingOut === 'left' ? 1 : Math.min(1, Math.max(0, (-dragOffset.x - 25) / 75)),
+                          pointerEvents: 'none',
+                          zIndex: 35,
+                          transition: isDragging ? 'none' : 'opacity 0.2s ease',
+                          boxShadow: '0 4px 16px rgba(229, 62, 62, 0.35)',
+                        }}
+                      >
+                        PASS
+                      </div>
                     </div>
                   </div>
 
