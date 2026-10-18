@@ -7,6 +7,7 @@ import { DUMMY_DISCOVER_PROFILES } from '../data/dummyProfiles';
 import type { DiscoverProfile } from '../types/discover';
 import { DEFAULT_AFTER_HOURS_CONFIG } from '../constants/afterHoursConfig';
 import { calculateAgeFromISO } from '../utils/ageCalculation';
+import { getPageBackground } from '../constants/themeGradients';
 
 interface Page19AfterHoursScreenProps {
   onSelectTab: (tab: MemberTab) => void;
@@ -404,7 +405,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
   };
 
   // Theme palettes
-  const bgMain = isDark ? '#140E1C' : '#FAF1F3';
+  const bgMain = getPageBackground(isDark);
   const textPrimary = isDark ? '#FDF3F5' : '#462037';
   const textMuted = isDark ? '#B3A1A8' : '#8A7A84';
   const cardBg = isDark ? 'rgba(32, 22, 44, 0.72)' : 'rgba(255, 255, 255, 0.85)';
@@ -421,13 +422,26 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
         minHeight: activeView === 'chat' || activeView === 'queue' ? '100%' : '100%',
         flex: 1,
         width: '100%',
-        backgroundColor: bgMain,
+        background: bgMain,
+        backgroundColor: isDark ? '#140E1C' : '#FAF1F3',
         color: textPrimary,
         fontFamily: 'var(--font-sans)',
         position: 'relative',
         overflow: activeView === 'chat' ? 'hidden' : undefined,
       }}
     >
+      {/* Background Ambience just like Elevate page */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          pointerEvents: 'none',
+          background: isDark
+            ? 'radial-gradient(ellipse 90% 60% at 50% -10%, rgba(161, 82, 95, 0.24) 0%, transparent 75%)'
+            : 'radial-gradient(ellipse 90% 60% at 50% -10%, rgba(220, 150, 170, 0.20) 0%, transparent 75%)',
+          zIndex: 0,
+        }}
+      />
       {showStatusBar && <StatusBar />}
 
       {/* VIEW: LOBBY */}

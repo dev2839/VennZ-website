@@ -26,6 +26,7 @@ import { DUMMY_DISCOVER_PROFILES } from './data/dummyProfiles';
 import type { DiscoverProfile } from './types/discover';
 import type { MatchItem } from './types/matches';
 import { useAuth } from './context/AuthContext';
+import { getPageBackground } from './constants/themeGradients';
 
 export const App: React.FC = () => {
   const {
@@ -676,6 +677,7 @@ export const App: React.FC = () => {
         width: '100%',
         display: 'flex',
         flexDirection: 'column',
+        background: getPageBackground(isDark),
         backgroundColor: isDark ? '#140E1C' : '#FAF1F3',
         color: isDark ? '#FDF3F5' : '#462037',
         fontFamily: 'var(--font-sans)',

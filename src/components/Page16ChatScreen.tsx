@@ -6,6 +6,7 @@ import { useAuth } from '../context/AuthContext';
 import { INITIAL_MATCHES } from '../context/AuthContext';
 import type { MatchItem, ChatMessage } from '../types/matches';
 import type { MemberTab } from './MemberBottomNav';
+import { getPageBackground, getPageScrim } from '../constants/themeGradients';
 import {
   ArrowLeft,
   CheckCheck,
@@ -487,7 +488,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
 
   // Luxury Theme Colors sticking strictly to VennZ identity
   const colors = {
-    bg: isDark ? '#140E1C' : '#FAF1F3',
+    bg: getPageBackground(isDark),
     sidebarBg: isDark ? '#1C0F19' : '#FFFFFF',
     text: isDark ? '#FDF3F5' : '#462037',
     muted: isDark ? 'rgba(253, 243, 245, 0.65)' : '#683A46',
@@ -525,7 +526,8 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
         flex: 1,
         display: 'flex',
         flexDirection: 'column',
-        backgroundColor: colors.bg,
+        background: colors.bg,
+        backgroundColor: isDark ? '#140E1C' : '#FAF1F3',
         color: colors.text,
         fontFamily: 'var(--font-sans)',
         overflow: 'hidden',
@@ -550,7 +552,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
         style={{
           position: 'absolute',
           inset: 0,
-          backgroundColor: isDark ? 'rgba(20, 14, 28, 0.52)' : 'rgba(250, 241, 243, 0.4)',
+          background: getPageScrim(isDark),
           zIndex: 1,
           pointerEvents: 'none',
         }}

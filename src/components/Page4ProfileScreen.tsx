@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { StatusBar } from './StatusBar';
 import { useAuth } from '../context/AuthContext';
 import { calculateAgeFromISO } from '../utils/ageCalculation';
+import { getPageBackground } from '../constants/themeGradients';
 
 interface Page4ProfileScreenProps {
   onBack: () => void;
@@ -634,6 +635,7 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
+        background: getPageBackground(isDark),
         backgroundColor: isDark ? '#140E1C' : '#FAF1F3',
         color: isDark ? '#FDF3F5' : '#462037',
         fontFamily: 'var(--font-sans)',

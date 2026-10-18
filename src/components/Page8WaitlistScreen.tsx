@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { StatusBar } from './StatusBar';
 import { ModalPortal } from './ModalPortal';
 import { useAuth } from '../context/AuthContext';
+import { getPageBackground } from '../constants/themeGradients';
 
 interface Page8WaitlistScreenProps {
   onBack: () => void;
@@ -153,6 +154,7 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
+        background: getPageBackground(isDark),
         backgroundColor: isDark ? '#140E1C' : '#FAF1F3',
         color: isDark ? '#FDF3F5' : '#462037',
         fontFamily: 'var(--font-sans)',

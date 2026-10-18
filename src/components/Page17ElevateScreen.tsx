@@ -10,6 +10,7 @@ import {
   generateDynamicScorecard,
   generateDynamicMakeoverReport,
 } from '../utils/elevateTelemetry';
+import { getPageBackground } from '../constants/themeGradients';
 
 interface Page17ElevateScreenProps {
   onSelectTab: (tab: MemberTab) => void;
@@ -266,7 +267,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
   const hasMakeoverOrder = elevateOrders.some((o) => o.serviceCategory === 'profile-makeover');
 
   // Colors & styles matching VennZ luxury editorial palette
-  const themeBgColor = isDark ? '#140E1C' : '#FAF1F3';
+  const themeBgColor = getPageBackground(isDark);
   const themeTextColor = isDark ? '#FDF3F5' : '#462037';
   const themeMulberry = isDark ? '#FDF3F5' : '#462037';
   const themeMuted = isDark ? 'rgba(253, 243, 245, 0.72)' : '#7A4D5B';
@@ -339,7 +340,8 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
         width: '100%',
         maxWidth: '100vw',
         margin: '0 auto',
-        backgroundColor: themeBgColor,
+        background: themeBgColor,
+        backgroundColor: isDark ? '#140E1C' : '#FAF1F3',
         color: themeTextColor,
         fontFamily: 'var(--font-sans)',
         overflowX: 'hidden',

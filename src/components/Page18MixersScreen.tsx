@@ -7,6 +7,7 @@ import { useAuth } from '../context/AuthContext';
 import type { MixerEvent, MixerBooking, CityMixerDemand } from '../types/mixers';
 import { matchCities } from '../data/mixerEvents';
 import { useLightbox } from '../context/LightboxContext';
+import { getPageBackground, getPageScrim } from '../constants/themeGradients';
 
 interface Page18MixersScreenProps {
   onSelectTab: (tab: MemberTab) => void;
@@ -228,7 +229,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
   const [confirmedBooking, setConfirmedBooking] = useState<MixerBooking | null>(null);
 
   // Dynamic Theme Colors
-  const themeBgColor = isDark ? '#140E1C' : '#FAF1F3';
+  const themeBgColor = getPageBackground(isDark);
   const themeTextColor = isDark ? '#FDF3F5' : '#462037';
   const themeMulberry = isDark ? '#FDF3F5' : '#462037';
   const themeMuted = isDark ? 'rgba(253, 243, 245, 0.72)' : '#683A46';
@@ -337,7 +338,8 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        backgroundColor: themeBgColor,
+        background: themeBgColor,
+        backgroundColor: isDark ? '#140E1C' : '#FAF1F3',
         color: themeTextColor,
         overflow: 'hidden',
       }}
@@ -358,12 +360,12 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
         }}
       />
 
-      {/* Subtle Luminous Parchment Glow & Dark Scrim */}
+      {/* Subtle Luminous Parchment Glow & Dark Scrim with Elevate Gradient Depth */}
       <div
         style={{
           position: 'absolute',
           inset: 0,
-          backgroundColor: isDark ? 'rgba(20, 14, 28, 0.45)' : 'rgba(250, 241, 243, 0.35)',
+          background: getPageScrim(isDark),
           zIndex: 1,
           pointerEvents: 'none',
         }}

@@ -42,6 +42,7 @@
 html, body {
   min-height: 100%;
   width: 100%;
+  background: radial-gradient(ellipse 90% 60% at 50% -10%, rgba(161, 82, 95, 0.28) 0%, transparent 75%), linear-gradient(180deg, #0D0713 0%, #170E20 28%, #261325 65%, #180D1E 100%);
   background-color: #140E1C;
   color: var(--color-warm-porcelain);
   font-family: var(--font-sans);
@@ -67,7 +68,7 @@ b, strong {
   flex-direction: column;
   align-items: stretch;
   justify-content: flex-start;
-  background-color: #140E1C;
+  background: transparent;
 }
 
 /* Custom Scrollbars */

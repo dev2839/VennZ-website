@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { StatusBar } from './StatusBar';
 import { useAuth } from '../context/AuthContext';
+import { getPageBackground } from '../constants/themeGradients';
 
 interface Page5IdentityScreenProps {
   onBack: () => void;
@@ -301,6 +302,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
+        background: getPageBackground(isDark),
         backgroundColor: isDark ? '#140E1C' : '#FAF1F3',
         color: isDark ? '#FDF3F5' : '#462037',
         fontFamily: 'var(--font-sans)',

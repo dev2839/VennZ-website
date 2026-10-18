@@ -29,6 +29,7 @@ import {
   INTEREST_OPTIONS,
   VIBE_OPTIONS,
 } from '../constants/profileOptions';
+import { getPageBackground } from '../constants/themeGradients';
 
 interface MyProfileScreenProps {
   onBack: () => void;
@@ -155,7 +156,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const colors = {
-    bg: isDark ? '#140E1C' : '#FAF1F3',
+    bg: getPageBackground(isDark),
     text: isDark ? '#FDF3F5' : '#462037',
     accent: isDark ? '#FDF3F5' : '#462037',
     muted: isDark ? 'rgba(253, 243, 245, 0.72)' : '#683A46',

@@ -1,6 +1,7 @@
 import React from 'react';
 import { StatusBar } from './StatusBar';
 import { useAuth } from '../context/AuthContext';
+import { getPageBackground } from '../constants/themeGradients';
 
 interface Page10OverviewScreenProps {
   onBack: () => void;
@@ -27,6 +28,7 @@ export const Page10OverviewScreen: React.FC<Page10OverviewScreenProps> = ({
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
+        background: getPageBackground(isDark),
         backgroundColor: isDark ? '#140E1C' : '#FAF1F3',
         color: isDark ? '#FDF3F5' : '#462037',
         fontFamily: 'var(--font-sans)',

@@ -9,7 +9,9 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
   const { appearanceMode } = useAuth();
   const isDark = appearanceMode === 'after-dark';
 
-  const footerBg = isDark ? '#140E1C' : '#FAF1F3';
+  const footerBg = isDark
+    ? 'linear-gradient(180deg, #180D1E 0%, #100816 100%)'
+    : 'linear-gradient(180deg, #FAF1F3 0%, #F5E8EC 100%)';
   const borderTop = isDark ? 'rgba(161, 82, 95, 0.32)' : 'rgba(161, 82, 95, 0.22)';
   const textColor = isDark ? '#FDF3F5' : '#462037';
   const mutedColor = isDark ? 'rgba(253, 243, 245, 0.72)' : '#683A46';
@@ -22,7 +24,8 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
         position: 'relative',
         zIndex: 10,
         width: '100%',
-        backgroundColor: footerBg,
+        background: footerBg,
+        backgroundColor: isDark ? '#140E1C' : '#FAF1F3',
         borderTop: `1px solid ${borderTop}`,
         padding: '48px 24px 36px',
         boxSizing: 'border-box',

@@ -6,6 +6,7 @@ import { ModalPortal } from './ModalPortal';
 import type { DiscoverProfile } from '../types/discover';
 import { useAuth } from '../context/AuthContext';
 import { useLightbox } from '../context/LightboxContext';
+import { getPageBackground, getPageScrim } from '../constants/themeGradients';
 
 interface Page12FullProfileScreenProps {
   profile: DiscoverProfile;
@@ -31,7 +32,7 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
   const [actionAnimating, setActionAnimating] = useState<'pass' | 'request' | null>(null);
   const [blockModalOpen, setBlockModalOpen] = useState(false);
 
-  const themeBgColor = isDark ? '#140E1C' : '#FAF1F3';
+  const themeBgColor = getPageBackground(isDark);
   const themeTextColor = isDark ? '#FDF3F5' : '#462037';
   const themeMulberry = isDark ? '#F9AAAD' : '#462037';
   const themeMuted = isDark ? '#D4A2AC' : '#683A46';
@@ -78,7 +79,8 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        backgroundColor: themeBgColor,
+        background: themeBgColor,
+        backgroundColor: isDark ? '#140E1C' : '#FAF1F3',
         color: themeTextColor,
         fontFamily: 'var(--font-sans)',
         overflow: 'hidden',
@@ -101,12 +103,12 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
         }}
       />
 
-      {/* Subtle Ambient Scrim */}
+      {/* Subtle Ambient Scrim with Elevate Gradient Depth */}
       <div
         style={{
           position: 'absolute',
           inset: 0,
-          backgroundColor: isDark ? 'rgba(3, 0, 3, 0.16)' : 'rgba(247, 243, 238, 0.32)',
+          background: getPageScrim(isDark),
           zIndex: 1,
           pointerEvents: 'none',
         }}

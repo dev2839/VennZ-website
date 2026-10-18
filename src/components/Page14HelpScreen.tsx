@@ -4,6 +4,7 @@ import { MemberTopBar } from './MemberTopBar';
 import { MemberBottomNav, type MemberTab } from './MemberBottomNav';
 import { useAuth } from '../context/AuthContext';
 import type { ComplaintCategory, ComplaintRecord } from '../types/you';
+import { getPageBackground, getPageScrim } from '../constants/themeGradients';
 
 interface Page14HelpScreenProps {
   onBack: () => void;
@@ -82,7 +83,7 @@ export const Page14HelpScreen: React.FC<Page14HelpScreenProps> = ({
   };
 
   // Theme styling
-  const themeBgColor = isDark ? '#140E1C' : '#FAF1F3';
+  const themeBgColor = getPageBackground(isDark);
   const themeTextColor = isDark ? '#FDF3F5' : '#462037';
   const themeMulberry = isDark ? '#FDF3F5' : '#462037';
   const themeMuted = isDark ? 'rgba(253, 243, 245, 0.72)' : '#683A46';
@@ -97,7 +98,8 @@ export const Page14HelpScreen: React.FC<Page14HelpScreenProps> = ({
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        backgroundColor: themeBgColor,
+        background: themeBgColor,
+        backgroundColor: isDark ? '#140E1C' : '#FAF1F3',
         color: themeTextColor,
         fontFamily: 'var(--font-sans)',
         overflow: 'hidden',
@@ -120,12 +122,12 @@ export const Page14HelpScreen: React.FC<Page14HelpScreenProps> = ({
         }}
       />
 
-      {/* Subtle Luminous Parchment Glow & Dark Atmospheric Scrim */}
+      {/* Subtle Luminous Parchment Glow & Dark Atmospheric Scrim with Elevate Gradient Depth */}
       <div
         style={{
           position: 'absolute',
           inset: 0,
-          backgroundColor: isDark ? 'rgba(20, 14, 28, 0.45)' : 'rgba(250, 241, 243, 0.35)',
+          background: getPageScrim(isDark),
           zIndex: 1,
           pointerEvents: 'none',
         }}
