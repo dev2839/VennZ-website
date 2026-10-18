@@ -13,6 +13,7 @@ interface Page19AfterHoursScreenProps {
   onNavigateHelp?: () => void;
   onUpgradeToMembership?: () => void;
   onNavigateToChat?: () => void;
+  onChatViewChange?: (isChatOrQueue: boolean) => void;
   showStatusBar?: boolean;
   showHomeIndicator?: boolean;
 }
@@ -76,9 +77,11 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
   onNavigateHelp: _onNavigateHelp,
   onUpgradeToMembership,
   onNavigateToChat,
+  onChatViewChange,
   showStatusBar = true,
   showHomeIndicator = true,
 }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const {
     profile,
     appearanceMode,
@@ -135,6 +138,19 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
   const [queueElapsedSeconds, setQueueElapsedSeconds] = useState<number>(0);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Notify parent of chat/queue view state to manage full-height and footer
+  useEffect(() => {
+    onChatViewChange?.(activeView === 'chat' || activeView === 'queue');
+  }, [activeView, onChatViewChange]);
+
+  // Always reset scroll to the top whenever switching between lobby, queue, and chat
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    if (document.documentElement) document.documentElement.scrollTop = 0;
+    if (document.body) document.body.scrollTop = 0;
+    if (containerRef.current) containerRef.current.scrollTop = 0;
+  }, [activeView]);
 
   // Calculate current user's age
   const userAge = profile.dateOfBirth ? calculateAgeFromISO(profile.dateOfBirth) : 27;
@@ -397,15 +413,19 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
 
   return (
     <div
+      ref={containerRef}
       style={{
         display: 'flex',
         flexDirection: 'column',
-        minHeight: '100%',
+        height: activeView === 'chat' || activeView === 'queue' ? '100%' : undefined,
+        minHeight: activeView === 'chat' || activeView === 'queue' ? '100%' : '100%',
+        flex: 1,
         width: '100%',
         backgroundColor: bgMain,
         color: textPrimary,
         fontFamily: 'var(--font-sans)',
         position: 'relative',
+        overflow: activeView === 'chat' ? 'hidden' : undefined,
       }}
     >
       {showStatusBar && <StatusBar />}
@@ -690,6 +710,9 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
               type="button"
               disabled={!isWindowActive || chatsUsedTonight >= maxChatsTonight}
               onClick={() => {
+                window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+                if (document.documentElement) document.documentElement.scrollTop = 0;
+                if (document.body) document.body.scrollTop = 0;
                 setQueueElapsedSeconds(0);
                 setActiveView('queue');
               }}
@@ -726,12 +749,15 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
         <div
           style={{
             flex: 1,
+            width: '100%',
+            height: '100%',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '30px 20px',
+            padding: '40px 20px',
             textAlign: 'center',
+            boxSizing: 'border-box',
           }}
         >
           {/* Radar animation circle */}
@@ -821,26 +847,29 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
       {activeView === 'chat' && partner && (
         <div
           style={{
+            position: 'relative',
+            width: '100%',
+            height: '100%',
+            minHeight: 0,
             flex: 1,
             display: 'flex',
             flexDirection: 'column',
-            height: 'calc(100vh - 120px)',
-            maxHeight: '100vh',
-            maxWidth: '720px',
-            margin: '0 auto',
-            width: '100%',
+            overflow: 'hidden',
             boxSizing: 'border-box',
           }}
         >
-          {/* Conversation Header */}
+          {/* Conversation Header - Fixed at Top */}
           <div
             style={{
+              flexShrink: 0,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              padding: '12px 16px',
+              padding: '12px 20px',
               borderBottom: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(0,0,0,0.08)',
               backgroundColor: cardBg,
+              backdropFilter: 'blur(12px)',
+              zIndex: 10,
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -913,10 +942,11 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
             </div>
           </div>
 
-          {/* Privacy Banner */}
+          {/* Privacy Banner - Fixed under Header */}
           <div
             style={{
-              padding: '8px 14px',
+              flexShrink: 0,
+              padding: '8px 20px',
               backgroundColor: isDark ? 'rgba(161,82,95,0.14)' : 'rgba(199,87,124,0.08)',
               borderBottom: isDark ? '1px solid rgba(161,82,95,0.2)' : '1px solid rgba(199,87,124,0.12)',
               fontSize: '11px',
@@ -924,6 +954,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
+              zIndex: 9,
             }}
           >
             <span>🔒 Anti-leak active: external links, files, and paste are blocked.</span>
@@ -973,15 +1004,20 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
             </div>
           </div>
 
-          {/* Messages Feed */}
+          {/* Messages Feed - Scrolls independently */}
           <div
             style={{
               flex: 1,
+              minHeight: 0,
               overflowY: 'auto',
-              padding: '16px',
+              padding: '20px',
               display: 'flex',
               flexDirection: 'column',
               gap: '12px',
+              boxSizing: 'border-box',
+              width: '100%',
+              maxWidth: '820px',
+              margin: '0 auto',
             }}
           >
             {messages.map((msg) => {
@@ -991,7 +1027,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                   key={msg.id}
                   style={{
                     alignSelf: isMe ? 'flex-end' : 'flex-start',
-                    maxWidth: '80%',
+                    maxWidth: '78%',
                     backgroundColor: isMe
                       ? isDark
                         ? '#A1525F'
@@ -1023,164 +1059,176 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Mutual Reveal Banner */}
+          {/* Bottom Controls Suite - Pinned to the Bottom */}
           <div
             style={{
-              padding: '10px 16px',
+              flexShrink: 0,
+              marginTop: 'auto',
               backgroundColor: cardBg,
               borderTop: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(0,0,0,0.08)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: '12px',
+              backdropFilter: 'blur(12px)',
+              zIndex: 10,
+              width: '100%',
+              boxSizing: 'border-box',
             }}
           >
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: '12px', fontWeight: 600, color: textPrimary }}>
-                {isMutualMatchRevealed
-                  ? 'Mutual Match Agreed!'
-                  : userRequestedReveal
-                  ? `Waiting for ${partner.firstName.charAt(0)}. to agree...`
-                  : partnerRequestedReveal
-                  ? `${partner.firstName.charAt(0)}. requested to Reveal & Match!`
-                  : 'Convert to Permanent Match?'}
-              </div>
-              <div style={{ fontSize: '11px', color: textMuted }}>
-                {isMutualMatchRevealed
-                  ? 'Both profiles unlocked! Conversation is now permanent.'
-                  : 'Both must consent. If neither or only one agrees, profiles stay private.'}
-              </div>
-            </div>
-
-            <div>
-              {!userRequestedReveal && !partnerRequestedReveal && (
-                <button
-                  type="button"
-                  onClick={handleUserRequestReveal}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    padding: '8px 16px',
-                    borderRadius: '999px',
-                    border: 'none',
-                    background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
-                    color: '#FFF',
-                    fontSize: '12px',
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                  }}
-                >
-                  <SparkleIcon color="#FFF" size={12} />
-                  <span>Reveal & Match</span>
-                </button>
-              )}
-
-              {userRequestedReveal && !isMutualMatchRevealed && (
-                <span style={{ fontSize: '12px', color: accentRose, fontWeight: 600 }}>
-                  Consent Sent ⏳
-                </span>
-              )}
-
-              {partnerRequestedReveal && !userRequestedReveal && (
-                <button
-                  type="button"
-                  onClick={handleUserAcceptReveal}
-                  style={{
-                    padding: '8px 16px',
-                    borderRadius: '999px',
-                    border: 'none',
-                    backgroundColor: '#10B981',
-                    color: '#FFF',
-                    fontSize: '12px',
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                  }}
-                >
-                  Agree & Reveal
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* Composer Input Area */}
-          <div
-            style={{
-              padding: '12px 16px',
-              backgroundColor: cardBg,
-              borderTop: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(0,0,0,0.08)',
-            }}
-          >
-            {inputWarning && (
+            <div style={{ maxWidth: '820px', margin: '0 auto', width: '100%' }}>
+              {/* Mutual Reveal Banner */}
               <div
                 style={{
-                  fontSize: '11px',
-                  color: '#EF4444',
-                  marginBottom: '8px',
-                  padding: '4px 8px',
-                  backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                  borderRadius: '6px',
-                }}
-              >
-                {inputWarning}
-              </div>
-            )}
-
-            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-              <input
-                type="text"
-                value={inputMessage}
-                onChange={(e) => {
-                  setInputMessage(e.target.value);
-                  if (inputWarning) setInputWarning(null);
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') handleSendMessage();
-                }}
-                onPaste={(e) => {
-                  e.preventDefault();
-                  setInputWarning('Pasting text is disabled to encourage natural, live conversation.');
-                }}
-                placeholder="Type your message (URLs and paste disabled)..."
-                style={{
-                  flex: 1,
-                  padding: '12px 16px',
-                  borderRadius: '999px',
-                  border: cardBorder,
-                  backgroundColor: isDark ? 'rgba(20, 14, 28, 0.8)' : '#FFFFFF',
-                  color: textPrimary,
-                  fontSize: '14px',
-                  outline: 'none',
-                  fontFamily: 'var(--font-sans)',
-                }}
-              />
-
-              <button
-                type="button"
-                onClick={handleSendMessage}
-                disabled={!inputMessage.trim()}
-                style={{
-                  width: '42px',
-                  height: '42px',
-                  borderRadius: '50%',
-                  border: 'none',
-                  background: inputMessage.trim()
-                    ? 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)'
-                    : isDark
-                    ? 'rgba(255,255,255,0.1)'
-                    : 'rgba(0,0,0,0.1)',
-                  color: '#FFFFFF',
+                  padding: '10px 20px',
+                  borderBottom: isDark ? '1px solid rgba(255,255,255,0.06)' : '1px solid rgba(0,0,0,0.05)',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: inputMessage.trim() ? 'pointer' : 'not-allowed',
+                  justifyContent: 'space-between',
+                  gap: '12px',
                 }}
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="22" y1="2" x2="11" y2="13" />
-                  <polygon points="22 2 15 22 11 13 2 9 22 2" />
-                </svg>
-              </button>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: '13px', fontWeight: 600, color: textPrimary }}>
+                    {isMutualMatchRevealed
+                      ? 'Mutual Match Agreed!'
+                      : userRequestedReveal
+                      ? `Waiting for ${partner.firstName.charAt(0)}. to agree...`
+                      : partnerRequestedReveal
+                      ? `${partner.firstName.charAt(0)}. requested to Reveal & Match!`
+                      : 'Convert to Permanent Match?'}
+                  </div>
+                  <div style={{ fontSize: '11px', color: textMuted, marginTop: '2px' }}>
+                    {isMutualMatchRevealed
+                      ? 'Both profiles unlocked! Conversation is now permanent.'
+                      : 'Both must consent. If neither or only one agrees, profiles stay private.'}
+                  </div>
+                </div>
+
+                <div>
+                  {!userRequestedReveal && !partnerRequestedReveal && (
+                    <button
+                      type="button"
+                      onClick={handleUserRequestReveal}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        padding: '8px 16px',
+                        borderRadius: '999px',
+                        border: 'none',
+                        background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
+                        color: '#FFF',
+                        fontSize: '12px',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        boxShadow: '0 4px 12px rgba(161,82,95,0.3)',
+                      }}
+                    >
+                      <SparkleIcon color="#FFF" size={12} />
+                      <span>Reveal & Match</span>
+                    </button>
+                  )}
+
+                  {userRequestedReveal && !isMutualMatchRevealed && (
+                    <span style={{ fontSize: '12px', color: accentRose, fontWeight: 600 }}>
+                      Consent Sent ⏳
+                    </span>
+                  )}
+
+                  {partnerRequestedReveal && !userRequestedReveal && (
+                    <button
+                      type="button"
+                      onClick={handleUserAcceptReveal}
+                      style={{
+                        padding: '8px 16px',
+                        borderRadius: '999px',
+                        border: 'none',
+                        backgroundColor: '#10B981',
+                        color: '#FFF',
+                        fontSize: '12px',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        boxShadow: '0 4px 12px rgba(16,185,129,0.3)',
+                      }}
+                    >
+                      Agree & Reveal
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Composer Input Area */}
+              <div style={{ padding: '12px 20px 16px' }}>
+                {inputWarning && (
+                  <div
+                    style={{
+                      fontSize: '11px',
+                      color: '#EF4444',
+                      marginBottom: '8px',
+                      padding: '4px 8px',
+                      backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                      borderRadius: '6px',
+                    }}
+                  >
+                    {inputWarning}
+                  </div>
+                )}
+
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                  <input
+                    type="text"
+                    value={inputMessage}
+                    onChange={(e) => {
+                      setInputMessage(e.target.value);
+                      if (inputWarning) setInputWarning(null);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') handleSendMessage();
+                    }}
+                    onPaste={(e) => {
+                      e.preventDefault();
+                      setInputWarning('Pasting text is disabled to encourage natural, live conversation.');
+                    }}
+                    placeholder="Type your message (URLs and paste disabled)..."
+                    style={{
+                      flex: 1,
+                      padding: '12px 18px',
+                      borderRadius: '999px',
+                      border: cardBorder,
+                      backgroundColor: isDark ? 'rgba(20, 14, 28, 0.85)' : '#FFFFFF',
+                      color: textPrimary,
+                      fontSize: '14px',
+                      outline: 'none',
+                      fontFamily: 'var(--font-sans)',
+                    }}
+                  />
+
+                  <button
+                    type="button"
+                    onClick={handleSendMessage}
+                    disabled={!inputMessage.trim()}
+                    style={{
+                      width: '42px',
+                      height: '42px',
+                      borderRadius: '50%',
+                      border: 'none',
+                      background: inputMessage.trim()
+                        ? 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)'
+                        : isDark
+                        ? 'rgba(255,255,255,0.1)'
+                        : 'rgba(0,0,0,0.1)',
+                      color: '#FFFFFF',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: inputMessage.trim() ? 'pointer' : 'not-allowed',
+                      flexShrink: 0,
+                    }}
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="22" y1="2" x2="11" y2="13" />
+                      <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -1696,12 +1744,14 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
         </ModalPortal>
       )}
 
-      {/* Bottom Nav for mobile views */}
-      <MemberBottomNav
-        activeTab="afterhours"
-        onSelectTab={onSelectTab}
-        showHomeIndicator={showHomeIndicator}
-      />
+      {/* Bottom Nav for mobile views — Only on Lobby */}
+      {activeView === 'lobby' && (
+        <MemberBottomNav
+          activeTab="afterhours"
+          onSelectTab={onSelectTab}
+          showHomeIndicator={showHomeIndicator}
+        />
+      )}
     </div>
   );
 };

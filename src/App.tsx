@@ -49,6 +49,7 @@ export const App: React.FC = () => {
 
   const [membershipReturnPath, setMembershipReturnPath] = useState<RoutePath>('/join/waitlist');
   const [membershipViewMode, setMembershipViewMode] = useState<'all' | 'membership_only' | 'complimentary_only'>('all');
+  const [afterHoursChatActive, setAfterHoursChatActive] = useState<boolean>(false);
 
   const VALID_PATHS: RoutePath[] = [
     '/',
@@ -636,6 +637,7 @@ export const App: React.FC = () => {
           onNavigateHelp={() => navigate('/member/help')}
           onUpgradeToMembership={handleUpgradeToMembership}
           onNavigateToChat={() => navigate('/member/chat')}
+          onChatViewChange={(isChatOrQueue) => setAfterHoursChatActive(isChatOrQueue)}
           showStatusBar={showStatusBar}
           showHomeIndicator={showHomeIndicator}
         />
@@ -654,12 +656,16 @@ export const App: React.FC = () => {
     );
   };
 
+  const isFullHeightChatMode =
+    currentPath === '/member/chat' ||
+    (currentPath === '/member/afterhours' && afterHoursChatActive);
+
   return (
     <div
       style={{
-        height: currentPath === '/member/chat' ? '100dvh' : undefined,
-        maxHeight: currentPath === '/member/chat' ? '100dvh' : undefined,
-        minHeight: currentPath === '/member/chat' ? '100dvh' : '100vh',
+        height: isFullHeightChatMode ? '100dvh' : undefined,
+        maxHeight: isFullHeightChatMode ? '100dvh' : undefined,
+        minHeight: isFullHeightChatMode ? '100dvh' : '100vh',
         width: '100%',
         display: 'flex',
         flexDirection: 'column',
@@ -667,7 +673,7 @@ export const App: React.FC = () => {
         color: isDark ? '#FDF3F5' : '#462037',
         fontFamily: 'var(--font-sans)',
         position: 'relative',
-        overflow: currentPath === '/member/chat' ? 'hidden' : undefined,
+        overflow: isFullHeightChatMode ? 'hidden' : undefined,
       }}
     >
       {/* Intro Launch Animation */}
@@ -704,8 +710,8 @@ export const App: React.FC = () => {
           position: 'relative',
           zIndex: 5,
           boxSizing: 'border-box',
-          overflow: currentPath === '/member/chat' ? 'hidden' : undefined,
-          ...(currentPath === '/member/chat'
+          overflow: isFullHeightChatMode ? 'hidden' : undefined,
+          ...(isFullHeightChatMode
             ? {
                 height: '100%',
                 maxHeight: '100%',
@@ -717,7 +723,7 @@ export const App: React.FC = () => {
       </main>
 
       {/* Comprehensive Editorial Web Footer */}
-      {currentPath !== '/member/chat' &&
+      {!isFullHeightChatMode &&
         currentPath !== '/join' &&
         currentPath !== '/login' &&
         currentPath !== '/join/verify-code' &&
