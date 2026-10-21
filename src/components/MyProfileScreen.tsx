@@ -17,12 +17,14 @@ import {
   CheckCheck,
   Info,
   EyeOff,
+  Sparkles,
 } from 'lucide-react';
 import { MemberBottomNav, type MemberTab } from './MemberBottomNav';
 import { MemberTopBar } from './MemberTopBar';
 import { StatusBar } from './StatusBar';
 import { ModalPortal } from './ModalPortal';
 import { PhotoCropModal } from './PhotoCropModal';
+import { ProfileElevateSuite } from './ProfileElevateSuite';
 import { useAuth, type UserProfile } from '../context/AuthContext';
 import { calculateAgeFromISO } from '../utils/ageCalculation';
 import {
@@ -34,6 +36,7 @@ import { getPageBackground } from '../constants/themeGradients';
 interface MyProfileScreenProps {
   onBack: () => void;
   onSelectTab: (tab: MemberTab) => void;
+  initialSubTab?: 'profile' | 'elevate' | 'account';
   onManageMembership?: () => void;
   onSignOut?: () => void;
   onDeleteAccount?: () => void;
@@ -51,6 +54,7 @@ const MAX_MONTHLY_INVITATIONS = 4;
 export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
   onBack,
   onSelectTab,
+  initialSubTab = 'profile',
   onManageMembership,
   onSignOut,
   onDeleteAccount,
@@ -85,7 +89,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
     vibes: [...(profile.vibes || [])],
   }));
 
-  const [activeSubTab, setActiveSubTab] = useState<'profile' | 'account'>('profile');
+  const [activeSubTab, setActiveSubTab] = useState<'profile' | 'elevate' | 'account'>(initialSubTab);
   const [isEditing, setIsEditing] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [previewPhotoIndex, setPreviewPhotoIndex] = useState(0);
@@ -758,7 +762,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
             </button>
           </div>
 
-          {/* Sub Navigation Pill Tabs (Profile Details vs Account & Membership) */}
+          {/* Sub Navigation Pill Tabs (Profile Details vs Elevate Studio vs Account & Membership) */}
           <div
             style={{
               display: 'flex',
@@ -768,6 +772,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
               backgroundColor: isDark ? 'rgba(40, 20, 34, 0.6)' : 'rgba(235, 220, 225, 0.5)',
               borderRadius: '999px',
               width: 'fit-content',
+              flexWrap: 'wrap',
             }}
           >
             <button
@@ -787,6 +792,28 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
               }}
             >
               Profile Details
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveSubTab('elevate')}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '8px 20px',
+                borderRadius: '999px',
+                border: 'none',
+                backgroundColor: activeSubTab === 'elevate' ? (isDark ? '#462037' : '#FFFFFF') : 'transparent',
+                color: activeSubTab === 'elevate' ? (isDark ? '#F9AAAD' : '#A1525F') : colors.muted,
+                fontWeight: activeSubTab === 'elevate' ? 700 : 500,
+                fontSize: '13px',
+                cursor: 'pointer',
+                boxShadow: activeSubTab === 'elevate' ? '0 2px 8px rgba(0,0,0,0.1)' : 'none',
+                transition: 'all 0.15s ease',
+              }}
+            >
+              <Sparkles size={14} color={activeSubTab === 'elevate' ? (isDark ? '#F9AAAD' : '#A1525F') : 'currentColor'} />
+              Elevate Studio
             </button>
             <button
               type="button"
@@ -1322,7 +1349,90 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                   </div>
                 </div>
               </section>
+
+              {/* Elevate & Intelligence Quick Link Banner */}
+              <div
+                style={{
+                  marginTop: '20px',
+                  padding: '20px',
+                  borderRadius: '16px',
+                  background: isDark
+                    ? 'linear-gradient(135deg, rgba(70, 32, 55, 0.45) 0%, rgba(40, 20, 34, 0.7) 100%)'
+                    : 'linear-gradient(135deg, rgba(253, 240, 243, 0.95) 0%, rgba(244, 230, 234, 0.8) 100%)',
+                  border: `1.5px solid ${isDark ? 'rgba(161, 82, 95, 0.35)' : 'rgba(161, 82, 95, 0.22)'}`,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  flexWrap: 'wrap',
+                  gap: '14px',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div
+                    style={{
+                      width: '38px',
+                      height: '38px',
+                      borderRadius: '10px',
+                      background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: '#FFF',
+                      flexShrink: 0,
+                    }}
+                  >
+                    <Sparkles size={18} />
+                  </div>
+                  <div>
+                    <h3
+                      style={{
+                        margin: 0,
+                        fontFamily: 'var(--font-serif)',
+                        fontSize: '16px',
+                        color: colors.text,
+                        fontWeight: 600,
+                      }}
+                    >
+                      Profile Intelligence & Makeover Studio
+                    </h3>
+                    <p style={{ margin: '4px 0 0', fontSize: '12.5px', color: colors.muted }}>
+                      Review live profile telemetry, AI makeover draft suggestions, and custom concierge services.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setActiveSubTab('elevate')}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '8px 18px',
+                    borderRadius: '999px',
+                    border: 'none',
+                    background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
+                    color: '#FFF',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 12px rgba(161, 82, 95, 0.25)',
+                  }}
+                >
+                  Open Elevate Studio →
+                </button>
+              </div>
             </>
+          ) : activeSubTab === 'elevate' ? (
+            /* ELEVATE INTELLIGENCE & CONCIERGE SUITE */
+            <ProfileElevateSuite
+              onApplyBioDraft={(newBio) => {
+                setDraft((prev) => ({ ...prev, introduction: newBio }));
+                setSaveMessage('Suggested bio draft successfully applied to your profile.');
+                setTimeout(() => setSaveMessage(''), 4000);
+              }}
+              onUpgradeToMembership={onUpgradeToMembership}
+              onNavigateHelp={onNavigateHelp}
+            />
           ) : (
             /* ACCOUNT & MEMBERSHIP TAB */
             <div style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>

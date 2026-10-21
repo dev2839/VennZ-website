@@ -1,13 +1,26 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
 
-export type MemberTab = 'discover' | 'matches' | 'elevate' | 'mixers' | 'afterhours' | 'you' | 'profile';
+export type MemberTab = 'discover' | 'matches' | 'blinddate' | 'mixers' | 'afterhours' | 'you' | 'profile' | 'elevate';
 
 interface MemberBottomNavProps {
   activeTab: MemberTab;
   onSelectTab: (tab: MemberTab) => void;
   showHomeIndicator?: boolean;
 }
+
+const SparkleIcon = ({ color, size = 10 }: { color: string; size?: number }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill={color}
+    stroke="none"
+    style={{ display: 'inline-block', verticalAlign: 'middle', flexShrink: 0 }}
+  >
+    <path d="M12 2L14.4 8.6L21 11L14.4 13.4L12 20L9.6 13.4L3 11L9.6 8.6L12 2Z" />
+  </svg>
+);
 
 const CrownIcon = ({ color, size = 10 }: { color: string; size?: number }) => (
   <svg
@@ -48,10 +61,17 @@ export const MemberBottomNav: React.FC<MemberBottomNavProps> = ({
 
   const hasIncomingRequests = Boolean(incomingRequests && incomingRequests.length > 0);
 
-  const tabs: { id: MemberTab; label: string; hasNotification?: boolean; isExclusive?: boolean; isMoon?: boolean }[] = [
+  const tabs: {
+    id: MemberTab;
+    label: string;
+    hasNotification?: boolean;
+    isExclusive?: boolean;
+    isMoon?: boolean;
+    isSparkle?: boolean;
+  }[] = [
     { id: 'discover', label: 'DISCOVER' },
     { id: 'matches', label: 'MATCHES', hasNotification: hasIncomingRequests },
-    { id: 'elevate', label: 'ELEVATE', isExclusive: true },
+    { id: 'blinddate', label: 'BLINDDATE', isSparkle: true },
     { id: 'mixers', label: 'MIXERS' },
     { id: 'afterhours', label: 'afterHOURS', isMoon: true },
   ];
@@ -133,6 +153,12 @@ export const MemberBottomNav: React.FC<MemberBottomNavProps> = ({
                   paddingBottom: '2px',
                 }}
               >
+                {tab.isSparkle && (
+                  <SparkleIcon
+                    color={isActive ? activeColor : (isDark ? 'rgba(249, 170, 173, 0.75)' : 'rgba(161, 82, 95, 0.65)')}
+                    size={10}
+                  />
+                )}
                 {tab.isExclusive && (
                   <CrownIcon
                     color={isActive ? (isDark ? '#F5D78E' : crownColor) : (isDark ? 'rgba(223, 183, 108, 0.7)' : 'rgba(138, 75, 110, 0.65)')}

@@ -15,7 +15,7 @@ import { MyProfileScreen } from './components/MyProfileScreen';
 import { Page14HelpScreen } from './components/Page14HelpScreen';
 import { Page15MatchesScreen } from './components/Page15MatchesScreen';
 import { Page16ChatScreen } from './components/Page16ChatScreen';
-import { Page17ElevateScreen } from './components/Page17ElevateScreen';
+import { PageBlindDateScreen } from './components/PageBlindDateScreen';
 import { Page18MixersScreen } from './components/Page18MixersScreen';
 import { Page19AfterHoursScreen } from './components/Page19AfterHoursScreen';
 import { WebNavbar, type RoutePath } from './components/WebNavbar';
@@ -74,6 +74,7 @@ export const App: React.FC = () => {
     '/member/matches',
     '/member/chat',
     '/member/elevate',
+    '/member/blinddate',
     '/member/mixers',
     '/member/afterhours',
   ];
@@ -403,8 +404,8 @@ export const App: React.FC = () => {
             } else if (tab === 'matches') {
               setMatchesInitialSubTab('matches');
               navigate('/member/matches');
-            } else if (tab === 'elevate') {
-              navigate('/member/elevate');
+            } else if (tab === 'elevate' || tab === 'blinddate') {
+              navigate('/member/blinddate');
             } else if (tab === 'mixers') {
               navigate('/member/mixers');
             } else if (tab === 'afterhours') {
@@ -433,8 +434,8 @@ export const App: React.FC = () => {
             } else if (tab === 'matches') {
               setMatchesInitialSubTab('matches');
               navigate('/member/matches');
-            } else if (tab === 'elevate') {
-              navigate('/member/elevate');
+            } else if (tab === 'elevate' || tab === 'blinddate') {
+              navigate('/member/blinddate');
             } else if (tab === 'mixers') {
               navigate('/member/mixers');
             } else if (tab === 'afterhours') {
@@ -466,8 +467,8 @@ export const App: React.FC = () => {
             } else if (tab === 'matches') {
               setMatchesInitialSubTab('matches');
               navigate('/member/matches');
-            } else if (tab === 'elevate') {
-              navigate('/member/elevate');
+            } else if (tab === 'elevate' || tab === 'blinddate') {
+              navigate('/member/blinddate');
             } else if (tab === 'mixers') {
               navigate('/member/mixers');
             } else if (tab === 'afterhours') {
@@ -494,8 +495,8 @@ export const App: React.FC = () => {
             } else if (tab === 'matches') {
               setMatchesInitialSubTab('matches');
               navigate('/member/matches');
-            } else if (tab === 'elevate') {
-              navigate('/member/elevate');
+            } else if (tab === 'elevate' || tab === 'blinddate') {
+              navigate('/member/blinddate');
             } else if (tab === 'mixers') {
               navigate('/member/mixers');
             } else if (tab === 'afterhours') {
@@ -521,8 +522,8 @@ export const App: React.FC = () => {
               navigate('/discover');
             } else if (tab === 'you' || tab === 'profile') {
               navigate('/member/my-profile');
-            } else if (tab === 'elevate') {
-              navigate('/member/elevate');
+            } else if (tab === 'elevate' || tab === 'blinddate') {
+              navigate('/member/blinddate');
             } else if (tab === 'mixers') {
               navigate('/member/mixers');
             } else if (tab === 'afterhours') {
@@ -562,8 +563,8 @@ export const App: React.FC = () => {
               navigate('/member/matches');
             } else if (tab === 'you' || tab === 'profile') {
               navigate('/member/my-profile');
-            } else if (tab === 'elevate') {
-              navigate('/member/elevate');
+            } else if (tab === 'elevate' || tab === 'blinddate') {
+              navigate('/member/blinddate');
             } else if (tab === 'mixers') {
               navigate('/member/mixers');
             } else if (tab === 'afterhours') {
@@ -577,9 +578,16 @@ export const App: React.FC = () => {
       );
     }
 
-    if (currentPath === '/member/elevate') {
+    if (currentPath === '/member/blinddate' || currentPath === '/member/elevate') {
       return (
-        <Page17ElevateScreen
+        <PageBlindDateScreen
+          onNavigateChat={(matchId) => {
+            const match = matches.find((m) => m.id === matchId);
+            if (match) {
+              setSelectedChatMatch(match);
+            }
+            navigate('/member/chat');
+          }}
           onSelectTab={(tab) => {
             if (tab === 'discover') {
               navigate('/discover');
@@ -609,8 +617,8 @@ export const App: React.FC = () => {
               navigate('/discover');
             } else if (tab === 'matches') {
               navigate('/member/matches');
-            } else if (tab === 'elevate') {
-              navigate('/member/elevate');
+            } else if (tab === 'elevate' || tab === 'blinddate') {
+              navigate('/member/blinddate');
             } else if (tab === 'you' || tab === 'profile') {
               navigate('/member/my-profile');
             } else if (tab === 'afterhours') {
@@ -634,8 +642,8 @@ export const App: React.FC = () => {
             } else if (tab === 'matches') {
               setMatchesInitialSubTab('matches');
               navigate('/member/matches');
-            } else if (tab === 'elevate') {
-              navigate('/member/elevate');
+            } else if (tab === 'elevate' || tab === 'blinddate') {
+              navigate('/member/blinddate');
             } else if (tab === 'mixers') {
               navigate('/member/mixers');
             } else if (tab === 'you' || tab === 'profile') {

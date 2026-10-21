@@ -12,12 +12,14 @@ import {
 } from '../utils/elevateTelemetry';
 import { getPageBackground } from '../constants/themeGradients';
 
-interface Page17ElevateScreenProps {
-  onSelectTab: (tab: MemberTab) => void;
+export interface Page17ElevateScreenProps {
+  onSelectTab?: (tab: MemberTab) => void;
   onNavigateHelp?: () => void;
   onUpgradeToMembership?: () => void;
   showStatusBar?: boolean;
   showHomeIndicator?: boolean;
+  embedded?: boolean;
+  onApplyBioDraft?: (newBio: string) => void;
 }
 
 type ElevateNavTab = 'catalog' | 'scorecard' | 'makeover' | 'orders' | 'concierge';
@@ -199,8 +201,11 @@ const ElevateFolderTab: React.FC<ElevateFolderTabProps> = ({
 export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
   onSelectTab,
   onNavigateHelp,
+  onUpgradeToMembership: _onUpgradeToMembership,
   showStatusBar = true,
   showHomeIndicator = true,
+  embedded = false,
+  onApplyBioDraft,
 }) => {
   const {
     appearanceMode,
@@ -312,6 +317,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
     setIsApplyingBio(true);
     setTimeout(() => {
       applyMakeoverBio(bioText);
+      onApplyBioDraft?.(bioText);
       setIsApplyingBio(false);
       setAppliedBioSuccess(true);
       setTimeout(() => setAppliedBioSuccess(false), 3500);
@@ -336,12 +342,12 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
     <div
       style={{
         position: 'relative',
-        minHeight: '100vh',
+        minHeight: embedded ? 'auto' : '100vh',
         width: '100%',
-        maxWidth: '100vw',
+        maxWidth: embedded ? '100%' : '100vw',
         margin: '0 auto',
-        background: themeBgColor,
-        backgroundColor: isDark ? '#140E1C' : '#FAF1F3',
+        background: embedded ? 'transparent' : themeBgColor,
+        backgroundColor: embedded ? 'transparent' : (isDark ? '#140E1C' : '#FAF1F3'),
         color: themeTextColor,
         fontFamily: 'var(--font-sans)',
         overflowX: 'hidden',
@@ -351,33 +357,37 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
       }}
     >
       {/* Background Ambience */}
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          pointerEvents: 'none',
-          background: isDark
-            ? 'radial-gradient(ellipse 90% 60% at 50% -10%, rgba(161, 82, 95, 0.22) 0%, rgba(20, 14, 28, 0.98) 75%)'
-            : 'radial-gradient(ellipse 90% 60% at 50% -10%, rgba(220, 150, 170, 0.18) 0%, rgba(250, 241, 243, 0.98) 75%)',
-          zIndex: 0,
-        }}
-      />
+      {!embedded && (
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            pointerEvents: 'none',
+            background: isDark
+              ? 'radial-gradient(ellipse 90% 60% at 50% -10%, rgba(161, 82, 95, 0.22) 0%, rgba(20, 14, 28, 0.98) 75%)'
+              : 'radial-gradient(ellipse 90% 60% at 50% -10%, rgba(220, 150, 170, 0.18) 0%, rgba(250, 241, 243, 0.98) 75%)',
+            zIndex: 0,
+          }}
+        />
+      )}
 
       {/* Top Header & Navigation */}
-      <div
-        style={{
-          position: 'sticky',
-          top: 0,
-          zIndex: 40,
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          backgroundColor: isDark ? 'rgba(20, 14, 28, 0.88)' : 'rgba(250, 241, 243, 0.88)',
-          borderBottom: `1px solid ${themeBorder}`,
-        }}
-      >
-        {showStatusBar && <StatusBar />}
-        <MemberTopBar onConciergeClick={onNavigateHelp} />
-      </div>
+      {!embedded && (
+        <div
+          style={{
+            position: 'sticky',
+            top: 0,
+            zIndex: 40,
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            backgroundColor: isDark ? 'rgba(20, 14, 28, 0.88)' : 'rgba(250, 241, 243, 0.88)',
+            borderBottom: `1px solid ${themeBorder}`,
+          }}
+        >
+          {showStatusBar && <StatusBar />}
+          <MemberTopBar onConciergeClick={onNavigateHelp} />
+        </div>
+      )}
 
       {/* Main Content Area */}
       <div
@@ -385,8 +395,8 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
           position: 'relative',
           zIndex: 1,
           flex: 1,
-          padding: '16px 18px 120px',
-          maxWidth: '840px',
+          padding: embedded ? '10px 0 32px' : '16px 18px 120px',
+          maxWidth: embedded ? '100%' : '840px',
           margin: '0 auto',
           width: '100%',
           boxSizing: 'border-box',
@@ -1949,11 +1959,13 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
       )}
 
       {/* Bottom Navigation */}
-      <MemberBottomNav
-        activeTab="elevate"
-        onSelectTab={onSelectTab}
-        showHomeIndicator={showHomeIndicator}
-      />
+      {!embedded && onSelectTab && (
+        <MemberBottomNav
+          activeTab="elevate"
+          onSelectTab={onSelectTab}
+          showHomeIndicator={showHomeIndicator}
+        />
+      )}
     </div>
   );
 };
