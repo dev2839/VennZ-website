@@ -154,7 +154,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
   const navItems: NavItem[] = [
     { path: '/discover' as RoutePath, label: 'DISCOVER' },
     { path: '/member/matches' as RoutePath, label: 'MATCHES', hasBadge: hasIncomingRequests },
-    { path: '/member/blinddate' as RoutePath, label: 'BLINDDATE', hasSparkle: true },
+    { path: '/member/blinddate' as RoutePath, label: 'BlindDate', hasSparkle: true },
     { path: '/member/mixers' as RoutePath, label: 'MIXERS' },
     { path: '/member/afterhours' as RoutePath, label: 'afterHOURS', hasMoon: true },
   ];

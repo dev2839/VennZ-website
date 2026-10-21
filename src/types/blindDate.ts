@@ -27,13 +27,33 @@ export interface PublicProfilePreview {
   city: string;
   designation: string;
   company?: string;
+  education?: string;
   gender: 'woman' | 'man' | 'other';
   previewPhoto: string;
+  photos: string[];
+  introduction: string;
   introductionSnippet: string;
   interests: string[];
   vibes: string[];
   isVerified: boolean;
   curationHighlight?: string; // Editorial highlight: e.g. "Shared affinity for Architecture & Coffee"
+  careerAndEducation?: {
+    role: string;
+    company: string;
+    education: string;
+  };
+  datingPreference?: string;
+  currentStatus?: string;
+  photoPrompts?: {
+    photoIndex: number;
+    title: string;
+    subtitle?: string;
+    content: string;
+    tags?: string[];
+  }[];
+  quirks?: string[];
+  weekendRitual?: string;
+  activeStatus?: string;
 }
 
 /**

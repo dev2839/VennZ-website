@@ -87,13 +87,23 @@ export class MockBlindDateProvider implements BlindDateService {
       city: profile.city,
       designation: profile.designation,
       company: profile.company,
+      education: profile.education,
       gender: profile.gender,
       previewPhoto: profile.photos && profile.photos.length > 0 ? profile.photos[0] : '',
+      photos: profile.photos && profile.photos.length > 0 ? profile.photos : [],
+      introduction: profile.introduction || '',
       introductionSnippet: snippet,
       interests: profile.interests || [],
       vibes: profile.vibes || [],
       isVerified: Boolean(profile.isVerified),
       curationHighlight: highlight,
+      careerAndEducation: profile.careerAndEducation,
+      datingPreference: profile.datingPreference,
+      currentStatus: profile.currentStatus,
+      photoPrompts: profile.photoPrompts,
+      quirks: profile.quirks,
+      weekendRitual: profile.weekendRitual,
+      activeStatus: profile.activeStatus,
     };
   }
 

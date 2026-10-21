@@ -7,11 +7,12 @@ import {
   MapPin,
   Briefcase,
   MessageCircle,
-  Eye,
   RefreshCw,
   Clock,
   CheckCircle2,
-  Lock,
+  ChevronLeft,
+  ChevronRight,
+  GraduationCap,
 } from 'lucide-react';
 import { MemberTopBar } from './MemberTopBar';
 import { MemberBottomNav, type MemberTab } from './MemberBottomNav';
@@ -22,11 +23,9 @@ import type {
   Recommendation,
   RecommendationStatus,
   MutualConnection,
-  FullProfile,
 } from '../types/blindDate';
 import type { MatchItem } from '../types/matches';
 import { getPageBackground, getPageScrim } from '../constants/themeGradients';
-import { ModalPortal } from './ModalPortal';
 
 interface PageBlindDateScreenProps {
   onSelectTab: (tab: MemberTab) => void;
@@ -54,7 +53,7 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [mutualConnection, setMutualConnection] = useState<MutualConnection | null>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [fullProfileModal, setFullProfileModal] = useState<FullProfile | null>(null);
+  const [activePhotoIndex, setActivePhotoIndex] = useState<number>(0);
 
   // Dynamic Theme Colors
   const themeBgColor = getPageBackground(isDark);
@@ -76,6 +75,7 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
   const loadRecommendation = useCallback(async () => {
     setStatus('loading');
     setErrorMessage(null);
+    setActivePhotoIndex(0);
     try {
       const rec = await blindDateService.getNextRecommendation(userId);
       if (!rec) {
@@ -101,6 +101,28 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
   useEffect(() => {
     loadRecommendation();
   }, [loadRecommendation]);
+
+  // Candidate photos list for multi-photo gallery
+  const candidatePhotos: string[] =
+    recommendation?.preview.photos && recommendation.preview.photos.length > 0
+      ? recommendation.preview.photos
+      : recommendation?.preview.previewPhoto
+      ? [recommendation.preview.previewPhoto]
+      : [];
+
+  const currentPhoto = candidatePhotos[activePhotoIndex] || candidatePhotos[0] || '';
+
+  const handlePrevPhoto = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (candidatePhotos.length <= 1) return;
+    setActivePhotoIndex((prev) => (prev > 0 ? prev - 1 : candidatePhotos.length - 1));
+  };
+
+  const handleNextPhoto = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (candidatePhotos.length <= 1) return;
+    setActivePhotoIndex((prev) => (prev < candidatePhotos.length - 1 ? prev + 1 : 0));
+  };
 
   /**
    * Handle user accepting recommendation
@@ -181,25 +203,6 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
       onNavigateChat(matchId);
     } else {
       onSelectTab('matches');
-    }
-  };
-
-  /**
-   * View full profile modal
-   */
-  const handleViewProfile = async () => {
-    if (!mutualConnection) return;
-    try {
-      const full = await blindDateService.getFullProfile(
-        mutualConnection.candidateProfileId,
-        userId
-      );
-      setFullProfileModal(full);
-    } catch {
-      // Fallback to mutual full profile
-      if (mutualConnection.fullProfile) {
-        setFullProfileModal(mutualConnection.fullProfile);
-      }
     }
   };
 
@@ -323,10 +326,10 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
               fontSize: '13px',
               color: themeMuted,
               lineHeight: 1.5,
-              maxWidth: '420px',
+              maxWidth: '440px',
             }}
           >
-            A tailored introduction selected for you by VennZ. Complete profiles and private details unlock strictly upon mutual consent.
+            A tailored introduction curated for you by VennZ. Review their complete profile and photographs below — direct messaging unlocks when both of you accept.
           </p>
         </div>
 
@@ -590,25 +593,28 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
               </div>
             )}
 
-            {/* PHOTO VIEWFINDER */}
+            {/* PHOTO VIEWFINDER WITH MULTI-PHOTO GALLERY */}
             <div
               style={{
                 position: 'relative',
                 width: '100%',
-                height: '360px',
+                height: '420px',
                 overflow: 'hidden',
                 backgroundColor: isDark ? '#1F111E' : '#E8DCE0',
+                userSelect: 'none',
               }}
             >
               <img
-                src={recommendation.preview.previewPhoto}
-                alt={recommendation.preview.displayName}
+                key={currentPhoto}
+                src={currentPhoto}
+                alt={`${recommendation.preview.displayName} photo ${activePhotoIndex + 1}`}
                 style={{
                   width: '100%',
                   height: '100%',
                   objectFit: 'cover',
                   objectPosition: 'center 20%',
                   display: 'block',
+                  transition: 'opacity 0.25s ease',
                 }}
               />
 
@@ -617,16 +623,50 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                 style={{
                   position: 'absolute',
                   inset: 0,
+                  pointerEvents: 'none',
                   background:
-                    'linear-gradient(to top, rgba(20, 14, 28, 0.92) 0%, rgba(20, 14, 28, 0.35) 45%, transparent 70%)',
+                    'linear-gradient(to top, rgba(20, 14, 28, 0.95) 0%, rgba(20, 14, 28, 0.35) 45%, transparent 70%)',
                 }}
               />
 
-              {/* Top Privacy Shield Pill */}
+              {/* Top Segmented Indicators for Photos */}
+              {candidatePhotos.length > 1 && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: '12px',
+                    left: '12px',
+                    right: '12px',
+                    display: 'flex',
+                    gap: '4px',
+                    zIndex: 15,
+                  }}
+                >
+                  {candidatePhotos.map((_, idx) => (
+                    <div
+                      key={idx}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setActivePhotoIndex(idx);
+                      }}
+                      style={{
+                        flex: 1,
+                        height: '3px',
+                        borderRadius: '2px',
+                        backgroundColor: idx === activePhotoIndex ? '#FFFFFF' : 'rgba(255, 255, 255, 0.38)',
+                        cursor: 'pointer',
+                        transition: 'background-color 0.2s ease',
+                      }}
+                    />
+                  ))}
+                </div>
+              )}
+
+              {/* Top Left Status Badge */}
               <div
                 style={{
                   position: 'absolute',
-                  top: '14px',
+                  top: candidatePhotos.length > 1 ? '24px' : '14px',
                   left: '14px',
                   display: 'inline-flex',
                   alignItems: 'center',
@@ -639,11 +679,120 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                   fontSize: '11px',
                   fontWeight: 600,
                   border: '1px solid rgba(255, 255, 255, 0.18)',
+                  zIndex: 12,
                 }}
               >
-                {status === 'mutual' ? <CheckCircle2 size={13} color="#4ADE80" /> : <Lock size={12} color="#F9AAAD" />}
-                <span>{status === 'mutual' ? 'Verified Connection' : 'Confidential Preview'}</span>
+                {status === 'mutual' ? <CheckCircle2 size={13} color="#4ADE80" /> : <Sparkles size={12} color="#F9AAAD" />}
+                <span>{status === 'mutual' ? 'Mutual Match' : 'Curated Introduction'}</span>
               </div>
+
+              {/* Photo Counter Badge */}
+              {candidatePhotos.length > 1 && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: '24px',
+                    right: '14px',
+                    padding: '3px 9px',
+                    borderRadius: '999px',
+                    backgroundColor: 'rgba(20, 14, 28, 0.72)',
+                    backdropFilter: 'blur(8px)',
+                    color: '#FFFFFF',
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    border: '1px solid rgba(255, 255, 255, 0.18)',
+                    zIndex: 12,
+                  }}
+                >
+                  {activePhotoIndex + 1} / {candidatePhotos.length}
+                </div>
+              )}
+
+              {/* Tap zones for intuitive photo browsing */}
+              <div
+                onClick={handlePrevPhoto}
+                title="Previous photograph"
+                style={{
+                  position: 'absolute',
+                  top: '50px',
+                  bottom: '80px',
+                  left: 0,
+                  width: '40%',
+                  zIndex: 10,
+                  cursor: candidatePhotos.length > 1 ? 'pointer' : 'default',
+                }}
+              />
+              <div
+                onClick={handleNextPhoto}
+                title="Next photograph"
+                style={{
+                  position: 'absolute',
+                  top: '50px',
+                  bottom: '80px',
+                  right: 0,
+                  width: '60%',
+                  zIndex: 10,
+                  cursor: candidatePhotos.length > 1 ? 'pointer' : 'default',
+                }}
+              />
+
+              {/* Visual Previous/Next Chevron Arrows */}
+              {candidatePhotos.length > 1 && (
+                <>
+                  <button
+                    type="button"
+                    onClick={handlePrevPhoto}
+                    aria-label="Previous photo"
+                    style={{
+                      position: 'absolute',
+                      top: '50%',
+                      left: '12px',
+                      transform: 'translateY(-50%)',
+                      zIndex: 14,
+                      width: '32px',
+                      height: '32px',
+                      borderRadius: '50%',
+                      border: 'none',
+                      backgroundColor: 'rgba(20, 14, 28, 0.65)',
+                      color: '#FFFFFF',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: 'pointer',
+                      backdropFilter: 'blur(4px)',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+                    }}
+                  >
+                    <ChevronLeft size={18} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleNextPhoto}
+                    aria-label="Next photo"
+                    style={{
+                      position: 'absolute',
+                      top: '50%',
+                      right: '12px',
+                      transform: 'translateY(-50%)',
+                      zIndex: 14,
+                      width: '32px',
+                      height: '32px',
+                      borderRadius: '50%',
+                      border: 'none',
+                      backgroundColor: 'rgba(20, 14, 28, 0.65)',
+                      color: '#FFFFFF',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: 'pointer',
+                      backdropFilter: 'blur(4px)',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+                    }}
+                  >
+                    <ChevronRight size={18} />
+                  </button>
+                </>
+              )}
 
               {/* Bottom Photo Identity Badge */}
               <div
@@ -653,22 +802,40 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                   left: '18px',
                   right: '18px',
                   color: '#FFFFFF',
+                  zIndex: 11,
+                  pointerEvents: 'none',
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '2px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px', flexWrap: 'wrap' }}>
                   <h2
                     style={{
                       margin: 0,
                       fontFamily: 'var(--font-serif)',
-                      fontSize: '28px',
+                      fontSize: '30px',
                       fontWeight: 400,
                       color: '#FFFFFF',
+                      lineHeight: 1.1,
                     }}
                   >
                     {recommendation.preview.displayName}, {recommendation.preview.age}
                   </h2>
                   {recommendation.preview.isVerified && (
-                    <ShieldCheck size={20} color="#F9AAAD" />
+                    <ShieldCheck size={22} color="#F9AAAD" />
+                  )}
+                  {recommendation.preview.activeStatus && (
+                    <span
+                      style={{
+                        fontSize: '11px',
+                        padding: '2px 8px',
+                        borderRadius: '999px',
+                        backgroundColor: 'rgba(255, 255, 255, 0.22)',
+                        backdropFilter: 'blur(4px)',
+                        color: 'rgba(255, 255, 255, 0.95)',
+                        fontWeight: 600,
+                      }}
+                    >
+                      {recommendation.preview.activeStatus}
+                    </span>
                   )}
                 </div>
 
@@ -677,25 +844,31 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                     display: 'flex',
                     alignItems: 'center',
                     gap: '12px',
-                    fontSize: '13px',
-                    color: 'rgba(255, 255, 255, 0.88)',
+                    fontSize: '13.5px',
+                    color: 'rgba(255, 255, 255, 0.92)',
                     flexWrap: 'wrap',
                   }}
                 >
                   <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                    <Briefcase size={13} />
-                    {recommendation.preview.designation}
+                    <Briefcase size={14} color="#F9AAAD" />
+                    {[recommendation.preview.designation, recommendation.preview.company].filter(Boolean).join(' · ')}
                   </span>
                   <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                    <MapPin size={13} />
+                    <MapPin size={14} color="#F9AAAD" />
                     {recommendation.preview.city}
                   </span>
+                  {recommendation.preview.education && (
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                      <GraduationCap size={14} color="#F9AAAD" />
+                      {recommendation.preview.education}
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
 
-            {/* CURATED PROFILE DETAILS BODY */}
-            <div style={{ padding: '20px 22px 24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {/* COMPLETE PROFILE DETAILS BODY */}
+            <div style={{ padding: '22px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
               {/* Editorial Curation Highlight */}
               {recommendation.preview.curationHighlight && (
                 <div
@@ -717,7 +890,7 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                 </div>
               )}
 
-              {/* Introductory Snippet */}
+              {/* Complete Introduction / About */}
               <div>
                 <span
                   style={{
@@ -730,23 +903,66 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                     marginBottom: '6px',
                   }}
                 >
-                  ABOUT
+                  ABOUT {recommendation.preview.displayName.toUpperCase()}
                 </span>
                 <p
                   style={{
                     margin: 0,
-                    fontSize: '14px',
-                    lineHeight: 1.55,
+                    fontSize: '14.5px',
+                    lineHeight: 1.6,
                     color: themeTextColor,
-                    fontStyle: 'italic',
                   }}
                 >
-                  "{recommendation.preview.introductionSnippet}"
+                  {recommendation.preview.introduction || recommendation.preview.introductionSnippet}
                 </p>
               </div>
 
-              {/* Interests & Vibes Chips */}
-              {recommendation.preview.interests.length > 0 && (
+              {/* Career & Education Details Card */}
+              <div
+                style={{
+                  padding: '14px 16px',
+                  borderRadius: '14px',
+                  backgroundColor: isDark ? 'rgba(40, 20, 34, 0.65)' : 'rgba(248, 238, 242, 0.75)',
+                  border: `1px solid ${themeBorder}`,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '8px',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Briefcase size={15} color={isDark ? '#F9AAAD' : '#A1525F'} />
+                  <span style={{ fontSize: '13.5px', color: themeTextColor, fontWeight: 600 }}>
+                    {recommendation.preview.designation}
+                    {recommendation.preview.company && ` at ${recommendation.preview.company}`}
+                  </span>
+                </div>
+                {recommendation.preview.education && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <GraduationCap size={15} color={isDark ? '#F9AAAD' : '#A1525F'} />
+                    <span style={{ fontSize: '13px', color: themeMuted }}>
+                      {recommendation.preview.education}
+                    </span>
+                  </div>
+                )}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <MapPin size={15} color={isDark ? '#F9AAAD' : '#A1525F'} />
+                  <span style={{ fontSize: '13px', color: themeMuted }}>
+                    {recommendation.preview.city}
+                  </span>
+                </div>
+                {recommendation.preview.datingPreference && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <Heart size={15} color={isDark ? '#F9AAAD' : '#A1525F'} />
+                    <span style={{ fontSize: '13px', color: themeMuted }}>
+                      Interested in dating {recommendation.preview.datingPreference.toLowerCase()}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* All Shared Interests & Vibes */}
+              {((recommendation.preview.interests && recommendation.preview.interests.length > 0) ||
+                (recommendation.preview.vibes && recommendation.preview.vibes.length > 0)) && (
                 <div>
                   <span
                     style={{
@@ -759,16 +975,16 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                       marginBottom: '8px',
                     }}
                   >
-                    SHARED INTERESTS & VIBE
+                    INTERESTS & VIBE
                   </span>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                    {recommendation.preview.interests.slice(0, 5).map((interest) => (
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '7px' }}>
+                    {recommendation.preview.interests.map((interest) => (
                       <span
                         key={interest}
                         style={{
                           fontSize: '12px',
                           fontWeight: 600,
-                          padding: '4px 12px',
+                          padding: '5px 13px',
                           borderRadius: '999px',
                           backgroundColor: isDark ? 'rgba(70, 32, 55, 0.5)' : 'rgba(240, 230, 235, 0.8)',
                           color: isDark ? '#F9AAAD' : '#462037',
@@ -778,15 +994,15 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                         {interest}
                       </span>
                     ))}
-                    {recommendation.preview.vibes.slice(0, 3).map((vibe) => (
+                    {recommendation.preview.vibes.map((vibe) => (
                       <span
                         key={vibe}
                         style={{
                           fontSize: '12px',
                           fontWeight: 600,
-                          padding: '4px 12px',
+                          padding: '5px 13px',
                           borderRadius: '999px',
-                          backgroundColor: isDark ? 'rgba(161, 82, 95, 0.25)' : 'rgba(253, 235, 239, 0.7)',
+                          backgroundColor: isDark ? 'rgba(161, 82, 95, 0.25)' : 'rgba(253, 235, 239, 0.85)',
                           color: isDark ? '#F9AAAD' : '#A1525F',
                           border: `1px solid ${themeBorder}`,
                         }}
@@ -798,7 +1014,40 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                 </div>
               )}
 
-              {/* Privacy Notice */}
+              {/* Photo Prompts / Lifestyle Prompts if available */}
+              {recommendation.preview.photoPrompts && recommendation.preview.photoPrompts.length > 0 && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  {recommendation.preview.photoPrompts.map((prompt, idx) => (
+                    <div
+                      key={idx}
+                      style={{
+                        padding: '12px 16px',
+                        borderRadius: '14px',
+                        backgroundColor: isDark ? 'rgba(30, 15, 25, 0.5)' : 'rgba(255, 255, 255, 0.8)',
+                        border: `1px solid ${themeBorder}`,
+                      }}
+                    >
+                      <div
+                        style={{
+                          fontSize: '11px',
+                          fontWeight: 700,
+                          color: isDark ? '#F9AAAD' : '#A1525F',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.08em',
+                          marginBottom: '4px',
+                        }}
+                      >
+                        {prompt.title}
+                      </div>
+                      <div style={{ fontSize: '13.5px', color: themeTextColor, lineHeight: 1.5 }}>
+                        {prompt.content}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Informative Curation Notice */}
               <div
                 style={{
                   display: 'flex',
@@ -807,17 +1056,17 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                   padding: '10px 14px',
                   borderRadius: '12px',
                   backgroundColor: isDark ? 'rgba(0, 0, 0, 0.25)' : 'rgba(0, 0, 0, 0.03)',
-                  border: `1px dashed ${themeBorder}`,
-                  fontSize: '11.5px',
+                  border: `1px solid ${themeBorder}`,
+                  fontSize: '12px',
                   color: themeMuted,
-                  lineHeight: 1.4,
+                  lineHeight: 1.45,
                 }}
               >
-                <ShieldCheck size={16} color={isDark ? '#F9AAAD' : '#A1525F'} style={{ flexShrink: 0 }} />
+                <Sparkles size={16} color={isDark ? '#F9AAAD' : '#A1525F'} style={{ flexShrink: 0 }} />
                 <span>
                   {status === 'mutual'
-                    ? 'Both users have consented. Full profile, albums, and messaging access are unlocked.'
-                    : 'Personal contact credentials, full legal names, and private photo albums remain confidential until mutual connection is confirmed.'}
+                    ? 'Mutual match confirmed! Direct 1:1 conversation and messaging are unlocked.'
+                    : 'Curated based on your preferences. Accepting this BlindDate will unlock direct chat once they accept too.'}
                 </span>
               </div>
 
@@ -923,50 +1172,47 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                 )}
 
                 {status === 'mutual' && (
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                    <button
-                      type="button"
-                      onClick={handleViewProfile}
-                      style={{
-                        height: '48px',
-                        borderRadius: '999px',
-                        border: `1.5px solid ${themeBorder}`,
-                        backgroundColor: isDark ? 'rgba(70, 32, 55, 0.4)' : '#FFFFFF',
-                        color: themeTextColor,
-                        fontSize: '12.5px',
-                        fontWeight: 700,
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '6px',
-                      }}
-                    >
-                      <Eye size={15} />
-                      <span>View Full Profile</span>
-                    </button>
-
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                     <button
                       type="button"
                       onClick={handleStartChat}
                       style={{
-                        height: '48px',
+                        height: '52px',
                         borderRadius: '999px',
                         border: 'none',
                         background: 'linear-gradient(135deg, #15803D 0%, #22C55E 100%)',
                         color: '#FFFFFF',
-                        fontSize: '13px',
+                        fontSize: '14px',
                         fontWeight: 700,
                         cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        gap: '6px',
-                        boxShadow: '0 6px 18px rgba(34, 197, 94, 0.35)',
+                        gap: '8px',
+                        boxShadow: '0 6px 20px rgba(34, 197, 94, 0.38)',
+                        width: '100%',
                       }}
                     >
-                      <MessageCircle size={16} />
-                      <span>Open Chat</span>
+                      <MessageCircle size={18} />
+                      <span>Start Chat with {recommendation.preview.displayName} →</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={handleReject}
+                      style={{
+                        height: '38px',
+                        borderRadius: '999px',
+                        border: 'none',
+                        backgroundColor: 'transparent',
+                        color: themeMuted,
+                        fontSize: '12px',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        textDecoration: 'underline',
+                      }}
+                    >
+                      Next Introduction →
                     </button>
                   </div>
                 )}
@@ -975,159 +1221,6 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
           </div>
         )}
       </main>
-
-      {/* FULL PROFILE MODAL (Available strictly upon mutual connection) */}
-      {fullProfileModal && (
-        <ModalPortal>
-          <div
-            style={{
-              position: 'fixed',
-              inset: 0,
-              zIndex: 99999,
-              backgroundColor: 'rgba(10, 5, 10, 0.88)',
-              backdropFilter: 'blur(12px)',
-              WebkitBackdropFilter: 'blur(12px)',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              overflowY: 'auto',
-              padding: '24px 16px',
-              boxSizing: 'border-box',
-            }}
-            onClick={() => setFullProfileModal(null)}
-          >
-            <div
-              onClick={(e) => e.stopPropagation()}
-              style={{
-                width: '100%',
-                maxWidth: '480px',
-                borderRadius: '24px',
-                backgroundColor: isDark ? '#1C0F19' : '#FFFFFF',
-                border: `1.5px solid ${themeBorder}`,
-                boxShadow: '0 24px 60px rgba(0,0,0,0.5)',
-                overflow: 'hidden',
-                position: 'relative',
-                margin: 'auto',
-              }}
-            >
-              {/* Close Button */}
-              <button
-                type="button"
-                onClick={() => setFullProfileModal(null)}
-                style={{
-                  position: 'absolute',
-                  top: '16px',
-                  right: '16px',
-                  width: '32px',
-                  height: '32px',
-                  borderRadius: '50%',
-                  backgroundColor: 'rgba(0,0,0,0.6)',
-                  border: 'none',
-                  color: '#FFFFFF',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                  zIndex: 20,
-                }}
-              >
-                <X size={18} />
-              </button>
-
-              {/* Photo Viewfinder */}
-              <div style={{ position: 'relative', width: '100%', height: '340px' }}>
-                <img
-                  src={fullProfileModal.photos[0] || ''}
-                  alt={fullProfileModal.firstName}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                />
-                <div
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    background: 'linear-gradient(to top, rgba(20, 14, 28, 0.95) 0%, transparent 60%)',
-                  }}
-                />
-                <div
-                  style={{
-                    position: 'absolute',
-                    bottom: '16px',
-                    left: '20px',
-                    color: '#FFFFFF',
-                  }}
-                >
-                  <h2 style={{ margin: '0 0 4px', fontFamily: 'var(--font-serif)', fontSize: '28px' }}>
-                    {fullProfileModal.firstName}, {fullProfileModal.age}
-                  </h2>
-                  <div style={{ fontSize: '13px', opacity: 0.9 }}>
-                    {[fullProfileModal.designation, fullProfileModal.company, fullProfileModal.city].filter(Boolean).join(' · ')}
-                  </div>
-                </div>
-              </div>
-
-              {/* Body Details */}
-              <div style={{ padding: '22px 20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                <div>
-                  <span style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.12em', color: themeMuted, textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>
-                    ABOUT
-                  </span>
-                  <p style={{ margin: 0, fontSize: '14px', lineHeight: 1.5, color: themeTextColor }}>
-                    {fullProfileModal.introduction}
-                  </p>
-                </div>
-
-                {fullProfileModal.interests.length > 0 && (
-                  <div>
-                    <span style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.12em', color: themeMuted, textTransform: 'uppercase', display: 'block', marginBottom: '8px' }}>
-                      INTERESTS
-                    </span>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                      {fullProfileModal.interests.map((int) => (
-                        <span
-                          key={int}
-                          style={{
-                            fontSize: '12px',
-                            fontWeight: 600,
-                            padding: '4px 10px',
-                            borderRadius: '999px',
-                            backgroundColor: isDark ? 'rgba(70, 32, 55, 0.5)' : '#F5EBEF',
-                            color: themeTextColor,
-                          }}
-                        >
-                          {int}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    setFullProfileModal(null);
-                    handleStartChat();
-                  }}
-                  style={{
-                    width: '100%',
-                    height: '46px',
-                    borderRadius: '999px',
-                    background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
-                    color: '#FFFFFF',
-                    border: 'none',
-                    fontSize: '13px',
-                    fontWeight: 700,
-                    cursor: 'pointer',
-                    marginTop: '8px',
-                    boxShadow: '0 6px 18px rgba(161, 82, 95, 0.35)',
-                  }}
-                >
-                  Start Conversation →
-                </button>
-              </div>
-            </div>
-          </div>
-        </ModalPortal>
-      )}
 
       {/* Member Bottom Nav */}
       <MemberBottomNav
