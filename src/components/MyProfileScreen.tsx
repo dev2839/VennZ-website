@@ -1396,7 +1396,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                       Profile Intelligence & Makeover Studio
                     </h3>
                     <p style={{ margin: '4px 0 0', fontSize: '12.5px', color: colors.muted }}>
-                      Review live profile telemetry, AI makeover draft suggestions, and custom concierge services.
+                      Review live profile telemetry, AI makeover draft suggestions, and custom styling services.
                     </p>
                   </div>
                 </div>

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StatusBar } from './StatusBar';
 import { MemberTopBar } from './MemberTopBar';
 import { MemberBottomNav, type MemberTab } from './MemberBottomNav';
@@ -22,7 +22,7 @@ export interface Page17ElevateScreenProps {
   onApplyBioDraft?: (newBio: string) => void;
 }
 
-type ElevateNavTab = 'catalog' | 'scorecard' | 'makeover' | 'orders' | 'concierge';
+type ElevateNavTab = 'catalog' | 'scorecard' | 'makeover' | 'orders';
 
 interface ElevateFolderTabProps {
   id: ElevateNavTab;
@@ -215,14 +215,15 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
     sentRequests,
     conversations,
     elevateOrders,
-    elevateMessages,
     createElevateOrder,
     requestElevateRefund,
     applyMakeoverBio,
-    sendElevateConciergeMessage,
+    isMember,
+    membershipStatus,
   } = useAuth();
 
   const isDark = appearanceMode === 'after-dark';
+  const isPremiumMember = Boolean(isMember || membershipStatus === 'member' || membershipStatus === 'complimentary');
 
   // Navigation sub-view
   const [activeTab, setActiveTab] = useState<ElevateNavTab>('catalog');
@@ -240,21 +241,18 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
   const [appliedBioSuccess, setAppliedBioSuccess] = useState(false);
   const [isApplyingBio, setIsApplyingBio] = useState(false);
 
-  // Concierge chat input & internal scroll
-  const [conciergeInput, setConciergeInput] = useState('');
-  const messagesContainerRef = useRef<HTMLDivElement | null>(null);
-
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     if (document.documentElement) document.documentElement.scrollTop = 0;
     if (document.body) document.body.scrollTop = 0;
   }, [activeTab]);
 
+  // Ensure free members cannot stay on 'orders' tab
   useEffect(() => {
-    if (messagesContainerRef.current) {
-      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+    if (activeTab === 'orders' && !isPremiumMember) {
+      setActiveTab('catalog');
     }
-  }, [activeTab, elevateMessages.length]);
+  }, [activeTab, isPremiumMember]);
 
   // Dynamic telemetry reports computed live from actual member profile and chat states
   const liveScorecard = generateDynamicScorecard(
@@ -294,8 +292,10 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
         setActiveTab('scorecard');
       } else if (service.category === 'profile-makeover') {
         setActiveTab('makeover');
-      } else {
+      } else if (isPremiumMember) {
         setActiveTab('orders');
+      } else {
+        setActiveTab('catalog');
       }
     }, 1200);
   };
@@ -322,20 +322,6 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
       setAppliedBioSuccess(true);
       setTimeout(() => setAppliedBioSuccess(false), 3500);
     }, 350);
-  };
-
-  // Handle Concierge Message Send
-  const handleSendConcierge = (e: React.FormEvent) => {
-    e.preventDefault();
-    const trimmed = conciergeInput.trim();
-    if (!trimmed) return;
-    sendElevateConciergeMessage(trimmed);
-    setConciergeInput('');
-    setTimeout(() => {
-      if (messagesContainerRef.current) {
-        messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
-      }
-    }, 50);
   };
 
   return (
@@ -490,8 +476,9 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                 { id: 'catalog' as const, label: 'Offerings' },
                 { id: 'scorecard' as const, label: 'Profile Intelligence' },
                 { id: 'makeover' as const, label: 'Makeover Studio' },
-                { id: 'orders' as const, label: 'My Orders', count: elevateOrders.length },
-                { id: 'concierge' as const, label: 'Concierge Desk' },
+                ...(isPremiumMember
+                  ? [{ id: 'orders' as const, label: 'My Orders', count: elevateOrders.length }]
+                  : []),
               ].map((tab, idx) => {
                 const isActive = activeTab === tab.id;
                 const tabZIndex = isActive ? 20 : (10 - idx);
@@ -1334,7 +1321,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
         {/* =========================================================================
             TAB 5: ORDERS, DELIVERABLES & REFUND MANAGEMENT
             ========================================================================= */}
-        {activeTab === 'orders' && (
+        {activeTab === 'orders' && isPremiumMember && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
             <div>
               <span
@@ -1576,143 +1563,6 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                 })}
               </div>
             )}
-          </div>
-        )}
-
-        {/* =========================================================================
-            TAB 6: CONCIERGE DESK CHAT
-            ========================================================================= */}
-        {activeTab === 'concierge' && (
-          <div style={{ display: 'flex', flexDirection: 'column', height: '65vh' }}>
-            <div style={{ marginBottom: '14px' }}>
-              <span
-                style={{
-                  fontSize: '11px',
-                  letterSpacing: '0.12em',
-                  fontWeight: 700,
-                  textTransform: 'uppercase',
-                  color: isDark ? '#F9AAAD' : '#A1525F',
-                }}
-              >
-                Confidential Communication
-              </span>
-              <h1
-                style={{
-                  fontFamily: 'var(--font-serif)',
-                  fontSize: '24px',
-                  fontWeight: 600,
-                  margin: '4px 0 0',
-                  color: themeTextColor,
-                }}
-              >
-                Elevate Concierge Desk
-              </h1>
-            </div>
-
-            {/* Messages Scroll Area */}
-            <div
-              ref={messagesContainerRef}
-              style={{
-                flex: 1,
-                overflowY: 'auto',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '12px',
-                padding: '16px',
-                borderRadius: '16px',
-                backgroundColor: themeCardBg,
-                border: `1px solid ${themeBorder}`,
-              }}
-            >
-              {elevateMessages.map((msg) => {
-                const isMember = msg.sender === 'member';
-
-                return (
-                  <div
-                    key={msg.id}
-                    style={{
-                      alignSelf: isMember ? 'flex-end' : 'flex-start',
-                      maxWidth: '82%',
-                      padding: '12px 16px',
-                      borderRadius: isMember ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
-                      background: isMember
-                        ? themeAccentGrad
-                        : isDark
-                        ? 'rgba(70, 32, 55, 0.85)'
-                        : '#FFFFFF',
-                      color: isMember ? '#FFFFFF' : isDark ? '#FDF3F5' : '#140E1C',
-                      border: isMember ? 'none' : `1px solid ${themeBorder}`,
-                      fontSize: '13.5px',
-                      lineHeight: '1.5',
-                      wordBreak: 'break-word',
-                      boxShadow: isMember
-                        ? '0 4px 14px rgba(161, 82, 95, 0.28)'
-                        : isDark
-                        ? 'none'
-                        : '0 2px 8px rgba(70, 32, 55, 0.08)',
-                    }}
-                  >
-                    <div style={{ color: isMember ? '#FFFFFF' : isDark ? '#FDF3F5' : '#140E1C' }}>{msg.text}</div>
-                    <div
-                      style={{
-                        fontSize: '10px',
-                        color: isMember ? 'rgba(255,255,255,0.85)' : themeMuted,
-                        marginTop: '4px',
-                        textAlign: 'right',
-                      }}
-                    >
-                      {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Input Form */}
-            <form onSubmit={handleSendConcierge} style={{ display: 'flex', gap: '10px', marginTop: '12px' }}>
-              <input
-                type="text"
-                value={conciergeInput}
-                onChange={(e) => setConciergeInput(e.target.value)}
-                placeholder="Ask the editorial desk a question..."
-                style={{
-                  flex: 1,
-                  padding: '13px 18px',
-                  borderRadius: '12px',
-                  border: `1.5px solid ${themeBorder}`,
-                  background: isDark ? 'rgba(42, 20, 34, 0.85)' : '#FFFFFF',
-                  color: isDark ? '#FFFFFF' : '#140E1C',
-                  WebkitTextFillColor: isDark ? '#FFFFFF' : '#140E1C',
-                  colorScheme: isDark ? 'dark' : 'light',
-                  caretColor: isDark ? '#F9AAAD' : '#A1525F',
-                  fontSize: '14px',
-                  fontFamily: 'var(--font-sans)',
-                  outline: 'none',
-                  boxShadow: isDark ? 'none' : '0 1px 4px rgba(70, 32, 55, 0.05)',
-                }}
-              />
-              <button
-                type="submit"
-                disabled={!conciergeInput.trim()}
-                style={{
-                  padding: '13px 24px',
-                  borderRadius: '12px',
-                  border: 'none',
-                  background: conciergeInput.trim()
-                    ? themeAccentGrad
-                    : isDark
-                    ? 'rgba(255, 255, 255, 0.1)'
-                    : 'rgba(70, 32, 55, 0.12)',
-                  color: conciergeInput.trim() ? '#FFFFFF' : isDark ? '#888' : '#7A4D5B',
-                  fontSize: '14px',
-                  fontWeight: 600,
-                  cursor: conciergeInput.trim() ? 'pointer' : 'default',
-                  transition: 'background 0.2s ease, opacity 0.2s ease',
-                }}
-              >
-                Send
-              </button>
-            </form>
           </div>
         )}
       </div>

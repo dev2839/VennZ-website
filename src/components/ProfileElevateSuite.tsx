@@ -12,9 +12,8 @@ export interface ProfileElevateSuiteProps {
  * Integrates the full Elevate capabilities into the member's Profile experience:
  * - Profile Scorecard / Intelligence metrics & telemetry
  * - Makeover Studio with Suggested Bio Draft & direct bio application
- * - Concierge service offerings & custom service checkout
- * - Orders tracking & refund management
- * - Direct Concierge Desk chat
+ * - Editorial service offerings & custom service checkout
+ * - Orders tracking & refund management (available for membership members)
  */
 export const ProfileElevateSuite: React.FC<ProfileElevateSuiteProps> = ({
   onApplyBioDraft,
