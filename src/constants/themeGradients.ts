@@ -1,22 +1,21 @@
 /**
  * VennZ Luxury Theme Gradients
- * Matches the signature Elevate atmospheric background:
- * Transitions smoothly from dark to light in both dark theme and light theme,
- * with a luminous ambient bloom (dark-to-light depth).
+ * Matches the signature dark purplish obsidian tone from the logo & welcome experience:
+ * Deep, elegant purple/plum undertones with a subtle, gentle gradient ("little gradient not much").
  */
 
 export const THEME_PAGE_GRADIENTS = {
   dark: {
-    // Top-to-bottom dark-to-light gradient with Elevate-style ambient radial glow
+    // Darker, rich purplish-plum tone matching the logo page with a soft, subtle gradient
     background:
-      'radial-gradient(ellipse 90% 60% at 50% -10%, rgba(161, 82, 95, 0.28) 0%, transparent 75%), linear-gradient(180deg, #0D0713 0%, #170E20 28%, #261325 65%, #180D1E 100%)',
+      'radial-gradient(ellipse 90% 55% at 50% -5%, rgba(70, 32, 55, 0.35) 0%, rgba(45, 18, 36, 0.15) 50%, transparent 80%), linear-gradient(180deg, #180D22 0%, #150B1E 50%, #120919 100%)',
     backgroundColor: '#140E1C',
     // Scrim overlay for screens with botanical wallpaper (Discover, Matches, Mixers, Chat)
     scrimGradient:
-      'radial-gradient(ellipse 90% 60% at 50% -10%, rgba(161, 82, 95, 0.28) 0%, transparent 75%), linear-gradient(180deg, rgba(13, 7, 19, 0.52) 0%, rgba(22, 13, 30, 0.40) 45%, rgba(38, 19, 37, 0.48) 100%)',
+      'radial-gradient(ellipse 90% 55% at 50% -5%, rgba(70, 32, 55, 0.28) 0%, rgba(45, 18, 36, 0.12) 50%, transparent 80%), linear-gradient(180deg, rgba(24, 13, 34, 0.65) 0%, rgba(21, 11, 30, 0.55) 50%, rgba(18, 9, 25, 0.62) 100%)',
   },
   light: {
-    // Top-to-bottom rich rose/mauve to porcelain blush gradient with Elevate-style luminous bloom
+    // Top-to-bottom rich rose/mauve to porcelain blush gradient with luminous bloom
     background:
       'radial-gradient(ellipse 90% 60% at 50% -10%, rgba(200, 120, 145, 0.24) 0%, transparent 75%), linear-gradient(180deg, #EAD5DA 0%, #F3E4E8 25%, #FAF1F3 65%, #FDF7F8 100%)',
     backgroundColor: '#FAF1F3',

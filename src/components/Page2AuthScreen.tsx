@@ -167,23 +167,46 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
     }
   };
 
-  // Apple OAuth Handler (optional for future Apple auth)
+  // Apple OAuth Handler
   const handleAppleSignIn = async () => {
-    const res = await appleAuth.initiateAppleSignIn();
+    const res = await appleAuth.initiateAppleSignIn(
+      (profile) => {
+        setAppleAuth();
+        if (profile.email) {
+          setEmailAuth(profile.email, profile.name);
+        }
+        handleAuthCompletion();
+      },
+      (error) => {
+        setOauthModal({
+          isOpen: true,
+          provider: 'apple',
+          title: 'Apple Sign-In Notice',
+          message: error,
+          showDemoOption: true,
+        });
+      }
+    );
+
     if (res.status === 'pending_configuration') {
       setOauthModal({
         isOpen: true,
         provider: 'apple',
-        title: 'Apple Sign-In Setup',
+        title: 'Apple Sign-In Configuration',
         message:
-          'Apple Sign-In requires an Apple Developer Service ID (VITE_APPLE_CLIENT_ID). You can sign in instantly using direct email or Google.',
+          'Apple Sign-In requires an Apple Services ID (VITE_APPLE_CLIENT_ID) configured in your environment or Vercel dashboard. You can sign in using Google or direct Email, or test with a verified Demo Apple Account.',
         missingEnv: 'VITE_APPLE_CLIENT_ID',
-        showDemoOption: false,
+        showDemoOption: true,
       });
-    } else {
-      setAppleAuth();
-      handleAuthCompletion();
     }
+  };
+
+  // Fallback demo Apple sign-in when client ID is not yet configured
+  const handleDemoAppleSignIn = () => {
+    setOauthModal(null);
+    setAppleAuth();
+    setEmailAuth('priya.apple@icloud.com', 'Priya Patel');
+    handleAuthCompletion();
   };
 
   // Fallback demo Google sign-in when client ID is not yet configured
@@ -693,30 +716,15 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
             </button>
           </div>
 
-          {/* Subtle Luxury Divider */}
+          {/* Subtle Luxury Divider Line */}
           <div
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              marginBottom: '20px',
+              height: '1px',
+              backgroundColor: 'rgba(161, 82, 95, 0.25)',
+              margin: '18px 0 20px 0',
+              width: '100%',
             }}
-          >
-            <div style={{ flex: 1, height: '1px', backgroundColor: 'rgba(161, 82, 95, 0.28)' }} />
-            <span
-              style={{
-                fontSize: '11.5px',
-                color: '#F8E2E6',
-                opacity: 0.7,
-                textTransform: 'uppercase',
-                letterSpacing: '0.1em',
-                fontWeight: 600,
-              }}
-            >
-              or sign in with email
-            </span>
-            <div style={{ flex: 1, height: '1px', backgroundColor: 'rgba(161, 82, 95, 0.28)' }} />
-          </div>
+          />
 
           {/* SECTION 2: Direct Email Sign-In (NO OTP) */}
           <form onSubmit={handleEmailSignIn} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
@@ -959,7 +967,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
                 {oauthModal.showDemoOption && (
                   <button
                     type="button"
-                    onClick={handleDemoGoogleSignIn}
+                    onClick={oauthModal.provider === 'apple' ? handleDemoAppleSignIn : handleDemoGoogleSignIn}
                     className="primary-action-btn"
                     style={{
                       width: '100%',
@@ -976,7 +984,11 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
                       gap: '8px',
                     }}
                   >
-                    <span>Continue with Demo Google Account (Rahul Sharma) →</span>
+                    <span>
+                      {oauthModal.provider === 'apple'
+                        ? 'Continue with Demo Apple Account (Priya Patel) →'
+                        : 'Continue with Demo Google Account (Rahul Sharma) →'}
+                    </span>
                   </button>
                 )}
 

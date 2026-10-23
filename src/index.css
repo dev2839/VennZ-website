@@ -42,7 +42,7 @@
 html, body {
   min-height: 100%;
   width: 100%;
-  background: radial-gradient(ellipse 90% 60% at 50% -10%, rgba(161, 82, 95, 0.28) 0%, transparent 75%), linear-gradient(180deg, #0D0713 0%, #170E20 28%, #261325 65%, #180D1E 100%);
+  background: radial-gradient(ellipse 90% 55% at 50% -5%, rgba(70, 32, 55, 0.35) 0%, rgba(45, 18, 36, 0.15) 50%, transparent 80%), linear-gradient(180deg, #180D22 0%, #150B1E 50%, #120919 100%);
   background-color: #140E1C;
   color: var(--color-warm-porcelain);
   font-family: var(--font-sans);
