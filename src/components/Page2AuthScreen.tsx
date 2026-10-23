@@ -119,13 +119,6 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
     }, 180);
   };
 
-  // Quick 1-click test demo logins
-  const handleQuickDemoLogin = (demoEmail: string, demoName: string) => {
-    setEmail(demoEmail);
-    setEmailError(null);
-    setEmailAuth(demoEmail, demoName);
-    handleAuthCompletion();
-  };
 
   // Google OAuth Handlers
   const handleGoogleSuccess = (profile: GoogleUserProfile) => {
@@ -245,23 +238,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
           transform: translateY(0);
         }
 
-        .demo-chip-btn {
-          background: rgba(70, 32, 55, 0.45);
-          border: 1px solid rgba(161, 82, 95, 0.3);
-          border-radius: 999px;
-          padding: 6px 14px;
-          color: #F9AAAD;
-          font-size: 12px;
-          font-weight: 500;
-          cursor: pointer;
-          transition: all 0.15s ease;
-        }
-        .demo-chip-btn:hover {
-          background: rgba(161, 82, 95, 0.35);
-          border-color: #C7577C;
-          color: #FDF3F5;
-          transform: translateY(-1px);
-        }
+
       `}</style>
 
       {/* Main Responsive Viewport Grid */}
@@ -630,7 +607,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
                 margin: 0,
               }}
             >
-              Continue with Google or sign in directly with your email to access your curated introductions.
+              Sign in to access your curated introductions and exclusive member circle.
             </p>
           </div>
 
@@ -744,24 +721,6 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
           {/* SECTION 2: Direct Email Sign-In (NO OTP) */}
           <form onSubmit={handleEmailSignIn} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                <label
-                  htmlFor="user-email-input"
-                  style={{
-                    fontSize: '12px',
-                    fontWeight: 600,
-                    letterSpacing: '0.08em',
-                    textTransform: 'uppercase',
-                    color: '#F9AAAD',
-                  }}
-                >
-                  Email Address
-                </label>
-                <span style={{ fontSize: '11px', color: '#F8E2E6', opacity: 0.65 }}>
-                  Direct Instant Access
-                </span>
-              </div>
-
               <div style={{ position: 'relative', width: '100%' }}>
                 {/* Email Icon */}
                 <div
@@ -893,55 +852,6 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
             </button>
           </form>
 
-          {/* Quick Demo Test Access Chips */}
-          <div style={{ marginTop: '20px', textAlign: 'center' }}>
-            <span
-              style={{
-                fontSize: '11px',
-                color: '#F8E2E6',
-                opacity: 0.65,
-                textTransform: 'uppercase',
-                letterSpacing: '0.08em',
-                fontWeight: 600,
-              }}
-            >
-              Quick Test Sign-In
-            </span>
-            <div
-              style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: '8px',
-                justifyContent: 'center',
-                marginTop: '8px',
-              }}
-            >
-              <button
-                type="button"
-                className="demo-chip-btn"
-                onClick={() => handleQuickDemoLogin('rahul.verma@vennz.club', 'Rahul')}
-                title="Sign in as Rahul"
-              >
-                ✦ rahul@vennz.club
-              </button>
-              <button
-                type="button"
-                className="demo-chip-btn"
-                onClick={() => handleQuickDemoLogin('priya.patel@vennz.club', 'Priya')}
-                title="Sign in as Priya"
-              >
-                ✦ priya@vennz.club
-              </button>
-              <button
-                type="button"
-                className="demo-chip-btn"
-                onClick={() => handleQuickDemoLogin('arjun.kapoor@vennz.club', 'Arjun')}
-                title="Sign in as Arjun"
-              >
-                ✦ arjun@vennz.club
-              </button>
-            </div>
-          </div>
 
           {/* Privacy & Terms Note */}
           <p
