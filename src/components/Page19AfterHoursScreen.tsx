@@ -105,7 +105,8 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
   const [weeklyMatchesCount, setWeeklyMatchesCount] = useState<number>(0);
 
   // Simulation mode for testing live window anytime
-  const [demoForceActiveWindow, setDemoForceActiveWindow] = useState<boolean>(true);
+  // Demo toggle defaults to false — real 10 PM–11 PM window enforced
+  const [demoForceActiveWindow, setDemoForceActiveWindow] = useState<boolean>(false);
 
   // Active view: 'lobby' | 'queue' | 'chat'
   const [activeView, setActiveView] = useState<'lobby' | 'queue' | 'chat'>('lobby');

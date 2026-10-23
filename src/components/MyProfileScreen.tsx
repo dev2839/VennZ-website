@@ -18,6 +18,9 @@ import {
   Info,
   EyeOff,
   Sparkles,
+  Sliders,
+  Globe,
+  UserX,
 } from 'lucide-react';
 import { MemberBottomNav, type MemberTab } from './MemberBottomNav';
 import { MemberTopBar } from './MemberTopBar';
@@ -50,6 +53,35 @@ interface MyProfileScreenProps {
 const MAX_PHOTOS = 6;
 const INVITATIONS_STORAGE_KEY = 'inner_circle_user_invitations';
 const MAX_MONTHLY_INVITATIONS = 4;
+
+
+const PREFS_STORAGE_KEY = 'vennz_user_preferences';
+
+interface UserPreferences {
+  distanceKm: number;
+  minAge: number;
+  maxAge: number;
+  blockedContacts: string[];
+  language: string;
+}
+
+const DEFAULT_PREFS: UserPreferences = {
+  distanceKm: 50,
+  minAge: 22,
+  maxAge: 35,
+  blockedContacts: ['+91 98765 43210 (Karan M.)', '+91 98123 45678 (Anonymous)'],
+  language: 'English (India)',
+};
+
+const LANGUAGE_OPTIONS = [
+  'English (India)',
+  'Hindi (हिन्दी)',
+  'Marathi (मराठी)',
+  'Bengali (বাংলা)',
+  'Tamil (தமிழ்)',
+  'Gujarati (ગુજરાતી)',
+  'Kannada (ಕನ್ನಡ)',
+];
 
 export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
   onBack,
@@ -91,6 +123,57 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
   }));
 
   const [activeSubTab, setActiveSubTab] = useState<'profile' | 'elevate' | 'account'>(initialSubTab);
+  // Persistent Preferences (location, age, blocked contacts, language) - never revert on refresh or sign out
+  const [preferences, setPreferences] = useState<UserPreferences>(() => {
+    try {
+      const saved = localStorage.getItem(PREFS_STORAGE_KEY);
+      if (saved) {
+        return { ...DEFAULT_PREFS, ...JSON.parse(saved) };
+      }
+    } catch {
+      // Ignore
+    }
+    return DEFAULT_PREFS;
+  });
+
+  const [newBlockedContact, setNewBlockedContact] = useState('');
+  const [prefsToast, setPrefsToast] = useState<string | null>(null);
+
+  const updatePreferences = (updates: Partial<UserPreferences>) => {
+    setPreferences((prev) => {
+      const next = { ...prev, ...updates };
+      try {
+        localStorage.setItem(PREFS_STORAGE_KEY, JSON.stringify(next));
+      } catch {
+        // Ignore
+      }
+      return next;
+    });
+  };
+
+  const handleUnblockContact = (contact: string) => {
+    const updated = preferences.blockedContacts.filter((c) => c !== contact);
+    updatePreferences({ blockedContacts: updated });
+    setPrefsToast(`Unblocked ${contact}`);
+    setTimeout(() => setPrefsToast(null), 3000);
+  };
+
+  const handleAddBlockedContact = (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmed = newBlockedContact.trim();
+    if (!trimmed) return;
+    if (preferences.blockedContacts.includes(trimmed)) {
+      setPrefsToast('Contact is already in your blocked list');
+      setTimeout(() => setPrefsToast(null), 3000);
+      return;
+    }
+    const updated = [...preferences.blockedContacts, trimmed];
+    updatePreferences({ blockedContacts: updated });
+    setNewBlockedContact('');
+    setPrefsToast(`Blocked ${trimmed}`);
+    setTimeout(() => setPrefsToast(null), 3000);
+  };
+
   const [isEditing, setIsEditing] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [previewPhotoIndex, setPreviewPhotoIndex] = useState(0);
@@ -832,7 +915,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                 transition: 'all 0.15s ease',
               }}
             >
-              Account & Membership
+              Settings
             </button>
           </div>
 
@@ -1435,8 +1518,359 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
               onNavigateHelp={onNavigateHelp}
             />
           ) : (
-            /* ACCOUNT & MEMBERSHIP TAB */
+            /* SETTINGS TAB */
             <div style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
+              {/* Toast for settings updates */}
+              {prefsToast && (
+                <div
+                  style={{
+                    padding: '12px 18px',
+                    borderRadius: '12px',
+                    backgroundColor: isDark ? 'rgba(52, 211, 153, 0.2)' : 'rgba(16, 185, 129, 0.15)',
+                    border: '1px solid rgba(52, 211, 153, 0.4)',
+                    color: isDark ? '#A7F3D0' : '#065F46',
+                    fontSize: '13px',
+                    fontWeight: 600,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                  }}
+                >
+                  <Check size={16} />
+                  <span>{prefsToast}</span>
+                </div>
+              )}
+
+              {/* 1. DISCOVERY & MATCHING PREFERENCES */}
+              <div
+                style={{
+                  padding: '24px',
+                  borderRadius: '20px',
+                  backgroundColor: colors.surface,
+                  border: `1px solid ${colors.border}`,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '20px',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <Sliders size={18} color={colors.accent} />
+                  <div>
+                    <h3
+                      style={{
+                        fontFamily: 'var(--font-serif)',
+                        fontSize: '20px',
+                        fontWeight: 600,
+                        margin: 0,
+                        color: colors.text,
+                      }}
+                    >
+                      Discovery Preferences
+                    </h3>
+                    <p style={{ margin: '3px 0 0', fontSize: '12.5px', color: colors.muted }}>
+                      Tailor the profiles you encounter on Discover
+                    </p>
+                  </div>
+                </div>
+
+                {/* Location Distance Slider */}
+                <div style={{ padding: '16px', borderRadius: '14px', backgroundColor: isDark ? 'rgba(70, 32, 55, 0.35)' : 'rgba(244, 230, 234, 0.45)', border: `1px solid ${colors.border}` }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <MapPin size={15} color={colors.rose} />
+                      <span style={{ fontSize: '12px', fontWeight: 700, letterSpacing: '0.06em', color: colors.rose, textTransform: 'uppercase' }}>
+                        Maximum Distance
+                      </span>
+                    </div>
+                    <span style={{ fontFamily: 'var(--font-serif)', fontSize: '17px', fontWeight: 700, color: colors.text }}>
+                      {preferences.distanceKm} km
+                    </span>
+                  </div>
+
+                  <input
+                    type="range"
+                    min={5}
+                    max={150}
+                    step={5}
+                    value={preferences.distanceKm}
+                    onChange={(e) => {
+                      const val = Number(e.target.value);
+                      updatePreferences({ distanceKm: val });
+                    }}
+                    style={{
+                      width: '100%',
+                      height: '6px',
+                      borderRadius: '4px',
+                      accentColor: '#A1525F',
+                      cursor: 'pointer',
+                      margin: '10px 0',
+                    }}
+                  />
+
+                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '6px' }}>
+                    {[15, 30, 50, 100].map((km) => (
+                      <button
+                        key={km}
+                        type="button"
+                        onClick={() => {
+                          updatePreferences({ distanceKm: km });
+                          setPrefsToast(`Distance radius set to ${km} km`);
+                          setTimeout(() => setPrefsToast(null), 2500);
+                        }}
+                        style={{
+                          padding: '5px 12px',
+                          borderRadius: '999px',
+                          border: `1px solid ${preferences.distanceKm === km ? colors.accent : colors.border}`,
+                          backgroundColor: preferences.distanceKm === km ? (isDark ? 'rgba(161, 82, 95, 0.35)' : 'rgba(161, 82, 95, 0.12)') : 'transparent',
+                          color: preferences.distanceKm === km ? colors.text : colors.muted,
+                          fontSize: '11px',
+                          fontWeight: 600,
+                          cursor: 'pointer',
+                        }}
+                      >
+                        {km} km
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Age Preference Range */}
+                <div style={{ padding: '16px', borderRadius: '14px', backgroundColor: isDark ? 'rgba(70, 32, 55, 0.35)' : 'rgba(244, 230, 234, 0.45)', border: `1px solid ${colors.border}` }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <span style={{ fontSize: '12px', fontWeight: 700, letterSpacing: '0.06em', color: colors.rose, textTransform: 'uppercase' }}>
+                      Age Range Preference
+                    </span>
+                    <span style={{ fontFamily: 'var(--font-serif)', fontSize: '17px', fontWeight: 700, color: colors.text }}>
+                      {preferences.minAge} – {preferences.maxAge} years
+                    </span>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginTop: '10px' }}>
+                    <div>
+                      <span style={{ fontSize: '11px', color: colors.muted, display: 'block', marginBottom: '4px' }}>Minimum Age</span>
+                      <input
+                        type="range"
+                        min={18}
+                        max={Math.min(preferences.maxAge - 1, 55)}
+                        value={preferences.minAge}
+                        onChange={(e) => {
+                          const val = Number(e.target.value);
+                          updatePreferences({ minAge: val });
+                        }}
+                        style={{ width: '100%', height: '6px', borderRadius: '4px', accentColor: '#A1525F', cursor: 'pointer' }}
+                      />
+                    </div>
+                    <div>
+                      <span style={{ fontSize: '11px', color: colors.muted, display: 'block', marginBottom: '4px' }}>Maximum Age</span>
+                      <input
+                        type="range"
+                        min={Math.max(preferences.minAge + 1, 21)}
+                        max={65}
+                        value={preferences.maxAge}
+                        onChange={(e) => {
+                          const val = Number(e.target.value);
+                          updatePreferences({ maxAge: val });
+                        }}
+                        style={{ width: '100%', height: '6px', borderRadius: '4px', accentColor: '#A1525F', cursor: 'pointer' }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 2. LANGUAGE PREFERENCE */}
+              <div
+                style={{
+                  padding: '24px',
+                  borderRadius: '20px',
+                  backgroundColor: colors.surface,
+                  border: `1px solid ${colors.border}`,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '16px',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <Globe size={18} color={colors.accent} />
+                  <div>
+                    <h3
+                      style={{
+                        fontFamily: 'var(--font-serif)',
+                        fontSize: '20px',
+                        fontWeight: 600,
+                        margin: 0,
+                        color: colors.text,
+                      }}
+                    >
+                      Language & Region
+                    </h3>
+                    <p style={{ margin: '3px 0 0', fontSize: '12.5px', color: colors.muted }}>
+                      Preferred language for app interface, concierge, and communication
+                    </p>
+                  </div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(170px, 1fr))', gap: '10px' }}>
+                  {LANGUAGE_OPTIONS.map((lang) => {
+                    const isSelected = preferences.language === lang;
+                    return (
+                      <button
+                        key={lang}
+                        type="button"
+                        onClick={() => {
+                          updatePreferences({ language: lang });
+                          setPrefsToast(`Language changed to ${lang}`);
+                          setTimeout(() => setPrefsToast(null), 2500);
+                        }}
+                        style={{
+                          padding: '10px 14px',
+                          borderRadius: '12px',
+                          border: `1.5px solid ${isSelected ? (isDark ? '#F9AAAD' : '#A1525F') : colors.border}`,
+                          backgroundColor: isSelected
+                            ? (isDark ? 'rgba(161, 82, 95, 0.3)' : 'rgba(161, 82, 95, 0.1)')
+                            : (isDark ? 'rgba(70, 32, 55, 0.25)' : 'rgba(255, 255, 255, 0.6)'),
+                          color: isSelected ? colors.text : colors.muted,
+                          fontSize: '13px',
+                          fontWeight: isSelected ? 700 : 500,
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          textAlign: 'left',
+                          transition: 'all 0.15s ease',
+                        }}
+                      >
+                        <span>{lang}</span>
+                        {isSelected && <Check size={14} color={isDark ? '#F9AAAD' : '#A1525F'} />}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* 3. BLOCKED CONTACTS & PRIVACY */}
+              <div
+                style={{
+                  padding: '24px',
+                  borderRadius: '20px',
+                  backgroundColor: colors.surface,
+                  border: `1px solid ${colors.border}`,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '16px',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <UserX size={18} color="#E06D6D" />
+                  <div>
+                    <h3
+                      style={{
+                        fontFamily: 'var(--font-serif)',
+                        fontSize: '20px',
+                        fontWeight: 600,
+                        margin: 0,
+                        color: colors.text,
+                      }}
+                    >
+                      Blocked Contacts & Privacy
+                    </h3>
+                    <p style={{ margin: '3px 0 0', fontSize: '12.5px', color: colors.muted }}>
+                      Contacts who cannot see your profile, send requests, or discover you
+                    </p>
+                  </div>
+                </div>
+
+                {/* Add blocked contact form */}
+                <form onSubmit={handleAddBlockedContact} style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                  <input
+                    type="text"
+                    value={newBlockedContact}
+                    onChange={(e) => setNewBlockedContact(e.target.value)}
+                    placeholder="Enter phone number or contact name..."
+                    style={{
+                      flex: 1,
+                      padding: '10px 14px',
+                      borderRadius: '12px',
+                      border: `1px solid ${colors.border}`,
+                      backgroundColor: isDark ? 'rgba(70, 32, 55, 0.35)' : '#FFFFFF',
+                      color: colors.text,
+                      fontSize: '13px',
+                      outline: 'none',
+                    }}
+                  />
+                  <button
+                    type="submit"
+                    style={{
+                      padding: '10px 18px',
+                      borderRadius: '12px',
+                      border: 'none',
+                      background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
+                      color: '#FFFFFF',
+                      fontSize: '12px',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    + Block Contact
+                  </button>
+                </form>
+
+                {/* Blocked contacts list */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {preferences.blockedContacts.length === 0 ? (
+                    <div style={{ padding: '16px', borderRadius: '12px', textAlign: 'center', color: colors.muted, fontSize: '13px', backgroundColor: isDark ? 'rgba(70, 32, 55, 0.2)' : 'rgba(0,0,0,0.02)' }}>
+                      No blocked contacts. You have not blocked anyone yet.
+                    </div>
+                  ) : (
+                    preferences.blockedContacts.map((contact) => (
+                      <div
+                        key={contact}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          padding: '12px 16px',
+                          borderRadius: '12px',
+                          backgroundColor: isDark ? 'rgba(70, 32, 55, 0.35)' : 'rgba(244, 230, 234, 0.35)',
+                          border: `1px solid ${colors.border}`,
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                          <UserX size={15} color="#E06D6D" />
+                          <span style={{ fontSize: '13px', fontWeight: 600, color: colors.text }}>{contact}</span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => handleUnblockContact(contact)}
+                          style={{
+                            padding: '4px 12px',
+                            borderRadius: '999px',
+                            border: `1px solid ${colors.border}`,
+                            backgroundColor: 'transparent',
+                            color: colors.muted,
+                            fontSize: '11.5px',
+                            fontWeight: 600,
+                            cursor: 'pointer',
+                            transition: 'all 0.15s ease',
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.color = '#E06D6D';
+                            e.currentTarget.style.borderColor = '#E06D6D';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.color = colors.muted;
+                            e.currentTarget.style.borderColor = colors.border;
+                          }}
+                        >
+                          Unblock
+                        </button>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+
               {/* Membership Plan Card */}
               <div
                 style={{
@@ -1760,6 +2194,52 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                   </button>
                 )}
               </div>
+
+              {/* App Version & Build Information Card */}
+              <div
+                style={{
+                  padding: '16px 20px',
+                  borderRadius: '16px',
+                  backgroundColor: isDark ? 'rgba(30, 18, 38, 0.5)' : 'rgba(250, 241, 243, 0.6)',
+                  border: `1px solid ${colors.border}`,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  flexWrap: 'wrap',
+                  gap: '10px',
+                }}
+              >
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontFamily: 'var(--font-serif)', fontSize: '14px', fontWeight: 600, color: colors.text }}>
+                      VennZ Web Edition
+                    </span>
+                    <span
+                      style={{
+                        fontSize: '10px',
+                        fontWeight: 700,
+                        padding: '2px 8px',
+                        borderRadius: '999px',
+                        backgroundColor: isDark ? 'rgba(52, 211, 153, 0.2)' : 'rgba(16, 185, 129, 0.15)',
+                        color: isDark ? '#A7F3D0' : '#065F46',
+                        border: '1px solid rgba(52, 211, 153, 0.35)',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                      }}
+                    >
+                      <Check size={10} /> Up to Date
+                    </span>
+                  </div>
+                  <span style={{ fontSize: '11.5px', color: colors.muted, display: 'block', marginTop: '3px' }}>
+                    Version 2.4.1 (Build 2026.10.23) · End-to-End Encrypted
+                  </span>
+                </div>
+                <div style={{ fontSize: '11px', color: colors.muted }}>
+                  © {new Date().getFullYear()} VennZ Private Club
+                </div>
+              </div>
+
             </div>
           )}
         </div>

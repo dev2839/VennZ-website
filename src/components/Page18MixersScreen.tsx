@@ -135,6 +135,29 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
     );
   };
 
+  /**
+   * Returns true if the event date+time has already passed in real time.
+   * Parses the human-readable date string like 'Saturday, 24 October'
+   * and combines with startTime like '7:30 PM' to get an exact Date.
+   */
+  const isPastEvent = (event: MixerEvent): boolean => {
+    try {
+      const now = new Date();
+      const currentYear = now.getFullYear();
+      // Strip day-of-week prefix if present: 'Saturday, 24 October' -> '24 October'
+      const datePart = event.date.replace(/^[A-Za-z]+,\s*/, '').trim();
+      // Build ISO-like string: '24 October 2026 7:30 PM'
+      const timePart = event.startTime ? (' ' + event.startTime) : '';
+      const dateTimeStr = datePart + ' ' + currentYear + timePart;
+      const parsed = new Date(dateTimeStr);
+      if (isNaN(parsed.getTime())) return false;
+      // If the parsed date is in the past relative to current time, event is past
+      return parsed.getTime() < now.getTime();
+    } catch {
+      return false;
+    }
+  };
+
   const handleJoinCityWaitlistSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedWaitlistCity) return;
@@ -726,7 +749,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                     transition: 'all 0.2s ease',
                   }}
                 >
-                  Upcoming Mixers ({mixerEvents.filter((e) => e.status !== 'COMPLETED').length})
+                  Upcoming Mixers ({mixerEvents.filter((e) => e.status !== 'COMPLETED' && !isPastEvent(e)).length})
                 </button>
 
                 <button
@@ -937,7 +960,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
               {/* Events Feed */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 {mixerEvents
-                  .filter((e) => e.status !== 'COMPLETED')
+                  .filter((e) => e.status !== 'COMPLETED' && !isPastEvent(e))
                   .map((event) => {
                     const isInterested = mixerInterestedEventIds.includes(event.id);
                     const isPlanning = event.status === 'PLANNING';

@@ -32,12 +32,17 @@ export const App: React.FC = () => {
   const {
     startComplimentaryFirstLook,
     setMembershipStatus,
-    resetAuth,
     appearanceMode,
     matches,
     setApplicationDecision,
     isAuthenticated,
     membershipStatus,
+    isDigiLockerVerified,
+    isIdentityVerified,
+    isApplicationSubmitted,
+    profile,
+    signOut,
+    deleteAccount,
   } = useAuth();
 
   const isDark = appearanceMode === 'after-dark';
@@ -79,11 +84,7 @@ export const App: React.FC = () => {
     '/member/afterhours',
   ];
 
-  const isRegisteredUser = Boolean(
-    isAuthenticated ||
-    membershipStatus === 'member' ||
-    membershipStatus === 'complimentary'
-  );
+// isRegisteredUser replaced with direct onboarding gating logic
 
   // Ref to the main content wrapper — used to reset internal scroll on navigation
   const mainRef = useRef<HTMLDivElement>(null);
@@ -181,13 +182,35 @@ export const App: React.FC = () => {
 
   // Handlers for Page 1
   const handleGetStarted = () => {
-    // If user has already registered / logged in, go directly to discover page
-    // If user has not logged in yet, go to sign in page (/join)
-    if (isRegisteredUser) {
+    // Full member/complimentary: go straight to discover
+    if (membershipStatus === 'member' || membershipStatus === 'complimentary') {
       navigate('/discover');
-    } else {
-      navigate('/join');
+      return;
     }
+    // Not authenticated yet: go to sign-in
+    if (!isAuthenticated) {
+      navigate('/join');
+      return;
+    }
+    // Authenticated but onboarding incomplete — resume at correct next step
+    if (!isDigiLockerVerified) {
+      navigate('/join/digilocker');
+      return;
+    }
+    if (!profile.vennzName || !profile.city || !profile.genderIdentity) {
+      navigate('/join/profile');
+      return;
+    }
+    if (!isIdentityVerified) {
+      navigate('/join/identity-verification');
+      return;
+    }
+    if (!isApplicationSubmitted) {
+      navigate('/join/context');
+      return;
+    }
+    // Application submitted but no membership — show waitlist/status screen
+    navigate('/join/waitlist');
   };
   const handleLearnHowItWorks = () => setLearnModalOpen(true);
 
@@ -195,7 +218,55 @@ export const App: React.FC = () => {
   // Handlers for Page 2 (Unified Phone & OTP Authentication)
   const handleBackToSplash = () => navigate('/');
   // After OTP success → DigiLocker verification (before profile setup)
-  const handleOtpSuccess = () => navigate('/join/digilocker');
+  const handleOtpSuccess = () => {
+    let currentMembership = membershipStatus;
+    let digiVerified = isDigiLockerVerified;
+    let currentVennzName = profile.vennzName;
+    let currentCity = profile.city;
+    let currentGender = profile.genderIdentity;
+    let identityVerified = isIdentityVerified;
+    let appSubmitted = isApplicationSubmitted;
+
+    try {
+      const savedArchive = localStorage.getItem('vennz_registered_account_archive');
+      if (savedArchive) {
+        const parsed = JSON.parse(savedArchive);
+        if (parsed.membershipStatus) currentMembership = parsed.membershipStatus;
+        if (parsed.isDigiLockerVerified !== undefined) digiVerified = parsed.isDigiLockerVerified;
+        if (parsed.profile?.vennzName) currentVennzName = parsed.profile.vennzName;
+        if (parsed.profile?.city) currentCity = parsed.profile.city;
+        if (parsed.profile?.genderIdentity) currentGender = parsed.profile.genderIdentity;
+        if (parsed.isIdentityVerified !== undefined) identityVerified = parsed.isIdentityVerified;
+        if (parsed.isApplicationSubmitted !== undefined) appSubmitted = parsed.isApplicationSubmitted;
+      }
+    } catch {
+      // Ignore
+    }
+
+    // Full member / complimentary: go straight to discover
+    if (currentMembership === 'member' || currentMembership === 'complimentary') {
+      navigate('/discover');
+      return;
+    }
+    // Incomplete onboarding: resume at the exact step left off at
+    if (!digiVerified) {
+      navigate('/join/digilocker');
+      return;
+    }
+    if (!currentVennzName || !currentCity || !currentGender) {
+      navigate('/join/profile');
+      return;
+    }
+    if (!identityVerified) {
+      navigate('/join/identity-verification');
+      return;
+    }
+    if (!appSubmitted) {
+      navigate('/join/context');
+      return;
+    }
+    navigate('/join/waitlist');
+  };
 
   // Handlers for Page 3 (DigiLocker Verification)
   const handleBackFromDigiLocker = () => navigate('/login');
@@ -256,11 +327,11 @@ export const App: React.FC = () => {
     navigate('/join/membership');
   };
   const handleSignOutFromYou = () => {
-    resetAuth();
+    signOut();
     navigate('/');
   };
   const handleDeleteAccountFromYou = () => {
-    resetAuth();
+    deleteAccount();
     navigate('/');
   };
 
@@ -517,6 +588,27 @@ export const App: React.FC = () => {
             setSelectedChatMatch(match);
             navigate('/member/chat');
           }}
+          onViewProfile={(match) => {
+            // Convert MatchItem to DiscoverProfile shape for viewing
+            const discoverProfile = DUMMY_DISCOVER_PROFILES.find(
+              (p) => p.id === match.profileId || p.id === match.id
+            ) || {
+              id: match.profileId || match.id,
+              firstName: match.name.split(' ')[0],
+              age: match.age,
+              city: match.city,
+              designation: match.designation,
+              company: match.company || '',
+              photos: [match.photo],
+              isVerified: match.isVerified,
+              introduction: '',
+              interests: [],
+              gender: 'woman' as const,
+              activeStatus: 'Active recently',
+            };
+            setSelectedProfileForFullView(discoverProfile);
+            navigate('/member/profile');
+          }}
           onSelectTab={(tab) => {
             if (tab === 'discover') {
               navigate('/discover');
@@ -556,6 +648,26 @@ export const App: React.FC = () => {
         <Page16ChatScreen
           match={matchToChat}
           onBack={() => navigate('/member/matches')}
+          onViewMatchProfile={(match) => {
+            const discoverProfile = DUMMY_DISCOVER_PROFILES.find(
+              (p) => p.id === match.profileId || p.id === match.id
+            ) || {
+              id: match.profileId || match.id,
+              firstName: match.name.split(' ')[0],
+              age: match.age,
+              city: match.city,
+              designation: match.designation,
+              company: match.company || '',
+              photos: [match.photo],
+              isVerified: match.isVerified,
+              introduction: '',
+              interests: [],
+              gender: 'woman' as const,
+              activeStatus: 'Active recently',
+            };
+            setSelectedProfileForFullView(discoverProfile);
+            navigate('/member/profile');
+          }}
           onSelectTab={(tab) => {
             if (tab === 'discover') {
               navigate('/discover');

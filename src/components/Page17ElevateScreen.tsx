@@ -519,8 +519,15 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
             ========================================================================= */}
         {activeTab === 'catalog' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            {/* Service Cards Grid */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {/* Service Cards Grid - side by side */}
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+                gap: '20px',
+                alignItems: 'stretch',
+              }}
+            >
               {ELEVATE_SERVICES.map((service) => {
                 const isOrdered = elevateOrders.some((o) => o.serviceId === service.id);
 

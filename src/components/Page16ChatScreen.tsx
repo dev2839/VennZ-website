@@ -21,11 +21,13 @@ import {
   Info,
   Smile,
   X,
+  Palette,
 } from 'lucide-react';
 
 interface Page16ChatScreenProps {
   match: MatchItem;
   onBack: () => void;
+  onViewMatchProfile?: (match: MatchItem) => void;
   onSelectTab?: (tab: MemberTab) => void;
   onNavigateHelp?: (prefilledCategory?: string) => void;
   showStatusBar?: boolean;
@@ -299,9 +301,22 @@ const EMOJI_CATEGORIES: EmojiCategory[] = [
   },
 ];
 
+
+const CHAT_THEMES = [
+  { id: 'default', name: 'VennZ', gradient: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)', preview: '#C7577C' },
+  { id: 'midnight', name: 'Midnight', gradient: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)', preview: '#16213e' },
+  { id: 'rose', name: 'Rose', gradient: 'linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%)', preview: '#ff758c' },
+  { id: 'ocean', name: 'Ocean', gradient: 'linear-gradient(135deg, #2980b9 0%, #6dd5fa 100%)', preview: '#2980b9' },
+  { id: 'forest', name: 'Forest', gradient: 'linear-gradient(135deg, #134e5e 0%, #71b280 100%)', preview: '#134e5e' },
+  { id: 'amber', name: 'Amber', gradient: 'linear-gradient(135deg, #f7971e 0%, #ffd200 100%)', preview: '#f7971e' },
+  { id: 'lavender', name: 'Lavender', gradient: 'linear-gradient(135deg, #9b59b6 0%, #c39bd3 100%)', preview: '#9b59b6' },
+  { id: 'slate', name: 'Slate', gradient: 'linear-gradient(135deg, #485563 0%, #29323c 100%)', preview: '#485563' },
+];
+
 export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
   match: initialMatch,
   onBack,
+  onViewMatchProfile,
   onSelectTab,
   onNavigateHelp,
   showStatusBar = true,
@@ -334,6 +349,8 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
   }, [initialMatch?.id]);
 
   const activeMatch = connectedList.find((m) => m.id === activeMatchId) || initialMatch || connectedList[0];
+  const [isChatThemeOpen, setIsChatThemeOpen] = useState(false);
+  const [chatTheme, setChatTheme] = useState<string>('default');
 
   // Mobile view toggle: 'list' (conversations list) vs 'chat' (active conversation)
   const [mobileView, setMobileView] = useState<'list' | 'chat'>('chat');
@@ -497,7 +514,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
     inputBg: isDark ? 'rgba(46, 24, 40, 0.85)' : '#F5EBEF',
     activeItemBg: isDark ? 'rgba(199, 87, 124, 0.2)' : 'rgba(161, 82, 95, 0.12)',
     hoverItemBg: isDark ? 'rgba(199, 87, 124, 0.08)' : 'rgba(161, 82, 95, 0.05)',
-    myBubbleBg: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
+    myBubbleBg: CHAT_THEMES.find((t) => t.id === chatTheme)?.gradient || 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
     theirBubbleBg: isDark ? 'rgba(46, 24, 40, 0.92)' : '#FFFFFF',
     pickerBg: isDark ? '#231220' : '#FFFFFF',
   };
@@ -937,6 +954,22 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                 <ArrowLeft size={18} color={iconColor} />
               </button>
 
+              <button
+                type="button"
+                onClick={() => onViewMatchProfile?.(activeMatch)}
+                aria-label={`View ${activeMatch.name}'s profile`}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  background: 'transparent',
+                  border: 0,
+                  cursor: 'pointer',
+                  padding: 0,
+                  textAlign: 'left',
+                  font: 'inherit',
+                }}
+              >
               <div style={{ position: 'relative', width: '40px', height: '40px', flexShrink: 0 }}>
                 <img
                   src={activeMatch.photo}
@@ -1005,10 +1038,30 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                   {[activeMatch.designation, activeMatch.city].filter(Boolean).join(' · ')}
                 </span>
               </div>
+              </button>
             </div>
 
             {/* Right: Phone, Video & Info Actions */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+              <button
+                type="button"
+                onClick={() => setIsChatThemeOpen(true)}
+                aria-label="Chat theme"
+                title="Change chat theme"
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: iconColor,
+                  cursor: 'pointer',
+                  padding: '6px',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <Palette size={19} color={iconColor} />
+              </button>
               <button
                 type="button"
                 onClick={() => showToast(`Calling ${activeMatch.name} via VennZ Encrypted Voice...`)}
@@ -1801,6 +1854,127 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
       )}
 
       {/* Responsive Styles for Desktop / Mobile */}
+
+      {/* Chat Theme Bottom Sheet */}
+      {isChatThemeOpen && (
+        <ModalPortal>
+          <div
+            onClick={() => setIsChatThemeOpen(false)}
+            style={{
+              position: 'fixed',
+              inset: 0,
+              zIndex: 200,
+              backgroundColor: 'rgba(0,0,0,0.45)',
+              backdropFilter: 'blur(4px)',
+            }}
+          />
+          <div
+            style={{
+              position: 'fixed',
+              bottom: 0,
+              left: 0,
+              right: 0,
+              zIndex: 210,
+              backgroundColor: isDark ? '#1C0F19' : '#FFFFFF',
+              borderRadius: '24px 24px 0 0',
+              padding: '20px 24px 40px',
+              maxWidth: '520px',
+              margin: '0 auto',
+              boxShadow: '0 -8px 40px rgba(0,0,0,0.35)',
+              border: `1px solid ${colors.border}`,
+            }}
+          >
+            <div
+              style={{
+                width: '40px',
+                height: '4px',
+                borderRadius: '2px',
+                backgroundColor: isDark ? 'rgba(255,255,255,0.18)' : 'rgba(0,0,0,0.15)',
+                margin: '0 auto 20px',
+              }}
+            />
+            <h3
+              style={{
+                fontFamily: 'var(--font-serif)',
+                fontSize: '20px',
+                fontWeight: 600,
+                color: colors.text,
+                margin: '0 0 6px',
+                textAlign: 'center',
+              }}
+            >
+              Chat Theme
+            </h3>
+            <p
+              style={{
+                fontSize: '12.5px',
+                color: colors.muted,
+                textAlign: 'center',
+                margin: '0 0 24px',
+              }}
+            >
+              Personalise how your conversation looks with {activeMatch.name}
+            </p>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
+              {CHAT_THEMES.map((theme) => (
+                <button
+                  key={theme.id}
+                  type="button"
+                  onClick={() => {
+                    setChatTheme(theme.id);
+                    setIsChatThemeOpen(false);
+                    showToast(`Chat theme changed to ${theme.name}`);
+                  }}
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '8px',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    padding: '4px',
+                  }}
+                >
+                  <div
+                    style={{
+                      width: '52px',
+                      height: '52px',
+                      borderRadius: '16px',
+                      background: theme.gradient,
+                      border:
+                        chatTheme === theme.id
+                          ? `3px solid ${isDark ? '#F9AAAD' : '#A1525F'}`
+                          : '3px solid transparent',
+                      boxShadow:
+                        chatTheme === theme.id
+                          ? `0 0 0 1px ${isDark ? '#F9AAAD' : '#A1525F'}`
+                          : '0 2px 8px rgba(0,0,0,0.1)',
+                      transition: 'all 0.15s ease',
+                    }}
+                  />
+                  <span
+                    style={{
+                      fontSize: '11px',
+                      fontWeight: 600,
+                      color:
+                        chatTheme === theme.id
+                          ? isDark
+                            ? '#F9AAAD'
+                            : '#A1525F'
+                          : colors.muted,
+                      letterSpacing: '0.03em',
+                    }}
+                  >
+                    {theme.name}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </ModalPortal>
+      )}
+
       <style>{`
         @media (max-width: 767px) {
           .chat-sidebar.mobile-hidden {

@@ -30,6 +30,7 @@ const formatRequestTime = (timestamp: number): string => {
 
 interface Page15MatchesScreenProps {
   onOpenChat: (match: MatchItem) => void;
+  onViewProfile?: (match: MatchItem) => void;
   onSelectTab: (tab: MemberTab) => void;
   onNavigateHelp?: () => void;
   initialSubTab?: 'matches' | 'requests';
@@ -39,6 +40,7 @@ interface Page15MatchesScreenProps {
 
 export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
   onOpenChat,
+  onViewProfile,
   onSelectTab,
   onNavigateHelp,
   initialSubTab = 'matches',
@@ -556,11 +558,8 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                   {filteredMatches.map((match, index) => {
                     const isUnread = unreadMatchIds.includes(match.id);
-                    return <button
+                    return <div
                       key={match.id}
-                      onClick={() => onOpenChat(match)}
-                      type="button"
-                      aria-label={`Open chat with ${match.name}${isUnread ? ', unread message' : ''}`}
                       style={{
                         display: 'flex',
                         alignItems: 'center',
@@ -568,86 +567,108 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
                         gap: '14px',
                         padding: '14px 0',
                         borderBottom: index < matches.length - 1 ? `1px solid ${themeBorder}` : 'none',
-                        cursor: 'pointer',
-                        transition: 'opacity 0.15s ease',
-                        width: '100%',
-                        border: 0,
-                        background: 'transparent',
-                        textAlign: 'left',
-                        font: 'inherit',
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.opacity = '0.85';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.opacity = '1';
                       }}
                     >
-                      {/* Left: Square Profile Image */}
-                      <img
-                        src={match.photo}
-                        alt={match.name}
+                      {/* Left clickable area: photo + name + message preview -> view profile */}
+                      <button
+                        type="button"
+                        onClick={() => onViewProfile ? onViewProfile(match) : onOpenChat(match)}
+                        aria-label={`View profile of ${match.name}`}
                         style={{
-                          width: '64px',
-                          height: '64px',
-                          borderRadius: '12px',
-                          objectFit: 'cover',
-                          flexShrink: 0,
-                          backgroundColor: '#1E161C',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '14px',
+                          flex: 1,
+                          minWidth: 0,
+                          border: 0,
+                          background: 'transparent',
+                          textAlign: 'left',
+                          font: 'inherit',
+                          cursor: 'pointer',
+                          padding: 0,
+                          transition: 'opacity 0.15s ease',
                         }}
-                      />
-
-                      {/* Middle: Name & Latest Message Preview */}
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginBottom: '4px' }}>
-                          <span style={{ fontFamily: 'var(--font-serif)', fontSize: '18px', fontWeight: 600, color: themeMulberry }}>{match.name}</span>
-                          {match.isVerified && (
-                            <span
-                              style={{
-                                fontSize: '9.5px',
-                                fontWeight: 700,
-                                letterSpacing: '0.08em',
-                                textTransform: 'uppercase',
-                                color: isDark ? '#66BB6A' : '#2E7D32',
-                              }}
-                            >
-                              VERIFIED
-                            </span>
-                          )}
-                          {isUnread && <span aria-label="Unread" style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#C94A4A', flexShrink: 0 }} />}
-                        </div>
-
-                        <p
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.opacity = '0.85';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.opacity = '1';
+                        }}
+                      >
+                        {/* Left: Square Profile Image */}
+                        <img
+                          src={match.photo}
+                          alt={match.name}
                           style={{
-                            margin: 0,
-                            fontSize: '13px',
-                            color: themeMuted,
-                            lineHeight: '1.35',
-                            whiteSpace: 'nowrap',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
+                            width: '64px',
+                            height: '64px',
+                            borderRadius: '12px',
+                            objectFit: 'cover',
+                            flexShrink: 0,
+                            backgroundColor: '#1E161C',
                           }}
-                        >
-                          {match.lastMessage || "Thank you for accepting — I'm Meera. How has your week been?"}
-                        </p>
-                        <span style={{ display: 'block', marginTop: '4px', color: themeMuted, fontSize: '10px' }}>{formatActivityTime(match.lastMessageTime || match.matchedAt)}</span>
-                      </div>
+                        />
 
-                      {/* Right: OPEN Action */}
+                        {/* Middle: Name & Latest Message Preview */}
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginBottom: '4px' }}>
+                            <span style={{ fontFamily: 'var(--font-serif)', fontSize: '18px', fontWeight: 600, color: themeMulberry }}>{match.name}</span>
+                            {match.isVerified && (
+                              <span
+                                style={{
+                                  fontSize: '9.5px',
+                                  fontWeight: 700,
+                                  letterSpacing: '0.08em',
+                                  textTransform: 'uppercase',
+                                  color: isDark ? '#66BB6A' : '#2E7D32',
+                                }}
+                              >
+                                VERIFIED
+                              </span>
+                            )}
+                            {isUnread && <span aria-label="Unread" style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#C94A4A', flexShrink: 0 }} />}
+                          </div>
+
+                          <p
+                            style={{
+                              margin: 0,
+                              fontSize: '13px',
+                              color: themeMuted,
+                              lineHeight: '1.35',
+                              whiteSpace: 'nowrap',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                            }}
+                          >
+                            {match.lastMessage || "Thank you for accepting — I’m Meera. How has your week been?"}
+                          </p>
+                          <span style={{ display: 'block', marginTop: '4px', color: themeMuted, fontSize: '10px' }}>{formatActivityTime(match.lastMessageTime || match.matchedAt)}</span>
+                        </div>
+                      </button>
+
+                      {/* Right: CHAT button -> open chat */}
                       <div style={{ paddingLeft: '8px', flexShrink: 0 }}>
-                        <span
+                        <button
+                          type="button"
+                          onClick={() => onOpenChat(match)}
+                          aria-label={`Open chat with ${match.name}${isUnread ? ', unread message' : ''}`}
                           style={{
                             fontSize: '11.5px',
                             fontWeight: 700,
                             letterSpacing: '0.1em',
                             textTransform: 'uppercase',
                             color: themeMulberry,
+                            border: 0,
+                            background: 'transparent',
+                            cursor: 'pointer',
+                            padding: '4px 0',
+                            font: 'inherit',
                           }}
                         >
-                          OPEN
-                        </span>
+                          CHAT
+                        </button>
                       </div>
-                    </button>;
+                    </div>;
                   })}
                 </div>
               ) : (

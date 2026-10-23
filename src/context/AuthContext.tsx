@@ -148,6 +148,8 @@ interface AuthContextType extends AuthState {
   simulate90DaysPassed: () => void;
   updateProfile: (profileUpdates: Partial<UserProfile>) => void;
   resetAuth: () => void;
+  signOut: () => void;
+  deleteAccount: () => void;
   /** Store DigiLocker verified data (name + DOB). Call only after explicit user consent. */
   setDigiLockerVerified: (name: string, dateOfBirth: string) => void;
   // Discover & Notification methods
@@ -558,6 +560,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   useEffect(() => {
+    if (state.membershipStatus === 'member' || state.membershipStatus === 'complimentary' || state.isApplicationSubmitted) {
+      try {
+        localStorage.setItem(
+          'vennz_registered_account_archive',
+          JSON.stringify({
+            profile: state.profile,
+            isDigiLockerVerified: state.isDigiLockerVerified,
+            digiLockerVerifiedName: state.digiLockerVerifiedName,
+            digiLockerVerifiedDob: state.digiLockerVerifiedDob,
+            isIdentityVerified: state.isIdentityVerified,
+            isSelfieVerified: state.isSelfieVerified,
+            isApplicationSubmitted: state.isApplicationSubmitted,
+            isApplicationApproved: state.isApplicationApproved,
+            applicationDecision: state.applicationDecision,
+            membershipStatus: state.membershipStatus,
+            email: state.email,
+            authMethod: state.authMethod,
+          })
+        );
+      } catch {
+        // Ignore
+      }
+    }
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     } catch {
@@ -734,16 +759,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const setGoogleAuth = (googleUser?: AuthState['googleUser']) => {
+    let restoredState: Partial<AuthState> = {};
+    try {
+      const savedArchive = localStorage.getItem('vennz_registered_account_archive');
+      if (savedArchive) {
+        const parsed = JSON.parse(savedArchive);
+        if (parsed && typeof parsed === 'object') {
+          restoredState = parsed;
+        }
+      }
+    } catch {
+      // Ignore
+    }
+
     setState((prev) => ({
       ...prev,
+      ...restoredState,
       authMethod: 'google',
       isAuthenticated: true,
       isPhoneVerified: true,
-      email: googleUser?.email || prev.email || '',
-      googleUser,
+      email: googleUser?.email || prev.email || restoredState.email || '',
+      googleUser: googleUser || prev.googleUser,
       profile: {
         ...prev.profile,
-        firstName: prev.profile.firstName || googleUser?.name?.split(' ')[0] || '',
+        ...(restoredState.profile || {}),
+        firstName: prev.profile.firstName || restoredState.profile?.firstName || googleUser?.name?.split(' ')[0] || '',
       },
     }));
   };
@@ -1539,9 +1579,51 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const resetAuth = () => {
+  const signOut = () => {
     setState((prev) => {
-      // Preserve user's chosen appearance mode (do NOT forcefully switch theme to dark mode on account deletion/sign-out)
+      try {
+        localStorage.setItem(
+          'vennz_registered_account_archive',
+          JSON.stringify({
+            profile: prev.profile,
+            isDigiLockerVerified: prev.isDigiLockerVerified,
+            digiLockerVerifiedName: prev.digiLockerVerifiedName,
+            digiLockerVerifiedDob: prev.digiLockerVerifiedDob,
+            isIdentityVerified: prev.isIdentityVerified,
+            isSelfieVerified: prev.isSelfieVerified,
+            isApplicationSubmitted: prev.isApplicationSubmitted,
+            isApplicationApproved: prev.isApplicationApproved,
+            applicationDecision: prev.applicationDecision,
+            membershipStatus: prev.membershipStatus,
+            email: prev.email,
+            authMethod: prev.authMethod,
+          })
+        );
+      } catch {
+        // Ignore
+      }
+
+      return {
+        ...prev,
+        isAuthenticated: false,
+      };
+    });
+  };
+
+  const deleteAccount = () => {
+    try {
+      localStorage.removeItem('vennz_registered_account_archive');
+      localStorage.removeItem('vennz_user_preferences');
+      localStorage.removeItem(STORAGE_KEY);
+      sessionStorage.removeItem('inner_circle_active_applicant_data');
+      localStorage.removeItem('inner_circle_active_applicant_data');
+      sessionStorage.removeItem('inner_circle_path');
+      localStorage.removeItem('inner_circle_path');
+    } catch {
+      // Ignore
+    }
+
+    setState((prev) => {
       const currentAppearance =
         prev.appearanceMode ||
         (localStorage.getItem('inner_circle_appearance_mode') as 'ivory' | 'after-dark') ||
@@ -1552,15 +1634,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         appearanceMode: currentAppearance,
       };
     });
-    try {
-      localStorage.removeItem(STORAGE_KEY);
-      sessionStorage.removeItem('inner_circle_active_applicant_data');
-      localStorage.removeItem('inner_circle_active_applicant_data');
-      sessionStorage.removeItem('inner_circle_path');
-      localStorage.removeItem('inner_circle_path');
-    } catch {
-      // Ignore
-    }
+  };
+
+  const resetAuth = () => {
+    deleteAccount();
   };
 
   const submitElevateRequest = (
@@ -2218,6 +2295,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         simulate90DaysPassed,
         updateProfile,
         resetAuth,
+        signOut,
+        deleteAccount,
         setDigiLockerVerified,
         passedProfileIds,
         sentRequestProfileIds,
