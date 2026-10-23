@@ -5,6 +5,7 @@ import { ModalPortal } from './ModalPortal';
 import { useAuth } from '../context/AuthContext';
 import { DUMMY_DISCOVER_PROFILES } from '../data/dummyProfiles';
 import type { DiscoverProfile } from '../types/discover';
+import type { ChatMessage } from '../types/matches';
 import { DEFAULT_AFTER_HOURS_CONFIG } from '../constants/afterHoursConfig';
 import { calculateAgeFromISO } from '../utils/ageCalculation';
 import { getPageBackground } from '../constants/themeGradients';
@@ -106,7 +107,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
   onSelectTab,
   onNavigateHelp: _onNavigateHelp,
   onUpgradeToMembership,
-  onNavigateToChat,
+  onNavigateToChat: _onNavigateToChat,
   onChatViewChange,
   showStatusBar = true,
   showHomeIndicator = true,
@@ -155,6 +156,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
   const [userRequestedReveal, setUserRequestedReveal] = useState<boolean>(false);
   const [_partnerRequestedReveal, setPartnerRequestedReveal] = useState<boolean>(false);
   const [isMutualMatchRevealed, setIsMutualMatchRevealed] = useState<boolean>(false);
+  const [isRevealingAnimation, setIsRevealingAnimation] = useState<boolean>(false);
 
   // Modals
   const [showTimesUpModal, setShowTimesUpModal] = useState<boolean>(false);
@@ -432,33 +434,50 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
   // User initiates Reveal & Match
   const handleUserRequestReveal = () => {
     setUserRequestedReveal(true);
-    // Partner reciprocates after a thoughtful 2.5s pause
+    // Partner reciprocates after a brief pause
     setTimeout(() => {
+      setIsRevealingAnimation(true);
       setPartnerRequestedReveal(true);
-      setIsMutualMatchRevealed(true);
-      setWeeklyMatchesCount((prev) => prev + 1);
 
-      // Add to permanent matches
-      if (partner) {
-        addDirectMatch({
-          id: `match-ah-${partner.id}`,
-          profileId: partner.id,
-          name: partner.firstName,
-          age: partner.age,
-          city: partner.city,
-          designation: partner.designation,
-          company: partner.company,
-          photo: partner.photos[0],
-          isVerified: partner.isVerified,
-          matchedAt: Date.now(),
-          lastMessage: `Connected intentionally via VennZ After Hours! We both mutually agreed to reveal our profiles.`,
-          lastMessageTime: Date.now(),
-        });
-      }
-    }, 2400);
+      // Revealing animation (video reference: Loading photo... ✦ REVEALED ✦)
+      setTimeout(() => {
+        setIsRevealingAnimation(false);
+        setIsMutualMatchRevealed(true);
+        setWeeklyMatchesCount((prev) => prev + 1);
+
+        // Automatically add to permanent matches so they appear on Matches page for chat
+        if (partner) {
+          const ahChatHistory: ChatMessage[] = messages.map((m) => ({
+            id: m.id,
+            senderId: m.sender === 'me' ? 'me' : partner.id,
+            text: m.text,
+            timestamp: m.timestamp,
+          }));
+
+          addDirectMatch(
+            {
+              id: `match-ah-${partner.id}`,
+              profileId: partner.id,
+              name: partner.firstName,
+              age: partner.age,
+              city: partner.city,
+              designation: partner.designation,
+              company: partner.company,
+              photo: partner.photos[0],
+              isVerified: partner.isVerified,
+              matchedAt: Date.now(),
+              lastMessage: ahChatHistory.length > 0
+                ? ahChatHistory[ahChatHistory.length - 1].text
+                : `Connected intentionally via VennZ After Hours! We both mutually agreed to reveal our profiles.`,
+              lastMessageTime: Date.now(),
+            },
+            ahChatHistory
+          );
+        }
+      }, 1400);
+    }, 1500);
   };
 
-  // End conversation quietly
   const handleEndConversation = () => {
     setActiveView('lobby');
     setPartner(null);
@@ -1163,7 +1182,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                 />
 
                 {/* Over photo when blurred: "Photo hidden" silhouette badge */}
-                {!isMutualMatchRevealed && (
+                {!isMutualMatchRevealed && !isRevealingAnimation && (
                   <div
                     style={{
                       position: 'absolute',
@@ -1203,6 +1222,47 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                       }}
                     >
                       Photo hidden
+                    </span>
+                  </div>
+                )}
+
+                {/* Revealing transition overlay (matching reference video exact_46.0s.jpg) */}
+                {isRevealingAnimation && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      backgroundColor: 'rgba(20, 14, 28, 0.65)',
+                      background: 'radial-gradient(circle at center, rgba(235, 175, 75, 0.32) 0%, rgba(20, 14, 28, 0.75) 65%)',
+                      zIndex: 4,
+                      backdropFilter: 'blur(8px)',
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontSize: '12px',
+                        color: 'rgba(255, 255, 255, 0.85)',
+                        letterSpacing: '0.04em',
+                        marginBottom: '6px',
+                      }}
+                    >
+                      Loading photo...
+                    </span>
+                    <span
+                      style={{
+                        fontSize: '12.5px',
+                        fontWeight: 800,
+                        color: '#F7C873',
+                        letterSpacing: '0.18em',
+                        textShadow: '0 0 12px rgba(247, 200, 115, 0.6)',
+                        textTransform: 'uppercase',
+                      }}
+                    >
+                      ✦ REVEALED ✦
                     </span>
                   </div>
                 )}
@@ -1754,154 +1814,6 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                   }}
                 >
                   Send Handle
-                </button>
-              </div>
-            </div>
-          </div>
-        </ModalPortal>
-      )}
-
-      {/* MODAL: MUTUAL MATCH CELEBRATION */}
-      {isMutualMatchRevealed && partner && (
-        <ModalPortal>
-          <div
-            style={{
-              position: 'fixed',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              backgroundColor: 'rgba(0, 0, 0, 0.8)',
-              backdropFilter: 'blur(8px)',
-              zIndex: 100,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '20px',
-            }}
-          >
-            <div
-              style={{
-                width: '100%',
-                maxWidth: '420px',
-                backgroundColor: isDark ? '#1C1324' : '#FFFFFF',
-                borderRadius: '24px',
-                padding: '30px 24px',
-                textAlign: 'center',
-                border: cardBorder,
-                boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
-              }}
-            >
-              <div
-                style={{
-                  width: '56px',
-                  height: '56px',
-                  borderRadius: '50%',
-                  backgroundColor: 'rgba(16, 185, 129, 0.15)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  margin: '0 auto 16px',
-                }}
-              >
-                <SparkleIcon color="#10B981" size={28} />
-              </div>
-
-              <h2
-                style={{
-                  fontFamily: 'var(--font-serif)',
-                  fontSize: '26px',
-                  margin: '0 0 8px',
-                  color: textPrimary,
-                }}
-              >
-                Mutual Match Unlocked!
-              </h2>
-
-              <p style={{ fontSize: '13px', color: textMuted, margin: '0 0 20px', lineHeight: 1.5 }}>
-                Both of you agreed to reveal your identities. You are now permanent matches on VennZ!
-              </p>
-
-              {/* Partner Profile Reveal Card */}
-              <div
-                style={{
-                  backgroundColor: cardBg,
-                  borderRadius: '16px',
-                  padding: '16px',
-                  border: cardBorder,
-                  marginBottom: '24px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '14px',
-                  textAlign: 'left',
-                }}
-              >
-                <img
-                  src={partner.photos[0]}
-                  alt={partner.firstName}
-                  style={{
-                    width: '64px',
-                    height: '64px',
-                    borderRadius: '50%',
-                    objectFit: 'cover',
-                    border: `2px solid ${accentRose}`,
-                  }}
-                />
-                <div>
-                  <div style={{ fontSize: '17px', fontWeight: 600, color: textPrimary }}>
-                    {partner.firstName}, {partner.age}
-                  </div>
-                  <div style={{ fontSize: '12px', color: accentRose, marginTop: '2px' }}>
-                    {partner.designation} · {partner.company}
-                  </div>
-                  <div style={{ fontSize: '11px', color: textMuted, marginTop: '2px' }}>
-                    {partner.city}
-                  </div>
-                </div>
-              </div>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsMutualMatchRevealed(false);
-                    if (onNavigateToChat) {
-                      onNavigateToChat();
-                    } else {
-                      onSelectTab('matches');
-                    }
-                  }}
-                  style={{
-                    width: '100%',
-                    padding: '14px',
-                    borderRadius: '999px',
-                    border: 'none',
-                    background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
-                    color: '#FFF',
-                    fontSize: '14px',
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                  }}
-                >
-                  Open Chat with {partner.firstName} →
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsMutualMatchRevealed(false);
-                    setActiveView('lobby');
-                  }}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    color: textMuted,
-                    fontSize: '13px',
-                    cursor: 'pointer',
-                    padding: '8px',
-                  }}
-                >
-                  Return to After Hours Lobby
                 </button>
               </div>
             </div>

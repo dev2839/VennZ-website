@@ -180,7 +180,7 @@ interface AuthContextType extends AuthState {
   sendChatMessage: (matchId: string, text: string) => void;
   unmatchUser: (matchId: string) => void;
   blockUser: (matchId: string) => void;
-  addDirectMatch: (match: MatchItem) => void;
+  addDirectMatch: (match: MatchItem, initialConversation?: ChatMessage[]) => void;
   // Elevate Concierge & Orders methods
   elevateRequests: ElevateRequest[];
   elevateBookings: ElevateBooking[];
@@ -1356,7 +1356,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
-  const addDirectMatch = (match: MatchItem) => {
+  const addDirectMatch = (match: MatchItem, initialConversation?: ChatMessage[]) => {
     setState((prev) => {
       const matchExists = (prev.matches || []).some(
         (m) => m.profileId === match.profileId || m.id === match.id
@@ -1371,11 +1371,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         timestamp: Date.now(),
       };
 
+      const convoMessages =
+        initialConversation && initialConversation.length > 0
+          ? initialConversation
+          : [openingMsg];
+
       const matchNotif: AppNotification = {
         id: `notif-afterhours-${Date.now()}`,
         type: 'match',
         category: 'MATCH',
-        title: 'New Mutual Match from After Hours! 🎉',
+        title: 'New Mutual Match from After Hours!',
         message: `You and ${match.name} both agreed to reveal and connect in After Hours.`,
         timestamp: 'Just now',
         isRead: false,
@@ -1394,10 +1399,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         unreadMatchIds: [...new Set([...(prev.unreadMatchIds || []), newMatchId])],
         conversations: {
           ...(prev.conversations || {}),
-          [newMatchId]: [openingMsg],
+          [newMatchId]: convoMessages,
         },
         notifications: [matchNotif, ...currentList],
-        latestPopupNotification: matchNotif,
+        latestPopupNotification: null,
       };
     });
   };
