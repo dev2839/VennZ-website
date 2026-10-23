@@ -70,7 +70,8 @@ export interface PhoneRecord {
 export interface AuthState {
   phoneNumber: string;
   countryCode: string;
-  authMethod: 'phone' | 'google' | 'apple' | null;
+  email?: string;
+  authMethod: 'phone' | 'email' | 'google' | 'apple' | null;
   isAuthenticated: boolean;
   isPhoneVerified?: boolean;
   isIdentityVerified?: boolean;
@@ -133,6 +134,7 @@ interface AuthContextType extends AuthState {
   resetTrialForTesting: () => void;
   setAppearanceMode: (mode: 'ivory' | 'after-dark') => void;
   setPhoneAuth: (phoneNumber: string) => void;
+  setEmailAuth: (email: string, name?: string) => void;
   setGoogleAuth: (googleUser?: AuthState['googleUser']) => void;
   setAppleAuth: () => void;
   setPhoneVerified: (verified: boolean) => void;
@@ -405,6 +407,7 @@ export const INITIAL_ELEVATE_MESSAGES: ElevateConciergeMessage[] = [
 
 const defaultState: AuthState = {
   phoneNumber: '',
+  email: '',
   countryCode: '+91',
   authMethod: null,
   isAuthenticated: false,
@@ -712,12 +715,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
+    const setEmailAuth = (email: string, name?: string) => {
+    setState((prev) => {
+      const cleanEmail = email.trim().toLowerCase();
+      const derivedName = name?.trim() || cleanEmail.split('@')[0];
+      return {
+        ...prev,
+        authMethod: 'email',
+        isAuthenticated: true,
+        isPhoneVerified: true,
+        email: cleanEmail,
+        profile: {
+          ...prev.profile,
+          firstName: prev.profile.firstName || derivedName,
+        },
+      };
+    });
+  };
+
   const setGoogleAuth = (googleUser?: AuthState['googleUser']) => {
     setState((prev) => ({
       ...prev,
       authMethod: 'google',
       isAuthenticated: true,
       isPhoneVerified: true,
+      email: googleUser?.email || prev.email || '',
       googleUser,
       profile: {
         ...prev.profile,
@@ -2171,6 +2193,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         appearanceMode: state.appearanceMode || 'ivory',
         setAppearanceMode,
         setPhoneAuth,
+        setEmailAuth,
         setGoogleAuth,
         setAppleAuth,
         setPhoneVerified,

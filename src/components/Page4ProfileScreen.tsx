@@ -60,9 +60,6 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
   const {
     profile,
     updateProfile,
-    isPhoneVerified,
-    phoneNumber,
-    countryCode,
     appearanceMode,
     setApplicationDecision,
     isDigiLockerVerified,
@@ -395,12 +392,7 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
       newErrors.introduction = 'Introduction cannot exceed 240 characters.';
     }
 
-    const isIndian = !countryCode || countryCode === '+91';
-    if (!isIndian) {
-      newErrors.general = 'Only Indian phone numbers (+91) are currently accepted.';
-    } else if (!isPhoneVerified && phoneNumber) {
-      newErrors.general = 'Your phone number must be verified on the previous screen before continuing.';
-    }
+    // Phone verification requirement removed — login is via Google & direct Email
 
     setErrors(prev => ({...prev, ...newErrors}));
     return Object.keys(newErrors).length === 0;

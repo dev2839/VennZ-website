@@ -26,6 +26,7 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
   const {
     profile,
     phoneNumber,
+    email,
     applicationDecision,
     setApplicationApproved,
     setApplicationDecision,
@@ -1022,7 +1023,7 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
                 gap: '8px',
               }}
             >
-              {phoneNumber && (
+              {(email || phoneNumber) && (
                 <div
                   style={{
                     fontSize: '11px',
@@ -1030,7 +1031,7 @@ export const Page8WaitlistScreen: React.FC<Page8WaitlistScreenProps> = ({
                     fontFamily: 'monospace',
                   }}
                 >
-                  Applicant ID: +91 {phoneNumber}
+                  Applicant ID: {email ? email : `+91 ${phoneNumber}`}
                 </div>
               )}
 

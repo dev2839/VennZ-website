@@ -2,32 +2,14 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { ModalPortal } from './ModalPortal';
 import { LivingCinematicBackground } from './LivingCinematicBackground';
-import { otpService } from '../services/otpService';
-import { googleAuth } from '../services/googleAuth';
-
-interface CountryCodeOption {
-  code: string;
-  flag: string;
-  name: string;
-}
-
-const COUNTRY_CODES: CountryCodeOption[] = [
-  { code: '+91', flag: '🇮🇳', name: 'India' },
-  { code: '+1', flag: '🇺🇸', name: 'United States' },
-  { code: '+44', flag: '🇬🇧', name: 'United Kingdom' },
-  { code: '+971', flag: '🇦🇪', name: 'United Arab Emirates' },
-  { code: '+65', flag: '🇸🇬', name: 'Singapore' },
-  { code: '+61', flag: '🇦🇺', name: 'Australia' },
-  { code: '+49', flag: '🇩🇪', name: 'Germany' },
-  { code: '+33', flag: '🇫🇷', name: 'France' },
-  { code: '+81', flag: '🇯🇵', name: 'Japan' },
-];
+import { googleAuth, type GoogleUserProfile } from '../services/googleAuth';
+import { appleAuth } from '../services/appleAuth';
 
 interface Page2AuthScreenProps {
   onBack: () => void;
-  onContinueToOtp?: (phoneNumber: string) => void;
+  onContinueToOtp?: (identifier: string) => void;
   onSuccess?: () => void;
-  initialStep?: 'phone' | 'otp';
+  initialStep?: 'phone' | 'otp' | 'email';
   showStatusBar?: boolean;
   showHomeIndicator?: boolean;
 }
@@ -36,14 +18,12 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
   onBack,
   onContinueToOtp,
   onSuccess,
-  initialStep = 'phone',
 }) => {
   const {
-    phoneNumber: savedPhone,
-    countryCode: savedCountryCode,
-    setPhoneAuth,
-    setPhoneVerified,
+    email: savedEmail,
+    setEmailAuth,
     setGoogleAuth,
+    setAppleAuth,
     appearanceMode,
     setAppearanceMode,
     notifications = [],
@@ -52,72 +32,32 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
   } = useAuth();
   const isDark = appearanceMode === 'after-dark';
 
-  // Mobile number state
-  const [countryCode, setCountryCode] = useState<string>(savedCountryCode || '+91');
-  const [phoneNumber, setPhoneNumber] = useState<string>(savedPhone || '');
-  const [phoneError, setPhoneError] = useState<string | null>(null);
-  const [isPhoneFocused, setIsPhoneFocused] = useState<boolean>(false);
-  const [countryDropdownOpen, setCountryDropdownOpen] = useState<boolean>(false);
+  // Email form state
+  const [email, setEmail] = useState<string>(savedEmail || '');
+  const [emailError, setEmailError] = useState<string | null>(null);
+  const [isEmailFocused, setIsEmailFocused] = useState<boolean>(false);
+  const [isSubmittingEmail, setIsSubmittingEmail] = useState<boolean>(false);
+
+  // Notifications dropdown
   const [notificationsOpen, setNotificationsOpen] = useState<boolean>(false);
-
-  // OTP Section state (revealed below mobile number on same page)
-  const isOtpInitial = (initialStep as 'phone' | 'otp') === 'otp';
-  const [otpRevealed, setOtpRevealed] = useState<boolean>(isOtpInitial || Boolean(savedPhone && isOtpInitial));
-  const [otpDigits, setOtpDigits] = useState<string[]>(['', '', '', '', '', '']);
-  const [focusedOtpIndex, setFocusedOtpIndex] = useState<number>(0);
-  const [otpError, setOtpError] = useState<string | null>(null);
-  const [isVerifying, setIsVerifying] = useState<boolean>(false);
-  const [resendCountdown, setResendCountdown] = useState<number>(30);
-  const [isResendActive, setIsResendActive] = useState<boolean>(false);
-  const [resendNotice, setResendNotice] = useState<string | null>(null);
-  const [verifySuccess, setVerifySuccess] = useState<boolean>(false);
-
-  // OAuth Modal state
-  const [oauthModal, setOauthModal] = useState<{
-    isOpen: boolean;
-    provider: 'google';
-    message: string;
-    missingEnv?: string;
-  } | null>(null);
-
-  const otpInputRefs = useRef<(HTMLInputElement | null)[]>([]);
-  const dropdownRef = useRef<HTMLDivElement | null>(null);
   const notifRef = useRef<HTMLDivElement | null>(null);
 
-  // Countdown timer for OTP resend
-  useEffect(() => {
-    let timer: ReturnType<typeof setInterval> | null = null;
-    if (otpRevealed && resendCountdown > 0) {
-      timer = setInterval(() => {
-        setResendCountdown((prev) => {
-          if (prev <= 1) {
-            setIsResendActive(true);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    }
-    return () => {
-      if (timer) clearInterval(timer);
-    };
-  }, [otpRevealed, resendCountdown]);
+  // Native Google GIS button mount container
+  const googleBtnContainerRef = useRef<HTMLDivElement | null>(null);
 
-  // Focus first OTP box automatically when OTP is revealed
-  useEffect(() => {
-    if (otpRevealed) {
-      setTimeout(() => {
-        otpInputRefs.current[0]?.focus();
-      }, 350);
-    }
-  }, [otpRevealed]);
+  // OAuth Modal state (informative dialog with Demo Google Account fallback)
+  const [oauthModal, setOauthModal] = useState<{
+    isOpen: boolean;
+    provider: 'google' | 'apple';
+    title: string;
+    message: string;
+    missingEnv?: string;
+    showDemoOption?: boolean;
+  } | null>(null);
 
-  // Click outside listener for country code & notifications dropdowns
+  // Close notifications on outside click
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setCountryDropdownOpen(false);
-      }
       if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
         setNotificationsOpen(false);
       }
@@ -126,270 +66,161 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const cleaned = e.target.value.replace(/\D/g, '').slice(0, 10);
-    setPhoneNumber(cleaned);
-    if (phoneError) setPhoneError(null);
+  // Pre-load Google Identity Services script on mount for seamless instant response across all devices
+  useEffect(() => {
+    googleAuth.loadGoogleScript().then(() => {
+      // If configured, optionally render native GIS button in container
+      if (googleAuth.isConfigured() && googleBtnContainerRef.current) {
+        googleAuth.renderGoogleButton(
+          googleBtnContainerRef.current,
+          (profile) => handleGoogleSuccess(profile),
+          (error) => handleGoogleError(error)
+        );
+      }
+    });
+  }, []);
+
+  const handleAuthCompletion = () => {
+    if (onSuccess) {
+      onSuccess();
+    } else if (onContinueToOtp) {
+      onContinueToOtp(email);
+    }
   };
 
-  const handleSendOtp = (e?: React.FormEvent) => {
+  const validateEmailFormat = (val: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(val.trim());
+  };
+
+  // Direct Email Sign-In (NO OTP required)
+  const handleEmailSignIn = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
-    const raw = phoneNumber.trim();
+    const clean = email.trim();
 
-    if (!raw) {
-      setPhoneError('Please enter your 10-digit mobile number');
+    if (!clean) {
+      setEmailError('Please enter your email address to continue');
       return;
     }
 
-    // For Indian mobile numbers, ensure valid 10-digit number
-    if (countryCode === '+91') {
-      const indianMobileRegex = /^[6-9]\d{9}$/;
-      if (!indianMobileRegex.test(raw)) {
-        if (raw.length !== 10) {
-          setPhoneError(`Mobile number must be 10 digits (currently ${raw.length})`);
-        } else {
-          setPhoneError('Please enter a valid Indian mobile number starting with 6, 7, 8, or 9');
-        }
-        return;
-      }
-    } else {
-      if (raw.length < 7 || raw.length > 12) {
-        setPhoneError('Please enter a valid mobile number');
-        return;
-      }
-    }
-
-    // Dispatch OTP locally without re-rendering the whole application
-    otpService.sendOtp(raw);
-
-    // Reveal OTP section seamlessly below phone number
-    setPhoneError(null);
-    setOtpRevealed(true);
-    setResendCountdown(30);
-    setIsResendActive(false);
-    setResendNotice('Verification code dispatched. (Enter code: 123456 to verify)');
-    setTimeout(() => setResendNotice(null), 5000);
-  };
-
-  const handleEditPhoneNumber = () => {
-    setOtpRevealed(false);
-    setOtpDigits(['', '', '', '', '', '']);
-    setOtpError(null);
-  };
-
-  // OTP Digit changes: single digit per box, zero jump
-  const handleOtpDigitChange = (index: number, val: string) => {
-    const numeric = val.replace(/\D/g, '');
-
-    if (!numeric) {
-      const next = [...otpDigits];
-      next[index] = '';
-      setOtpDigits(next);
-      if (otpError) setOtpError(null);
+    if (!validateEmailFormat(clean)) {
+      setEmailError('Please enter a valid email address (e.g. name@domain.com)');
       return;
     }
 
-    if (numeric.length === 1) {
-      const next = [...otpDigits];
-      next[index] = numeric;
-      setOtpDigits(next);
-      if (otpError) setOtpError(null);
+    setIsSubmittingEmail(true);
+    setEmailError(null);
 
-      if (index < 5) {
-        otpInputRefs.current[index + 1]?.focus();
-      }
-    } else if (numeric.length === 2) {
-      // User typed over existing character -> use newest typed digit
-      const lastChar = numeric.slice(-1);
-      const next = [...otpDigits];
-      next[index] = lastChar;
-      setOtpDigits(next);
-      if (otpError) setOtpError(null);
-      if (index < 5) {
-        otpInputRefs.current[index + 1]?.focus();
-      }
-    } else {
-      // Pasted full code
-      handleOtpPasteString(numeric, index);
-    }
+    // Instant sign-in without OTP
+    setTimeout(() => {
+      setEmailAuth(clean);
+      setIsSubmittingEmail(false);
+      handleAuthCompletion();
+    }, 180);
   };
 
-  const handleOtpPasteString = (pasted: string, startIndex: number = 0) => {
-    const clean = pasted.replace(/\D/g, '').slice(0, 6);
-    if (!clean) return;
-
-    const next = [...otpDigits];
-    for (let i = 0; i < clean.length && startIndex + i < 6; i++) {
-      next[startIndex + i] = clean[i];
-    }
-    setOtpDigits(next);
-    if (otpError) setOtpError(null);
-
-    const nextFocus = Math.min(startIndex + clean.length, 5);
-    otpInputRefs.current[nextFocus]?.focus();
+  // Quick 1-click test demo logins
+  const handleQuickDemoLogin = (demoEmail: string, demoName: string) => {
+    setEmail(demoEmail);
+    setEmailError(null);
+    setEmailAuth(demoEmail, demoName);
+    handleAuthCompletion();
   };
 
-  const handleOtpKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      handleVerifyOtp();
-      return;
-    }
-    if (e.key === 'Backspace') {
-      if (!otpDigits[index] && index > 0) {
-        const next = [...otpDigits];
-        next[index - 1] = '';
-        setOtpDigits(next);
-        otpInputRefs.current[index - 1]?.focus();
-      } else {
-        const next = [...otpDigits];
-        next[index] = '';
-        setOtpDigits(next);
-      }
-      if (otpError) setOtpError(null);
-    } else if (e.key === 'ArrowLeft' && index > 0) {
-      otpInputRefs.current[index - 1]?.focus();
-    } else if (e.key === 'ArrowRight' && index < 5) {
-      otpInputRefs.current[index + 1]?.focus();
-    }
+  // Google OAuth Handlers
+  const handleGoogleSuccess = (profile: GoogleUserProfile) => {
+    setGoogleAuth({
+      name: profile.name,
+      email: profile.email,
+      picture: profile.picture,
+    });
+    handleAuthCompletion();
   };
 
-  const handleDemoFill = () => {
-    const demoCode = otpService.getDemoCode();
-    setOtpDigits(demoCode.split(''));
-    setOtpError(null);
-    otpInputRefs.current[5]?.focus();
+  const handleGoogleError = (error: string) => {
+    setOauthModal({
+      isOpen: true,
+      provider: 'google',
+      title: 'Google Sign-In Notice',
+      message: error,
+      showDemoOption: true,
+    });
   };
 
-  const handleResendCode = () => {
-    if (!isResendActive) return;
-    otpService.sendOtp(phoneNumber);
-    setResendCountdown(30);
-    setIsResendActive(false);
-    setResendNotice('A new verification code has been dispatched. (Enter code: 123456 to verify)');
-    setTimeout(() => setResendNotice(null), 5000);
-  };
-
-  const handleVerifyOtp = async (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-    const code = otpDigits.join('');
-
-    if (code.length < 6) {
-      setOtpError('Please enter all 6 digits of your verification code');
-      return;
-    }
-
-    setIsVerifying(true);
-    setOtpError(null);
-
-    try {
-      const result = await otpService.verifyOtp(code);
-      if (result.success) {
-        setVerifySuccess(true);
-        setPhoneAuth(phoneNumber);
-        setPhoneVerified(true);
-        setTimeout(() => {
-          if (onSuccess) {
-            onSuccess();
-          } else if (onContinueToOtp) {
-            onContinueToOtp(phoneNumber);
-          }
-        }, 120);
-      } else {
-        // Strictly reject wrong OTP: do NOT navigate to next page!
-        setOtpError(result.error || 'Invalid verification code. Please enter the correct code (123456).');
-      }
-    } catch {
-      setOtpError('Verification request failed. Please check connection.');
-    } finally {
-      setIsVerifying(false);
-    }
-  };
-
-  // Google Sign In
   const handleGoogleSignIn = async () => {
     const result = await googleAuth.initiateGoogleSignIn(
-      (profile) => {
-        setGoogleAuth({
-          name: profile.name,
-          email: profile.email,
-          picture: profile.picture,
-        });
-        if (onSuccess) onSuccess();
-        else if (onContinueToOtp) onContinueToOtp(`google:${profile.email}`);
-      },
-      (error) => {
-        setOauthModal({
-          isOpen: true,
-          provider: 'google',
-          message: error,
-        });
-      }
+      (profile) => handleGoogleSuccess(profile),
+      (error) => handleGoogleError(error)
     );
 
     if (result.status === 'missing_config') {
       setOauthModal({
         isOpen: true,
         provider: 'google',
-        message: 'Google OAuth requires Client ID configuration.',
+        title: 'Google OAuth Setup',
+        message:
+          'To connect with your personal Google account, your Google OAuth 2.0 Client ID (VITE_GOOGLE_CLIENT_ID) needs to be configured in your environment or Vercel dashboard. You can continue right now using our verified Demo Google Account.',
         missingEnv: 'VITE_GOOGLE_CLIENT_ID',
+        showDemoOption: true,
       });
     } else if (result.status === 'error') {
       setOauthModal({
         isOpen: true,
         provider: 'google',
-        message: result.message || 'Failed to initialize Google OAuth.',
+        title: 'Google Authentication',
+        message: result.message || 'Unable to connect with Google.',
+        showDemoOption: true,
       });
     }
   };
 
-  const selectedCountry = COUNTRY_CODES.find((c) => c.code === countryCode) || COUNTRY_CODES[0];
+  // Apple OAuth Handler (optional for future Apple auth)
+  const handleAppleSignIn = async () => {
+    const res = await appleAuth.initiateAppleSignIn();
+    if (res.status === 'pending_configuration') {
+      setOauthModal({
+        isOpen: true,
+        provider: 'apple',
+        title: 'Apple Sign-In Setup',
+        message:
+          'Apple Sign-In requires an Apple Developer Service ID (VITE_APPLE_CLIENT_ID). You can sign in instantly using direct email or Google.',
+        missingEnv: 'VITE_APPLE_CLIENT_ID',
+        showDemoOption: false,
+      });
+    } else {
+      setAppleAuth();
+      handleAuthCompletion();
+    }
+  };
+
+  // Fallback demo Google sign-in when client ID is not yet configured
+  const handleDemoGoogleSignIn = () => {
+    setOauthModal(null);
+    setGoogleAuth({
+      name: 'Rahul Sharma',
+      email: 'rahul.sharma@gmail.com',
+      picture: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80',
+    });
+    handleAuthCompletion();
+  };
 
   return (
     <LivingCinematicBackground>
       <style>{`
-        /* Continuous entrance animation from previous page (0 coordinate slide) */
-        @keyframes continuousEntrance {
-          0% {
-            opacity: 0;
-          }
-          100% {
-            opacity: 1;
-          }
-        }
-
-        @keyframes otpSmoothReveal {
-          0% {
-            opacity: 0;
-            max-height: 0px;
-            transform: translateY(12px);
-          }
-          100% {
-            opacity: 1;
-            max-height: 520px;
-            transform: translateY(0);
-          }
-        }
-
         .auth-panel-card {
           will-change: transform, opacity;
         }
 
-        .otp-input-box:focus {
+        .email-input-custom:focus {
           border-color: #F9AAAD !important;
-          box-shadow: 0 0 0 1px #F9AAAD, 0 0 12px rgba(249, 170, 173, 0.25) !important;
-          background: rgba(104, 58, 70, 0.7) !important;
-        }
-
-        .phone-input-custom:focus {
-          border-color: #C7577C !important;
-          box-shadow: 0 0 0 1px #C7577C, 0 0 14px rgba(199, 87, 124, 0.3) !important;
+          box-shadow: 0 0 0 1px #F9AAAD, 0 0 16px rgba(249, 170, 173, 0.28) !important;
+          background: rgba(85, 38, 66, 0.8) !important;
         }
 
         .primary-action-btn {
           background: linear-gradient(135deg, #A1525F 0%, #C7577C 100%);
           box-shadow: 0 8px 24px rgba(70, 32, 55, 0.55), 0 0 1px 1px rgba(249, 170, 173, 0.2) inset;
-          transition: all 0.25s ease;
+          transition: all 0.22s ease;
         }
         .primary-action-btn:hover:not(:disabled) {
           background: linear-gradient(135deg, #C7577C 0%, #F9AAAD 100%);
@@ -403,9 +234,37 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
           opacity: 0.5;
           cursor: not-allowed;
         }
+
+        .google-btn-hover:hover {
+          background-color: rgba(90, 42, 70, 0.85) !important;
+          border-color: #F9AAAD !important;
+          transform: translateY(-1px);
+          box-shadow: 0 10px 24px rgba(161, 82, 95, 0.35) !important;
+        }
+        .google-btn-hover:active {
+          transform: translateY(0);
+        }
+
+        .demo-chip-btn {
+          background: rgba(70, 32, 55, 0.45);
+          border: 1px solid rgba(161, 82, 95, 0.3);
+          border-radius: 999px;
+          padding: 6px 14px;
+          color: #F9AAAD;
+          font-size: 12px;
+          font-weight: 500;
+          cursor: pointer;
+          transition: all 0.15s ease;
+        }
+        .demo-chip-btn:hover {
+          background: rgba(161, 82, 95, 0.35);
+          border-color: #C7577C;
+          color: #FDF3F5;
+          transform: translateY(-1px);
+        }
       `}</style>
 
-      {/* Main Responsive Viewport Grid - Top anchored to prevent upward jump when expanding */}
+      {/* Main Responsive Viewport Grid */}
       <div
         style={{
           width: '100%',
@@ -420,7 +279,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
           position: 'relative',
         }}
       >
-        {/* Top-Left Brand & Navigation (Logo with Back button naturally below it) */}
+        {/* Top-Left Brand & Navigation */}
         <div
           style={{
             position: 'absolute',
@@ -433,7 +292,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
             zIndex: 35,
           }}
         >
-          {/* Top-left VennZ Logo */}
+          {/* VennZ Logo */}
           <div
             onClick={onBack}
             style={{
@@ -457,9 +316,10 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
             />
           </div>
 
-          {/* Back navigation button positioned naturally over background below logo */}
+          {/* Back Navigation Button */}
           <button
             onClick={onBack}
+            type="button"
             aria-label="Back to welcome page"
             style={{
               display: 'inline-flex',
@@ -558,13 +418,13 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
                     height: '7px',
                     borderRadius: '50%',
                     backgroundColor: '#C94A4A',
-                    boxShadow: '0 0 6px rgba(201, 74, 74, 0.7)',
+                    boxShadow: '0 0 8px #C94A4A',
                   }}
                 />
               )}
             </button>
 
-            {/* Notifications Dropdown Drawer */}
+            {/* Notification Dropdown */}
             {notificationsOpen && (
               <div
                 style={{
@@ -572,70 +432,42 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
                   top: '48px',
                   right: 0,
                   width: '320px',
-                  maxHeight: '380px',
                   backgroundColor: 'rgba(30, 16, 28, 0.95)',
                   backdropFilter: 'blur(24px)',
                   WebkitBackdropFilter: 'blur(24px)',
-                  borderRadius: '18px',
-                  border: '1px solid rgba(161, 82, 95, 0.4)',
-                  boxShadow: '0 20px 48px rgba(10, 6, 14, 0.85)',
-                  overflow: 'hidden',
-                  zIndex: 100,
-                  display: 'flex',
-                  flexDirection: 'column',
+                  border: '1px solid rgba(161, 82, 95, 0.35)',
+                  borderRadius: '16px',
+                  padding: '16px',
+                  boxShadow: '0 16px 40px rgba(0,0,0,0.6)',
+                  zIndex: 50,
                 }}
               >
-                <div
-                  style={{
-                    padding: '14px 18px',
-                    borderBottom: '1px solid rgba(161, 82, 95, 0.25)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                  }}
-                >
-                  <span
-                    style={{
-                      fontFamily: 'var(--font-sans)',
-                      fontSize: '11px',
-                      fontWeight: 600,
-                      letterSpacing: '0.14em',
-                      textTransform: 'uppercase',
-                      color: '#F9AAAD',
-                    }}
-                  >
-                    NOTIFICATIONS
-                  </span>
-                  <span style={{ fontSize: '11px', color: '#D4A2AC' }}>
-                    {notifications.length} updates
-                  </span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                  <span style={{ fontSize: '13px', fontWeight: 600, color: '#FDF3F5' }}>Notifications</span>
+                  <span style={{ fontSize: '11px', color: '#F9AAAD' }}>{unreadNotificationsCount} new</span>
                 </div>
-
-                <div style={{ overflowY: 'auto', maxHeight: '300px' }}>
-                  {notifications.length === 0 ? (
-                    <div style={{ padding: '24px', textAlign: 'center', color: '#D4A2AC', fontSize: '13px' }}>
-                      No new notifications
-                    </div>
-                  ) : (
-                    notifications.map((notif) => (
+                {notifications.length === 0 ? (
+                  <p style={{ fontSize: '12px', color: '#F8E2E6', opacity: 0.7, margin: 0, textAlign: 'center', padding: '12px 0' }}>
+                    No new notifications
+                  </p>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '240px', overflowY: 'auto' }}>
+                    {notifications.slice(0, 4).map((notif) => (
                       <div
                         key={notif.id}
                         style={{
-                          padding: '12px 18px',
-                          borderBottom: '1px solid rgba(161, 82, 95, 0.15)',
-                          cursor: 'default',
+                          padding: '8px 10px',
+                          borderRadius: '10px',
+                          backgroundColor: 'rgba(70, 32, 55, 0.4)',
+                          fontSize: '12px',
                         }}
                       >
-                        <h4 style={{ fontFamily: 'var(--font-serif)', fontSize: '14px', color: '#FDF3F5', margin: '0 0 3px' }}>
-                          {notif.title}
-                        </h4>
-                        <p style={{ margin: 0, fontSize: '12px', color: '#D4A2AC', lineHeight: 1.4 }}>
-                          {notif.message}
-                        </p>
+                        <div style={{ fontWeight: 600, color: '#FDF3F5', marginBottom: '2px' }}>{notif.title}</div>
+                        <div style={{ color: '#F8E2E6', opacity: 0.8, fontSize: '11px' }}>{notif.message}</div>
                       </div>
-                    ))
-                  )}
-                </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -644,8 +476,8 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
           <button
             type="button"
             onClick={() => setAppearanceMode(isDark ? 'ivory' : 'after-dark')}
-            aria-label={isDark ? 'Switch to Ivory theme' : 'Switch to Dark theme'}
-            title={isDark ? 'Switch to Ivory theme' : 'Switch to Dark theme'}
+            aria-label="Toggle theme"
+            title={isDark ? 'Switch to Ivory theme' : 'Switch to After Dark theme'}
             style={{
               width: '40px',
               height: '40px',
@@ -690,7 +522,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
           </button>
         </div>
 
-        {/* Ambient Left Brand Typography (Desktop only - creates luxury balance) */}
+        {/* Ambient Left Brand Typography (Desktop only) */}
         <div
           className="hidden-on-mobile"
           style={{
@@ -729,23 +561,23 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
               textShadow: '0 1px 12px rgba(10, 6, 14, 0.95), 0 0 18px rgba(20, 14, 28, 0.8)',
             }}
           >
-            An invite-only ecosystem with zero anonymous profiles, biometric verification, and human matchmaking.
+            An invite-only ecosystem with zero anonymous profiles, identity verification, and intentional matchmaking.
           </p>
         </div>
 
-        {/* Authentication Card (Right-aligned on Desktop, Centered on Mobile) */}
+        {/* Main Authentication Card */}
         <div
           className="auth-panel-card"
           style={{
             width: '100%',
-            maxWidth: '520px',
-            backgroundColor: 'rgba(30, 16, 28, 0.72)',
+            maxWidth: '500px',
+            backgroundColor: 'rgba(30, 16, 28, 0.74)',
             backdropFilter: 'blur(28px) saturate(180%)',
             WebkitBackdropFilter: 'blur(28px) saturate(180%)',
             border: '1px solid rgba(161, 82, 95, 0.35)',
             borderRadius: '24px',
             boxShadow: '0 28px 68px rgba(10, 6, 14, 0.75), 0 0 1px 1px rgba(249, 170, 173, 0.12) inset',
-            padding: 'clamp(32px, 5vw, 44px)',
+            padding: 'clamp(30px, 4.5vw, 42px)',
             boxSizing: 'border-box',
             display: 'flex',
             flexDirection: 'column',
@@ -753,624 +585,360 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
             margin: 0,
           }}
         >
-          {/* Card Header — text only, no logo */}
-          <div style={{ textAlign: 'center', marginBottom: '28px' }}>
+          {/* Editorial Card Badge & Header */}
+          <div style={{ textAlign: 'center', marginBottom: '26px' }}>
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '4px 12px',
+                borderRadius: '999px',
+                background: 'rgba(161, 82, 95, 0.22)',
+                border: '1px solid rgba(249, 170, 173, 0.3)',
+                color: '#F9AAAD',
+                fontSize: '11px',
+                fontWeight: 600,
+                letterSpacing: '0.12em',
+                textTransform: 'uppercase',
+                marginBottom: '14px',
+              }}
+            >
+              <span>✦</span>
+              <span>Exclusive Circle Access</span>
+            </div>
+
             <h1
               style={{
                 fontFamily: 'var(--font-serif)',
-                fontSize: '28px',
+                fontSize: 'clamp(26px, 3.2vw, 32px)',
                 fontWeight: 400,
                 color: '#FDF3F5',
                 letterSpacing: '0.01em',
                 margin: '0 0 10px 0',
               }}
             >
-              {otpRevealed ? 'Verification Code' : 'Welcome to VennZ'}
+              Welcome to VennZ
             </h1>
+
             <p
               style={{
-                fontSize: '14.5px',
+                fontSize: '14px',
                 lineHeight: 1.55,
                 color: '#F8E2E6',
                 opacity: 0.85,
                 margin: 0,
               }}
             >
-              {otpRevealed
-                ? `Enter the 6-digit code sent to ${countryCode} ${phoneNumber} (Use code: 123456)`
-                : 'Enter your mobile number to begin or continue your membership application.'}
+              Continue with Google or sign in directly with your email to access your curated introductions.
             </p>
           </div>
 
-          {/* Form Section 1: Mobile Number Input */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <label
-                style={{
-                  fontSize: '12px',
-                  fontWeight: 600,
-                  letterSpacing: '0.08em',
-                  textTransform: 'uppercase',
-                  color: '#F9AAAD',
-                }}
-              >
-                Mobile Number
-              </label>
-
-              {/* Edit phone link when in OTP state */}
-              {otpRevealed && (
-                <button
-                  type="button"
-                  onClick={handleEditPhoneNumber}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    padding: 0,
-                    fontSize: '12px',
-                    fontWeight: 500,
-                    color: '#F9AAAD',
-                    cursor: 'pointer',
-                    textDecoration: 'underline',
-                    textUnderlineOffset: '3px',
-                    transition: 'color 0.15s ease',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = '#FDF3F5')}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = '#F9AAAD')}
-                >
-                  Edit number
-                </button>
-              )}
-            </div>
-
-            {/* Combined Country Code + Phone Input Group */}
-            <div
+          {/* SECTION 1: Continue with Google (Primary Social OAuth) */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '22px' }}>
+            <button
+              type="button"
+              onClick={handleGoogleSignIn}
+              className="google-btn-hover"
               style={{
+                width: '100%',
+                height: '52px',
+                backgroundColor: 'rgba(70, 32, 55, 0.65)',
+                border: '1.5px solid rgba(161, 82, 95, 0.45)',
+                borderRadius: '14px',
                 display: 'flex',
-                gap: '8px',
-                position: 'relative',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '12px',
+                color: '#FDF3F5',
+                fontSize: '15px',
+                fontWeight: 600,
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                boxShadow: '0 6px 18px rgba(0, 0, 0, 0.25)',
               }}
             >
-              {/* Country Code Dropdown Trigger */}
-              <div ref={dropdownRef} style={{ position: 'relative' }}>
-                <button
-                  type="button"
-                  disabled={otpRevealed}
-                  onClick={() => setCountryDropdownOpen(!countryDropdownOpen)}
-                  aria-label="Select country dial code"
+              {/* Official Multi-Color Google G SVG */}
+              <svg width="20" height="20" viewBox="0 0 24 24">
+                <path
+                  fill="#EA4335"
+                  d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.8 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.4 9 5 12 5z"
+                />
+                <path
+                  fill="#4285F4"
+                  d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"
+                />
+                <path
+                  fill="#FBBC05"
+                  d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3s.1-1.6.4-2.3L1.9 7.3C.7 9.7 0 12.3 0 15.1c0 2.8.7 5.4 1.9 7.8l3.7-2.9z"
+                />
+                <path
+                  fill="#34A853"
+                  d="M12 23.5c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.4-6.4-5.2L1.9 16.5C3.7 20.3 7.5 23.5 12 23.5z"
+                />
+              </svg>
+              <span>Continue with Google</span>
+            </button>
+
+            {/* Optional Apple Sign-In Button */}
+            <button
+              type="button"
+              onClick={handleAppleSignIn}
+              style={{
+                width: '100%',
+                height: '46px',
+                backgroundColor: 'rgba(40, 20, 32, 0.55)',
+                border: '1px solid rgba(161, 82, 95, 0.28)',
+                borderRadius: '14px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '10px',
+                color: '#FDF3F5',
+                fontSize: '14px',
+                fontWeight: 500,
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(70, 32, 55, 0.7)';
+                e.currentTarget.style.borderColor = '#C7577C';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(40, 20, 32, 0.55)';
+                e.currentTarget.style.borderColor = 'rgba(161, 82, 95, 0.28)';
+              }}
+            >
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.61-.75 1.04-1.8 0.92-2.87-.9.04-1.99.6-2.63 1.35-.58.67-1.09 1.74-.95 2.78 1.01.08 2.05-.51 2.66-1.26z" />
+              </svg>
+              <span>Continue with Apple</span>
+            </button>
+          </div>
+
+          {/* Subtle Luxury Divider */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              marginBottom: '20px',
+            }}
+          >
+            <div style={{ flex: 1, height: '1px', backgroundColor: 'rgba(161, 82, 95, 0.28)' }} />
+            <span
+              style={{
+                fontSize: '11.5px',
+                color: '#F8E2E6',
+                opacity: 0.7,
+                textTransform: 'uppercase',
+                letterSpacing: '0.1em',
+                fontWeight: 600,
+              }}
+            >
+              or sign in with email
+            </span>
+            <div style={{ flex: 1, height: '1px', backgroundColor: 'rgba(161, 82, 95, 0.28)' }} />
+          </div>
+
+          {/* SECTION 2: Direct Email Sign-In (NO OTP) */}
+          <form onSubmit={handleEmailSignIn} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                <label
+                  htmlFor="user-email-input"
                   style={{
-                    height: '52px',
-                    padding: '0 14px',
-                    backgroundColor: 'rgba(70, 32, 55, 0.65)',
-                    border: '1px solid rgba(161, 82, 95, 0.4)',
-                    borderRadius: '14px',
-                    color: '#FDF3F5',
-                    fontSize: '15px',
-                    fontWeight: 500,
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    cursor: otpRevealed ? 'default' : 'pointer',
-                    opacity: otpRevealed ? 0.75 : 1,
-                    transition: 'border-color 0.2s ease, background-color 0.2s ease',
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                    color: '#F9AAAD',
                   }}
                 >
-                  <span style={{ fontSize: '17px' }}>{selectedCountry.flag}</span>
-                  <span>{selectedCountry.code}</span>
-                  {!otpRevealed && (
-                    <svg
-                      width="12"
-                      height="12"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="#F9AAAD"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      style={{
-                        transform: countryDropdownOpen ? 'rotate(180deg)' : 'none',
-                        transition: 'transform 0.2s ease',
-                      }}
-                    >
-                      <polyline points="6 9 12 15 18 9" />
-                    </svg>
-                  )}
-                </button>
-
-                {/* Country Code Dropdown Menu */}
-                {countryDropdownOpen && !otpRevealed && (
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: '58px',
-                      left: 0,
-                      width: '240px',
-                      maxHeight: '260px',
-                      overflowY: 'auto',
-                      backgroundColor: 'rgba(30, 16, 28, 0.95)',
-                      backdropFilter: 'blur(24px)',
-                      border: '1px solid rgba(161, 82, 95, 0.45)',
-                      borderRadius: '16px',
-                      boxShadow: '0 16px 36px rgba(10, 6, 14, 0.85)',
-                      zIndex: 100,
-                      padding: '6px',
-                    }}
-                  >
-                    {COUNTRY_CODES.map((item) => (
-                      <button
-                        key={item.code + item.name}
-                        type="button"
-                        onClick={() => {
-                          setCountryCode(item.code);
-                          setCountryDropdownOpen(false);
-                        }}
-                        style={{
-                          width: '100%',
-                          padding: '10px 12px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '10px',
-                          background: item.code === countryCode ? 'rgba(161, 82, 95, 0.35)' : 'transparent',
-                          border: 'none',
-                          borderRadius: '10px',
-                          color: '#FDF3F5',
-                          fontSize: '14px',
-                          textAlign: 'left',
-                          cursor: 'pointer',
-                          transition: 'background-color 0.15s ease',
-                        }}
-                        onMouseEnter={(e) => {
-                          if (item.code !== countryCode) e.currentTarget.style.backgroundColor = 'rgba(70, 32, 55, 0.6)';
-                        }}
-                        onMouseLeave={(e) => {
-                          if (item.code !== countryCode) e.currentTarget.style.backgroundColor = 'transparent';
-                        }}
-                      >
-                        <span style={{ fontSize: '18px' }}>{item.flag}</span>
-                        <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                          {item.name}
-                        </span>
-                        <span style={{ color: '#F9AAAD', fontWeight: 500, fontSize: '13px' }}>{item.code}</span>
-                      </button>
-                    ))}
-                  </div>
-                )}
+                  Email Address
+                </label>
+                <span style={{ fontSize: '11px', color: '#F8E2E6', opacity: 0.65 }}>
+                  Direct Instant Access
+                </span>
               </div>
 
-              {/* Phone Input Box */}
-              <div style={{ flex: 1, position: 'relative' }}>
+              <div style={{ position: 'relative', width: '100%' }}>
+                {/* Email Icon */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    left: '16px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    color: isEmailFocused ? '#F9AAAD' : 'rgba(249, 170, 173, 0.5)',
+                    pointerEvents: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                    <polyline points="22,6 12,13 2,6" />
+                  </svg>
+                </div>
+
                 <input
-                  type="tel"
-                  inputMode="numeric"
-                  pattern="[0-9]*"
-                  value={phoneNumber}
-                  onChange={handlePhoneChange}
-                  disabled={otpRevealed}
-                  onFocus={() => setIsPhoneFocused(true)}
-                  onBlur={() => setIsPhoneFocused(false)}
-                  placeholder="98765 43210"
-                  className="phone-input-custom"
+                  id="user-email-input"
+                  type="email"
+                  inputMode="email"
+                  autoComplete="email"
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  spellCheck={false}
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (emailError) setEmailError(null);
+                  }}
+                  onFocus={() => setIsEmailFocused(true)}
+                  onBlur={() => setIsEmailFocused(false)}
+                  placeholder="name@example.com"
+                  className="email-input-custom"
                   style={{
                     width: '100%',
                     height: '52px',
-                    padding: '0 16px',
-                    backgroundColor: otpRevealed ? 'rgba(70, 32, 55, 0.35)' : 'rgba(70, 32, 55, 0.65)',
-                    border: `1px solid ${
-                      phoneError
+                    padding: '0 16px 0 46px',
+                    backgroundColor: 'rgba(70, 32, 55, 0.65)',
+                    border: `1.5px solid ${
+                      emailError
                         ? '#C7577C'
-                        : isPhoneFocused
+                        : isEmailFocused
                         ? '#F9AAAD'
                         : 'rgba(161, 82, 95, 0.4)'
                     }`,
                     borderRadius: '14px',
                     color: '#FDF3F5',
-                    fontSize: '16px',
-                    letterSpacing: '0.05em',
+                    fontSize: '15px',
                     boxSizing: 'border-box',
                     outline: 'none',
-                    opacity: otpRevealed ? 0.75 : 1,
-                    cursor: otpRevealed ? 'not-allowed' : 'text',
                     transition: 'all 0.2s ease',
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' && !otpRevealed) {
-                      e.preventDefault();
-                      handleSendOtp();
-                    }
                   }}
                 />
               </div>
+
+              {/* Error Message */}
+              {emailError && (
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    color: '#F9AAAD',
+                    fontSize: '12.5px',
+                    marginTop: '8px',
+                    paddingLeft: '4px',
+                  }}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                  </svg>
+                  <span>{emailError}</span>
+                </div>
+              )}
             </div>
 
-            {/* Phone Error Message */}
-            {phoneError && (
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  color: '#F9AAAD',
-                  fontSize: '13px',
-                  paddingLeft: '4px',
-                }}
-              >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <line x1="12" y1="8" x2="12" y2="12"></line>
-                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                </svg>
-                <span>{phoneError}</span>
-              </div>
-            )}
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={isSubmittingEmail}
+              className="primary-action-btn"
+              style={{
+                width: '100%',
+                height: '52px',
+                borderRadius: '14px',
+                border: 'none',
+                color: '#FDF3F5',
+                fontSize: '15.5px',
+                fontWeight: 600,
+                letterSpacing: '0.04em',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                marginTop: '4px',
+              }}
+            >
+              {isSubmittingEmail ? (
+                <>
+                  <div
+                    style={{
+                      width: '18px',
+                      height: '18px',
+                      border: '2px solid rgba(255,255,255,0.3)',
+                      borderTopColor: '#FDF3F5',
+                      borderRadius: '50%',
+                      animation: 'spin 0.8s linear infinite',
+                    }}
+                  />
+                  <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+                  <span>Signing In...</span>
+                </>
+              ) : (
+                <>
+                  <span>Continue with Email</span>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </>
+              )}
+            </button>
+          </form>
 
-            {/* Continue Button (Smoothly collapses when OTP is revealed) */}
+          {/* Quick Demo Test Access Chips */}
+          <div style={{ marginTop: '20px', textAlign: 'center' }}>
+            <span
+              style={{
+                fontSize: '11px',
+                color: '#F8E2E6',
+                opacity: 0.65,
+                textTransform: 'uppercase',
+                letterSpacing: '0.08em',
+                fontWeight: 600,
+              }}
+            >
+              Quick Test Sign-In
+            </span>
             <div
               style={{
-                maxHeight: !otpRevealed ? '64px' : '0px',
-                opacity: !otpRevealed ? 1 : 0,
-                transform: !otpRevealed ? 'translateY(0)' : 'translateY(-4px)',
-                overflow: 'hidden',
-                transition: 'max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, transform 0.25s ease',
-                pointerEvents: !otpRevealed ? 'auto' : 'none',
-                marginTop: !otpRevealed ? '10px' : '0px',
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '8px',
+                justifyContent: 'center',
+                marginTop: '8px',
               }}
             >
               <button
                 type="button"
-                onClick={() => handleSendOtp()}
-                className="primary-action-btn"
-                style={{
-                  width: '100%',
-                  height: '52px',
-                  borderRadius: '14px',
-                  border: 'none',
-                  color: '#FDF3F5',
-                  fontSize: '15px',
-                  fontWeight: 600,
-                  letterSpacing: '0.04em',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '8px',
-                }}
+                className="demo-chip-btn"
+                onClick={() => handleQuickDemoLogin('rahul.verma@vennz.club', 'Rahul')}
+                title="Sign in as Rahul"
               >
-                <span>Continue</span>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                  <polyline points="12 5 19 12 12 19"></polyline>
-                </svg>
+                ✦ rahul@vennz.club
               </button>
-            </div>
-          </div>
-
-          {/* Form Section 2: OTP Verification Reveal (SMOOTH EXPANSION IN-PLACE BELOW MOBILE INPUT) */}
-          <div
-            className="otp-reveal-container"
-            style={{
-              maxHeight: otpRevealed ? '600px' : '0px',
-              opacity: otpRevealed ? 1 : 0,
-              transform: otpRevealed ? 'translateY(0)' : 'translateY(-6px)',
-              overflow: 'hidden',
-              transition: 'max-height 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease, transform 0.35s ease',
-              pointerEvents: otpRevealed ? 'auto' : 'none',
-              marginTop: otpRevealed ? '20px' : '0px',
-            }}
-          >
-            <div
-              style={{
-                height: '1px',
-                backgroundColor: 'rgba(161, 82, 95, 0.25)',
-                marginBottom: '20px',
-              }}
-            />
-
-              {/* 6 OTP Input Boxes */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <label
-                    style={{
-                      fontSize: '12px',
-                      fontWeight: 600,
-                      letterSpacing: '0.08em',
-                      textTransform: 'uppercase',
-                      color: '#F9AAAD',
-                    }}
-                  >
-                    6-Digit Verification Code
-                  </label>
-
-                  {/* Demo fill shortcut for testers */}
-                  <button
-                    type="button"
-                    onClick={handleDemoFill}
-                    style={{
-                      background: 'rgba(104, 58, 70, 0.5)',
-                      border: '1px solid rgba(249, 170, 173, 0.35)',
-                      borderRadius: '8px',
-                      padding: '3px 8px',
-                      fontSize: '11px',
-                      fontWeight: 500,
-                      color: '#F9AAAD',
-                      cursor: 'pointer',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '4px',
-                      transition: 'all 0.15s ease',
-                    }}
-                    title="Click to quickly fill code: 123456"
-                  >
-                    <span>✦ Demo Fill</span>
-                    <span style={{ opacity: 0.7 }}>(123456)</span>
-                  </button>
-                </div>
-
-                {/* The 6 Digit Boxes */}
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    gap: 'clamp(6px, 1.6vw, 10px)',
-                    width: '100%',
-                  }}
-                >
-                  {otpDigits.map((digit, index) => (
-                    <input
-                      key={index}
-                      ref={(el) => {
-                        otpInputRefs.current[index] = el;
-                      }}
-                      type="text"
-                      inputMode="numeric"
-                      pattern="[0-9]*"
-                      maxLength={1}
-                      value={digit}
-                      onChange={(e) => handleOtpDigitChange(index, e.target.value)}
-                      onKeyDown={(e) => handleOtpKeyDown(index, e)}
-                      onFocus={() => {
-                        setFocusedOtpIndex(index);
-                        otpInputRefs.current[index]?.select();
-                      }}
-                      className="otp-input-box"
-                      style={{
-                        flex: 1,
-                        maxWidth: '48px',
-                        height: '48px',
-                        textAlign: 'center',
-                        fontSize: '18px',
-                        fontWeight: 600,
-                        color: '#FDF3F5',
-                        backgroundColor: 'rgba(70, 32, 55, 0.55)',
-                        border: `1.5px solid ${
-                          otpError
-                            ? '#C7577C'
-                            : focusedOtpIndex === index
-                            ? '#F9AAAD'
-                            : digit
-                            ? 'rgba(199, 87, 124, 0.65)'
-                            : 'rgba(161, 82, 95, 0.35)'
-                        }`,
-                        borderRadius: '11px',
-                        outline: 'none',
-                        transition: 'border-color 0.15s ease, background-color 0.15s ease',
-                        boxSizing: 'border-box',
-                      }}
-                    />
-                  ))}
-                </div>
-
-                {/* OTP Error Notice */}
-                {otpError && (
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '6px',
-                      color: '#F9AAAD',
-                      fontSize: '13px',
-                      paddingLeft: '2px',
-                    }}
-                  >
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-                      <circle cx="12" cy="12" r="10"></circle>
-                      <line x1="12" y1="8" x2="12" y2="12"></line>
-                      <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                    </svg>
-                    <span>{otpError}</span>
-                  </div>
-                )}
-
-                {/* Resend Notice Toast */}
-                {resendNotice && (
-                  <div
-                    style={{
-                      color: '#C7577C',
-                      fontSize: '12px',
-                      paddingLeft: '2px',
-                    }}
-                  >
-                    {resendNotice}
-                  </div>
-                )}
-
-                {/* Resend Code Timer / Button */}
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    marginTop: '4px',
-                    fontSize: '13px',
-                  }}
-                >
-                  <span style={{ color: '#F8E2E6', opacity: 0.75 }}>Didn't receive the code?</span>
-                  {isResendActive ? (
-                    <button
-                      type="button"
-                      onClick={handleResendCode}
-                      style={{
-                        background: 'none',
-                        border: 'none',
-                        padding: 0,
-                        color: '#F9AAAD',
-                        fontWeight: 600,
-                        fontSize: '13px',
-                        cursor: 'pointer',
-                        textDecoration: 'underline',
-                        textUnderlineOffset: '3px',
-                      }}
-                    >
-                      Resend Code
-                    </button>
-                  ) : (
-                    <span style={{ color: '#A1525F', fontWeight: 500 }}>
-                      Resend in 00:{resendCountdown < 10 ? `0${resendCountdown}` : resendCountdown}
-                    </span>
-                  )}
-                </div>
-
-                {/* Verify Action Button */}
-                <div style={{ marginTop: '16px' }}>
-                  <button
-                    type="button"
-                    disabled={isVerifying || otpDigits.join('').length !== 6}
-                    onClick={() => handleVerifyOtp()}
-                    className="primary-action-btn"
-                    style={{
-                      width: '100%',
-                      height: '52px',
-                      borderRadius: '14px',
-                      border: 'none',
-                      color: '#FDF3F5',
-                      fontSize: '15px',
-                      fontWeight: 600,
-                      letterSpacing: '0.04em',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '8px',
-                    }}
-                  >
-                    {isVerifying ? (
-                      <>
-                        <div
-                          style={{
-                            width: '18px',
-                            height: '18px',
-                            border: '2px solid rgba(255,255,255,0.3)',
-                            borderTopColor: '#FDF3F5',
-                            borderRadius: '50%',
-                            animation: 'spin 0.8s linear infinite',
-                          }}
-                        />
-                        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-                        <span>Verifying...</span>
-                      </>
-                    ) : verifySuccess ? (
-                      <>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FDF3F5" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                          <polyline points="20 6 9 17 4 12"></polyline>
-                        </svg>
-                        <span>Verified</span>
-                      </>
-                    ) : (
-                      <>
-                        <span>Verify & Continue</span>
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                          <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
-                      </>
-                    )}
-                  </button>
-                </div>
-              </div>
-            </div>
-
-          {/* Social Sign In Alternatives (Smoothly collapses when OTP is revealed) */}
-          <div
-            style={{
-              maxHeight: !otpRevealed ? '160px' : '0px',
-              opacity: !otpRevealed ? 1 : 0,
-              transform: !otpRevealed ? 'translateY(0)' : 'translateY(-4px)',
-              overflow: 'hidden',
-              transition: 'max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, transform 0.25s ease',
-              pointerEvents: !otpRevealed ? 'auto' : 'none',
-              marginTop: !otpRevealed ? '24px' : '0px',
-            }}
-          >
-            <div>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  marginBottom: '18px',
-                }}
-              >
-                <div style={{ flex: 1, height: '1px', backgroundColor: 'rgba(161, 82, 95, 0.25)' }} />
-                <span
-                  style={{
-                    fontSize: '12px',
-                    color: '#F8E2E6',
-                    opacity: 0.65,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.08em',
-                  }}
-                >
-                  or continue with
-                </span>
-                <div style={{ flex: 1, height: '1px', backgroundColor: 'rgba(161, 82, 95, 0.25)' }} />
-              </div>
-
-              {/* Google Sign In Only */}
               <button
                 type="button"
-                onClick={handleGoogleSignIn}
-                style={{
-                  width: '100%',
-                  height: '48px',
-                  backgroundColor: 'rgba(70, 32, 55, 0.55)',
-                  border: '1px solid rgba(161, 82, 95, 0.35)',
-                  borderRadius: '14px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '10px',
-                  color: '#FDF3F5',
-                  fontSize: '14px',
-                  fontWeight: 500,
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(104, 58, 70, 0.7)';
-                  e.currentTarget.style.borderColor = '#C7577C';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(70, 32, 55, 0.55)';
-                  e.currentTarget.style.borderColor = 'rgba(161, 82, 95, 0.35)';
-                }}
+                className="demo-chip-btn"
+                onClick={() => handleQuickDemoLogin('priya.patel@vennz.club', 'Priya')}
+                title="Sign in as Priya"
               >
-                <svg width="18" height="18" viewBox="0 0 24 24">
-                  <path
-                    fill="#EA4335"
-                    d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.8 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.4 9 5 12 5z"
-                  />
-                  <path
-                    fill="#4285F4"
-                    d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"
-                  />
-                  <path
-                    fill="#FBBC05"
-                    d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3s.1-1.6.4-2.3L1.9 7.3C.7 9.7 0 12.3 0 15.1c0 2.8.7 5.4 1.9 7.8l3.7-2.9z"
-                  />
-                  <path
-                    fill="#34A853"
-                    d="M12 23.5c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.4-6.4-5.2L1.9 16.5C3.7 20.3 7.5 23.5 12 23.5z"
-                  />
-                </svg>
-                <span>Continue with Google</span>
+                ✦ priya@vennz.club
+              </button>
+              <button
+                type="button"
+                className="demo-chip-btn"
+                onClick={() => handleQuickDemoLogin('arjun.kapoor@vennz.club', 'Arjun')}
+                title="Sign in as Arjun"
+              >
+                ✦ arjun@vennz.club
               </button>
             </div>
           </div>
@@ -1379,7 +947,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
           <p
             style={{
               fontSize: '11px',
-              lineHeight: 1.5,
+              lineHeight: 1.55,
               color: '#F8E2E6',
               opacity: 0.6,
               textAlign: 'center',
@@ -1392,7 +960,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
         </div>
       </div>
 
-      {/* OAuth Information Modal */}
+      {/* OAuth Configuration & Demo Account Dialog */}
       {oauthModal && oauthModal.isOpen && (
         <ModalPortal>
           <div
@@ -1401,8 +969,8 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
               inset: 0,
               zIndex: 9999,
               backgroundColor: 'rgba(20, 14, 28, 0.85)',
-              backdropFilter: 'blur(12px)',
-              WebkitBackdropFilter: 'blur(12px)',
+              backdropFilter: 'blur(14px)',
+              WebkitBackdropFilter: 'blur(14px)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -1412,53 +980,121 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
           >
             <div
               style={{
-                backgroundColor: '#462037',
-                border: '1px solid rgba(161, 82, 95, 0.4)',
-                borderRadius: '20px',
+                backgroundColor: '#35182B',
+                border: '1px solid rgba(161, 82, 95, 0.45)',
+                borderRadius: '22px',
                 padding: '28px',
-                maxWidth: '420px',
+                maxWidth: '440px',
                 width: '100%',
-                boxShadow: '0 24px 60px rgba(0,0,0,0.7)',
+                boxShadow: '0 24px 60px rgba(0,0,0,0.75)',
                 color: '#FDF3F5',
               }}
               onClick={(e) => e.stopPropagation()}
             >
-              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '20px', margin: '0 0 10px 0', color: '#F9AAAD' }}>
-                Google Authentication
-              </h3>
-              <p style={{ fontSize: '14px', lineHeight: 1.5, color: '#F8E2E6', margin: '0 0 16px 0' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+                <div
+                  style={{
+                    width: '36px',
+                    height: '36px',
+                    borderRadius: '10px',
+                    backgroundColor: 'rgba(161, 82, 95, 0.35)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#F9AAAD',
+                  }}
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+                  </svg>
+                </div>
+                <h3
+                  style={{
+                    fontFamily: 'var(--font-serif)',
+                    fontSize: '20px',
+                    margin: 0,
+                    color: '#F9AAAD',
+                  }}
+                >
+                  {oauthModal.title}
+                </h3>
+              </div>
+
+              <p style={{ fontSize: '13.5px', lineHeight: 1.6, color: '#F8E2E6', margin: '0 0 16px 0', opacity: 0.9 }}>
                 {oauthModal.message}
               </p>
+
               {oauthModal.missingEnv && (
                 <div
                   style={{
-                    background: 'rgba(20, 14, 28, 0.6)',
-                    padding: '8px 12px',
-                    borderRadius: '8px',
+                    background: 'rgba(20, 14, 28, 0.7)',
+                    border: '1px solid rgba(161, 82, 95, 0.3)',
+                    padding: '10px 14px',
+                    borderRadius: '10px',
                     fontFamily: 'monospace',
                     fontSize: '12px',
                     color: '#F9AAAD',
                     marginBottom: '18px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '4px',
                   }}
                 >
-                  Missing: {oauthModal.missingEnv}
+                  <span style={{ fontSize: '11px', opacity: 0.7 }}>Environment Variable:</span>
+                  <code>{oauthModal.missingEnv}</code>
                 </div>
               )}
-              <button
-                onClick={() => setOauthModal(null)}
-                className="primary-action-btn"
-                style={{
-                  width: '100%',
-                  height: '44px',
-                  borderRadius: '12px',
-                  border: 'none',
-                  color: '#FDF3F5',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                }}
-              >
-                Understood
-              </button>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                {oauthModal.showDemoOption && (
+                  <button
+                    type="button"
+                    onClick={handleDemoGoogleSignIn}
+                    className="primary-action-btn"
+                    style={{
+                      width: '100%',
+                      height: '46px',
+                      borderRadius: '12px',
+                      border: 'none',
+                      color: '#FDF3F5',
+                      fontWeight: 600,
+                      fontSize: '14px',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px',
+                    }}
+                  >
+                    <span>Continue with Demo Google Account (Rahul Sharma) →</span>
+                  </button>
+                )}
+
+                <button
+                  type="button"
+                  onClick={() => setOauthModal(null)}
+                  style={{
+                    width: '100%',
+                    height: '42px',
+                    borderRadius: '12px',
+                    border: '1px solid rgba(161, 82, 95, 0.3)',
+                    background: 'rgba(70, 32, 55, 0.4)',
+                    color: '#F8E2E6',
+                    fontSize: '13.5px',
+                    fontWeight: 500,
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = 'rgba(70, 32, 55, 0.7)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'rgba(70, 32, 55, 0.4)';
+                  }}
+                >
+                  Close & Use Email Sign-In
+                </button>
+              </div>
             </div>
           </div>
         </ModalPortal>

@@ -68,6 +68,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
     profile,
     updateProfile,
     appearanceMode,
+    email,
     isPhoneVerified,
     isIdentityVerified,
     isSelfieVerified,
@@ -309,7 +310,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
     (incomingRequests ? incomingRequests.length : 0) + (sentRequests ? sentRequests.length : 0);
 
   const verificationItems: [string, boolean][] = [
-    ['Phone number', Boolean(isPhoneVerified)],
+    [email ? 'Email address' : 'Account verification', Boolean(isPhoneVerified || email)],
     ['Identity (DigiLocker)', Boolean(isIdentityVerified || isDigiLockerVerified)],
     ['Biometric Selfie', Boolean(isSelfieVerified)],
   ];
