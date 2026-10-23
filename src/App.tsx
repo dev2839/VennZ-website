@@ -50,6 +50,7 @@ export const App: React.FC = () => {
   const [selectedProfileForFullView, setSelectedProfileForFullView] = useState<DiscoverProfile | null>(
     () => DUMMY_DISCOVER_PROFILES[0]
   );
+  const [profileViewSource, setProfileViewSource] = useState<RoutePath>('/discover');
   const [selectedChatMatch, setSelectedChatMatch] = useState<MatchItem | null>(null);
   const [matchesInitialSubTab, setMatchesInitialSubTab] = useState<'matches' | 'requests'>('matches');
 
@@ -466,6 +467,7 @@ export const App: React.FC = () => {
       return (
         <Page11DiscoverScreen
           onViewFullProfile={(profile) => {
+            setProfileViewSource('/discover');
             setSelectedProfileForFullView(profile);
             navigate('/member/profile');
           }}
@@ -495,8 +497,8 @@ export const App: React.FC = () => {
       return (
         <Page12FullProfileScreen
           profile={profileToView}
-          onBack={() => navigate('/discover')}
-          onActionComplete={() => navigate('/discover')}
+          onBack={() => navigate(profileViewSource || '/discover')}
+          onActionComplete={() => navigate(profileViewSource || '/discover')}
           onSelectTab={(tab) => {
             if (tab === 'you' || tab === 'profile') {
               navigate('/member/my-profile');
@@ -589,6 +591,7 @@ export const App: React.FC = () => {
             navigate('/member/chat');
           }}
           onViewProfile={(match) => {
+            setProfileViewSource('/member/matches');
             // Convert MatchItem to DiscoverProfile shape for viewing
             const discoverProfile = DUMMY_DISCOVER_PROFILES.find(
               (p) => p.id === match.profileId || p.id === match.id
@@ -649,6 +652,7 @@ export const App: React.FC = () => {
           match={matchToChat}
           onBack={() => navigate('/member/matches')}
           onViewMatchProfile={(match) => {
+            setProfileViewSource('/member/chat');
             const discoverProfile = DUMMY_DISCOVER_PROFILES.find(
               (p) => p.id === match.profileId || p.id === match.id
             ) || {
