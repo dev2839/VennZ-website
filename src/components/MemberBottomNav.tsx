@@ -71,7 +71,7 @@ export const MemberBottomNav: React.FC<MemberBottomNavProps> = ({
   }[] = [
     { id: 'discover', label: 'DISCOVER' },
     { id: 'matches', label: 'MATCHES', hasNotification: hasIncomingRequests },
-    { id: 'blinddate', label: 'BlindDate', isSparkle: true },
+    { id: 'blinddate', label: 'PickForMe', isSparkle: true },
     { id: 'mixers', label: 'MIXERS' },
     { id: 'afterhours', label: 'afterHOURS', isMoon: true },
   ];

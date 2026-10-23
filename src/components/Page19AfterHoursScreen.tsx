@@ -73,6 +73,35 @@ const SparkleIcon = ({ color, size = 16 }: { color: string; size?: number }) => 
   </svg>
 );
 
+
+const UserSilhouetteIcon = ({ color = '#FFFFFF', size = 20 }: { color?: string; size?: number }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill={color}
+    style={{ display: 'inline-block', verticalAlign: 'middle', flexShrink: 0 }}
+  >
+    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+  </svg>
+);
+
+const ExpandIcon = ({ color = '#FFFFFF', size = 12 }: { color?: string; size?: number }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke={color}
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    style={{ display: 'inline-block', verticalAlign: 'middle', flexShrink: 0 }}
+  >
+    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+  </svg>
+);
+
 export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
   onSelectTab,
   onNavigateHelp: _onNavigateHelp,
@@ -124,7 +153,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
 
   // Mutual Consent Reveal state
   const [userRequestedReveal, setUserRequestedReveal] = useState<boolean>(false);
-  const [partnerRequestedReveal, setPartnerRequestedReveal] = useState<boolean>(false);
+  const [_partnerRequestedReveal, setPartnerRequestedReveal] = useState<boolean>(false);
   const [isMutualMatchRevealed, setIsMutualMatchRevealed] = useState<boolean>(false);
 
   // Modals
@@ -138,6 +167,82 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
 
   // Queue state
   const [queueElapsedSeconds, setQueueElapsedSeconds] = useState<number>(0);
+  // Ephemeral Room & Video Reference States
+  const [roomCode, setRoomCode] = useState<string>('ROOM D7CFE3D0');
+  const [isPhotoExpanded, setIsPhotoExpanded] = useState<boolean>(false);
+  const [skipsRemaining, setSkipsRemaining] = useState<number>(10);
+  const [showShareSocialsModal, setShowShareSocialsModal] = useState<boolean>(false);
+  const [socialPlatform, setSocialPlatform] = useState<'instagram' | 'whatsapp' | 'vennz'>('instagram');
+  const [socialHandleInput, setSocialHandleInput] = useState<string>('');
+  const [socialSharedToast, setSocialSharedToast] = useState<string | null>(null);
+
+  // Derived Partner Persona (matching video: "Easygoing Planner", "Low Maintenance, High Warmth", quote)
+  const partnerPersona = React.useMemo(() => {
+    if (!partner) {
+      return {
+        archetype: 'Easygoing Planner',
+        tagline: 'Low Maintenance, High Warmth',
+        quote: '“bts girl”',
+      };
+    }
+    const archetypes = [
+      'Easygoing Planner',
+      'Curious Explorer',
+      'Creative Strategist',
+      'Thoughtful Architect',
+      'Quiet Ambitious',
+    ];
+    const taglines = [
+      'Low Maintenance, High Warmth',
+      'Deep conversations over black coffee',
+      'Art lover with an observant edge',
+      'Spontaneous traveler & weekend chef',
+    ];
+    const quotes = [
+      '“bts girl”',
+      '“i love to eat & late-night walks”',
+      '“curious mind, grounded heart”',
+      '“music, architecture & honest talks”',
+    ];
+    const sum = partner.id.split('').reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
+    return {
+      archetype: archetypes[sum % archetypes.length],
+      tagline: taglines[sum % taglines.length],
+      quote: quotes[sum % quotes.length],
+    };
+  }, [partner]);
+
+  const handleSkipPartner = () => {
+    if (skipsRemaining > 0) {
+      setSkipsRemaining((prev) => prev - 1);
+    }
+    const eligiblePool = DUMMY_DISCOVER_PROFILES.filter((cand) => {
+      if (blockedProfileIds && blockedProfileIds.includes(cand.id)) return false;
+      if (partner && cand.id === partner.id) return false;
+      return true;
+    });
+    const nextCandidate =
+      eligiblePool.length > 0
+        ? eligiblePool[Math.floor(Math.random() * eligiblePool.length)]
+        : DUMMY_DISCOVER_PROFILES[0];
+
+    setPartner(nextCandidate);
+    setRemainingSeconds(config.conversationDurationSeconds);
+    setUserRequestedReveal(false);
+    setPartnerRequestedReveal(false);
+    setIsMutualMatchRevealed(false);
+    setIsPhotoExpanded(false);
+    setRoomCode('ROOM ' + Math.random().toString(16).substring(2, 10).toUpperCase());
+    setMessages([
+      {
+        id: `msg-sys-${Date.now()}`,
+        sender: 'partner',
+        text: `Hello! I'm in the room too. How is your night going?`,
+        timestamp: Date.now(),
+      },
+    ]);
+  };
+
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -214,6 +319,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
           : DUMMY_DISCOVER_PROFILES[0];
 
       setPartner(chosenCandidate);
+      setRoomCode('ROOM ' + Math.random().toString(16).substring(2, 10).toUpperCase());
       setRemainingSeconds(config.conversationDurationSeconds);
       setUserRequestedReveal(false);
       setPartnerRequestedReveal(false);
@@ -352,30 +458,6 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
     }, 2400);
   };
 
-  // Partner initiated Reveal, user agrees
-  const handleUserAcceptReveal = () => {
-    setUserRequestedReveal(true);
-    setIsMutualMatchRevealed(true);
-    setWeeklyMatchesCount((prev) => prev + 1);
-
-    if (partner) {
-      addDirectMatch({
-        id: `match-ah-${partner.id}`,
-        profileId: partner.id,
-        name: partner.firstName,
-        age: partner.age,
-        city: partner.city,
-        designation: partner.designation,
-        company: partner.company,
-        photo: partner.photos[0],
-        isVerified: partner.isVerified,
-        matchedAt: Date.now(),
-        lastMessage: `Connected intentionally via VennZ After Hours! We both mutually agreed to reveal our profiles.`,
-        lastMessageTime: Date.now(),
-      });
-    }
-  };
-
   // End conversation quietly
   const handleEndConversation = () => {
     setActiveView('lobby');
@@ -508,6 +590,194 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
               An intentional 8-minute blind conversation window every night from 10 PM to 11 PM.
               No photos, handles, or bios—connect purely through words before mutual reveal.
             </p>
+          </div>
+
+          {/* Mystery Participant Card Preview (Video Reference: Blurred photo, persona, quote, Enter the Room) */}
+          <div
+            style={{
+              width: '100%',
+              backgroundColor: cardBg,
+              border: cardBorder,
+              borderRadius: '20px',
+              padding: '16px',
+              marginBottom: '20px',
+              boxSizing: 'border-box',
+              boxShadow: isDark
+                ? '0 8px 32px rgba(0,0,0,0.45)'
+                : '0 8px 28px rgba(161, 82, 95, 0.08)',
+              backdropFilter: 'blur(12px)',
+            }}
+          >
+            {/* Blurred Photo Container */}
+            <div
+              style={{
+                position: 'relative',
+                width: '100%',
+                height: '190px',
+                borderRadius: '14px',
+                overflow: 'hidden',
+                backgroundColor: '#1E161C',
+                marginBottom: '14px',
+              }}
+            >
+              <img
+                src={profile.photos?.[0] || '/letters/letter_V.png'}
+                alt="Blind participant preview"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  filter: 'blur(28px) brightness(0.75)',
+                  transform: 'scale(1.15)',
+                }}
+              />
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: 'rgba(20, 14, 28, 0.35)',
+                }}
+              >
+                <div
+                  style={{
+                    width: '46px',
+                    height: '46px',
+                    borderRadius: '50%',
+                    backgroundColor: 'rgba(255, 255, 255, 0.16)',
+                    border: '1.5px solid rgba(255, 255, 255, 0.35)',
+                    backdropFilter: 'blur(8px)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginBottom: '6px',
+                    boxShadow: '0 4px 14px rgba(0, 0, 0, 0.4)',
+                  }}
+                >
+                  <UserSilhouetteIcon color="#FFFFFF" size={20} />
+                </div>
+                <span
+                  style={{
+                    fontSize: '11.5px',
+                    fontWeight: 600,
+                    letterSpacing: '0.04em',
+                    color: '#FFFFFF',
+                    textShadow: '0 2px 8px rgba(0, 0, 0, 0.7)',
+                  }}
+                >
+                  Photo hidden
+                </span>
+              </div>
+            </div>
+
+            {/* Persona, Badge & Quote */}
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
+                <span
+                  style={{
+                    fontFamily: 'var(--font-serif)',
+                    fontSize: '19px',
+                    fontWeight: 600,
+                    color: textPrimary,
+                  }}
+                >
+                  {profile.vennzName || profile.firstName || 'curious guy'}
+                </span>
+                <span
+                  style={{
+                    fontSize: '9.5px',
+                    fontWeight: 700,
+                    letterSpacing: '0.08em',
+                    padding: '2px 8px',
+                    borderRadius: '999px',
+                    backgroundColor: isDark ? 'rgba(161, 82, 95, 0.25)' : 'rgba(161, 82, 95, 0.1)',
+                    color: accentRose,
+                    textTransform: 'uppercase',
+                  }}
+                >
+                  {profile.genderIdentity || 'MEMBER'}
+                </span>
+              </div>
+
+              <div style={{ fontSize: '12px', color: textMuted, marginBottom: '8px' }}>
+                Low Maintenance, High Warmth
+              </div>
+
+              <div
+                style={{
+                  padding: '9px 12px',
+                  borderRadius: '10px',
+                  backgroundColor: isDark ? 'rgba(30, 18, 38, 0.5)' : 'rgba(250, 241, 243, 0.65)',
+                  border: `1px solid ${cardBorder}`,
+                  fontSize: '12.5px',
+                  fontStyle: 'italic',
+                  color: textPrimary,
+                  marginBottom: '14px',
+                }}
+              >
+                “i love good food & deep midnight conversations”
+              </div>
+
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '8px 12px',
+                  borderRadius: '10px',
+                  backgroundColor: isDark ? 'rgba(161, 82, 95, 0.12)' : 'rgba(161, 82, 95, 0.06)',
+                  marginBottom: '14px',
+                  fontSize: '11.5px',
+                  color: textMuted,
+                }}
+              >
+                <SparkleIcon color={accentRose} size={14} />
+                <span>Ready to match · Both photos stay blurred for the full 10-minute chat.</span>
+              </div>
+
+              <button
+                type="button"
+                disabled={!isWindowActive || chatsUsedTonight >= maxChatsTonight}
+                onClick={() => {
+                  window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+                  if (document.documentElement) document.documentElement.scrollTop = 0;
+                  if (document.body) document.body.scrollTop = 0;
+                  setQueueElapsedSeconds(0);
+                  setActiveView('queue');
+                }}
+                style={{
+                  width: '100%',
+                  padding: '14px 24px',
+                  borderRadius: '12px',
+                  border: 'none',
+                  background: !isWindowActive || chatsUsedTonight >= maxChatsTonight
+                    ? 'rgba(161, 82, 95, 0.3)'
+                    : 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
+                  color: '#FFFFFF',
+                  fontSize: '14px',
+                  fontWeight: 700,
+                  letterSpacing: '0.04em',
+                  cursor: !isWindowActive || chatsUsedTonight >= maxChatsTonight ? 'not-allowed' : 'pointer',
+                  boxShadow: isWindowActive && chatsUsedTonight < maxChatsTonight
+                    ? '0 6px 20px rgba(161, 82, 95, 0.4)'
+                    : 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  transition: 'transform 0.15s ease',
+                }}
+              >
+                <span>Enter the Room →</span>
+              </button>
+
+              <div style={{ textAlign: 'center', marginTop: '8px', fontSize: '11px', color: textMuted }}>
+                10 free skips remaining today
+              </div>
+            </div>
           </div>
 
           {/* Window Status Card */}
@@ -873,7 +1143,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
             boxSizing: 'border-box',
           }}
         >
-          {/* Conversation Header - Fixed at Top */}
+          {/* Top Room Header Bar (Timer / Connected | Room Code | Skip & Report) */}
           <div
             style={{
               flexShrink: 0,
@@ -881,143 +1151,142 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
               alignItems: 'center',
               justifyContent: 'space-between',
               padding: '12px 20px',
-              borderBottom: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(0,0,0,0.08)',
-              backgroundColor: cardBg,
+              borderBottom: cardBorder,
+              backgroundColor: isDark ? 'rgba(20, 14, 28, 0.95)' : 'rgba(255, 255, 255, 0.95)',
               backdropFilter: 'blur(12px)',
               zIndex: 10,
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              {/* Silhouette Avatar */}
-              <div
-                style={{
-                  width: '40px',
-                  height: '40px',
-                  borderRadius: '50%',
-                  background: isDark
-                    ? 'linear-gradient(135deg, #381A2D 0%, #52273D 100%)'
-                    : 'linear-gradient(135deg, #EAD7DD 0%, #D8B7C2 100%)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  border: `1.5px solid ${accentRose}`,
-                }}
-              >
-                <MoonIcon color={accentRose} size={18} />
-              </div>
-
-              <div>
-                <div style={{ fontSize: '15px', fontWeight: 600, color: textPrimary }}>
-                  {partner.firstName.charAt(0)}., {partner.age}
-                </div>
-                <div style={{ fontSize: '11px', color: textMuted }}>
-                  Anonymous Blind Participant · Profile Hidden
-                </div>
-              </div>
-            </div>
-
-            {/* Timer Badge */}
+            {/* Left: Timer or Connected status */}
             <div
               style={{
-                display: 'flex',
+                display: 'inline-flex',
                 alignItems: 'center',
-                gap: '6px',
-                padding: '6px 12px',
+                gap: '7px',
+                padding: '6px 14px',
                 borderRadius: '999px',
-                backgroundColor:
-                  remainingSeconds < 60
-                    ? 'rgba(239, 68, 68, 0.15)'
-                    : remainingSeconds < 180
-                    ? 'rgba(245, 158, 11, 0.15)'
-                    : isDark
-                    ? 'rgba(16, 185, 129, 0.15)'
-                    : 'rgba(16, 185, 129, 0.12)',
-                color:
-                  remainingSeconds < 60
-                    ? '#EF4444'
-                    : remainingSeconds < 180
-                    ? '#F59E0B'
-                    : '#10B981',
+                backgroundColor: isMutualMatchRevealed
+                  ? 'rgba(16, 185, 129, 0.16)'
+                  : remainingSeconds < 60
+                  ? 'rgba(239, 68, 68, 0.15)'
+                  : remainingSeconds < 180
+                  ? 'rgba(245, 158, 11, 0.15)'
+                  : isDark
+                  ? 'rgba(161, 82, 95, 0.22)'
+                  : 'rgba(161, 82, 95, 0.12)',
+                color: isMutualMatchRevealed
+                  ? '#10B981'
+                  : remainingSeconds < 60
+                  ? '#EF4444'
+                  : remainingSeconds < 180
+                  ? '#F59E0B'
+                  : accentRose,
                 fontSize: '13px',
                 fontWeight: 700,
                 fontFamily: 'monospace',
+                letterSpacing: '0.04em',
               }}
             >
-              <MoonIcon
-                color={
-                  remainingSeconds < 60
-                    ? '#EF4444'
-                    : remainingSeconds < 180
-                    ? '#F59E0B'
-                    : '#10B981'
-                }
-                size={13}
-              />
-              <span>{formatTimer(remainingSeconds)}</span>
+              {isMutualMatchRevealed ? (
+                <>
+                  <span
+                    style={{
+                      width: '7px',
+                      height: '7px',
+                      borderRadius: '50%',
+                      backgroundColor: '#10B981',
+                      boxShadow: '0 0 8px #10B981',
+                    }}
+                  />
+                  <span>Connected</span>
+                </>
+              ) : (
+                <>
+                  <MoonIcon
+                    color={
+                      remainingSeconds < 60
+                        ? '#EF4444'
+                        : remainingSeconds < 180
+                        ? '#F59E0B'
+                        : accentRose
+                    }
+                    size={13}
+                  />
+                  <span>{formatTimer(remainingSeconds)}</span>
+                </>
+              )}
             </div>
-          </div>
 
-          {/* Privacy Banner - Fixed under Header */}
-          <div
-            style={{
-              flexShrink: 0,
-              padding: '8px 20px',
-              backgroundColor: isDark ? 'rgba(161,82,95,0.14)' : 'rgba(199,87,124,0.08)',
-              borderBottom: isDark ? '1px solid rgba(161,82,95,0.2)' : '1px solid rgba(199,87,124,0.12)',
-              fontSize: '11px',
-              color: textMuted,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              zIndex: 9,
-            }}
-          >
-            <span>🔒 Anti-leak active: external links, files, and paste are blocked.</span>
-            <div style={{ display: 'flex', gap: '8px' }}>
+            {/* Center: Room Code */}
+            <div
+              style={{
+                fontSize: '12px',
+                fontWeight: 700,
+                letterSpacing: '0.12em',
+                fontFamily: 'monospace',
+                color: textMuted,
+                textTransform: 'uppercase',
+              }}
+            >
+              {roomCode}
+            </div>
+
+            {/* Right: Skip and Report Actions */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <button
+                type="button"
+                onClick={handleSkipPartner}
+                style={{
+                  background: 'none',
+                  border: `1px solid ${cardBorder}`,
+                  borderRadius: '999px',
+                  padding: '4px 12px',
+                  color: textMuted,
+                  fontSize: '11px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease',
+                }}
+              >
+                Skip
+              </button>
               <button
                 type="button"
                 onClick={() => setShowReportModal(true)}
                 style={{
                   background: 'none',
-                  border: 'none',
+                  border: `1px solid ${cardBorder}`,
+                  borderRadius: '999px',
+                  padding: '4px 12px',
                   color: textMuted,
                   fontSize: '11px',
+                  fontWeight: 600,
                   cursor: 'pointer',
-                  textDecoration: 'underline',
+                  transition: 'all 0.15s ease',
                 }}
               >
                 Report
               </button>
-              <button
-                type="button"
-                onClick={() => setShowBlockModal(true)}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: textMuted,
-                  fontSize: '11px',
-                  cursor: 'pointer',
-                  textDecoration: 'underline',
-                }}
-              >
-                Block
-              </button>
-              <button
-                type="button"
-                onClick={handleEndConversation}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: accentRose,
-                  fontSize: '11px',
-                  cursor: 'pointer',
-                  fontWeight: 600,
-                }}
-              >
-                End Chat
-              </button>
             </div>
           </div>
+
+          {/* Social Shared Notification Toast */}
+          {socialSharedToast && (
+            <div
+              style={{
+                padding: '10px 16px',
+                backgroundColor: 'rgba(16, 185, 129, 0.95)',
+                color: '#FFFFFF',
+                fontSize: '12.5px',
+                fontWeight: 600,
+                textAlign: 'center',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+                zIndex: 15,
+              }}
+            >
+              {socialSharedToast}
+            </div>
+          )}
 
           {/* Messages Feed - Scrolls independently */}
           <div
@@ -1025,228 +1294,659 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
               flex: 1,
               minHeight: 0,
               overflowY: 'auto',
-              padding: '20px',
+              padding: '16px 20px',
               display: 'flex',
               flexDirection: 'column',
-              gap: '12px',
               boxSizing: 'border-box',
               width: '100%',
-              maxWidth: '820px',
+              maxWidth: '580px',
               margin: '0 auto',
             }}
           >
-            {messages.map((msg) => {
-              const isMe = msg.sender === 'me';
-              return (
-                <div
-                  key={msg.id}
+            {/* Partner Profile Card (Pinned at Top of conversation - Video Reference) */}
+            <div
+              style={{
+                width: '100%',
+                backgroundColor: cardBg,
+                border: cardBorder,
+                borderRadius: '20px',
+                padding: '14px',
+                marginBottom: '14px',
+                boxSizing: 'border-box',
+                boxShadow: isDark
+                  ? '0 8px 30px rgba(0, 0, 0, 0.35)'
+                  : '0 8px 24px rgba(161, 82, 95, 0.08)',
+                backdropFilter: 'blur(12px)',
+              }}
+            >
+              {/* Photo Canvas with Smooth Blur / Reveal (Video Reference) */}
+              <div
+                onClick={() => {
+                  if (isMutualMatchRevealed) {
+                    setIsPhotoExpanded(true);
+                  }
+                }}
+                style={{
+                  position: 'relative',
+                  width: '100%',
+                  height: '190px',
+                  borderRadius: '14px',
+                  overflow: 'hidden',
+                  cursor: isMutualMatchRevealed ? 'pointer' : 'default',
+                  backgroundColor: '#1E161C',
+                }}
+                title={isMutualMatchRevealed ? 'Tap to view full photograph' : 'Photo remains hidden until mutual unblur'}
+              >
+                <img
+                  src={partner.photos[0]}
+                  alt={isMutualMatchRevealed ? partner.firstName : 'Blind participant'}
                   style={{
-                    alignSelf: isMe ? 'flex-end' : 'flex-start',
-                    maxWidth: '78%',
-                    backgroundColor: isMe
-                      ? isDark
-                        ? '#A1525F'
-                        : '#C7577C'
-                      : cardBg,
-                    color: isMe ? '#FFFFFF' : textPrimary,
-                    border: isMe ? 'none' : cardBorder,
-                    borderRadius: isMe ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
-                    padding: '12px 16px',
-                    fontSize: '14px',
-                    lineHeight: 1.45,
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    filter: isMutualMatchRevealed ? 'none' : 'blur(28px) brightness(0.72)',
+                    transform: isMutualMatchRevealed ? 'scale(1)' : 'scale(1.15)',
+                    transition: 'filter 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s ease',
                   }}
-                >
-                  <div>{msg.text}</div>
+                />
+
+                {/* Over photo when blurred: "Photo hidden" silhouette badge */}
+                {!isMutualMatchRevealed && (
                   <div
                     style={{
-                      fontSize: '10px',
-                      color: isMe ? 'rgba(255,255,255,0.7)' : textMuted,
-                      marginTop: '4px',
-                      textAlign: isMe ? 'right' : 'left',
+                      position: 'absolute',
+                      inset: 0,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      backgroundColor: 'rgba(20, 14, 28, 0.35)',
+                      pointerEvents: 'none',
                     }}
                   >
-                    {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    <div
+                      style={{
+                        width: '44px',
+                        height: '44px',
+                        borderRadius: '50%',
+                        backgroundColor: 'rgba(255, 255, 255, 0.16)',
+                        border: '1.5px solid rgba(255, 255, 255, 0.35)',
+                        backdropFilter: 'blur(8px)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginBottom: '6px',
+                        boxShadow: '0 4px 14px rgba(0, 0, 0, 0.4)',
+                      }}
+                    >
+                      <UserSilhouetteIcon color="#FFFFFF" size={20} />
+                    </div>
+                    <span
+                      style={{
+                        fontSize: '11.5px',
+                        fontWeight: 600,
+                        letterSpacing: '0.04em',
+                        color: '#FFFFFF',
+                        textShadow: '0 2px 8px rgba(0, 0, 0, 0.7)',
+                      }}
+                    >
+                      Photo hidden
+                    </span>
                   </div>
+                )}
+
+                {/* Over photo when unblurred: "tap to expand" pill button */}
+                {isMutualMatchRevealed && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      bottom: '10px',
+                      right: '10px',
+                      padding: '4px 10px',
+                      borderRadius: '999px',
+                      backgroundColor: 'rgba(20, 14, 28, 0.78)',
+                      border: '1px solid rgba(255, 255, 255, 0.25)',
+                      backdropFilter: 'blur(8px)',
+                      color: '#FFFFFF',
+                      fontSize: '10.5px',
+                      fontWeight: 600,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+                    }}
+                  >
+                    <ExpandIcon color="#FFFFFF" size={11} />
+                    <span>tap to expand</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Persona, Tagline & Quote Details */}
+              <div style={{ marginTop: '12px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
+                  <span
+                    style={{
+                      fontFamily: 'var(--font-serif)',
+                      fontSize: '18px',
+                      fontWeight: 600,
+                      color: textPrimary,
+                    }}
+                  >
+                    {isMutualMatchRevealed ? `${partner.firstName}, ${partner.age}` : partnerPersona.archetype}
+                  </span>
+
+                  <span
+                    style={{
+                      fontSize: '9.5px',
+                      fontWeight: 700,
+                      letterSpacing: '0.08em',
+                      padding: '2px 8px',
+                      borderRadius: '999px',
+                      backgroundColor: isDark ? 'rgba(161, 82, 95, 0.25)' : 'rgba(161, 82, 95, 0.1)',
+                      color: accentRose,
+                      textTransform: 'uppercase',
+                    }}
+                  >
+                    {partner.gender === 'woman' ? 'FEMALE' : 'MALE'}
+                  </span>
                 </div>
-              );
-            })}
-            <div ref={messagesEndRef} />
+
+                <div style={{ fontSize: '12px', color: textMuted, marginTop: '2px' }}>
+                  {isMutualMatchRevealed ? `${partner.city} · ${partner.designation}` : partnerPersona.tagline}
+                </div>
+
+                {/* Quote Box (Matching video reference) */}
+                <div
+                  style={{
+                    marginTop: '8px',
+                    padding: '8px 12px',
+                    borderRadius: '10px',
+                    backgroundColor: isDark ? 'rgba(30, 18, 38, 0.45)' : 'rgba(250, 241, 243, 0.65)',
+                    border: `1px solid ${cardBorder}`,
+                    fontSize: '12px',
+                    fontStyle: 'italic',
+                    color: textPrimary,
+                    lineHeight: 1.4,
+                  }}
+                >
+                  {partnerPersona.quote}
+                </div>
+              </div>
+            </div>
+
+            {/* Skips allowance note */}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '0 4px 10px',
+                fontSize: '11px',
+                color: textMuted,
+              }}
+            >
+              <span>{skipsRemaining} skips left today</span>
+              <span>Mutual unblur reveals photographs</span>
+            </div>
+
+            {/* Icebreaker Prompt */}
+            <div
+              style={{
+                textAlign: 'center',
+                padding: '8px 14px',
+                marginBottom: '12px',
+                fontSize: '12px',
+                color: textMuted,
+                fontStyle: 'italic',
+              }}
+            >
+              Say something kind to break the ice.
+            </div>
+
+            {/* Conversation Bubbles */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', flex: 1 }}>
+              {messages.map((msg) => {
+                const isMe = msg.sender === 'me';
+                return (
+                  <div
+                    key={msg.id}
+                    style={{
+                      alignSelf: isMe ? 'flex-end' : 'flex-start',
+                      maxWidth: '80%',
+                      backgroundColor: isMe
+                        ? 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)'
+                        : cardBg,
+                      background: isMe
+                        ? 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)'
+                        : cardBg,
+                      color: isMe ? '#FFFFFF' : textPrimary,
+                      border: isMe ? 'none' : cardBorder,
+                      borderRadius: isMe ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
+                      padding: '10px 14px',
+                      fontSize: '13.5px',
+                      lineHeight: 1.45,
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+                    }}
+                  >
+                    <div>{msg.text}</div>
+                    <div
+                      style={{
+                        fontSize: '9.5px',
+                        color: isMe ? 'rgba(255,255,255,0.7)' : textMuted,
+                        marginTop: '3px',
+                        textAlign: isMe ? 'right' : 'left',
+                      }}
+                    >
+                      {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </div>
+                  </div>
+                );
+              })}
+              <div ref={messagesEndRef} />
+            </div>
           </div>
 
-          {/* Bottom Controls Suite - Pinned to the Bottom */}
+          {/* Bottom Controls Suite (Pinned above composer) */}
           <div
             style={{
               flexShrink: 0,
               marginTop: 'auto',
               backgroundColor: cardBg,
-              borderTop: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(0,0,0,0.08)',
+              borderTop: cardBorder,
               backdropFilter: 'blur(12px)',
               zIndex: 10,
               width: '100%',
               boxSizing: 'border-box',
             }}
           >
-            <div style={{ maxWidth: '820px', margin: '0 auto', width: '100%' }}>
-              {/* Mutual Reveal Banner */}
-              <div
-                style={{
-                  padding: '10px 20px',
-                  borderBottom: isDark ? '1px solid rgba(255,255,255,0.06)' : '1px solid rgba(0,0,0,0.05)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  gap: '12px',
-                }}
-              >
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: '13px', fontWeight: 600, color: textPrimary }}>
-                    {isMutualMatchRevealed
-                      ? 'Mutual Match Agreed!'
-                      : userRequestedReveal
-                      ? `Waiting for ${partner.firstName.charAt(0)}. to agree...`
-                      : partnerRequestedReveal
-                      ? `${partner.firstName.charAt(0)}. requested to Reveal & Match!`
-                      : 'Convert to Permanent Match?'}
-                  </div>
-                  <div style={{ fontSize: '11px', color: textMuted, marginTop: '2px' }}>
-                    {isMutualMatchRevealed
-                      ? 'Both profiles unlocked! Conversation is now permanent.'
-                      : 'Both must consent. If neither or only one agrees, profiles stay private.'}
-                  </div>
-                </div>
-
-                <div>
-                  {!userRequestedReveal && !partnerRequestedReveal && (
-                    <button
-                      type="button"
-                      onClick={handleUserRequestReveal}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '6px',
-                        padding: '8px 16px',
-                        borderRadius: '999px',
-                        border: 'none',
-                        background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
-                        color: '#FFF',
-                        fontSize: '12px',
-                        fontWeight: 600,
-                        cursor: 'pointer',
-                        boxShadow: '0 4px 12px rgba(161,82,95,0.3)',
-                      }}
-                    >
-                      <SparkleIcon color="#FFF" size={12} />
-                      <span>Reveal & Match</span>
-                    </button>
-                  )}
-
-                  {userRequestedReveal && !isMutualMatchRevealed && (
-                    <span style={{ fontSize: '12px', color: accentRose, fontWeight: 600 }}>
-                      Consent Sent ⏳
-                    </span>
-                  )}
-
-                  {partnerRequestedReveal && !userRequestedReveal && (
-                    <button
-                      type="button"
-                      onClick={handleUserAcceptReveal}
-                      style={{
-                        padding: '8px 16px',
-                        borderRadius: '999px',
-                        border: 'none',
-                        backgroundColor: '#10B981',
-                        color: '#FFF',
-                        fontSize: '12px',
-                        fontWeight: 600,
-                        cursor: 'pointer',
-                        boxShadow: '0 4px 12px rgba(16,185,129,0.3)',
-                      }}
-                    >
-                      Agree & Reveal
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              {/* Composer Input Area */}
-              <div style={{ padding: '12px 20px 16px' }}>
-                {inputWarning && (
-                  <div
-                    style={{
-                      fontSize: '11px',
-                      color: '#EF4444',
-                      marginBottom: '8px',
-                      padding: '4px 8px',
-                      backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                      borderRadius: '6px',
-                    }}
-                  >
-                    {inputWarning}
-                  </div>
-                )}
-
-                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                  <input
-                    type="text"
-                    value={inputMessage}
-                    onChange={(e) => {
-                      setInputMessage(e.target.value);
-                      if (inputWarning) setInputWarning(null);
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') handleSendMessage();
-                    }}
-                    onPaste={(e) => {
-                      e.preventDefault();
-                      setInputWarning('Pasting text is disabled to encourage natural, live conversation.');
-                    }}
-                    placeholder="Type your message (URLs and paste disabled)..."
-                    style={{
-                      flex: 1,
-                      padding: '12px 18px',
-                      borderRadius: '999px',
-                      border: cardBorder,
-                      backgroundColor: isDark ? 'rgba(20, 14, 28, 0.85)' : '#FFFFFF',
-                      color: textPrimary,
-                      fontSize: '14px',
-                      outline: 'none',
-                      fontFamily: 'var(--font-sans)',
-                    }}
-                  />
-
+            <div style={{ maxWidth: '580px', margin: '0 auto', width: '100%', padding: '10px 16px 14px' }}>
+              {/* Mutual Reveal Action Button (Video Reference) */}
+              <div style={{ marginBottom: '10px' }}>
+                {!userRequestedReveal && !isMutualMatchRevealed && (
                   <button
                     type="button"
-                    onClick={handleSendMessage}
-                    disabled={!inputMessage.trim()}
+                    onClick={handleUserRequestReveal}
                     style={{
-                      width: '42px',
-                      height: '42px',
-                      borderRadius: '50%',
+                      width: '100%',
+                      padding: '12px 20px',
+                      borderRadius: '12px',
                       border: 'none',
-                      background: inputMessage.trim()
-                        ? 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)'
-                        : isDark
-                        ? 'rgba(255,255,255,0.1)'
-                        : 'rgba(0,0,0,0.1)',
+                      background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
                       color: '#FFFFFF',
+                      fontSize: '13px',
+                      fontWeight: 700,
+                      letterSpacing: '0.04em',
+                      cursor: 'pointer',
+                      boxShadow: '0 4px 16px rgba(161, 82, 95, 0.35)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      cursor: inputMessage.trim() ? 'pointer' : 'not-allowed',
-                      flexShrink: 0,
+                      gap: '8px',
+                      transition: 'transform 0.15s ease',
                     }}
                   >
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <line x1="22" y1="2" x2="11" y2="13" />
-                      <polygon points="22 2 15 22 11 13 2 9 22 2" />
-                    </svg>
+                    <SparkleIcon color="#FFFFFF" size={13} />
+                    <span>Unblur / Reveal Each Other</span>
                   </button>
+                )}
+
+                {userRequestedReveal && !isMutualMatchRevealed && (
+                  <div
+                    style={{
+                      width: '100%',
+                      padding: '11px 18px',
+                      borderRadius: '12px',
+                      backgroundColor: isDark ? 'rgba(70, 32, 55, 0.45)' : 'rgba(244, 230, 234, 0.7)',
+                      border: '1.5px solid rgba(245, 158, 11, 0.5)',
+                      color: isDark ? '#FBBF24' : '#D97706',
+                      fontSize: '12.5px',
+                      fontWeight: 700,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px',
+                      boxSizing: 'border-box',
+                    }}
+                  >
+                    <span
+                      style={{
+                        width: '7px',
+                        height: '7px',
+                        borderRadius: '50%',
+                        backgroundColor: '#F59E0B',
+                        boxShadow: '0 0 8px #F59E0B',
+                        display: 'inline-block',
+                      }}
+                    />
+                    <span>Waiting for them to unblur...</span>
+                  </div>
+                )}
+
+                {isMutualMatchRevealed && (
+                  <button
+                    type="button"
+                    onClick={() => setShowShareSocialsModal(true)}
+                    style={{
+                      width: '100%',
+                      padding: '12px 20px',
+                      borderRadius: '12px',
+                      border: '1px solid rgba(52, 211, 153, 0.4)',
+                      background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.88) 0%, rgba(5, 150, 105, 0.95) 100%)',
+                      color: '#FFFFFF',
+                      fontSize: '13px',
+                      fontWeight: 700,
+                      letterSpacing: '0.04em',
+                      cursor: 'pointer',
+                      boxShadow: '0 4px 16px rgba(16, 185, 129, 0.25)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px',
+                    }}
+                  >
+                    <span>Share Socials with Your Match</span>
+                  </button>
+                )}
+              </div>
+
+              {/* Composer Input Area */}
+              {inputWarning && (
+                <div
+                  style={{
+                    fontSize: '11px',
+                    color: '#EF4444',
+                    marginBottom: '6px',
+                    padding: '4px 8px',
+                    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                    borderRadius: '6px',
+                  }}
+                >
+                  {inputWarning}
                 </div>
+              )}
+
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                <button
+                  type="button"
+                  onClick={handleSkipPartner}
+                  style={{
+                    background: 'none',
+                    border: `1px solid ${cardBorder}`,
+                    color: textMuted,
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    padding: '8px 12px',
+                    borderRadius: '999px',
+                    cursor: 'pointer',
+                    whiteSpace: 'nowrap',
+                  }}
+                  title="Skip to next candidate"
+                >
+                  → Skip
+                </button>
+
+                <input
+                  type="text"
+                  value={inputMessage}
+                  onChange={(e) => {
+                    setInputMessage(e.target.value);
+                    if (inputWarning) setInputWarning(null);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleSendMessage();
+                  }}
+                  onPaste={(e) => {
+                    e.preventDefault();
+                    setInputWarning('Pasting text is disabled to encourage natural, live conversation.');
+                  }}
+                  placeholder="Type a message..."
+                  style={{
+                    flex: 1,
+                    padding: '10px 16px',
+                    borderRadius: '999px',
+                    border: cardBorder,
+                    backgroundColor: isDark ? 'rgba(20, 14, 28, 0.85)' : '#FFFFFF',
+                    color: textPrimary,
+                    fontSize: '13.5px',
+                    outline: 'none',
+                    fontFamily: 'var(--font-sans)',
+                  }}
+                />
+
+                <button
+                  type="button"
+                  onClick={handleSendMessage}
+                  disabled={!inputMessage.trim()}
+                  style={{
+                    width: '38px',
+                    height: '38px',
+                    borderRadius: '50%',
+                    border: 'none',
+                    background: inputMessage.trim()
+                      ? 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)'
+                      : isDark
+                      ? 'rgba(255,255,255,0.1)'
+                      : 'rgba(0,0,0,0.1)',
+                    color: '#FFFFFF',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: inputMessage.trim() ? 'pointer' : 'default',
+                    flexShrink: 0,
+                  }}
+                >
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="22" y1="2" x2="11" y2="13" />
+                    <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                  </svg>
+                </button>
               </div>
             </div>
           </div>
         </div>
+      )}
+
+      {/* MODAL: PHOTO LIGHTBOX EXPAND (Video Reference) */}
+      {isPhotoExpanded && partner && (
+        <ModalPortal>
+          <div
+            onClick={() => setIsPhotoExpanded(false)}
+            style={{
+              position: 'fixed',
+              inset: 0,
+              zIndex: 300,
+              backgroundColor: 'rgba(0, 0, 0, 0.85)',
+              backdropFilter: 'blur(12px)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '20px',
+            }}
+          >
+            <div
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                position: 'relative',
+                maxWidth: '420px',
+                width: '100%',
+                borderRadius: '24px',
+                overflow: 'hidden',
+                backgroundColor: isDark ? '#140E1C' : '#FFFFFF',
+                boxShadow: '0 20px 60px rgba(0,0,0,0.65)',
+                border: '1px solid rgba(255,255,255,0.18)',
+              }}
+            >
+              <img
+                src={partner.photos[0]}
+                alt={partner.firstName}
+                style={{
+                  width: '100%',
+                  aspectRatio: '3/4',
+                  objectFit: 'cover',
+                  display: 'block',
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => setIsPhotoExpanded(false)}
+                style={{
+                  position: 'absolute',
+                  top: '12px',
+                  right: '12px',
+                  width: '34px',
+                  height: '34px',
+                  borderRadius: '50%',
+                  backgroundColor: 'rgba(0,0,0,0.65)',
+                  border: '1px solid rgba(255,255,255,0.35)',
+                  color: '#FFFFFF',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                }}
+              >
+                ✕
+              </button>
+              <div
+                style={{
+                  padding: '16px 20px',
+                  backgroundColor: isDark ? '#140E1C' : '#FFFFFF',
+                }}
+              >
+                <div style={{ fontSize: '18px', fontWeight: 600, color: textPrimary }}>
+                  {partner.firstName}, {partner.age}
+                </div>
+                <div style={{ fontSize: '12.5px', color: textMuted, marginTop: '2px' }}>
+                  {partner.city} · {partner.designation}
+                </div>
+              </div>
+            </div>
+          </div>
+        </ModalPortal>
+      )}
+
+      {/* MODAL: SHARE SOCIALS (Video Reference) */}
+      {showShareSocialsModal && partner && (
+        <ModalPortal>
+          <div
+            onClick={() => setShowShareSocialsModal(false)}
+            style={{
+              position: 'fixed',
+              inset: 0,
+              zIndex: 310,
+              backgroundColor: 'rgba(0, 0, 0, 0.7)',
+              backdropFilter: 'blur(8px)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '20px',
+            }}
+          >
+            <div
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                width: '100%',
+                maxWidth: '400px',
+                backgroundColor: isDark ? '#1C0F19' : '#FFFFFF',
+                borderRadius: '22px',
+                padding: '24px',
+                border: cardBorder,
+                boxShadow: '0 16px 45px rgba(0,0,0,0.5)',
+              }}
+            >
+              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '20px', margin: '0 0 6px', color: textPrimary }}>
+                Share Socials
+              </h3>
+              <p style={{ fontSize: '12.5px', color: textMuted, margin: '0 0 16px', lineHeight: 1.45 }}>
+                You and {partner.firstName} mutually unblurred! Pick a handle to exchange:
+              </p>
+              <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
+                {(['instagram', 'whatsapp', 'vennz'] as const).map((plat) => (
+                  <button
+                    key={plat}
+                    type="button"
+                    onClick={() => setSocialPlatform(plat)}
+                    style={{
+                      flex: 1,
+                      padding: '8px 12px',
+                      borderRadius: '999px',
+                      border: `1px solid ${socialPlatform === plat ? accentRose : cardBorder}`,
+                      backgroundColor: socialPlatform === plat ? (isDark ? 'rgba(161,82,95,0.3)' : 'rgba(161,82,95,0.12)') : 'transparent',
+                      color: socialPlatform === plat ? textPrimary : textMuted,
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      textTransform: 'capitalize',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {plat}
+                  </button>
+                ))}
+              </div>
+              <input
+                type="text"
+                value={socialHandleInput}
+                onChange={(e) => setSocialHandleInput(e.target.value)}
+                placeholder={socialPlatform === 'whatsapp' ? '+91 Phone number...' : '@handle...'}
+                style={{
+                  width: '100%',
+                  padding: '12px 14px',
+                  borderRadius: '12px',
+                  border: cardBorder,
+                  backgroundColor: isDark ? 'rgba(70,32,55,0.3)' : '#F9F5F6',
+                  color: textPrimary,
+                  fontSize: '13.5px',
+                  marginBottom: '18px',
+                  outline: 'none',
+                  boxSizing: 'border-box',
+                }}
+              />
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <button
+                  type="button"
+                  onClick={() => setShowShareSocialsModal(false)}
+                  style={{
+                    flex: 1,
+                    padding: '10px',
+                    borderRadius: '999px',
+                    border: cardBorder,
+                    background: 'transparent',
+                    color: textMuted,
+                    fontSize: '12.5px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowShareSocialsModal(false);
+                    setSocialSharedToast(`Sent your ${socialPlatform} to ${partner.firstName}!`);
+                    setTimeout(() => setSocialSharedToast(null), 3500);
+                  }}
+                  style={{
+                    flex: 1,
+                    padding: '10px',
+                    borderRadius: '999px',
+                    border: 'none',
+                    background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
+                    color: '#FFFFFF',
+                    fontSize: '12.5px',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                  }}
+                >
+                  Send Handle
+                </button>
+              </div>
+            </div>
+          </div>
+        </ModalPortal>
       )}
 
       {/* MODAL: MUTUAL MATCH CELEBRATION */}

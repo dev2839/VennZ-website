@@ -159,7 +159,7 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
             photo: mutual.candidatePhoto,
             isVerified: mutual.fullProfile.isVerified,
             matchedAt: Date.now(),
-            lastMessage: '✨ Connected via VennZ BlindDate! Complete profile unlocked.',
+            lastMessage: '✨ Connected via VennZ PickForMe! Complete profile unlocked.',
             lastMessageTime: Date.now(),
           };
           addDirectMatch(newMatch);
@@ -317,7 +317,7 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
               letterSpacing: '-0.01em',
             }}
           >
-            BlindDate
+            PickForMe
           </h1>
 
           <p
@@ -1066,7 +1066,7 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                 <span>
                   {status === 'mutual'
                     ? 'Mutual match confirmed! Direct 1:1 conversation and messaging are unlocked.'
-                    : 'Curated based on your preferences. Accepting this BlindDate will unlock direct chat once they accept too.'}
+                    : 'Curated based on your preferences. Accepting this PickForMe match will unlock direct chat once they accept too.'}
                 </span>
               </div>
 
