@@ -71,48 +71,21 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
         display: 'flex',
         flexDirection: 'column',
         background: getPageBackground(isDark),
-        backgroundColor: isDark ? '#140E1C' : '#FAF1F3',
         color: isDark ? '#FDF3F5' : '#462037',
         fontFamily: 'var(--font-sans)',
         overflow: 'hidden',
       }}
     >
-      {/* Background: Botanical Parchment Texture */}
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          backgroundImage: isDark ? 'url(/profile-bg-dark.png)' : 'url(/profile-bg.jpg)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'top center',
-          backgroundRepeat: 'no-repeat',
-          opacity: isDark ? 0.98 : 0.94,
-          zIndex: 0,
-          pointerEvents: 'none',
-        }}
-      />
-
-      {/* Subtle Luminous Overlay */}
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          backgroundColor: isDark ? 'rgba(20, 14, 28, 0.45)' : 'rgba(250, 241, 243, 0.42)',
-          zIndex: 1,
-          pointerEvents: 'none',
-        }}
-      />
-
       {/* Fixed Top Header (Status Bar + Navigation) */}
       <div
         style={{
           position: 'relative',
           zIndex: 20,
           flexShrink: 0,
-          backgroundColor: isDark ? 'rgba(20, 14, 28, 0.92)' : 'rgba(250, 241, 243, 0.92)',
-          backdropFilter: 'blur(10px)',
-          WebkitBackdropFilter: 'blur(10px)',
-          borderBottom: isDark ? '1px solid rgba(161, 82, 95, 0.2)' : '1px solid rgba(161, 82, 95, 0.12)',
+          backgroundColor: isDark ? 'rgba(24, 13, 34, 0.75)' : 'rgba(250, 241, 243, 0.85)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
+          borderBottom: isDark ? '1px solid rgba(161, 82, 95, 0.18)' : '1px solid rgba(161, 82, 95, 0.12)',
         }}
       >
         {showStatusBar && <StatusBar variant={isDark ? 'light' : 'dark'} />}
