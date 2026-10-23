@@ -8,7 +8,7 @@ export const THEME_PAGE_GRADIENTS = {
   dark: {
     // Darker, rich purplish-plum tone matching the logo page with a soft, subtle gradient
     background:
-      'radial-gradient(ellipse 90% 55% at 50% -5%, rgba(70, 32, 55, 0.35) 0%, rgba(45, 18, 36, 0.15) 50%, transparent 80%), linear-gradient(180deg, #180D22 0%, #150B1E 50%, #120919 100%)',
+      'radial-gradient(ellipse 90% 55% at 50% -5%, rgba(37, 9, 26, 0.84) 0%, rgba(44, 0, 30, 0.73) 50%, transparent 80%), linear-gradient(180deg, #180D22 0%, #150B1E 50%, #120919 100%)',
     backgroundColor: '#140E1C',
     // Scrim overlay for screens with botanical wallpaper (Discover, Matches, Mixers, Chat)
     scrimGradient:
