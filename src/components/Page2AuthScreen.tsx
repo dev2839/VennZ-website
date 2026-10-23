@@ -20,7 +20,6 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
   onSuccess,
 }) => {
   const {
-    email: savedEmail,
     setEmailAuth,
     setGoogleAuth,
     setAppleAuth,
@@ -32,12 +31,6 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
   } = useAuth();
   const isDark = appearanceMode === 'after-dark';
 
-  // Email form state
-  const [email, setEmail] = useState<string>(savedEmail || '');
-  const [emailError, setEmailError] = useState<string | null>(null);
-  const [isEmailFocused, setIsEmailFocused] = useState<boolean>(false);
-  const [isSubmittingEmail, setIsSubmittingEmail] = useState<boolean>(false);
-
   // Notifications dropdown
   const [notificationsOpen, setNotificationsOpen] = useState<boolean>(false);
   const notifRef = useRef<HTMLDivElement | null>(null);
@@ -45,7 +38,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
   // Native Google GIS button mount container
   const googleBtnContainerRef = useRef<HTMLDivElement | null>(null);
 
-  // OAuth Modal state (informative dialog with Demo Google Account fallback)
+  // OAuth Modal state (informative dialog with Demo Account fallback)
   const [oauthModal, setOauthModal] = useState<{
     isOpen: boolean;
     provider: 'google' | 'apple';
@@ -69,7 +62,6 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
   // Pre-load Google Identity Services script on mount for seamless instant response across all devices
   useEffect(() => {
     googleAuth.loadGoogleScript().then(() => {
-      // If configured, optionally render native GIS button in container
       if (googleAuth.isConfigured() && googleBtnContainerRef.current) {
         googleAuth.renderGoogleButton(
           googleBtnContainerRef.current,
@@ -80,45 +72,13 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
     });
   }, []);
 
-  const handleAuthCompletion = () => {
+  const handleAuthCompletion = (identifier?: string) => {
     if (onSuccess) {
       onSuccess();
     } else if (onContinueToOtp) {
-      onContinueToOtp(email);
+      onContinueToOtp(identifier || 'member');
     }
   };
-
-  const validateEmailFormat = (val: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(val.trim());
-  };
-
-  // Direct Email Sign-In (NO OTP required)
-  const handleEmailSignIn = (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-    const clean = email.trim();
-
-    if (!clean) {
-      setEmailError('Please enter your email address to continue');
-      return;
-    }
-
-    if (!validateEmailFormat(clean)) {
-      setEmailError('Please enter a valid email address (e.g. name@domain.com)');
-      return;
-    }
-
-    setIsSubmittingEmail(true);
-    setEmailError(null);
-
-    // Instant sign-in without OTP
-    setTimeout(() => {
-      setEmailAuth(clean);
-      setIsSubmittingEmail(false);
-      handleAuthCompletion();
-    }, 180);
-  };
-
 
   // Google OAuth Handlers
   const handleGoogleSuccess = (profile: GoogleUserProfile) => {
@@ -127,7 +87,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
       email: profile.email,
       picture: profile.picture,
     });
-    handleAuthCompletion();
+    handleAuthCompletion(profile.email);
   };
 
   const handleGoogleError = (error: string) => {
@@ -175,7 +135,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
         if (profile.email) {
           setEmailAuth(profile.email, profile.name);
         }
-        handleAuthCompletion();
+        handleAuthCompletion(profile.email);
       },
       (error) => {
         setOauthModal({
@@ -194,7 +154,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
         provider: 'apple',
         title: 'Apple Sign-In Configuration',
         message:
-          'Apple Sign-In requires an Apple Services ID (VITE_APPLE_CLIENT_ID) configured in your environment or Vercel dashboard. You can sign in using Google or direct Email, or test with a verified Demo Apple Account.',
+          'Apple Sign-In requires an Apple Services ID (VITE_APPLE_CLIENT_ID) configured in your environment or Vercel dashboard. You can test right now with our verified Demo Apple Account.',
         missingEnv: 'VITE_APPLE_CLIENT_ID',
         showDemoOption: true,
       });
@@ -206,7 +166,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
     setOauthModal(null);
     setAppleAuth();
     setEmailAuth('priya.apple@icloud.com', 'Priya Patel');
-    handleAuthCompletion();
+    handleAuthCompletion('priya.apple@icloud.com');
   };
 
   // Fallback demo Google sign-in when client ID is not yet configured
@@ -217,7 +177,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
       email: 'rahul.sharma@gmail.com',
       picture: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80',
     });
-    handleAuthCompletion();
+    handleAuthCompletion('rahul.sharma@gmail.com');
   };
 
   return (
@@ -225,12 +185,6 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
       <style>{`
         .auth-panel-card {
           will-change: transform, opacity;
-        }
-
-        .email-input-custom:focus {
-          border-color: #F9AAAD !important;
-          box-shadow: 0 0 0 1px #F9AAAD, 0 0 16px rgba(249, 170, 173, 0.28) !important;
-          background: rgba(85, 38, 66, 0.8) !important;
         }
 
         .primary-action-btn {
@@ -246,22 +200,19 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
         .primary-action-btn:active:not(:disabled) {
           transform: translateY(0);
         }
-        .primary-action-btn:disabled {
-          opacity: 0.5;
-          cursor: not-allowed;
-        }
 
-        .google-btn-hover:hover {
+        .social-auth-btn {
+          transition: all 0.2s ease;
+        }
+        .social-auth-btn:hover {
           background-color: rgba(90, 42, 70, 0.85) !important;
           border-color: #F9AAAD !important;
           transform: translateY(-1px);
           box-shadow: 0 10px 24px rgba(161, 82, 95, 0.35) !important;
         }
-        .google-btn-hover:active {
+        .social-auth-btn:active {
           transform: translateY(0);
         }
-
-
       `}</style>
 
       {/* Main Responsive Viewport Grid */}
@@ -570,14 +521,14 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
           className="auth-panel-card"
           style={{
             width: '100%',
-            maxWidth: '500px',
+            maxWidth: '480px',
             backgroundColor: 'rgba(30, 16, 28, 0.74)',
             backdropFilter: 'blur(28px) saturate(180%)',
             WebkitBackdropFilter: 'blur(28px) saturate(180%)',
             border: '1px solid rgba(161, 82, 95, 0.35)',
             borderRadius: '24px',
             boxShadow: '0 28px 68px rgba(10, 6, 14, 0.75), 0 0 1px 1px rgba(249, 170, 173, 0.12) inset',
-            padding: 'clamp(30px, 4.5vw, 42px)',
+            padding: 'clamp(32px, 5vw, 44px)',
             boxSizing: 'border-box',
             display: 'flex',
             flexDirection: 'column',
@@ -586,7 +537,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
           }}
         >
           {/* Editorial Card Badge & Header */}
-          <div style={{ textAlign: 'center', marginBottom: '26px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '32px' }}>
             <div
               style={{
                 display: 'inline-flex',
@@ -630,16 +581,17 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
                 margin: 0,
               }}
             >
-              Sign in to access your curated introductions and exclusive member circle.
+              Sign in with Google or Apple to access your curated circle and private introductions.
             </p>
           </div>
 
-          {/* SECTION 1: Continue with Google (Primary Social OAuth) */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '22px' }}>
+          {/* Social Authentication Suite (Google & Apple Only) */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '12px' }}>
+            {/* Continue with Google */}
             <button
               type="button"
               onClick={handleGoogleSignIn}
-              className="google-btn-hover"
+              className="social-auth-btn"
               style={{
                 width: '100%',
                 height: '52px',
@@ -654,7 +606,6 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
                 fontSize: '15px',
                 fontWeight: 600,
                 cursor: 'pointer',
-                transition: 'all 0.2s ease',
                 boxShadow: '0 6px 18px rgba(0, 0, 0, 0.25)',
               }}
             >
@@ -680,186 +631,34 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
               <span>Continue with Google</span>
             </button>
 
-            {/* Optional Apple Sign-In Button */}
+            {/* Continue with Apple */}
             <button
               type="button"
               onClick={handleAppleSignIn}
+              className="social-auth-btn"
               style={{
                 width: '100%',
-                height: '46px',
-                backgroundColor: 'rgba(40, 20, 32, 0.55)',
-                border: '1px solid rgba(161, 82, 95, 0.28)',
+                height: '52px',
+                backgroundColor: 'rgba(55, 26, 44, 0.65)',
+                border: '1.5px solid rgba(161, 82, 95, 0.45)',
                 borderRadius: '14px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '10px',
+                gap: '12px',
                 color: '#FDF3F5',
-                fontSize: '14px',
-                fontWeight: 500,
+                fontSize: '15px',
+                fontWeight: 600,
                 cursor: 'pointer',
-                transition: 'all 0.2s ease',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(70, 32, 55, 0.7)';
-                e.currentTarget.style.borderColor = '#C7577C';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(40, 20, 32, 0.55)';
-                e.currentTarget.style.borderColor = 'rgba(161, 82, 95, 0.28)';
+                boxShadow: '0 6px 18px rgba(0, 0, 0, 0.25)',
               }}
             >
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.61-.75 1.04-1.8 0.92-2.87-.9.04-1.99.6-2.63 1.35-.58.67-1.09 1.74-.95 2.78 1.01.08 2.05-.51 2.66-1.26z" />
               </svg>
               <span>Continue with Apple</span>
             </button>
           </div>
-
-          {/* Subtle Luxury Divider Line */}
-          <div
-            style={{
-              height: '1px',
-              backgroundColor: 'rgba(161, 82, 95, 0.25)',
-              margin: '18px 0 20px 0',
-              width: '100%',
-            }}
-          />
-
-          {/* SECTION 2: Direct Email Sign-In (NO OTP) */}
-          <form onSubmit={handleEmailSignIn} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-            <div>
-              <div style={{ position: 'relative', width: '100%' }}>
-                {/* Email Icon */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    left: '16px',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    color: isEmailFocused ? '#F9AAAD' : 'rgba(249, 170, 173, 0.5)',
-                    pointerEvents: 'none',
-                    display: 'flex',
-                    alignItems: 'center',
-                  }}
-                >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                    <polyline points="22,6 12,13 2,6" />
-                  </svg>
-                </div>
-
-                <input
-                  id="user-email-input"
-                  type="email"
-                  inputMode="email"
-                  autoComplete="email"
-                  autoCapitalize="none"
-                  autoCorrect="off"
-                  spellCheck={false}
-                  value={email}
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                    if (emailError) setEmailError(null);
-                  }}
-                  onFocus={() => setIsEmailFocused(true)}
-                  onBlur={() => setIsEmailFocused(false)}
-                  placeholder="name@example.com"
-                  className="email-input-custom"
-                  style={{
-                    width: '100%',
-                    height: '52px',
-                    padding: '0 16px 0 46px',
-                    backgroundColor: 'rgba(70, 32, 55, 0.65)',
-                    border: `1.5px solid ${
-                      emailError
-                        ? '#C7577C'
-                        : isEmailFocused
-                        ? '#F9AAAD'
-                        : 'rgba(161, 82, 95, 0.4)'
-                    }`,
-                    borderRadius: '14px',
-                    color: '#FDF3F5',
-                    fontSize: '15px',
-                    boxSizing: 'border-box',
-                    outline: 'none',
-                    transition: 'all 0.2s ease',
-                  }}
-                />
-              </div>
-
-              {/* Error Message */}
-              {emailError && (
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    color: '#F9AAAD',
-                    fontSize: '12.5px',
-                    marginTop: '8px',
-                    paddingLeft: '4px',
-                  }}
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="12" y1="8" x2="12" y2="12"></line>
-                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                  </svg>
-                  <span>{emailError}</span>
-                </div>
-              )}
-            </div>
-
-            {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={isSubmittingEmail}
-              className="primary-action-btn"
-              style={{
-                width: '100%',
-                height: '52px',
-                borderRadius: '14px',
-                border: 'none',
-                color: '#FDF3F5',
-                fontSize: '15.5px',
-                fontWeight: 600,
-                letterSpacing: '0.04em',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                marginTop: '4px',
-              }}
-            >
-              {isSubmittingEmail ? (
-                <>
-                  <div
-                    style={{
-                      width: '18px',
-                      height: '18px',
-                      border: '2px solid rgba(255,255,255,0.3)',
-                      borderTopColor: '#FDF3F5',
-                      borderRadius: '50%',
-                      animation: 'spin 0.8s linear infinite',
-                    }}
-                  />
-                  <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-                  <span>Signing In...</span>
-                </>
-              ) : (
-                <>
-                  <span>Continue with Email</span>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                    <polyline points="12 5 19 12 12 19"></polyline>
-                  </svg>
-                </>
-              )}
-            </button>
-          </form>
-
 
           {/* Privacy & Terms Note */}
           <p
@@ -1014,7 +813,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
                     e.currentTarget.style.backgroundColor = 'rgba(70, 32, 55, 0.4)';
                   }}
                 >
-                  Close & Use Email Sign-In
+                  Close
                 </button>
               </div>
             </div>
