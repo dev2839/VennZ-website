@@ -20,6 +20,7 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
 
   return (
     <footer
+      className="web-editorial-footer"
       style={{
         position: 'relative',
         zIndex: 10,
@@ -35,6 +36,7 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
       }}
     >
       <div
+        className="web-footer-grid"
         style={{
           maxWidth: '1280px',
           margin: '0 auto',
@@ -46,11 +48,12 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
         }}
       >
         {/* Brand Column */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+        <div className="web-footer-brand-col" style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <img
               src="/vennz-logo.png"
               alt="VennZ"
+              className="web-footer-logo"
               style={{
                 height: '32px',
                 width: 'auto',
@@ -62,85 +65,92 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
               }}
             />
           </div>
-          <p style={{ fontSize: '16.5px', lineHeight: 1.6, color: textColor, margin: 0, fontWeight: 400 }}>
+          <p className="web-footer-desc" style={{ fontSize: '16.5px', lineHeight: 1.6, color: textColor, margin: 0, fontWeight: 400 }}>
             An exclusive, verified community connecting ambitious individuals through rigorous standards, intentional matchmaking, and private mixer gatherings.
           </p>
         </div>
 
-        {/* Community Pillars */}
-        <div>
-          <h5
-            style={{
-              fontFamily: 'var(--font-sans)',
-              fontSize: '15px',
-              fontWeight: 700,
-              letterSpacing: '0.14em',
-              textTransform: 'uppercase',
-              color: headingColor,
-              marginBottom: '14px',
-            }}
-          >
-            Community
-          </h5>
-          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            {['Curated Introductions', 'Identity Verification', 'Private Mixers', 'Elevate Concierge'].map((item) => (
-              <li key={item} style={{ fontSize: '16.5px', color: textColor, fontWeight: 400 }}>
-                {item}
-              </li>
-            ))}
-          </ul>
-        </div>
+        {/* Links Wrapper: display contents on desktop (zero change), flex side-by-side on mobile */}
+        <div className="web-footer-links-wrapper">
+          {/* Community Pillars */}
+          <div className="web-footer-links-col">
+            <h5
+              className="web-footer-heading"
+              style={{
+                fontFamily: 'var(--font-sans)',
+                fontSize: '15px',
+                fontWeight: 700,
+                letterSpacing: '0.14em',
+                textTransform: 'uppercase',
+                color: headingColor,
+                marginBottom: '14px',
+              }}
+            >
+              Community
+            </h5>
+            <ul className="web-footer-list" style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              {['Curated Introductions', 'Identity Verification', 'Private Mixers', 'Elevate Concierge'].map((item) => (
+                <li key={item} className="web-footer-item" style={{ fontSize: '16.5px', color: textColor, fontWeight: 400 }}>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
 
-        {/* Member Standards & Safety */}
-        <div>
-          <h5
-            style={{
-              fontFamily: 'var(--font-sans)',
-              fontSize: '15px',
-              fontWeight: 700,
-              letterSpacing: '0.14em',
-              textTransform: 'uppercase',
-              color: headingColor,
-              marginBottom: '14px',
-            }}
-          >
-            Standards & Safety
-          </h5>
-          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            {[
-              { label: 'Community Standards', path: '/join/standards' },
-              { label: 'Help & Concierge Desk', path: '/member/help' },
-              { label: 'Verification Protocol', path: '/join/identity-verification' },
-              { label: 'Waitlist & Review', path: '/join/waitlist' },
-            ].map((link) => (
-              <li key={link.label}>
-                <button
-                  type="button"
-                  onClick={() => onNavigate && onNavigate(link.path)}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    padding: 0,
-                    fontSize: '16.5px',
-                    color: textColor,
-                    fontWeight: 500,
-                    cursor: 'pointer',
-                    textAlign: 'left',
-                    transition: 'color 0.15s ease',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = hoverColor)}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = textColor)}
-                >
-                  {link.label}
-                </button>
-              </li>
-            ))}
-          </ul>
+          {/* Member Standards & Safety */}
+          <div className="web-footer-links-col">
+            <h5
+              className="web-footer-heading"
+              style={{
+                fontFamily: 'var(--font-sans)',
+                fontSize: '15px',
+                fontWeight: 700,
+                letterSpacing: '0.14em',
+                textTransform: 'uppercase',
+                color: headingColor,
+                marginBottom: '14px',
+              }}
+            >
+              Standards & Safety
+            </h5>
+            <ul className="web-footer-list" style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              {[
+                { label: 'Community Standards', path: '/join/standards' },
+                { label: 'Help & Concierge Desk', path: '/member/help' },
+                { label: 'Verification Protocol', path: '/join/identity-verification' },
+                { label: 'Waitlist & Review', path: '/join/waitlist' },
+              ].map((link) => (
+                <li key={link.label} className="web-footer-item">
+                  <button
+                    type="button"
+                    className="web-footer-link-btn"
+                    onClick={() => onNavigate && onNavigate(link.path)}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      padding: 0,
+                      fontSize: '16.5px',
+                      color: textColor,
+                      fontWeight: 500,
+                      cursor: 'pointer',
+                      textAlign: 'left',
+                      transition: 'color 0.15s ease',
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = hoverColor)}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = textColor)}
+                  >
+                    {link.label}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
         {/* Membership & Security */}
-        <div>
+        <div className="web-footer-membership-col">
           <h5
+            className="web-footer-heading"
             style={{
               fontFamily: 'var(--font-sans)',
               fontSize: '15px',
@@ -153,7 +163,7 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
           >
             Membership
           </h5>
-          <p style={{ fontSize: '16.5px', lineHeight: 1.6, color: textColor, margin: '0', fontWeight: 400 }}>
+          <p className="web-footer-desc" style={{ fontSize: '16.5px', lineHeight: 1.6, color: textColor, margin: '0', fontWeight: 400 }}>
             Membership is strictly by application review or peer referral. All members are verified with live biometric confirmation.
           </p>
         </div>
@@ -161,6 +171,7 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
 
       {/* Copyright Sub-bar */}
       <div
+        className="web-footer-copyright-bar"
         style={{
           maxWidth: '1280px',
           margin: '24px auto 0',
@@ -173,11 +184,12 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
           color: mutedColor,
         }}
       >
-        <div>© {new Date().getFullYear()} VennZ. All rights reserved.</div>
-        <div style={{ display: 'flex', gap: '20px' }}>
+        <div className="web-footer-copyright">© {new Date().getFullYear()} VennZ. All rights reserved.</div>
+        <div className="web-footer-legal-links" style={{ display: 'flex', gap: '20px' }}>
           {['Privacy Policy', 'Terms of Service', 'Code of Conduct'].map((item) => (
             <span
               key={item}
+              className="web-footer-legal-link"
               style={{
                 cursor: 'pointer',
                 color: mutedColor,

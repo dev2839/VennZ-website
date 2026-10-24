@@ -173,4 +173,101 @@
     padding-bottom: calc(24px + env(safe-area-inset-bottom, 16px)) !important;
     box-sizing: border-box !important;
   }
+
+  /* 8. Compact Editorial Footer (Strictly Mobile: width < 768px) */
+  /* Reduces vertical space by >50%, refines typography and aligns cleanly */
+  .web-editorial-footer {
+    padding: 24px 16px calc(24px + env(safe-area-inset-bottom, 16px)) !important;
+    text-align: left !important;
+  }
+
+  .web-footer-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 14px !important;
+    padding-bottom: 16px !important;
+  }
+
+  .web-footer-brand-col {
+    gap: 8px !important;
+  }
+
+  .web-footer-logo {
+    height: 24px !important;
+    max-width: 95px !important;
+  }
+
+  .web-footer-desc {
+    font-size: 12.5px !important;
+    line-height: 1.42 !important;
+    opacity: 0.9 !important;
+  }
+
+  /* Compact 2-column side-by-side layout for Community and Standards & Safety links */
+  .web-footer-links-wrapper {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 16px !important;
+    width: 100% !important;
+    margin: 4px 0 !important;
+  }
+
+  .web-footer-links-col {
+    width: 48% !important;
+    flex: 1 !important;
+  }
+
+  .web-footer-heading {
+    font-size: 11px !important;
+    letter-spacing: 0.12em !important;
+    margin-bottom: 8px !important;
+  }
+
+  .web-footer-list {
+    gap: 6px !important;
+  }
+
+  .web-footer-item,
+  .web-footer-link-btn {
+    font-size: 12px !important;
+    line-height: 1.35 !important;
+  }
+
+  .web-footer-membership-col {
+    margin-top: 2px !important;
+    gap: 6px !important;
+  }
+
+  .web-footer-copyright-bar {
+    margin-top: 14px !important;
+    gap: 8px !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    font-size: 11px !important;
+  }
+
+  .web-footer-copyright {
+    font-size: 11px !important;
+    color: inherit !important;
+    opacity: 0.8 !important;
+  }
+
+  .web-footer-legal-links {
+    gap: 14px !important;
+    font-size: 11px !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+  }
+
+  .web-footer-legal-link {
+    font-size: 11px !important;
+  }
+}
+
+/* Desktop & iPad (width >= 768px): links wrapper behaves as contents so original layout remains 100% UNTOUCHED */
+@media (min-width: 768px) {
+  .web-footer-links-wrapper {
+    display: contents;
+  }
 }

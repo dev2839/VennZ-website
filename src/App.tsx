@@ -20,6 +20,7 @@ import { Page18MixersScreen } from './components/Page18MixersScreen';
 import { Page19AfterHoursScreen } from './components/Page19AfterHoursScreen';
 import { WebNavbar, type RoutePath } from './components/WebNavbar';
 import { WebFooter } from './components/WebFooter';
+import { useIsMobile } from './mobile/useIsMobile';
 import { NotificationPopup } from './components/NotificationPopup';
 import { ModalPortal } from './components/ModalPortal';
 import { DUMMY_DISCOVER_PROFILES } from './data/dummyProfiles';
@@ -29,6 +30,7 @@ import { useAuth } from './context/AuthContext';
 import { getPageBackground } from './constants/themeGradients';
 
 export const App: React.FC = () => {
+  const isMobile = useIsMobile(768);
   const {
     startComplimentaryFirstLook,
     setMembershipStatus,
@@ -855,12 +857,19 @@ export const App: React.FC = () => {
         {renderActiveScreen(false, false)}
       </main>
 
-      {/* Comprehensive Editorial Web Footer */}
+      {/* Comprehensive Editorial Web Footer: On mobile, strictly on first page, profile setup page, and profile page */}
       {!isFullHeightChatMode &&
         currentPath !== '/join' &&
         currentPath !== '/login' &&
         currentPath !== '/join/verify-code' &&
-        currentPath !== '/join/digilocker' && (
+        currentPath !== '/join/digilocker' &&
+        (!isMobile ||
+          currentPath === '/' ||
+          currentPath === '/overview' ||
+          currentPath === '/join/profile' ||
+          currentPath === '/member/profile' ||
+          currentPath === '/member/you' ||
+          currentPath === '/member/my-profile') && (
           <WebFooter onNavigate={(path) => navigate(path as RoutePath)} />
         )}
 
