@@ -181,14 +181,14 @@ export const NotificationPopup: React.FC<NotificationPopupProps> = ({ onNavigate
       onMouseLeave={() => setIsHovered(false)}
       style={{
         position: 'fixed',
-        top: isMobile ? '16px' : '76px',
+        top: isMobile ? '72px' : '76px',
         left: isMobile ? '50%' : 'auto',
         right: isMobile ? 'auto' : '20px',
         transform: isMobile
           ? (isVisible ? 'translateX(-50%) translateY(0) scale(1)' : 'translateX(-50%) translateY(-10px) scale(0.98)')
           : (isVisible ? 'translateY(0) scale(1)' : 'translateY(-10px) scale(0.98)'),
-        zIndex: 1500,
-        maxWidth: isMobile ? '300px' : '320px',
+        zIndex: 2500,
+        maxWidth: isMobile ? '280px' : '320px',
         width: isMobile ? 'calc(100vw - 32px)' : '320px',
         opacity: isVisible ? 1 : 0,
         pointerEvents: isVisible ? 'auto' : 'none',
@@ -210,17 +210,17 @@ export const NotificationPopup: React.FC<NotificationPopupProps> = ({ onNavigate
           boxShadow: isDark
             ? '0 12px 32px -6px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(161, 82, 95, 0.15)'
             : '0 12px 32px -6px rgba(70, 32, 55, 0.12), 0 0 0 1px rgba(161, 82, 95, 0.08)',
-          padding: '10px 12px 11px',
+          padding: isMobile ? '7px 9px 8px' : '10px 12px 11px',
           display: 'flex',
           alignItems: 'center',
-          gap: '10px',
+          gap: isMobile ? '8px' : '10px',
         }}
       >
         {/* Compact Circular Icon Badge */}
         <div
           style={{
-            width: '28px',
-            height: '28px',
+            width: isMobile ? '24px' : '28px',
+            height: isMobile ? '24px' : '28px',
             borderRadius: '50%',
             backgroundColor: isDark ? 'rgba(70, 32, 55, 0.65)' : 'rgba(253, 243, 245, 0.95)',
             border: isDark ? '1px solid rgba(249, 170, 173, 0.22)' : '1px solid rgba(199, 87, 124, 0.2)',
@@ -240,7 +240,7 @@ export const NotificationPopup: React.FC<NotificationPopupProps> = ({ onNavigate
             <span
               style={{
                 fontFamily: 'var(--font-sans)',
-                fontSize: '11px',
+                fontSize: isMobile ? '9.5px' : '11px',
                 fontWeight: 700,
                 letterSpacing: '0.12em',
                 textTransform: 'uppercase',
@@ -249,8 +249,8 @@ export const NotificationPopup: React.FC<NotificationPopupProps> = ({ onNavigate
             >
               {categoryLabel}
             </span>
-            <span style={{ fontSize: '11px', color: isDark ? '#8A7A84' : '#A38E9B' }}>•</span>
-            <span style={{ fontSize: '11.5px', color: isDark ? '#D4A2AC' : '#8A7A84' }}>
+            <span style={{ fontSize: isMobile ? '9.5px' : '11px', color: isDark ? '#8A7A84' : '#A38E9B' }}>•</span>
+            <span style={{ fontSize: isMobile ? '10px' : '11.5px', color: isDark ? '#D4A2AC' : '#8A7A84' }}>
               {activeNotif.timestamp || 'Just now'}
             </span>
           </div>
@@ -259,7 +259,7 @@ export const NotificationPopup: React.FC<NotificationPopupProps> = ({ onNavigate
           <h4
             style={{
               fontFamily: 'var(--font-sans)',
-              fontSize: '14px',
+              fontSize: isMobile ? '12.5px' : '14px',
               fontWeight: 600,
               color: isDark ? '#FFFFFF' : '#140E1C',
               margin: 0,
@@ -275,7 +275,7 @@ export const NotificationPopup: React.FC<NotificationPopupProps> = ({ onNavigate
           {/* Message (single line or tight two lines) */}
           <p
             style={{
-              fontSize: '13px',
+              fontSize: isMobile ? '11.5px' : '13px',
               lineHeight: '1.3',
               color: isDark ? '#D4A2AC' : '#683A46',
               margin: 0,

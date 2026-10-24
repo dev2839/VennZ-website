@@ -94,6 +94,13 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
   const hasIncomingRequests = Boolean(incomingRequests && incomingRequests.length > 0);
 
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const notifRef = useRef<HTMLDivElement | null>(null);
   const notifButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -377,19 +384,22 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
               <div
                 ref={notifRef}
                 style={{
-                  position: 'absolute',
-                  top: '46px',
-                  right: 0,
-                  width: '360px',
-                  maxHeight: '440px',
+                  position: isMobile ? 'fixed' : 'absolute',
+                  top: isMobile ? '64px' : '46px',
+                  left: isMobile ? '12px' : 'auto',
+                  right: isMobile ? '12px' : 0,
+                  width: isMobile ? 'auto' : '360px',
+                  maxWidth: isMobile ? 'calc(100vw - 24px)' : '360px',
+                  maxHeight: isMobile ? '380px' : '440px',
                   backgroundColor: isDark ? '#462037' : '#FAF1F3',
-                  borderRadius: '18px',
+                  borderRadius: isMobile ? '14px' : '18px',
                   border: `1px solid ${borderBottom}`,
                   boxShadow: isDark ? '0 20px 48px rgba(20, 14, 28, 0.65)' : '0 20px 48px rgba(70, 32, 55, 0.15)',
                   overflow: 'hidden',
-                  zIndex: 100,
+                  zIndex: 2000,
                   display: 'flex',
                   flexDirection: 'column',
+                  boxSizing: 'border-box',
                 }}
               >
                 <div
