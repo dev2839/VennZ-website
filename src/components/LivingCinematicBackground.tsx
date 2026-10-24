@@ -100,7 +100,44 @@ export const LivingCinematicBackground: React.FC<LivingCinematicBackgroundProps>
           transform: scale(1.025) translateZ(0);
           will-change: transform;
         }
-      `}</style>
+      
+        @media (max-width: 767px) {
+          .cinematic-bg-video-track {
+            position: fixed !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            width: 100vw !important;
+            height: 100dvh !important;
+            height: 100vh !important;
+            object-fit: cover !important;
+            object-position: center center !important;
+            filter: brightness(105%) contrast(98%) !important;
+            will-change: auto !important;
+          }
+          .living-cinematic-stage > div:first-child {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100vw !important;
+            height: 100dvh !important;
+            height: 100vh !important;
+            z-index: 1 !important;
+            overflow: hidden !important;
+          }
+          .cinematic-horizon-glow {
+            position: fixed !important;
+            top: 25% !important;
+            height: 40% !important;
+          }
+          .living-cinematic-stage > div:nth-child(3) {
+            position: fixed !important;
+            inset: 0 !important;
+          }
+        }
+`}</style>
 
       {/* Layer 1: Seamless Infinitely Continuous Living Cinematic Video */}
       <CinematicVideoPlayer />

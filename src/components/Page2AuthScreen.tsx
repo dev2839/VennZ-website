@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { ModalPortal } from './ModalPortal';
 import { LivingCinematicBackground } from './LivingCinematicBackground';
+import { useIsMobile } from '../mobile/useIsMobile';
+import { MobileAuthScreen } from '../mobile/MobileAuthScreen';
 import { googleAuth, type GoogleUserProfile } from '../services/googleAuth';
 import { appleAuth } from '../services/appleAuth';
 
@@ -19,6 +21,18 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
   onContinueToOtp,
   onSuccess,
 }) => {
+    const isMobile = useIsMobile(768);
+
+  if (isMobile) {
+    return (
+      <MobileAuthScreen
+        onBack={onBack}
+        onContinueToOtp={onContinueToOtp}
+        onSuccess={onSuccess}
+      />
+    );
+  }
+
   const {
     setEmailAuth,
     setGoogleAuth,

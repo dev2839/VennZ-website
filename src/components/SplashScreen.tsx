@@ -3,6 +3,8 @@ import { StatusBar } from './StatusBar';
 import { SplashBranding } from './SplashBranding';
 import { SplashActions } from './SplashActions';
 import { useAuth } from '../context/AuthContext';
+import { useIsMobile } from '../mobile/useIsMobile';
+import { MobileSplashScreen } from '../mobile/MobileSplashScreen';
 
 interface SplashScreenProps {
   onGetStarted: () => void;
@@ -103,6 +105,18 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
   showHomeIndicator = false,
   isIntroActive = false,
 }) => {
+    const isMobile = useIsMobile(768);
+
+  if (isMobile) {
+    return (
+      <MobileSplashScreen
+        onGetStarted={onGetStarted}
+        onLearnHowItWorks={onLearnHowItWorks}
+        showStatusBar={showStatusBar}
+      />
+    );
+  }
+
   const { appearanceMode } = useAuth();
   const isDark = appearanceMode === 'after-dark';
 

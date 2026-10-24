@@ -1,0 +1,169 @@
+/* ==========================================================================
+   VennZ Mobile Design System (Strictly scoped to mobile devices: width < 768px)
+   Laptop, PC, and iPad views (width >= 768px) remain 100% UNTOUCHED.
+   ========================================================================== */
+
+@media (max-width: 767px) {
+  /* 1. Global Mobile Viewport & Smooth Touch Scrolling */
+  html, body {
+    width: 100% !important;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    touch-action: pan-y !important;
+  }
+
+  #root {
+    width: 100% !important;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+    position: relative !important;
+  }
+
+  /* 2. Fix Intro Background Video (No half-video, no blank bottom screen on mobile) */
+  .living-cinematic-stage {
+    position: relative !important;
+    width: 100% !important;
+    min-height: 100dvh !important;
+    background-color: #140E1C !important;
+  }
+
+  /* Video player container locked to full mobile viewport */
+  .cinematic-bg-video-container,
+  .living-cinematic-stage > div:first-child {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    height: 100dvh !important;
+    height: 100vh !important;
+    z-index: 1 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+    transform: translateZ(0) !important;
+    -webkit-transform: translateZ(0) !important;
+  }
+
+  /* Video element: full-bleed cover without GPU lag */
+  .cinematic-bg-video-track {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    -webkit-transform: translate(-50%, -50%) !important;
+    min-width: 100% !important;
+    min-height: 100% !important;
+    width: 100vw !important;
+    height: 100dvh !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    display: block !important;
+    opacity: 0.95 !important;
+    /* Lightweight mobile filter: remove expensive multi-stack blurs that cause stutter */
+    filter: brightness(105%) contrast(98%) !important;
+    will-change: auto !important;
+    backface-visibility: hidden !important;
+  }
+
+  /* Scrim overlays: fixed full viewport to prevent black/blank gaps on scroll */
+  .cinematic-horizon-glow {
+    position: fixed !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: 30% !important;
+    height: 40% !important;
+    z-index: 2 !important;
+    pointer-events: none !important;
+  }
+
+  .living-cinematic-stage > div:nth-child(3) {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100dvh !important;
+    z-index: 3 !important;
+    pointer-events: none !important;
+  }
+
+  /* 3. Mobile Button Visibility & Positioning Fixes */
+  /* Prevent buttons from being cut in half, hidden, or pushed off screen */
+  .mobile-action-button,
+  button[type="button"],
+  button[type="submit"] {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+
+  /* Ensure member screens have safe bottom padding above fixed MemberBottomNav */
+  main.page-transition-wrapper,
+  .member-screen-content,
+  .mobile-scroll-body,
+  .afterhours-lobby-container,
+  div[style*="minHeight: '100vh'"],
+  div[style*="min-height: 100vh"],
+  div[style*="minHeight: '100dvh'"],
+  div[style*="min-height: 100dvh"] {
+    box-sizing: border-box !important;
+  }
+
+  /* Clear bottom margin for pages with MemberBottomNav so content and action buttons never get hidden */
+  .has-bottom-nav,
+  .member-view-container {
+    padding-bottom: calc(96px + env(safe-area-inset-bottom, 16px)) !important;
+  }
+
+  /* 4. Fix Mobile Text Alignment & Wrapping */
+  h1, h2, h3, h4, p, span, label {
+    overflow-wrap: break-word !important;
+    word-break: break-word !important;
+    max-width: 100% !important;
+  }
+
+  /* Mobile text alignment helpers */
+  .mobile-text-center {
+    text-align: center !important;
+  }
+
+  .mobile-text-left {
+    text-align: left !important;
+  }
+
+  /* 5. Mobile Performance Optimization: Eliminate Lag & Photo Glitches */
+  /* Heavy backdrop filters are replaced with lightweight blur or solid luxurious tints */
+  .auth-panel-card,
+  .modal-card,
+  .elevate-suite-card,
+  .discover-card-glass {
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45) !important;
+  }
+
+  /* Photo optimization: prevent flickering, glitching, or reflow delays */
+  img {
+    max-width: 100% !important;
+    content-visibility: auto;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
+  /* 6. Form Inputs & Selects on Mobile */
+  input, select, textarea {
+    font-size: 16px !important; /* Prevents auto-zoom on iOS Safari */
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* 7. Modal Portals on Mobile */
+  .modal-portal-overlay {
+    padding: 16px !important;
+    padding-bottom: calc(24px + env(safe-area-inset-bottom, 16px)) !important;
+    box-sizing: border-box !important;
+  }
+}
