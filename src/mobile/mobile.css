@@ -143,14 +143,21 @@
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45) !important;
   }
 
-  /* Photo optimization: prevent flickering, glitching, or reflow delays */
-  img {
+  /* Photo optimization: prevent flickering, glitching, or reflow delays (exempt logo letters so animations remain 100% fluid) */
+  img:not([src*="letter"]):not([src*="logo"]) {
     max-width: 100% !important;
     content-visibility: auto;
     transform: translateZ(0);
     -webkit-transform: translateZ(0);
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
+  }
+
+  /* Logo letters in intro and splash strictly preserve natural dimensions and crisp rendering */
+  img[src*="letter"] {
+    content-visibility: visible !important;
+    -webkit-backface-visibility: visible !important;
+    backface-visibility: visible !important;
   }
 
   /* 6. Form Inputs & Selects on Mobile */

@@ -113,6 +113,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
         onGetStarted={onGetStarted}
         onLearnHowItWorks={onLearnHowItWorks}
         showStatusBar={showStatusBar}
+        isIntroActive={isIntroActive}
       />
     );
   }

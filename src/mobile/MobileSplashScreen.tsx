@@ -6,6 +6,7 @@ interface MobileSplashScreenProps {
   onGetStarted: () => void;
   onLearnHowItWorks?: () => void;
   showStatusBar?: boolean;
+  isIntroActive?: boolean;
 }
 
 interface PillarItem {
@@ -101,6 +102,7 @@ const LOGO_LETTERS = [
 export const MobileSplashScreen: React.FC<MobileSplashScreenProps> = ({
   onGetStarted,
   showStatusBar = false,
+  isIntroActive = false,
 }) => {
   const { appearanceMode } = useAuth();
   const isDark = appearanceMode === 'after-dark';
@@ -163,72 +165,121 @@ export const MobileSplashScreen: React.FC<MobileSplashScreenProps> = ({
           position: 'relative',
           zIndex: 10,
           width: '100%',
-          minHeight: 'calc(100dvh - 20px)',
+          minHeight: '100dvh',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '24px 16px calc(28px + env(safe-area-inset-bottom, 16px))',
+          justifyContent: 'center',
+          padding: '24px 16px calc(32px + env(safe-area-inset-bottom, 16px))',
           boxSizing: 'border-box',
         }}
       >
-        <div style={{ width: '100%', height: '10px' }} />
-
         {/* VennZ 3D Logo Centerpiece */}
         <div
+          id="welcome-vennz-logo-target"
           style={{
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             textAlign: 'center',
             width: '100%',
+            perspective: '1000px',
           }}
         >
-          {/* Logo container strictly sized for mobile screen */}
+          {/* Logo container strictly sized for mobile screen & matching IntroAnimation */}
           <div
+            id="welcome-vennz-logo-inner"
             style={{
               position: 'relative',
-              width: 'min(300px, 80vw)',
+              width: 'clamp(280px, 76vw, 320px)',
               aspectRatio: '984 / 303',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              marginBottom: '16px',
+              transformOrigin: 'center center',
             }}
           >
-            {LOGO_LETTERS.map((letter) => (
-              <img
-                key={letter.id}
-                src={letter.src}
-                alt={letter.id}
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'contain',
-                }}
-              />
-            ))}
+            {/* Ground Shadow */}
+            <div
+              style={{
+                position: 'absolute',
+                bottom: '-4px',
+                left: '10%',
+                right: '10%',
+                height: '20px',
+                borderRadius: '50%',
+                background: isDark
+                  ? 'radial-gradient(ellipse at center, rgba(0, 0, 0, 0.85) 0%, rgba(104, 58, 70, 0.35) 45%, transparent 75%)'
+                  : 'radial-gradient(ellipse at center, rgba(161, 82, 95, 0.25) 0%, transparent 70%)',
+                filter: 'blur(8px)',
+                pointerEvents: 'none',
+                zIndex: 1,
+                opacity: isIntroActive ? 0 : 1,
+                transition: 'none',
+              }}
+            />
+
+            {/* Letter Layer with identical drop-shadow as IntroAnimation */}
+            <div
+              id="welcome-vennz-logo-letters"
+              style={{
+                position: 'absolute',
+                inset: 0,
+                zIndex: 2,
+                opacity: isIntroActive ? 0 : 1,
+                transition: 'none',
+                filter: isDark
+                  ? [
+                      'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.9))',
+                      'drop-shadow(0 14px 28px rgba(0, 0, 0, 0.85))',
+                      'drop-shadow(0 26px 45px rgba(20, 14, 28, 0.7))',
+                      'drop-shadow(0 0 20px rgba(161, 82, 95, 0.25))',
+                    ].join(' ')
+                  : [
+                      'drop-shadow(0 3px 5px rgba(70, 32, 55, 0.3))',
+                      'drop-shadow(0 12px 22px rgba(104, 58, 70, 0.16))',
+                      'drop-shadow(0 0 20px rgba(199, 87, 124, 0.18))',
+                    ].join(' '),
+              }}
+            >
+              {LOGO_LETTERS.map((letter) => (
+                <img
+                  key={letter.id}
+                  src={letter.src}
+                  alt={letter.id}
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain',
+                    pointerEvents: 'none',
+                  }}
+                />
+              ))}
+            </div>
           </div>
 
           {/* Tagline */}
           <p
             style={{
               fontFamily: 'var(--font-sans)',
-              fontSize: '16px',
+              fontSize: '15px',
               fontWeight: 500,
               letterSpacing: '0.02em',
               color: isDark ? '#FDF3F5' : '#462037',
-              margin: '8px 0 0 0',
+              margin: '10px 0 0 0',
               textAlign: 'center',
+              opacity: isIntroActive ? 0 : 1,
+              transform: isIntroActive ? 'translateY(8px)' : 'translateY(0)',
+              transition: 'opacity 0.4s ease 0.15s, transform 0.4s ease 0.15s',
             }}
           >
             Real people. Meaningful connections.
           </p>
         </div>
 
-        {/* Editorial Hook & Primary CTA Button */}
+        {/* Editorial Hook & Primary CTA Button - Reduced space in mobile view */}
         <div
           style={{
             width: '100%',
@@ -236,15 +287,19 @@ export const MobileSplashScreen: React.FC<MobileSplashScreenProps> = ({
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
+            marginTop: '22px',
+            opacity: isIntroActive ? 0 : 1,
+            transform: isIntroActive ? 'translateY(12px)' : 'translateY(0)',
+            transition: 'opacity 0.45s ease 0.22s, transform 0.45s ease 0.22s',
           }}
         >
           <p
             style={{
               fontFamily: 'var(--font-sans)',
-              fontSize: '13px',
+              fontSize: '12px',
               fontWeight: 600,
               textTransform: 'uppercase',
-              letterSpacing: '0.14em',
+              letterSpacing: '0.16em',
               color: isDark ? '#D4A2AC' : '#683A46',
               margin: '0 0 2px 0',
             }}
@@ -254,10 +309,10 @@ export const MobileSplashScreen: React.FC<MobileSplashScreenProps> = ({
           <p
             style={{
               fontFamily: 'var(--font-script)',
-              fontSize: '44px',
+              fontSize: '38px',
               lineHeight: 1.1,
               color: isDark ? '#FDF3F5' : '#462037',
-              margin: '0 0 20px 0',
+              margin: '0 0 16px 0',
             }}
           >
             A community.
@@ -269,11 +324,11 @@ export const MobileSplashScreen: React.FC<MobileSplashScreenProps> = ({
             onClick={onGetStarted}
             style={{
               width: '100%',
-              height: '54px',
+              height: '52px',
               background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
               color: '#FDF3F5',
               fontFamily: 'var(--font-sans)',
-              fontSize: '17px',
+              fontSize: '16.5px',
               fontWeight: 700,
               borderRadius: '9999px',
               border: isDark ? '1px solid rgba(249, 170, 173, 0.4)' : '1px solid rgba(161, 82, 95, 0.25)',
@@ -292,6 +347,26 @@ export const MobileSplashScreen: React.FC<MobileSplashScreenProps> = ({
               <path d="m12 5 7 7-7 7" />
             </svg>
           </button>
+
+          {/* Subtle scroll indicator */}
+          <div
+            style={{
+              marginTop: '22px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '4px',
+              opacity: isIntroActive ? 0 : 0.65,
+              transition: 'opacity 0.4s ease 0.32s',
+            }}
+          >
+            <span style={{ fontSize: '10.5px', letterSpacing: '0.16em', textTransform: 'uppercase', color: isDark ? '#D4A2AC' : '#683A46', fontWeight: 600 }}>
+              Scroll to explore
+            </span>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={isDark ? '#D4A2AC' : '#683A46'} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="m6 9 6 6 6-6" />
+            </svg>
+          </div>
         </div>
       </section>
 
