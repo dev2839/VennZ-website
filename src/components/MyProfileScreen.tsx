@@ -136,7 +136,6 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
     return DEFAULT_PREFS;
   });
 
-  const [newBlockedContact, setNewBlockedContact] = useState('');
   const [prefsToast, setPrefsToast] = useState<string | null>(null);
 
   const updatePreferences = (updates: Partial<UserPreferences>) => {
@@ -158,21 +157,6 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
     setTimeout(() => setPrefsToast(null), 3000);
   };
 
-  const handleAddBlockedContact = (e: React.FormEvent) => {
-    e.preventDefault();
-    const trimmed = newBlockedContact.trim();
-    if (!trimmed) return;
-    if (preferences.blockedContacts.includes(trimmed)) {
-      setPrefsToast('Contact is already in your blocked list');
-      setTimeout(() => setPrefsToast(null), 3000);
-      return;
-    }
-    const updated = [...preferences.blockedContacts, trimmed];
-    updatePreferences({ blockedContacts: updated });
-    setNewBlockedContact('');
-    setPrefsToast(`Blocked ${trimmed}`);
-    setTimeout(() => setPrefsToast(null), 3000);
-  };
 
   const [isEditing, setIsEditing] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
@@ -1746,41 +1730,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                   </div>
                 </div>
 
-                {/* Add blocked contact form */}
-                <form onSubmit={handleAddBlockedContact} style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                  <input
-                    type="text"
-                    value={newBlockedContact}
-                    onChange={(e) => setNewBlockedContact(e.target.value)}
-                    placeholder="Enter phone number or contact name..."
-                    style={{
-                      flex: 1,
-                      padding: '10px 14px',
-                      borderRadius: '12px',
-                      border: `1px solid ${colors.border}`,
-                      backgroundColor: isDark ? 'rgba(70, 32, 55, 0.35)' : '#FFFFFF',
-                      color: colors.text,
-                      fontSize: '15px',
-                      outline: 'none',
-                    }}
-                  />
-                  <button
-                    type="submit"
-                    style={{
-                      padding: '10px 18px',
-                      borderRadius: '12px',
-                      border: 'none',
-                      background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
-                      color: '#FFFFFF',
-                      fontSize: '14px',
-                      fontWeight: 700,
-                      cursor: 'pointer',
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    + Block Contact
-                  </button>
-                </form>
+                
 
                 {/* Blocked contacts list */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>

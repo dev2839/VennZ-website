@@ -563,54 +563,94 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                       transition: 'transform 0.2s ease, border-color 0.2s ease',
                     }}
                   >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                      <div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          <span
-                            style={{
-                              fontSize: '13px',
-                              fontFamily: 'monospace',
-                              letterSpacing: '0.08em',
-                              padding: '2px 7px',
-                              borderRadius: '6px',
-                              backgroundColor: isDark ? 'rgba(161, 82, 95, 0.3)' : 'rgba(161, 82, 95, 0.1)',
-                              color: themeMulberry,
-                              fontWeight: 700,
-                            }}
-                          >
-                            {service.number}
-                          </span>
-                          <h2
-                            style={{
-                              fontFamily: 'var(--font-serif)',
-                              fontSize: '22px',
-                              fontWeight: 600,
-                              margin: 0,
-                              color: themeTextColor,
-                            }}
-                          >
-                            {service.name}
-                          </h2>
-                        </div>
-                        <p
+                    {/* Header Row: Number + Title + Pricing */}
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: isMobile ? 'column' : 'row',
+                        justifyContent: 'space-between',
+                        alignItems: isMobile ? 'flex-start' : 'flex-start',
+                        gap: isMobile ? '6px' : '16px',
+                        width: '100%',
+                      }}
+                    >
+                      {/* Number and Service Name in One Line */}
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                          flexWrap: 'nowrap',
+                          minWidth: 0,
+                        }}
+                      >
+                        <span
                           style={{
-                            fontSize: '15px',
-                            color: themeMuted,
-                            margin: '6px 0 0',
-                            lineHeight: '1.45',
+                            fontSize: '13px',
+                            fontFamily: 'monospace',
+                            letterSpacing: '0.04em',
+                            padding: '3px 7px',
+                            borderRadius: '6px',
+                            backgroundColor: isDark ? 'rgba(161, 82, 95, 0.3)' : 'rgba(161, 82, 95, 0.1)',
+                            color: themeMulberry,
+                            fontWeight: 700,
+                            whiteSpace: 'nowrap',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flexShrink: 0,
+                            lineHeight: 1,
                           }}
                         >
-                          {service.tagline}
-                        </p>
+                          {service.number}
+                        </span>
+                        <h2
+                          style={{
+                            fontFamily: 'var(--font-serif)',
+                            fontSize: isMobile ? '20px' : '22px',
+                            fontWeight: 600,
+                            margin: 0,
+                            color: themeTextColor,
+                            lineHeight: 1.2,
+                            whiteSpace: 'nowrap',
+                          }}
+                        >
+                          {service.name}
+                        </h2>
                       </div>
 
-                      <div style={{ textAlign: 'right', flexShrink: 0, marginLeft: '12px' }}>
-                        <div style={{ fontSize: '20px', fontWeight: 700, color: themeTextColor }}>
+                      {/* Pricing and Turnaround */}
+                      <div
+                        style={{
+                          display: 'flex',
+                          flexDirection: isMobile ? 'row' : 'column',
+                          alignItems: isMobile ? 'baseline' : 'flex-end',
+                          gap: isMobile ? '8px' : '2px',
+                          flexShrink: 0,
+                          textAlign: isMobile ? 'left' : 'right',
+                        }}
+                      >
+                        <div style={{ fontSize: isMobile ? '18px' : '20px', fontWeight: 700, color: themeTextColor }}>
                           ₹{service.startingPrice.toLocaleString('en-IN')}
                         </div>
-                        <div style={{ fontSize: '13px', color: themeMuted }}>{service.typicalDuration}</div>
+                        <div style={{ fontSize: '12.5px', color: themeMuted, whiteSpace: 'nowrap' }}>
+                          {isMobile ? `· ${service.typicalDuration}` : service.typicalDuration}
+                        </div>
                       </div>
                     </div>
+
+                    {/* Full Width Tagline / Description */}
+                    <p
+                      style={{
+                        fontSize: isMobile ? '14px' : '15px',
+                        color: themeMuted,
+                        margin: 0,
+                        lineHeight: '1.45',
+                        width: '100%',
+                      }}
+                    >
+                      {service.tagline}
+                    </p>
 
                     {/* Least-Privilege Staff Access Scope Badge */}
                     <div
