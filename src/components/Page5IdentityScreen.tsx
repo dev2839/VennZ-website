@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { StatusBar } from './StatusBar';
 import { useAuth } from '../context/AuthContext';
 import { getPageBackground } from '../constants/themeGradients';
+import { useIsMobile } from '../mobile/useIsMobile';
 
 interface Page5IdentityScreenProps {
   onBack: () => void;
@@ -64,6 +65,8 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
     appearanceMode,
   } = useAuth();
   const isDark = appearanceMode === 'after-dark';
+  const isMobile = useIsMobile(768);
+  const galleryInputRef = useRef<HTMLInputElement | null>(null);
 
   // Local verification state (initialized directly from context so refresh never resets it)
   const [selfieComplete, setLocalSelfieComplete] = useState<boolean>(isSelfieVerified);
@@ -128,6 +131,16 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
   // --------------------------------------------------------------------------
   const handleStartCamera = async () => {
     setCameraErrorMessage('');
+
+    // On mobile devices, immediately trigger native front selfie camera capture via file input with capture="user"
+    // This provides 100% native reliability, instant load, avoids getUserMedia permission dialog hangs,
+    // and captures a crystal clear front selfie using the device's native camera.
+    if (isMobile) {
+      if (fileInputRef.current) {
+        fileInputRef.current.click();
+        return;
+      }
+    }
 
     // If mediaDevices is missing (e.g. non-HTTPS IP on LAN or strict privacy mode), trigger native camera capture
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
@@ -375,7 +388,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
               alignItems: 'center',
               gap: '6px',
               fontFamily: 'var(--font-sans)',
-              fontSize: '16.5px',
+              fontSize: isMobile ? '14px' : '16.5px',
               fontWeight: 700,
               letterSpacing: '0.08em',
               textTransform: 'uppercase',
@@ -395,13 +408,13 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
               <path d="M19 12H5" />
               <path d="m12 19-7-7 7-7" />
             </svg>
-            <span>BACK</span>
+            {!isMobile && <span>BACK</span>}
           </button>
 
           {/* Verification Badge */}
           <span
             style={{
-              fontSize: '15px',
+              fontSize: isMobile ? '12px' : '15px',
               letterSpacing: '0.09em',
               textTransform: 'uppercase',
               fontWeight: 600,
@@ -429,7 +442,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
         {/* Main Content Area */}
         <div
           style={{
-            padding: '28px 24px 40px 24px',
+            padding: isMobile ? '18px 16px 36px 16px' : '28px 24px 40px 24px',
             textAlign: 'left',
             maxWidth: '820px',
             margin: '0 auto',
@@ -441,11 +454,11 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
           <h1
             style={{
               fontFamily: 'var(--font-serif)',
-              fontSize: 'clamp(32px, 3.8vw, 44px)',
+              fontSize: isMobile ? '24px' : 'clamp(32px, 3.8vw, 44px)',
               lineHeight: '1.2',
               fontWeight: 400,
               color: isDark ? '#FBF7F2' : 'var(--color-mulberry)',
-              margin: '0 0 12px 0',
+              margin: isMobile ? '0 0 8px 0' : '0 0 12px 0',
               letterSpacing: '-0.01em',
             }}
           >
@@ -454,10 +467,10 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
 
           <p
             style={{
-              fontSize: '18px',
-              lineHeight: '1.55',
+              fontSize: isMobile ? '13.5px' : '18px',
+              lineHeight: isMobile ? '1.45' : '1.55',
               color: isDark ? '#BDB0B6' : '#6E5E68',
-              margin: '0 0 28px 0',
+              margin: isMobile ? '0 0 18px 0' : '0 0 28px 0',
             }}
           >
             A quick photo to verify that your profile pictures authentically match you. Kept strictly confidential and never displayed on your public profile.
@@ -475,35 +488,38 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
               border: selfieComplete
                 ? (isDark ? '1.5px solid rgba(74, 222, 128, 0.4)' : '1.5px solid rgba(46, 125, 50, 0.35)')
                 : (isDark ? '1.5px solid rgba(243, 238, 233, 0.14)' : '1px solid rgba(73, 40, 61, 0.16)'),
-              padding: '20px',
-              marginBottom: '24px',
+              padding: isMobile ? '16px 14px' : '20px',
+              marginBottom: isMobile ? '18px' : '24px',
               boxShadow: isDark ? 'none' : '0 6px 20px rgba(73, 40, 61, 0.05)',
               transition: 'border-color 0.2s ease',
             }}
           >
-            {/* Header: Title + Status Badge */}
+            {/* Header: Title + Status Badge (fits strictly on ONE line) */}
             <div
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                marginBottom: '12px',
+                marginBottom: isMobile ? '10px' : '12px',
+                gap: '8px',
+                flexWrap: 'nowrap',
               }}
             >
               <h2
                 style={{
-                  fontSize: '17px',
+                  fontSize: isMobile ? '12.5px' : '17px',
                   fontWeight: 700,
-                  letterSpacing: '0.08em',
+                  letterSpacing: isMobile ? '0.04em' : '0.08em',
                   textTransform: 'uppercase',
                   color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
                   margin: 0,
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '8px',
+                  gap: isMobile ? '6px' : '8px',
+                  whiteSpace: 'nowrap',
                 }}
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <svg width={isMobile ? "16" : "18"} height={isMobile ? "16" : "18"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
                   <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
                   <circle cx="12" cy="13" r="3" />
                 </svg>
@@ -513,12 +529,14 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
               {/* Status Badge */}
               <span
                 style={{
-                  fontSize: '14px',
+                  fontSize: isMobile ? '11px' : '14px',
                   fontWeight: 700,
-                  letterSpacing: '0.08em',
-                  padding: '4px 11px',
+                  letterSpacing: isMobile ? '0.04em' : '0.08em',
+                  padding: isMobile ? '3px 8px' : '4px 11px',
                   borderRadius: '12px',
                   textTransform: 'uppercase',
+                  whiteSpace: 'nowrap',
+                  flexShrink: 0,
                   backgroundColor: selfieComplete
                     ? (isDark ? 'rgba(74, 222, 128, 0.18)' : 'rgba(46, 125, 50, 0.12)')
                     : (isDark ? 'rgba(240, 212, 184, 0.12)' : 'rgba(73, 40, 61, 0.08)'),
@@ -527,7 +545,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                     : (isDark ? '#F9AAAD' : 'var(--color-mulberry)'),
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: '5px',
+                  gap: '4px',
                 }}
               >
                 {selfieComplete ? 'COMPLETE ✓' : 'REQUIRED'}
@@ -537,33 +555,35 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
             {/* Description */}
             <p
               style={{
-                fontSize: '17px',
-                lineHeight: '1.5',
+                fontSize: isMobile ? '13px' : '17px',
+                lineHeight: isMobile ? '1.4' : '1.5',
                 color: isDark ? '#D9CFD5' : '#5E4E58',
-                margin: '0 0 18px 0',
+                margin: isMobile ? '0 0 14px 0' : '0 0 18px 0',
               }}
             >
               One clear selfie taken on this device, used only as an authenticity signal during manual review. It is never visible to other members and never appears on your profile.
             </p>
 
-            {/* STATE B: UNLOCKED — CAMERA IDLE (Prompt to open live camera or use device camera) */}
+            {/* STATE B: UNLOCKED — CAMERA IDLE (Prompt to open camera or upload) */}
             {cameraState === 'idle' && !selfieComplete && (
               <div
                 style={{
                   backgroundColor: isDark ? 'rgba(243, 238, 233, 0.04)' : 'rgba(73, 40, 61, 0.04)',
                   borderRadius: '16px',
-                  padding: '24px 20px',
+                  padding: isMobile ? '18px 14px' : '24px 20px',
                   textAlign: 'center',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  gap: '14px',
+                  gap: isMobile ? '12px' : '14px',
+                  boxSizing: 'border-box',
+                  width: '100%',
                 }}
               >
                 <div
                   style={{
-                    width: '54px',
-                    height: '54px',
+                    width: isMobile ? '46px' : '54px',
+                    height: isMobile ? '46px' : '54px',
                     borderRadius: '50%',
                     backgroundColor: isDark ? 'rgba(240, 212, 184, 0.12)' : 'rgba(73, 40, 61, 0.08)',
                     display: 'flex',
@@ -572,38 +592,40 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                     color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
                   }}
                 >
-                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width={isMobile ? "22" : "26"} height={isMobile ? "22" : "26"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
                     <circle cx="12" cy="13" r="3" />
                   </svg>
                 </div>
 
-                <div style={{ fontSize: '17px', color: isDark ? '#D9CFD5' : '#5E4E58', lineHeight: '1.45', maxWidth: '400px' }}>
+                <div style={{ fontSize: isMobile ? '13px' : '17px', color: isDark ? '#D9CFD5' : '#5E4E58', lineHeight: '1.45', maxWidth: '400px' }}>
                   Face the camera in good lighting. No sunglasses, hats, or filters.
                 </div>
 
-                {/* Primary Button: Live Camera */}
+                {/* Primary Button: Live Camera on Desktop / Native Front Camera on Mobile */}
                 <button
                   type="button"
                   onClick={handleStartCamera}
                   style={{
                     width: '100%',
-                    height: '50px',
+                    height: isMobile ? '46px' : '50px',
+                    padding: isMobile ? '0 14px' : '0 20px',
                     borderRadius: '14px',
                     backgroundColor: isDark ? '#A1525F' : 'var(--color-mulberry)',
                     color: '#FFFFFF',
                     border: isDark ? '1px solid rgba(240, 212, 184, 0.35)' : 'none',
-                    fontSize: '16.5px',
+                    fontSize: isMobile ? '12.5px' : '16.5px',
                     fontWeight: 700,
-                    letterSpacing: '0.06em',
+                    letterSpacing: isMobile ? '0.04em' : '0.06em',
                     textTransform: 'uppercase',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: '10px',
+                    gap: '8px',
                     boxShadow: isDark ? '0 4px 14px rgba(0, 0, 0, 0.3)' : '0 4px 14px rgba(73, 40, 61, 0.18)',
                     transition: 'transform 0.15s ease, background-color 0.15s ease',
+                    boxSizing: 'border-box',
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.transform = 'translateY(-1px)';
@@ -614,27 +636,28 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                     e.currentTarget.style.backgroundColor = isDark ? '#A1525F' : 'var(--color-mulberry)';
                   }}
                 >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width={isMobile ? "16" : "18"} height={isMobile ? "16" : "18"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
                     <circle cx="12" cy="12" r="10" />
                     <circle cx="12" cy="12" r="3" />
                   </svg>
-                  <span>OPEN LIVE CAMERA & TAKE SELFIE</span>
+                  <span style={{ whiteSpace: 'nowrap' }}>{isMobile ? 'TAKE SELFIE WITH CAMERA' : 'OPEN LIVE CAMERA & TAKE SELFIE'}</span>
                 </button>
 
-                {/* Secondary Button: Native Device Camera / File Upload */}
+                {/* Secondary Button: Device Gallery / File Upload */}
                 <button
                   type="button"
-                  onClick={() => fileInputRef.current?.click()}
+                  onClick={() => (galleryInputRef.current || fileInputRef.current)?.click()}
                   style={{
                     width: '100%',
-                    height: '46px',
+                    height: isMobile ? '44px' : '46px',
+                    padding: isMobile ? '0 14px' : '0 16px',
                     borderRadius: '14px',
                     backgroundColor: isDark ? 'rgba(243, 238, 233, 0.08)' : 'rgba(73, 40, 61, 0.06)',
                     border: isDark ? '1px solid rgba(240, 212, 184, 0.25)' : '1px solid rgba(73, 40, 61, 0.18)',
                     color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
-                    fontSize: '15.5px',
+                    fontSize: isMobile ? '11.5px' : '15.5px',
                     fontWeight: 600,
-                    letterSpacing: '0.04em',
+                    letterSpacing: isMobile ? '0.03em' : '0.04em',
                     textTransform: 'uppercase',
                     cursor: 'pointer',
                     display: 'flex',
@@ -642,6 +665,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                     justifyContent: 'center',
                     gap: '8px',
                     transition: 'background-color 0.15s ease',
+                    boxSizing: 'border-box',
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.backgroundColor = isDark ? 'rgba(243, 238, 233, 0.14)' : 'rgba(73, 40, 61, 0.1)';
@@ -650,12 +674,12 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                     e.currentTarget.style.backgroundColor = isDark ? 'rgba(243, 238, 233, 0.08)' : 'rgba(73, 40, 61, 0.06)';
                   }}
                 >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width={isMobile ? "15" : "16"} height={isMobile ? "15" : "16"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                     <polyline points="17 8 12 3 7 8" />
                     <line x1="12" y1="3" x2="12" y2="15" />
                   </svg>
-                  <span>OR TAKE / UPLOAD WITH DEVICE CAMERA</span>
+                  <span style={{ whiteSpace: 'nowrap' }}>{isMobile ? 'UPLOAD PHOTO / GALLERY' : 'OR TAKE / UPLOAD WITH DEVICE CAMERA'}</span>
                 </button>
               </div>
             )}
@@ -1048,7 +1072,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
               onClick={handleContinueClick}
               style={{
                 width: '100%',
-                height: '56px',
+                height: isMobile ? '50px' : '56px',
                 borderRadius: '28px',
                 background: canContinue
                   ? 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)'
@@ -1057,7 +1081,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                   ? '#FDF3F5'
                   : (isDark ? 'rgba(253, 243, 245, 0.35)' : 'rgba(70, 32, 55, 0.45)'),
                 border: 'none',
-                fontSize: '17.5px',
+                fontSize: isMobile ? '15.5px' : '17.5px',
                 fontWeight: 700,
                 letterSpacing: '0.08em',
                 textTransform: 'uppercase',
@@ -1134,12 +1158,21 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
         {/* Hidden Canvas for High-Res Capture */}
         <canvas ref={canvasRef} style={{ display: 'none' }} />
 
-        {/* Hidden File Input for Device Camera Capture Fallback */}
+        {/* Hidden File Input for Native Camera (direct selfie capture on mobile) */}
         <input
           ref={fileInputRef}
           type="file"
           accept="image/*"
           capture="user"
+          onChange={handleSelfieFileUpload}
+          style={{ display: 'none' }}
+        />
+
+        {/* Hidden File Input for Photo Library Chooser */}
+        <input
+          ref={galleryInputRef}
+          type="file"
+          accept="image/*"
           onChange={handleSelfieFileUpload}
           style={{ display: 'none' }}
         />

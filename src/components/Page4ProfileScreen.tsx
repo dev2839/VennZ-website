@@ -3,6 +3,7 @@ import { StatusBar } from './StatusBar';
 import { useAuth } from '../context/AuthContext';
 import { calculateAgeFromISO } from '../utils/ageCalculation';
 import { getPageBackground } from '../constants/themeGradients';
+import { useIsMobile } from '../mobile/useIsMobile';
 
 interface Page4ProfileScreenProps {
   onBack: () => void;
@@ -67,6 +68,7 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
     digiLockerVerifiedDob,
   } = useAuth();
   const isDark = appearanceMode === 'after-dark';
+  const isMobile = useIsMobile(768);
 
   const [stage, setStage] = useState<'about' | 'venn'>('about');
 
@@ -591,29 +593,38 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
   const inputBorderColor = isDark ? 'rgba(243,238,233,0.18)' : 'rgba(73,40,61,0.22)';
   const textColor = isDark ? '#FBF7F2' : 'var(--color-espresso)';
 
-  const renderChip = (opt: string, isSelected: boolean, onClick: () => void) => (
+  const renderChip = (
+    opt: string,
+    isSelected: boolean,
+    onClick: () => void,
+    customLabel?: string,
+    compact?: boolean
+  ) => (
     <button
       key={opt}
       type="button"
       onClick={onClick}
       style={{
-        padding: '9px 20px',
+        padding: isMobile
+          ? (compact ? '5px 10px' : '6px 12px')
+          : (compact ? '7px 16px' : '9px 20px'),
         borderRadius: '999px',
         border: `1.5px solid ${isSelected ? 'rgba(161,82,95,0.9)' : (isDark ? 'rgba(161,82,95,0.3)' : 'rgba(73,40,61,0.2)')}`,
         backgroundColor: isSelected
           ? (isDark ? 'rgba(161,82,95,0.85)' : 'rgba(199,87,124,0.85)')
           : (isDark ? 'rgba(70,32,55,0.5)' : 'rgba(255,255,255,0.6)'),
         color: isSelected ? '#FDF3F5' : (isDark ? '#F9AAAD' : 'var(--color-mulberry)'),
-        fontSize: '16px',
+        fontSize: isMobile ? (compact ? '11.5px' : '12.5px') : '16px',
         fontWeight: isSelected ? 700 : 600,
         fontFamily: 'var(--font-sans)',
-        letterSpacing: '0.04em',
+        letterSpacing: '0.03em',
         cursor: 'pointer',
         transition: 'background 0.2s ease, color 0.2s ease, border-color 0.2s ease',
         whiteSpace: 'nowrap',
+        boxSizing: 'border-box',
       }}
     >
-      {opt}
+      {customLabel || opt}
     </button>
   );
 
@@ -713,7 +724,7 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
           </div>
         </div>
 
-        <div style={{ maxWidth: '960px', margin: '0 auto', width: '100%', padding: '24px 24px 48px 24px', textAlign: 'left', boxSizing: 'border-box' }}>
+        <div style={{ maxWidth: '960px', margin: '0 auto', width: '100%', padding: isMobile ? '16px 14px 40px 14px' : '24px 24px 48px 24px', textAlign: 'left', boxSizing: 'border-box' }}>
           
           {/* Venn Flower Visual */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '32px' }}>
@@ -961,11 +972,19 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                   <label style={{ display: 'block', fontSize: '15.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor, marginBottom: '8px' }}>
                     GENDER IDENTITY <span style={{ color: '#E06D6D' }}>*</span>
                   </label>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-                    {GENDER_OPTIONS.map(opt => renderChip(opt, genderIdentity === opt, () => {
-                      setGenderIdentity(opt);
-                      if (errors.genderIdentity) setErrors(prev => ({...prev, genderIdentity: ''}));
-                    }))}
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: isMobile ? '6px' : '10px' }}>
+                    {GENDER_OPTIONS.map(opt => {
+                      const mobileLabel = opt === 'PREFER TO SELF-DESCRIBE' ? 'SELF-DESCRIBE' : opt;
+                      return renderChip(
+                        opt,
+                        genderIdentity === opt,
+                        () => {
+                          setGenderIdentity(opt);
+                          if (errors.genderIdentity) setErrors(prev => ({...prev, genderIdentity: ''}));
+                        },
+                        isMobile ? mobileLabel : opt
+                      );
+                    })}
                   </div>
                   {genderIdentity === 'PREFER TO SELF-DESCRIBE' && (
                     <div style={{ marginTop: '12px' }}>
@@ -1005,11 +1024,15 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                   <label style={{ display: 'block', fontSize: '15.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor, marginBottom: '8px' }}>
                     INTERESTED IN DATING <span style={{ color: '#E06D6D' }}>*</span>
                   </label>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-                    {DATING_PREF_OPTIONS.map(opt => renderChip(opt, datingPreference === opt, () => {
-                      setDatingPreference(opt);
-                      if (errors.datingPreference) setErrors(prev => ({...prev, datingPreference: ''}));
-                    }))}
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: isMobile ? '6px' : '10px' }}>
+                    {DATING_PREF_OPTIONS.map(opt => renderChip(
+                      opt,
+                      datingPreference === opt,
+                      () => {
+                        setDatingPreference(opt);
+                        if (errors.datingPreference) setErrors(prev => ({...prev, datingPreference: ''}));
+                      }
+                    ))}
                   </div>
                   {errors.datingPreference && <div style={{ color: '#E06D6D', fontSize: '15px', marginTop: '5px' }}>{errors.datingPreference}</div>}
                 </div>
@@ -1019,11 +1042,21 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                   <label style={{ display: 'block', fontSize: '15.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor, marginBottom: '8px' }}>
                     CURRENT STATUS <span style={{ color: '#E06D6D' }}>*</span>
                   </label>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-                    {STATUS_OPTIONS.map(opt => renderChip(opt, currentStatus === opt, () => {
-                      setCurrentStatus(opt);
-                      if (errors.currentStatus) setErrors(prev => ({...prev, currentStatus: ''}));
-                    }))}
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: isMobile ? '6px' : '10px' }}>
+                    {STATUS_OPTIONS.map(opt => {
+                      let mobileLabel: string = opt;
+                      if (opt === 'FOUNDER / ENTREPRENEUR') mobileLabel = 'FOUNDER';
+                      if (opt === 'SELF-EMPLOYED / FREELANCER') mobileLabel = 'FREELANCER';
+                      return renderChip(
+                        opt,
+                        currentStatus === opt,
+                        () => {
+                          setCurrentStatus(opt);
+                          if (errors.currentStatus) setErrors(prev => ({...prev, currentStatus: ''}));
+                        },
+                        isMobile ? mobileLabel : opt
+                      );
+                    })}
                   </div>
                   {errors.currentStatus && <div style={{ color: '#E06D6D', fontSize: '15px', marginTop: '5px' }}>{errors.currentStatus}</div>}
                 </div>
@@ -1124,15 +1157,21 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                   <p style={{ fontSize: '15px', color: isDark ? '#B3A1A8' : '#8A7A84', margin: '0 0 12px 0' }}>
                     Select 3 to 6 interests that reflect who you are.
                   </p>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-                    {INTEREST_OPTIONS.map(opt => renderChip(opt, interests.includes(opt), () => {
-                      setInterests(prev => {
-                        if (prev.includes(opt)) return prev.filter(x => x !== opt);
-                        if (prev.length >= 6) return prev;
-                        return [...prev, opt];
-                      });
-                      if (errors.interests) setErrors(prev => ({...prev, interests: ''}));
-                    }))}
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: isMobile ? '6px' : '10px' }}>
+                    {INTEREST_OPTIONS.map(opt => renderChip(
+                      opt,
+                      interests.includes(opt),
+                      () => {
+                        setInterests(prev => {
+                          if (prev.includes(opt)) return prev.filter(x => x !== opt);
+                          if (prev.length >= 6) return prev;
+                          return [...prev, opt];
+                        });
+                        if (errors.interests) setErrors(prev => ({...prev, interests: ''}));
+                      },
+                      undefined,
+                      true
+                    ))}
                   </div>
                   {errors.interests && <div style={{ color: '#E06D6D', fontSize: '15px', marginTop: '6px' }}>{errors.interests}</div>}
                 </div>
@@ -1150,15 +1189,21 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                   <p style={{ fontSize: '15px', color: isDark ? '#B3A1A8' : '#8A7A84', margin: '0 0 12px 0' }}>
                     Choose 2 to 5 traits that capture your essence.
                   </p>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-                    {VIBE_OPTIONS.map(opt => renderChip(opt, vibes.includes(opt), () => {
-                      setVibes(prev => {
-                        if (prev.includes(opt)) return prev.filter(x => x !== opt);
-                        if (prev.length >= 5) return prev;
-                        return [...prev, opt];
-                      });
-                      if (errors.vibes) setErrors(prev => ({...prev, vibes: ''}));
-                    }))}
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: isMobile ? '6px' : '10px' }}>
+                    {VIBE_OPTIONS.map(opt => renderChip(
+                      opt,
+                      vibes.includes(opt),
+                      () => {
+                        setVibes(prev => {
+                          if (prev.includes(opt)) return prev.filter(x => x !== opt);
+                          if (prev.length >= 5) return prev;
+                          return [...prev, opt];
+                        });
+                        if (errors.vibes) setErrors(prev => ({...prev, vibes: ''}));
+                      },
+                      undefined,
+                      true
+                    ))}
                   </div>
                   {errors.vibes && <div style={{ color: '#E06D6D', fontSize: '15px', marginTop: '6px' }}>{errors.vibes}</div>}
                 </div>
