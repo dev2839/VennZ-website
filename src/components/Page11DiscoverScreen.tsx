@@ -3,7 +3,6 @@ import { EyeOff } from 'lucide-react';
 import { MemberTopBar } from './MemberTopBar';
 import { MemberBottomNav, type MemberTab } from './MemberBottomNav';
 import { StatusBar } from './StatusBar';
-import { useIsMobile } from '../mobile/useIsMobile';
 import { useAuth } from '../context/AuthContext';
 import { DUMMY_DISCOVER_PROFILES } from '../data/dummyProfiles';
 import type { DiscoverProfile } from '../types/discover';
@@ -43,8 +42,6 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
     setMembershipStatus,
   } = useAuth();
   const isDark = appearanceMode === 'after-dark';
-  const isMobile = useIsMobile(768);
-  const [mobilePhotoIdx, setMobilePhotoIdx] = useState<number>(0);
 
   // Scroll to top on mount
   useEffect(() => {
@@ -116,49 +113,31 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
     } else {
       setCardOrder([]);
     }
-    setMobilePhotoIdx(0);
     setTransitionPhase('idle');
     isTransitioningRef.current = false;
     setDragOffset({ x: 0, y: 0 });
     setIsDragging(false);
   }, [currentProfile?.id]);
 
-  // Preload upcoming photos in the queue
+  // Preload all profile photos in memory to ensure instant GPU caching and buttery smooth transitions
   useEffect(() => {
-    if (!currentProfile?.photos || currentProfile.photos.length <= 1 || cardOrder.length === 0) return;
-    const currentFront = cardOrder[0] ?? 0;
-    const nextIdx = (currentFront + 1) % currentProfile.photos.length;
-    const img1 = new Image();
-    img1.src = currentProfile.photos[nextIdx];
-    if (currentProfile.photos.length > 2) {
-      const nextNextIdx = (currentFront + 2) % currentProfile.photos.length;
-      const img2 = new Image();
-      img2.src = currentProfile.photos[nextNextIdx];
-    }
-  }, [cardOrder, currentProfile]);
-
-  // Previous photo handler for mobile (smooth instant transition without deck drop)
-  const handlePrevPhotoCard = useCallback(() => {
     if (!currentProfile?.photos || currentProfile.photos.length <= 1) return;
-    if (isMobile) {
-      setMobilePhotoIdx((prev) => (prev > 0 ? prev - 1 : currentProfile.photos.length - 1));
-    }
-  }, [currentProfile, isMobile]);
+    currentProfile.photos.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, [currentProfile?.id]);
 
-  // Transition to next photo: on mobile, butter-smooth hardware-accelerated photo change; on desktop, 3D deck slide
+  // Transition to next photo: slide down in front, drop behind, and glide up into the rear of the stack smoothly
   const handleNextPhotoCard = useCallback(() => {
     if (!currentProfile?.photos || currentProfile.photos.length <= 1) return;
-    if (isMobile) {
-      setMobilePhotoIdx((prev) => (prev + 1) % currentProfile.photos.length);
-      return;
-    }
     if (isTransitioningRef.current) return;
     isTransitioningRef.current = true;
 
-    // Phase 1: Slide down in front to reveal the next card (which already has its own image & text!)
+    // Phase 1: Slide down in front to reveal the next card (which already has its own image & text)
     setTransitionPhase('drop');
 
-    // Phase 2: Outgoing front card drops behind the deck (zIndex 1) and glides up into rear position
+    // Phase 2: Outgoing front card drops behind the deck (zIndex behind Layer 2) and glides up into rear position
     timeout1Ref.current = setTimeout(() => {
       setTransitionPhase('return');
 
@@ -169,12 +148,10 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
         isTransitioningRef.current = false;
       }, 300);
     }, 280);
-  }, [currentProfile, isMobile]);
+  }, [currentProfile]);
 
-  // Active displayed photo index
-  const activePhotoIndex = isMobile
-    ? mobilePhotoIdx
-    : (transitionPhase === 'drop' || transitionPhase === 'return')
+  // Active displayed photo index (during drop/return, the incoming front card is cardOrder[1])
+  const activePhotoIndex = (transitionPhase === 'drop' || transitionPhase === 'return')
     ? (cardOrder.length > 1 ? cardOrder[1] : (cardOrder[0] ?? 0))
     : (cardOrder[0] ?? 0);
 
@@ -683,7 +660,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
               // Helper function to render the full self-contained content of each photo card
               const renderCardBody = (pIdx: number, _isInteractiveFront?: boolean) => {
                 const photoUrl = photoList[pIdx];
-                const details = getPhotoCardDetails(currentProfile, isMobile && _isInteractiveFront ? activePhotoIndex : pIdx);
+                const details = getPhotoCardDetails(currentProfile, pIdx);
 
                 return (
                   <div
@@ -693,53 +670,11 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                       height: '100%',
                       overflow: 'hidden',
                       borderRadius: '24px',
+                      backgroundColor: '#1E161C',
                     }}
                   >
                     {/* Photo Image */}
-                    {isMobile && _isInteractiveFront ? (
-                      <div
-                        style={{
-                          position: 'relative',
-                          width: '100%',
-                          height: '100%',
-                          backgroundColor: '#1E161C',
-                        }}
-                      >
-                        {photoList.map((url, imgIdx) => {
-                          const isCurrent = imgIdx === activePhotoIndex;
-                          return (
-                            <div
-                              key={`mobile-front-img-${imgIdx}`}
-                              style={{
-                                position: 'absolute',
-                                inset: 0,
-                                opacity: isCurrent ? 1 : 0,
-                                transform: isCurrent ? 'scale(1)' : 'scale(1.02)',
-                                transition: 'opacity 0.26s cubic-bezier(0.2, 0, 0, 1), transform 0.26s cubic-bezier(0.2, 0, 0, 1)',
-                                pointerEvents: 'none',
-                                willChange: 'opacity, transform',
-                                backfaceVisibility: 'hidden',
-                                WebkitBackfaceVisibility: 'hidden',
-                              }}
-                            >
-                              <img
-                                src={url}
-                                alt={`${currentProfile.firstName}'s photo ${imgIdx + 1}`}
-                                draggable={false}
-                                decoding="async"
-                                style={{
-                                  width: '100%',
-                                  height: '100%',
-                                  objectFit: 'cover',
-                                  objectPosition: 'center top',
-                                  display: 'block',
-                                }}
-                              />
-                            </div>
-                          );
-                        })}
-                      </div>
-                    ) : photoUrl ? (
+                    {photoUrl ? (
                       <img
                         src={photoUrl}
                         alt={`${currentProfile.firstName}'s photo ${pIdx + 1}`}
@@ -753,6 +688,8 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                           objectPosition: 'center top',
                           display: 'block',
                           pointerEvents: 'none',
+                          backfaceVisibility: 'hidden',
+                          WebkitBackfaceVisibility: 'hidden',
                         }}
                       />
                     ) : (
@@ -784,34 +721,22 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                           display: 'flex',
                           gap: '5px',
                           zIndex: 25,
-                          pointerEvents: isMobile && _isInteractiveFront ? 'auto' : 'none',
+                          pointerEvents: 'none',
                         }}
                       >
-                        {photoList.map((_, segIdx) => {
-                          const isSegActive = isMobile && _isInteractiveFront
-                            ? segIdx === activePhotoIndex
-                            : segIdx === pIdx;
-                          return (
-                            <div
-                              key={segIdx}
-                              onClick={(e) => {
-                                if (isMobile && _isInteractiveFront) {
-                                  e.stopPropagation();
-                                  setMobilePhotoIdx(segIdx);
-                                }
-                              }}
-                              style={{
-                                height: '3px',
-                                flex: 1,
-                                cursor: isMobile && _isInteractiveFront ? 'pointer' : 'default',
-                                borderRadius: '2px',
-                                backgroundColor: isSegActive ? '#FFFFFF' : 'rgba(255, 255, 255, 0.38)',
-                                boxShadow: isSegActive ? '0 0 6px rgba(255, 255, 255, 0.8)' : 'none',
-                                transition: 'background-color 0.25s ease',
-                              }}
-                            />
-                          );
-                        })}
+                        {photoList.map((_, segIdx) => (
+                          <div
+                            key={segIdx}
+                            style={{
+                              height: '3px',
+                              flex: 1,
+                              borderRadius: '2px',
+                              backgroundColor: segIdx === pIdx ? '#FFFFFF' : 'rgba(255, 255, 255, 0.38)',
+                              boxShadow: segIdx === pIdx ? '0 0 6px rgba(255, 255, 255, 0.8)' : 'none',
+                              transition: 'background-color 0.25s ease',
+                            }}
+                          />
+                        ))}
                       </div>
                     )}
 
@@ -870,7 +795,6 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                     {/* Overlay Details */}
                     {details.type !== 'empty' && (
                       <div
-                        key={`overlay-details-${isMobile && _isInteractiveFront ? activePhotoIndex : pIdx}`}
                         style={{
                           position: 'absolute',
                           bottom: '18px',
@@ -878,7 +802,6 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                           right: '20px',
                           zIndex: 15,
                           pointerEvents: 'none',
-                          animation: 'fadeInDetails 0.2s ease',
                         }}
                       >
                         {details.type === 'primary' && (
@@ -1123,31 +1046,29 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                     {/* Layer 3: Deepest Background Card (shown if N >= 3) */}
                     {thirdIdx !== null && (
                       <div
-                        key={isMobile ? 'deck-card-layer-3' : `deck-card-${thirdIdx}`}
+                        key={`deck-card-${thirdIdx}`}
                         style={{
                           position: 'absolute',
                           inset: 0,
                           borderRadius: '24px',
                           backgroundColor: '#1E161C',
                           boxShadow: isDark ? '0 8px 24px rgba(0, 0, 0, 0.45)' : '0 8px 22px rgba(73, 40, 61, 0.1)',
-                          transform: isMobile
-                            ? 'translate3d(0, -16px, -30px) scale(0.90) rotate(-2.8deg)'
-                            : (transitionPhase === 'idle'
-                            ? 'translate3d(0, -16px, -30px) scale(0.90) rotate(-2.8deg)'
-                            : 'translate3d(0, -8px, -15px) scale(0.95) rotate(2.4deg)'),
+                          transform: transitionPhase === 'idle'
+                            ? 'translate3d(0, -16px, 0) scale(0.90) rotate(-2.8deg)'
+                            : 'translate3d(0, -8px, 0) scale(0.95) rotate(2.4deg)',
                           transformOrigin: 'bottom center',
-                          opacity: isMobile ? 0.75 : (transitionPhase === 'idle' ? 0.75 : 0.9),
-                          filter: isDark ? 'brightness(0.68)' : 'brightness(0.78)',
+                          opacity: transitionPhase === 'idle' ? 0.75 : 0.9,
+                          filter: transitionPhase === 'idle'
+                            ? (isDark ? 'brightness(0.68)' : 'brightness(0.78)')
+                            : (isDark ? 'brightness(0.78)' : 'brightness(0.88)'),
                           zIndex: 2,
-                          transition: isMobile
-                            ? 'none'
-                            : (prefersReducedMotion
+                          transition: prefersReducedMotion
                             ? 'none'
                             : transitionPhase === 'drop'
                             ? 'transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.28s ease, filter 0.28s ease'
-                            : 'none'),
+                            : 'transform 0.30s ease, opacity 0.30s ease, filter 0.30s ease',
                           pointerEvents: 'none',
-                          willChange: isMobile ? 'auto' : 'transform, opacity',
+                          willChange: 'transform, opacity',
                           backfaceVisibility: 'hidden',
                           WebkitBackfaceVisibility: 'hidden',
                         }}
@@ -1159,39 +1080,31 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                     {/* Layer 2: Middle Background Card (shown if N >= 2) */}
                     {nextIdx !== null && (
                       <div
-                        key={isMobile ? 'deck-card-layer-2' : `deck-card-${nextIdx}`}
+                        key={`deck-card-${nextIdx}`}
                         style={{
                           position: 'absolute',
                           inset: 0,
                           borderRadius: '24px',
                           backgroundColor: '#1E161C',
-                          boxShadow: isMobile
+                          boxShadow: transitionPhase === 'idle'
                             ? (isDark ? '0 12px 30px rgba(0, 0, 0, 0.5)' : '0 12px 28px rgba(73, 40, 61, 0.12)')
-                            : (transitionPhase === 'idle'
-                            ? (isDark ? '0 12px 30px rgba(0, 0, 0, 0.5)' : '0 12px 28px rgba(73, 40, 61, 0.12)')
-                            : (isDark ? '0 18px 44px rgba(0, 0, 0, 0.6)' : '0 16px 40px rgba(73, 40, 61, 0.18)')),
-                          transform: isMobile
-                            ? 'translate3d(0, -8px, -15px) scale(0.95) rotate(2.4deg)'
-                            : (transitionPhase === 'idle'
-                            ? 'translate3d(0, -8px, -15px) scale(0.95) rotate(2.4deg)'
-                            : 'translate3d(0, 0, 0) scale(1) rotate(0deg)'),
+                            : (isDark ? '0 18px 44px rgba(0, 0, 0, 0.6)' : '0 16px 40px rgba(73, 40, 61, 0.18)'),
+                          transform: transitionPhase === 'idle'
+                            ? 'translate3d(0, -8px, 0) scale(0.95) rotate(2.4deg)'
+                            : 'translate3d(0, 0, 0) scale(1) rotate(0deg)',
                           transformOrigin: 'bottom center',
-                          opacity: isMobile ? 0.9 : (transitionPhase === 'idle' ? 0.9 : 1),
-                          filter: isMobile
+                          opacity: transitionPhase === 'idle' ? 0.9 : 1,
+                          filter: transitionPhase === 'idle'
                             ? (isDark ? 'brightness(0.78)' : 'brightness(0.88)')
-                            : (transitionPhase === 'idle'
-                            ? (isDark ? 'brightness(0.78)' : 'brightness(0.88)')
-                            : 'brightness(1)'),
-                          zIndex: isMobile ? 5 : (transitionPhase === 'idle' ? 5 : 10),
-                          transition: isMobile
-                            ? 'none'
-                            : (prefersReducedMotion
+                            : 'brightness(1)',
+                          zIndex: transitionPhase === 'idle' ? 5 : 10,
+                          transition: prefersReducedMotion
                             ? 'none'
                             : transitionPhase === 'drop'
-                            ? 'transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.28s ease, filter 0.28s ease'
-                            : 'none'),
+                            ? 'transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.28s ease, filter 0.28s ease, box-shadow 0.28s ease'
+                            : 'transform 0.30s ease, opacity 0.30s ease, filter 0.30s ease',
                           pointerEvents: 'none',
-                          willChange: isMobile ? 'auto' : 'transform, opacity',
+                          willChange: 'transform, opacity',
                           backfaceVisibility: 'hidden',
                           WebkitBackfaceVisibility: 'hidden',
                         }}
@@ -1202,27 +1115,17 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
 
                     {/* Layer 1: Front / Outgoing Card */}
                     <div
-                      key={isMobile ? 'deck-card-layer-1' : `deck-card-${frontIdx}`}
+                      key={`deck-card-${frontIdx}`}
                       onPointerDown={handlePointerDown}
                       onPointerMove={handlePointerMove}
                       onPointerUp={handlePointerUp}
                       onPointerCancel={handlePointerCancel}
-                      onClick={(e) => {
+                      onClick={() => {
                         if (ignoreNextClickRef.current) {
                           ignoreNextClickRef.current = false;
                           return;
                         }
-                        if (isMobile) {
-                          const rect = e.currentTarget.getBoundingClientRect();
-                          const clickX = e.clientX - rect.left;
-                          if (clickX < rect.width * 0.33) {
-                            handlePrevPhotoCard();
-                          } else {
-                            handleNextPhotoCard();
-                          }
-                        } else {
-                          handleNextPhotoCard();
-                        }
+                        handleNextPhotoCard();
                       }}
                       style={{
                         position: 'absolute',
@@ -1231,49 +1134,37 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                         backgroundColor: '#1E161C',
                         boxShadow: isDragging
                           ? (isDark ? '0 24px 50px rgba(0, 0, 0, 0.8)' : '0 22px 46px rgba(73, 40, 61, 0.28)')
-                          : isMobile
-                          ? (isDark ? '0 18px 44px rgba(0, 0, 0, 0.6)' : '0 16px 40px rgba(73, 40, 61, 0.18)')
                           : transitionPhase === 'drop'
                           ? (isDark ? '0 24px 50px rgba(0, 0, 0, 0.7)' : '0 22px 46px rgba(73, 40, 61, 0.24)')
                           : transitionPhase === 'return'
                           ? (isDark ? '0 8px 24px rgba(0, 0, 0, 0.45)' : '0 8px 22px rgba(73, 40, 61, 0.1)')
                           : (isDark ? '0 18px 44px rgba(0, 0, 0, 0.6)' : '0 16px 40px rgba(73, 40, 61, 0.18)'),
-                        transform: isMobile
-                          ? 'translate3d(0, 0, 0) scale(1) rotate(0deg)'
-                          : (transitionPhase === 'idle'
+                        transform: transitionPhase === 'idle'
                           ? 'translate3d(0, 0, 0) scale(1) rotate(0deg)'
                           : transitionPhase === 'drop'
-                          ? 'translate3d(8px, 76%, 20px) scale(0.96) rotate(3.5deg)'
+                          ? 'translate3d(8px, 72%, 0) scale(0.96) rotate(3.5deg)'
                           : (thirdIdx !== null
-                            ? 'translate3d(0, -16px, -30px) scale(0.90) rotate(-2.8deg)'
-                            : 'translate3d(0, -8px, -15px) scale(0.95) rotate(2.4deg)')),
+                            ? 'translate3d(0, -16px, 0) scale(0.90) rotate(-2.8deg)'
+                            : 'translate3d(0, -8px, 0) scale(0.95) rotate(2.4deg)'),
                         transformOrigin: 'bottom center',
-                        opacity: isMobile
-                          ? 1
-                          : (transitionPhase === 'return' ? (thirdIdx !== null ? 0.75 : 0.9) : 1),
-                        filter: isMobile
-                          ? 'none'
-                          : (transitionPhase === 'return'
+                        opacity: transitionPhase === 'return' ? (thirdIdx !== null ? 0.75 : 0.9) : 1,
+                        filter: transitionPhase === 'return'
                           ? (thirdIdx !== null ? (isDark ? 'brightness(0.68)' : 'brightness(0.78)') : (isDark ? 'brightness(0.78)' : 'brightness(0.88)'))
-                          : 'brightness(1)'),
-                        zIndex: isMobile
-                          ? 10
-                          : (transitionPhase === 'drop' ? 15 : (transitionPhase === 'return' ? 1 : 10)),
+                          : 'brightness(1)',
+                        zIndex: transitionPhase === 'drop' ? 15 : (thirdIdx !== null ? 2 : 5),
                         cursor: isDragging ? 'grabbing' : (N > 1 ? 'pointer' : 'grab'),
                         touchAction: 'pan-y',
                         transition: isDragging
-                          ? 'none'
-                          : isMobile
                           ? 'none'
                           : prefersReducedMotion
                           ? 'none'
                           : transitionPhase === 'drop'
                           ? 'transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1), box-shadow 0.28s ease'
                           : transitionPhase === 'return'
-                          ? 'transform 0.30s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.30s ease, filter 0.30s ease'
+                          ? 'transform 0.30s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.30s ease, filter 0.30s ease, box-shadow 0.30s ease'
                           : 'none',
                         userSelect: 'none',
-                        willChange: isMobile ? 'auto' : 'transform, opacity',
+                        willChange: 'transform, opacity',
                         backfaceVisibility: 'hidden',
                         WebkitBackfaceVisibility: 'hidden',
                       }}
