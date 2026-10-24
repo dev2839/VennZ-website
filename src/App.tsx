@@ -857,7 +857,7 @@ export const App: React.FC = () => {
         {renderActiveScreen(false, false)}
       </main>
 
-      {/* Comprehensive Editorial Web Footer: Excluded from discover, mixers, elevate, matches, pickforme, afterhours */}
+      {/* Comprehensive Editorial Web Footer: Excluded from discover, mixers, elevate, matches, pickforme, afterhours, and full profile view */}
       {!isFullHeightChatMode &&
         currentPath !== '/join' &&
         currentPath !== '/login' &&
@@ -869,11 +869,11 @@ export const App: React.FC = () => {
         currentPath !== '/member/matches' &&
         currentPath !== '/member/blinddate' &&
         currentPath !== '/member/afterhours' &&
+        currentPath !== '/member/profile' &&
         (!isMobile ||
           currentPath === '/' ||
           currentPath === '/overview' ||
           currentPath === '/join/profile' ||
-          currentPath === '/member/profile' ||
           currentPath === '/member/you' ||
           currentPath === '/member/my-profile') && (
           <WebFooter onNavigate={(path) => navigate(path as RoutePath)} />

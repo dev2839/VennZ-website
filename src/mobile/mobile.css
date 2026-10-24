@@ -263,6 +263,12 @@
   .web-footer-legal-link {
     font-size: 11px !important;
   }
+
+  /* 13. Discover Card Smooth Mobile Photo Transitions (Zero GPU lag, Zero compositing glitch) */
+  .ken-burns-img {
+    animation: none !important;
+    transform: none !important;
+  }
 }
 
 /* Desktop & iPad (width >= 768px): links wrapper behaves as contents so original layout remains 100% UNTOUCHED */
