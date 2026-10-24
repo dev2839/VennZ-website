@@ -24,11 +24,17 @@
   --btn-gradient-primary: linear-gradient(135deg, #A1525F 0%, #C7577C 100%);
   --btn-gradient-hover: linear-gradient(135deg, #C7577C 0%, #F9AAAD 100%);
 
-  /* Typography */
-  --font-serif: 'Sugar', 'Brown Sugar', 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
-  --font-sans: 'Sugar', 'Plus Jakarta Sans', 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* Typography (Reference Fonts: Outfit for entire website, Baskerville for special highlights) */
+  --font-serif: 'Libre Baskerville', Baskerville, 'Baskerville Old Face', 'Hoefler Text', Garamond, 'Times New Roman', serif;
+  --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --font-script: 'Alex Brush', cursive;
-  --font-serif-italic: 'Playfair Display', Georgia, serif;
+  --font-serif-italic: 'Libre Baskerville', Baskerville, Georgia, serif;
+  --font-highlight: 'Libre Baskerville', Baskerville, 'Baskerville Old Face', serif;
+}
+
+
+button, input, select, textarea, optgroup {
+  font-family: inherit;
 }
 
 *, *::before, *::after {
@@ -46,7 +52,7 @@ html, body {
   background-color: #140E1C;
   color: var(--color-warm-porcelain);
   font-family: var(--font-sans);
-  font-weight: 300;
+  font-weight: 400;
   letter-spacing: 0.01em;
   overflow-x: hidden;
 }
