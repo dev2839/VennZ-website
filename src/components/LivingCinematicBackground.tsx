@@ -1,5 +1,4 @@
 import React, { useRef, useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
 
 interface LivingCinematicBackgroundProps {
   className?: string;
@@ -61,8 +60,6 @@ export const LivingCinematicBackground: React.FC<LivingCinematicBackgroundProps>
   className = '',
   children,
 }) => {
-  const { appearanceMode } = useAuth();
-  const isDark = appearanceMode === 'after-dark';
 
   return (
     <div
@@ -72,7 +69,7 @@ export const LivingCinematicBackground: React.FC<LivingCinematicBackgroundProps>
         width: '100%',
         minHeight: '100dvh',
         overflow: 'hidden',
-        backgroundColor: isDark ? '#140E1C' : '#FAF1F3',
+        backgroundColor: '#140E1C',
       }}
     >
       <style>{`
@@ -147,18 +144,7 @@ export const LivingCinematicBackground: React.FC<LivingCinematicBackgroundProps>
       {/* Layer 1: Seamless Infinitely Continuous Living Cinematic Video */}
       <CinematicVideoPlayer />
 
-      {/* Light mode luminous scrim */}
-      {!isDark && (
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            background: 'linear-gradient(180deg, rgba(251, 243, 245, 0.35) 0%, rgba(250, 241, 243, 0.65) 100%)',
-            zIndex: 2,
-            pointerEvents: 'none',
-          }}
-        />
-      )}
+
 
       {/* Layer 2: Subtle Horizon Twilight Warmth */}
       <div

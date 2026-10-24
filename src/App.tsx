@@ -857,12 +857,18 @@ export const App: React.FC = () => {
         {renderActiveScreen(false, false)}
       </main>
 
-      {/* Comprehensive Editorial Web Footer: On mobile, strictly on first page, profile setup page, and profile page */}
+      {/* Comprehensive Editorial Web Footer: Excluded from discover, mixers, elevate, matches, pickforme, afterhours */}
       {!isFullHeightChatMode &&
         currentPath !== '/join' &&
         currentPath !== '/login' &&
         currentPath !== '/join/verify-code' &&
         currentPath !== '/join/digilocker' &&
+        currentPath !== '/discover' &&
+        currentPath !== '/member/mixers' &&
+        currentPath !== '/member/elevate' &&
+        currentPath !== '/member/matches' &&
+        currentPath !== '/member/blinddate' &&
+        currentPath !== '/member/afterhours' &&
         (!isMobile ||
           currentPath === '/' ||
           currentPath === '/overview' ||

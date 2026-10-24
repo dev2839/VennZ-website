@@ -15,31 +15,26 @@ export const Page3DigiLockerScreen: React.FC<Page3DigiLockerScreenProps> = ({
   onBack,
   onSuccess,
 }) => {
-  const { setDigiLockerVerified, appearanceMode } = useAuth();
-  const isDark = appearanceMode === 'after-dark';
+  const { setDigiLockerVerified } = useAuth();
   const isMobile = useIsMobile(768);
 
   const [step, setStep] = useState<DigiLockerFlowStep>('intro');
   const [errorMessage, setErrorMessage] = useState<string>('');
 
-  // Dynamic Theme Colors
-  const textColor = isDark ? '#FDF3F5' : '#462037';
-  const mutedColor = isDark ? '#D4A2AC' : '#683A46';
-  const cardBg = isDark ? 'rgba(30, 16, 28, 0.78)' : 'rgba(255, 255, 255, 0.94)';
-  const cardBorder = isDark ? '1px solid rgba(161, 82, 95, 0.35)' : '1px solid rgba(161, 82, 95, 0.22)';
-  const cardShadow = isDark
-    ? '0 28px 68px rgba(10, 6, 14, 0.75), 0 0 1px 1px rgba(249, 170, 173, 0.1) inset'
-    : '0 20px 50px rgba(73, 40, 61, 0.14), 0 0 1px 1px rgba(255, 255, 255, 0.8) inset';
-  const rowBg = isDark ? 'rgba(70, 32, 55, 0.35)' : 'rgba(250, 241, 243, 0.92)';
-  const rowBorder = isDark ? '1px solid rgba(161, 82, 95, 0.25)' : '1px solid rgba(199, 87, 124, 0.2)';
-  const rowText = isDark ? '#F8E2E6' : '#462037';
-  const privacyBg = isDark ? 'rgba(20, 14, 28, 0.5)' : 'rgba(246, 236, 239, 0.85)';
-  const privacyBorder = isDark ? '1px solid rgba(161, 82, 95, 0.2)' : '1px solid rgba(161, 82, 95, 0.15)';
-  const iconBg = isDark
-    ? 'linear-gradient(135deg, rgba(70, 32, 55, 0.6) 0%, rgba(104, 58, 70, 0.6) 100%)'
-    : 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 230, 235, 0.95) 100%)';
-  const iconBorder = isDark ? '1px solid rgba(161, 82, 95, 0.4)' : '1px solid rgba(199, 87, 124, 0.35)';
-  const iconStroke = isDark ? '#F9AAAD' : '#A1525F';
+  // Dark Glassmorphic Theme Colors (Consistent Dark Background)
+  const textColor = '#FDF3F5';
+  const mutedColor = '#D4A2AC';
+  const cardBg = 'rgba(30, 16, 28, 0.78)';
+  const cardBorder = '1px solid rgba(161, 82, 95, 0.35)';
+  const cardShadow = '0 28px 68px rgba(10, 6, 14, 0.75), 0 0 1px 1px rgba(249, 170, 173, 0.1) inset';
+  const rowBg = 'rgba(70, 32, 55, 0.35)';
+  const rowBorder = '1px solid rgba(161, 82, 95, 0.25)';
+  const rowText = '#F8E2E6';
+  const privacyBg = 'rgba(20, 14, 28, 0.5)';
+  const privacyBorder = '1px solid rgba(161, 82, 95, 0.2)';
+  const iconBg = 'linear-gradient(135deg, rgba(70, 32, 55, 0.6) 0%, rgba(104, 58, 70, 0.6) 100%)';
+  const iconBorder = '1px solid rgba(161, 82, 95, 0.4)';
+  const iconStroke = '#F9AAAD';
 
   // Prevent duplicate API calls
   const isRequestInFlight = useRef(false);
@@ -63,8 +58,8 @@ export const Page3DigiLockerScreen: React.FC<Page3DigiLockerScreenProps> = ({
           width: '20px',
           height: '20px',
           borderRadius: '50%',
-          backgroundColor: isDark ? 'rgba(199, 87, 124, 0.2)' : 'rgba(161, 82, 95, 0.12)',
-          border: isDark ? '1.5px solid #C7577C' : '1.5px solid #A1525F',
+          backgroundColor: 'rgba(199, 87, 124, 0.2)',
+          border: '1.5px solid #C7577C',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -72,7 +67,7 @@ export const Page3DigiLockerScreen: React.FC<Page3DigiLockerScreenProps> = ({
         }}
       >
         <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
-          <path d="M2 6l3 3 5-5" stroke={isDark ? '#F9AAAD' : '#A1525F'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M2 6l3 3 5-5" stroke="#F9AAAD" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </span>
       <span style={{ fontSize: '15.5px', color: rowText, fontWeight: 500 }}>{label}</span>
@@ -81,7 +76,7 @@ export const Page3DigiLockerScreen: React.FC<Page3DigiLockerScreenProps> = ({
 
   const PrivacyRow: React.FC<{ text: string }> = ({ text }) => (
     <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
-      <span style={{ color: isDark ? '#A1525F' : '#C7577C', fontSize: '15px', lineHeight: '20px', flexShrink: 0 }}>•</span>
+      <span style={{ color: '#A1525F', fontSize: '15px', lineHeight: '20px', flexShrink: 0 }}>•</span>
       <span style={{ fontSize: '14.5px', color: mutedColor, lineHeight: 1.5 }}>{text}</span>
     </div>
   );
@@ -216,8 +211,8 @@ export const Page3DigiLockerScreen: React.FC<Page3DigiLockerScreenProps> = ({
     width: '100%',
     height: '46px',
     borderRadius: '9999px',
-    border: isDark ? '1px solid rgba(161, 82, 95, 0.4)' : '1px solid rgba(161, 82, 95, 0.3)',
-    background: isDark ? 'transparent' : 'rgba(255, 255, 255, 0.75)',
+    border: '1px solid rgba(161, 82, 95, 0.4)',
+    background: 'transparent',
     color: mutedColor,
     fontSize: '15.5px',
     fontWeight: 500,
@@ -247,7 +242,7 @@ export const Page3DigiLockerScreen: React.FC<Page3DigiLockerScreenProps> = ({
                 alignItems: 'center',
                 justifyContent: 'center',
                 margin: '0 auto 16px auto',
-                boxShadow: isDark ? '0 4px 16px rgba(0,0,0,0.4)' : '0 4px 14px rgba(70, 32, 55, 0.1)',
+                boxShadow: '0 4px 16px rgba(0,0,0,0.4)',
               }}
             >
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={iconStroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -280,7 +275,7 @@ export const Page3DigiLockerScreen: React.FC<Page3DigiLockerScreenProps> = ({
                 fontWeight: 600,
                 letterSpacing: '0.1em',
                 textTransform: 'uppercase',
-                color: isDark ? '#F9AAAD' : '#A1525F',
+                color: '#F9AAAD',
                 marginBottom: '10px',
               }}
             >
@@ -338,8 +333,8 @@ export const Page3DigiLockerScreen: React.FC<Page3DigiLockerScreenProps> = ({
             type="button"
             style={{ ...ghostBtnStyle, marginTop: '10px' }}
             onClick={onBack}
-            onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#C7577C'; e.currentTarget.style.color = isDark ? '#F9AAAD' : '#A1525F'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.borderColor = isDark ? 'rgba(161, 82, 95, 0.4)' : 'rgba(161, 82, 95, 0.3)'; e.currentTarget.style.color = mutedColor; }}
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#C7577C'; e.currentTarget.style.color = '#F9AAAD'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(161, 82, 95, 0.4)'; e.currentTarget.style.color = mutedColor; }}
           >
             Go Back
           </button>
@@ -353,7 +348,7 @@ export const Page3DigiLockerScreen: React.FC<Page3DigiLockerScreenProps> = ({
         <div style={{ ...cardStyle, alignItems: 'center', textAlign: 'center', gap: '20px' }}>
           <div style={{ animation: 'dlSpin 1.2s linear infinite', width: '48px', height: '48px' }}>
             <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-              <circle cx="24" cy="24" r="20" stroke={isDark ? 'rgba(161, 82, 95, 0.25)' : 'rgba(161, 82, 95, 0.15)'} strokeWidth="4" />
+              <circle cx="24" cy="24" r="20" stroke="rgba(161, 82, 95, 0.25)" strokeWidth="4" />
               <path d="M24 4a20 20 0 0 1 20 20" stroke="#C7577C" strokeWidth="4" strokeLinecap="round" />
             </svg>
           </div>
@@ -377,7 +372,7 @@ export const Page3DigiLockerScreen: React.FC<Page3DigiLockerScreenProps> = ({
             style={{
               textAlign: 'center',
               padding: '0 0 20px 0',
-              borderBottom: `1px solid ${isDark ? 'rgba(161, 82, 95, 0.2)' : 'rgba(161, 82, 95, 0.15)'}`,
+              borderBottom: '1px solid rgba(161, 82, 95, 0.2)',
               marginBottom: '20px',
             }}
           >
@@ -386,8 +381,8 @@ export const Page3DigiLockerScreen: React.FC<Page3DigiLockerScreenProps> = ({
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '6px',
-                backgroundColor: isDark ? 'rgba(20, 14, 28, 0.6)' : 'rgba(250, 241, 243, 0.9)',
-                border: isDark ? '1px solid rgba(161, 82, 95, 0.3)' : '1px solid rgba(161, 82, 95, 0.2)',
+                backgroundColor: 'rgba(20, 14, 28, 0.6)',
+                border: '1px solid rgba(161, 82, 95, 0.3)',
                 borderRadius: '999px',
                 padding: '5px 12px',
                 marginBottom: '14px',
@@ -397,7 +392,7 @@ export const Page3DigiLockerScreen: React.FC<Page3DigiLockerScreenProps> = ({
                 <circle cx="6" cy="6" r="5" stroke="#4CAF50" strokeWidth="1.5" />
                 <path d="M3.5 6l1.8 1.8L8.5 4" stroke="#4CAF50" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-              <span style={{ fontSize: '12px', color: isDark ? '#F9AAAD' : '#A1525F', letterSpacing: '0.08em', fontWeight: 600 }}>
+              <span style={{ fontSize: '12px', color: '#F9AAAD', letterSpacing: '0.08em', fontWeight: 600 }}>
                 SECURE CONNECTION · DIGILOCKER
               </span>
             </div>
@@ -418,7 +413,7 @@ export const Page3DigiLockerScreen: React.FC<Page3DigiLockerScreenProps> = ({
           </div>
 
           <div style={{ marginBottom: '16px' }}>
-            <p style={{ fontSize: '12.5px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: isDark ? '#F9AAAD' : '#A1525F', margin: '0 0 10px 0' }}>
+            <p style={{ fontSize: '12.5px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#F9AAAD', margin: '0 0 10px 0' }}>
               Permissions requested
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -454,8 +449,8 @@ export const Page3DigiLockerScreen: React.FC<Page3DigiLockerScreenProps> = ({
             type="button"
             style={{ ...ghostBtnStyle, marginTop: '10px' }}
             onClick={handleDecline}
-            onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#C7577C'; e.currentTarget.style.color = isDark ? '#F9AAAD' : '#A1525F'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.borderColor = isDark ? 'rgba(161, 82, 95, 0.4)' : 'rgba(161, 82, 95, 0.3)'; e.currentTarget.style.color = mutedColor; }}
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#C7577C'; e.currentTarget.style.color = '#F9AAAD'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(161, 82, 95, 0.4)'; e.currentTarget.style.color = mutedColor; }}
           >
             Decline
           </button>
@@ -469,7 +464,7 @@ export const Page3DigiLockerScreen: React.FC<Page3DigiLockerScreenProps> = ({
         <div style={{ ...cardStyle, alignItems: 'center', textAlign: 'center', gap: '20px' }}>
           <div style={{ animation: 'dlSpin 1.2s linear infinite', width: '48px', height: '48px' }}>
             <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-              <circle cx="24" cy="24" r="20" stroke={isDark ? 'rgba(161, 82, 95, 0.25)' : 'rgba(161, 82, 95, 0.15)'} strokeWidth="4" />
+              <circle cx="24" cy="24" r="20" stroke="rgba(161, 82, 95, 0.25)" strokeWidth="4" />
               <path d="M24 4a20 20 0 0 1 20 20" stroke="#C7577C" strokeWidth="4" strokeLinecap="round" />
             </svg>
           </div>
@@ -528,8 +523,8 @@ export const Page3DigiLockerScreen: React.FC<Page3DigiLockerScreenProps> = ({
                 width: '52px',
                 height: '52px',
                 borderRadius: '50%',
-                backgroundColor: isDark ? 'rgba(70, 32, 55, 0.5)' : 'rgba(250, 241, 243, 0.9)',
-                border: isDark ? '1.5px solid rgba(161, 82, 95, 0.5)' : '1.5px solid rgba(161, 82, 95, 0.35)',
+                backgroundColor: 'rgba(70, 32, 55, 0.5)',
+                border: '1.5px solid rgba(161, 82, 95, 0.5)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -560,8 +555,8 @@ export const Page3DigiLockerScreen: React.FC<Page3DigiLockerScreenProps> = ({
             type="button"
             style={{ ...ghostBtnStyle, marginTop: '10px' }}
             onClick={onBack}
-            onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#C7577C'; e.currentTarget.style.color = isDark ? '#F9AAAD' : '#A1525F'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.borderColor = isDark ? 'rgba(161, 82, 95, 0.4)' : 'rgba(161, 82, 95, 0.3)'; e.currentTarget.style.color = mutedColor; }}
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#C7577C'; e.currentTarget.style.color = '#F9AAAD'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(161, 82, 95, 0.4)'; e.currentTarget.style.color = mutedColor; }}
           >
             Go Back
           </button>
@@ -579,7 +574,7 @@ export const Page3DigiLockerScreen: React.FC<Page3DigiLockerScreenProps> = ({
                 width: '52px',
                 height: '52px',
                 borderRadius: '50%',
-                backgroundColor: isDark ? 'rgba(70, 32, 55, 0.5)' : 'rgba(250, 241, 243, 0.9)',
+                backgroundColor: 'rgba(70, 32, 55, 0.5)',
                 border: '1.5px solid rgba(201, 74, 74, 0.5)',
                 display: 'flex',
                 alignItems: 'center',
@@ -612,8 +607,8 @@ export const Page3DigiLockerScreen: React.FC<Page3DigiLockerScreenProps> = ({
             type="button"
             style={{ ...ghostBtnStyle, marginTop: '10px' }}
             onClick={onBack}
-            onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#C7577C'; e.currentTarget.style.color = isDark ? '#F9AAAD' : '#A1525F'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.borderColor = isDark ? 'rgba(161, 82, 95, 0.4)' : 'rgba(161, 82, 95, 0.3)'; e.currentTarget.style.color = mutedColor; }}
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#C7577C'; e.currentTarget.style.color = '#F9AAAD'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(161, 82, 95, 0.4)'; e.currentTarget.style.color = mutedColor; }}
           >
             Go Back
           </button>
@@ -684,12 +679,12 @@ export const Page3DigiLockerScreen: React.FC<Page3DigiLockerScreenProps> = ({
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                background: isDark ? 'rgba(70, 32, 55, 0.65)' : 'rgba(255, 255, 255, 0.9)',
-                border: isDark ? '1px solid rgba(161, 82, 95, 0.35)' : '1px solid rgba(161, 82, 95, 0.25)',
-                color: isDark ? '#F9AAAD' : '#A1525F',
+                background: 'rgba(70, 32, 55, 0.65)',
+                border: '1px solid rgba(161, 82, 95, 0.35)',
+                color: '#F9AAAD',
                 cursor: 'pointer',
                 padding: 0,
-                boxShadow: isDark ? '0 2px 8px rgba(0,0,0,0.3)' : '0 2px 8px rgba(70,32,55,0.1)',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
                 backdropFilter: 'blur(8px)',
                 WebkitBackdropFilter: 'blur(8px)',
               }}
@@ -709,7 +704,7 @@ export const Page3DigiLockerScreen: React.FC<Page3DigiLockerScreenProps> = ({
                   width: 'auto',
                   maxWidth: '95px',
                   objectFit: 'contain',
-                  filter: isDark ? 'drop-shadow(0 2px 4px rgba(0,0,0,0.6))' : 'drop-shadow(0 1px 3px rgba(70,32,55,0.15))',
+                  filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.6))',
                 }}
               />
             </div>
@@ -727,7 +722,7 @@ export const Page3DigiLockerScreen: React.FC<Page3DigiLockerScreenProps> = ({
                       width: isActive ? '16px' : '5px',
                       height: '5px',
                       borderRadius: '3px',
-                      backgroundColor: isActive ? '#C7577C' : isPast ? (isDark ? '#683A46' : '#A1525F') : (isDark ? 'rgba(161, 82, 95, 0.3)' : 'rgba(199, 87, 124, 0.25)'),
+                      backgroundColor: isActive ? '#C7577C' : isPast ? '#683A46' : 'rgba(161, 82, 95, 0.3)',
                       transition: 'all 0.35s ease',
                     }}
                   />
@@ -760,7 +755,7 @@ export const Page3DigiLockerScreen: React.FC<Page3DigiLockerScreenProps> = ({
                   maxWidth: '130px',
                   objectFit: 'contain',
                   cursor: 'pointer',
-                  filter: isDark ? 'drop-shadow(0 2px 6px rgba(0,0,0,0.8))' : 'drop-shadow(0 1px 4px rgba(70,32,55,0.2))',
+                  filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.8))',
                 }}
               />
               {step === 'intro' && (
@@ -770,13 +765,13 @@ export const Page3DigiLockerScreen: React.FC<Page3DigiLockerScreenProps> = ({
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '8px',
-                    background: isDark ? 'rgba(70, 32, 55, 0.45)' : 'rgba(255, 255, 255, 0.85)',
+                    background: 'rgba(70, 32, 55, 0.45)',
                     backdropFilter: 'blur(16px)',
                     WebkitBackdropFilter: 'blur(16px)',
-                    border: isDark ? '1px solid rgba(161, 82, 95, 0.3)' : '1px solid rgba(161, 82, 95, 0.25)',
+                    border: '1px solid rgba(161, 82, 95, 0.3)',
                     borderRadius: '100px',
                     padding: '9px 16px',
-                    color: isDark ? '#F9AAAD' : '#A1525F',
+                    color: '#F9AAAD',
                     fontSize: '15px',
                     fontWeight: 500,
                     cursor: 'pointer',
@@ -784,12 +779,12 @@ export const Page3DigiLockerScreen: React.FC<Page3DigiLockerScreenProps> = ({
                     transition: 'all 0.2s ease',
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.background = isDark ? 'rgba(104, 58, 70, 0.65)' : '#FFFFFF';
+                    e.currentTarget.style.background = 'rgba(104, 58, 70, 0.65)';
                     e.currentTarget.style.borderColor = '#C7577C';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.background = isDark ? 'rgba(70, 32, 55, 0.45)' : 'rgba(255, 255, 255, 0.85)';
-                    e.currentTarget.style.borderColor = isDark ? 'rgba(161, 82, 95, 0.3)' : 'rgba(161, 82, 95, 0.25)';
+                    e.currentTarget.style.background = 'rgba(70, 32, 55, 0.45)';
+                    e.currentTarget.style.borderColor = 'rgba(161, 82, 95, 0.3)';
                   }}
                 >
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -822,7 +817,7 @@ export const Page3DigiLockerScreen: React.FC<Page3DigiLockerScreenProps> = ({
                       width: isActive ? '20px' : '6px',
                       height: '6px',
                       borderRadius: '3px',
-                      backgroundColor: isActive ? '#C7577C' : isPast ? (isDark ? '#683A46' : '#A1525F') : (isDark ? 'rgba(161, 82, 95, 0.3)' : 'rgba(199, 87, 124, 0.25)'),
+                      backgroundColor: isActive ? '#C7577C' : isPast ? '#683A46' : 'rgba(161, 82, 95, 0.3)',
                       transition: 'all 0.35s ease',
                     }}
                   />
