@@ -20,7 +20,6 @@ import { Page18MixersScreen } from './components/Page18MixersScreen';
 import { Page19AfterHoursScreen } from './components/Page19AfterHoursScreen';
 import { WebNavbar, type RoutePath } from './components/WebNavbar';
 import { WebFooter } from './components/WebFooter';
-import { useIsMobile } from './mobile/useIsMobile';
 import { NotificationPopup } from './components/NotificationPopup';
 import { ModalPortal } from './components/ModalPortal';
 import { DUMMY_DISCOVER_PROFILES } from './data/dummyProfiles';
@@ -30,7 +29,6 @@ import { useAuth } from './context/AuthContext';
 import { getPageBackground } from './constants/themeGradients';
 
 export const App: React.FC = () => {
-  const isMobile = useIsMobile(768);
   const {
     startComplimentaryFirstLook,
     setMembershipStatus,
@@ -883,25 +881,9 @@ export const App: React.FC = () => {
         {renderActiveScreen(false, false)}
       </main>
 
-      {/* Comprehensive Editorial Web Footer: Excluded from discover, mixers, elevate, matches, pickforme, afterhours, and full profile view */}
+      {/* Comprehensive Editorial Web Footer: Rendered strictly on public landing and overview pages */}
       {!isFullHeightChatMode &&
-        currentPath !== '/join' &&
-        currentPath !== '/login' &&
-        currentPath !== '/join/verify-code' &&
-        currentPath !== '/join/digilocker' &&
-        currentPath !== '/discover' &&
-        currentPath !== '/member/mixers' &&
-        currentPath !== '/member/elevate' &&
-        currentPath !== '/member/matches' &&
-        currentPath !== '/member/blinddate' &&
-        currentPath !== '/member/afterhours' &&
-        currentPath !== '/member/profile' &&
-        currentPath !== '/join/profile' &&
-        (!isMobile ||
-          currentPath === '/' ||
-          currentPath === '/overview' ||
-          currentPath === '/member/you' ||
-          currentPath === '/member/my-profile') && (
+        (currentPath === '/' || currentPath === '/overview') && (
           <WebFooter onNavigate={(path) => navigate(path as RoutePath)} />
         )}
 

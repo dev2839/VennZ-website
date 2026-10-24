@@ -2161,50 +2161,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                 )}
               </div>
 
-              {/* App Version & Build Information Card */}
-              <div
-                style={{
-                  padding: '16px 20px',
-                  borderRadius: '16px',
-                  backgroundColor: isDark ? 'rgba(30, 18, 38, 0.5)' : 'rgba(250, 241, 243, 0.6)',
-                  border: `1px solid ${colors.border}`,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  flexWrap: 'wrap',
-                  gap: '10px',
-                }}
-              >
-                <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span style={{ fontFamily: 'var(--font-serif)', fontSize: '16px', fontWeight: 600, color: colors.text }}>
-                      VennZ Web Edition
-                    </span>
-                    <span
-                      style={{
-                        fontSize: '12px',
-                        fontWeight: 700,
-                        padding: '2px 8px',
-                        borderRadius: '999px',
-                        backgroundColor: isDark ? 'rgba(52, 211, 153, 0.2)' : 'rgba(16, 185, 129, 0.15)',
-                        color: isDark ? '#A7F3D0' : '#065F46',
-                        border: '1px solid rgba(52, 211, 153, 0.35)',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '4px',
-                      }}
-                    >
-                      <Check size={10} /> Up to Date
-                    </span>
-                  </div>
-                  <span style={{ fontSize: '13.5px', color: colors.muted, display: 'block', marginTop: '3px' }}>
-                    Version 2.4.1 (Build 2026.10.23) · End-to-End Encrypted
-                  </span>
-                </div>
-                <div style={{ fontSize: '13px', color: colors.muted }}>
-                  © {new Date().getFullYear()} VennZ Private Club
-                </div>
-              </div>
+
 
             </div>
           )}
