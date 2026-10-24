@@ -94,7 +94,6 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
   const hasIncomingRequests = Boolean(incomingRequests && incomingRequests.length > 0);
 
   const [notificationsOpen, setNotificationsOpen] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const notifRef = useRef<HTMLDivElement | null>(null);
   const notifButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -593,30 +592,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
             )}
           </button>
 
-          {/* Mobile Menu Hamburger Toggle */}
-          {isMemberArea && (
-            <button
-              type="button"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="show-on-mobile-only"
-              style={{
-                width: '32px',
-                height: '32px',
-                backgroundColor: 'transparent',
-                border: 'none',
-                color: textColor,
-                display: 'none',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-              }}
-              aria-label="Toggle navigation menu"
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                {mobileMenuOpen ? <path d="M18 6L6 18M6 6l12 12" /> : <path d="M4 12h16M4 6h16M4 18h16" />}
-              </svg>
-            </button>
-          )}
+
 
           {/* Member Profile Avatar or Sign In button */}
           {isMemberArea ? (
@@ -683,62 +659,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
         </div>
       </div>
 
-      {/* Mobile Drawer Navigation */}
-      {mobileMenuOpen && isMemberArea && (
-        <div
-          style={{
-            backgroundColor: isDark ? 'rgba(20, 14, 28, 0.98)' : 'rgba(250, 241, 243, 0.98)',
-            backdropFilter: 'blur(16px)',
-            padding: '12px 20px 18px',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '6px',
-            borderBottom: isDark ? '1px solid rgba(161, 82, 95, 0.25)' : '1px solid rgba(199, 87, 124, 0.2)',
-          }}
-        >
-          {navItems.map((item) => {
-            const isActive =
-              currentPath === item.path ||
-              (item.path === '/member/my-profile' && (currentPath === '/member/you' || currentPath === '/member/profile'));
-            return (
-              <button
-                key={item.path}
-                type="button"
-                onClick={() => {
-                  onNavigate(item.path);
-                  setMobileMenuOpen(false);
-                }}
-                style={{
-                  width: '100%',
-                  textAlign: 'left',
-                  padding: '10px 14px',
-                  borderRadius: '10px',
-                  border: 'none',
-                  backgroundColor: isActive ? (isDark ? 'rgba(199, 87, 124, 0.22)' : 'rgba(161, 82, 95, 0.12)') : 'transparent',
-                  color: isActive ? activeColor : textColor,
-                  fontSize: '15px',
-                  fontWeight: isActive ? 600 : 500,
-                  letterSpacing: '0.08em',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  {item.hasCrown && <CrownIcon color="#DFB76C" size={12} />}
-                  {item.hasSparkle && <SparkleIcon color={isActive ? activeColor : textColor} size={12} />}
-                  {item.hasMoon && <MoonIcon color={isActive ? activeColor : textColor} size={12} />}
-                  <span>{item.label}</span>
-                </span>
-                {item.hasBadge && (
-                  <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#C94A4A' }} />
-                )}
-              </button>
-            );
-          })}
-        </div>
-      )}
+
     </header>
   );
 };
