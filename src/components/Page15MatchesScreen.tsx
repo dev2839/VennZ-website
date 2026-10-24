@@ -31,9 +31,11 @@ const formatRequestTime = (timestamp: number): string => {
 interface Page15MatchesScreenProps {
   onOpenChat: (match: MatchItem) => void;
   onViewProfile?: (match: MatchItem) => void;
+  onViewRequestProfile?: (req: IncomingRequest) => void;
   onSelectTab: (tab: MemberTab) => void;
   onNavigateHelp?: () => void;
   initialSubTab?: 'matches' | 'requests';
+  initialRequestTab?: 'incoming' | 'sent';
   showStatusBar?: boolean;
   showHomeIndicator?: boolean;
 }
@@ -41,9 +43,11 @@ interface Page15MatchesScreenProps {
 export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
   onOpenChat,
   onViewProfile,
+  onViewRequestProfile,
   onSelectTab,
   onNavigateHelp,
   initialSubTab = 'matches',
+  initialRequestTab = 'incoming',
   showStatusBar = true,
   showHomeIndicator = true,
 }) => {
@@ -62,7 +66,7 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
 
   // Sub-tabs: 'matches' vs 'requests'
   const [activeSubTab, setActiveSubTab] = useState<'matches' | 'requests'>(initialSubTab);
-  const [activeRequestTab, setActiveRequestTab] = useState<'incoming' | 'sent'>('incoming');
+  const [activeRequestTab, setActiveRequestTab] = useState<'incoming' | 'sent'>(initialRequestTab);
   const [selectedRequest, setSelectedRequest] = useState<IncomingRequest | null>(null);
   const [declineAllOpen, setDeclineAllOpen] = useState(false);
   const [acceptedProfileId, setAcceptedProfileId] = useState<string | null>(null);
@@ -73,6 +77,12 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
       setActiveSubTab(initialSubTab);
     }
   }, [initialSubTab]);
+
+  React.useEffect(() => {
+    if (initialRequestTab) {
+      setActiveRequestTab(initialRequestTab);
+    }
+  }, [initialRequestTab]);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const orderedMatches = [...matches].sort(
@@ -304,119 +314,144 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
                         alignItems: 'center',
                       }}
                     >
-                      {/* Square Photo Thumbnail */}
-                      <img
-                        src={req.photo}
-                        alt={req.name}
-                        style={{
-                          width: '92px',
-                          height: '92px',
-                          borderRadius: '12px',
-                          objectFit: 'cover',
-                          flexShrink: 0,
-                          backgroundColor: '#1E161C',
+                      {/* Clickable user profile area (Photo + Details) */}
+                      <div
+                        onClick={() => {
+                          if (onViewRequestProfile) {
+                            onViewRequestProfile(req);
+                          } else if (onViewProfile) {
+                            onViewProfile({ ...req, matchedAt: req.timestamp });
+                          }
                         }}
-                      />
-
-                      {/* Right Details & Actions */}
-                      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-                        <h3
+                        role="button"
+                        tabIndex={0}
+                        title={`View ${req.name}'s profile`}
+                        style={{
+                          display: 'flex',
+                          gap: '14px',
+                          flex: 1,
+                          minWidth: 0,
+                          cursor: 'pointer',
+                          alignItems: 'center',
+                        }}
+                      >
+                        {/* Square Photo Thumbnail */}
+                        <img
+                          src={req.photo}
+                          alt={req.name}
                           style={{
-                            fontFamily: 'var(--font-serif)',
-                            fontSize: '22px',
-                            fontWeight: 600,
-                            color: themeMulberry,
-                            margin: '0 0 3px 0',
-                            letterSpacing: '-0.01em',
-                            whiteSpace: 'nowrap',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
+                            width: '92px',
+                            height: '92px',
+                            borderRadius: '12px',
+                            objectFit: 'cover',
+                            flexShrink: 0,
+                            backgroundColor: '#1E161C',
                           }}
-                        >
-                          {req.name}, {req.age}
-                        </h3>
+                        />
 
-                        <div
+                        {/* Right Details */}
+                        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+                          <h3
+                            style={{
+                              fontFamily: 'var(--font-serif)',
+                              fontSize: '22px',
+                              fontWeight: 600,
+                              color: themeMulberry,
+                              margin: '0 0 3px 0',
+                              letterSpacing: '-0.01em',
+                              whiteSpace: 'nowrap',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                            }}
+                          >
+                            {req.name}, {req.age}
+                          </h3>
+
+                          <div
+                            style={{
+                              fontSize: '12.5px',
+                              fontWeight: 700,
+                              letterSpacing: '0.1em',
+                              textTransform: 'uppercase',
+                              color: themeMuted,
+                              marginBottom: '3px',
+                            }}
+                          >
+                            {req.city}
+                          </div>
+
+                          <div
+                            style={{
+                              fontSize: '15px',
+                              color: isDark ? '#E5D8DF' : '#4A3B45',
+                              whiteSpace: 'nowrap',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                            }}
+                          >
+                            {req.designation}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Action Buttons: DECLINE / ACCEPT */}
+                      <div
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '8px',
+                          flexShrink: 0,
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <button
+                          type="button"
+                          onClick={() => handleAccept(req.id, req.name)}
                           style={{
-                            fontSize: '12.5px',
+                            height: '34px',
+                            padding: '0 16px',
+                            borderRadius: '17px',
+                            background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
+                            border: 'none',
+                            color: '#FFFFFF',
+                            fontSize: '12px',
                             fontWeight: 700,
-                            letterSpacing: '0.1em',
+                            letterSpacing: '0.08em',
                             textTransform: 'uppercase',
-                            color: themeMuted,
-                            marginBottom: '3px',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            boxShadow: '0 2px 8px rgba(161, 82, 95, 0.4)',
+                            transition: 'all 0.15s ease',
                           }}
                         >
-                          {req.city}
-                        </div>
-
-                        <div
-                          style={{
-                            fontSize: '15px',
-                            color: isDark ? '#E5D8DF' : '#4A3B45',
-                            marginBottom: '10px',
-                            whiteSpace: 'nowrap',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                          }}
-                        >
-                          {req.designation}
-                        </div>
-
-                        <button type="button" onClick={() => setSelectedRequest(req)} style={{ alignSelf: 'flex-start', marginBottom: '9px', padding: '2px 0', border: 0, background: 'transparent', color: themeMuted, cursor: 'pointer', fontSize: '12px', fontWeight: 700, textDecoration: 'underline', textUnderlineOffset: '3px' }}>
-                          VIEW REQUEST PROFILE
+                          ACCEPT
                         </button>
 
-                        {/* Action Buttons: DECLINE / ACCEPT */}
-                        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                          <button
-                            type="button"
-                            onClick={() => handleDecline(req.id, req.name)}
-                            style={{
-                              flex: 1,
-                              height: '34px',
-                              borderRadius: '17px',
-                              backgroundColor: 'transparent',
-                              border: `1.5px solid ${isDark ? 'rgba(243, 238, 233, 0.35)' : 'rgba(73, 40, 61, 0.35)'}`,
-                              color: themeMulberry,
-                              fontSize: '13px',
-                              fontWeight: 700,
-                              letterSpacing: '0.08em',
-                              textTransform: 'uppercase',
-                              cursor: 'pointer',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              transition: 'all 0.15s ease',
-                            }}
-                          >
-                            DECLINE
-                          </button>
-
-                          <button
-                            type="button"
-                            onClick={() => handleAccept(req.id, req.name)}
-                            style={{
-                              flex: 1.15,
-                              height: '34px',
-                              borderRadius: '17px',
-                              background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
-                              color: '#FDF3F5',
-                              border: 'none',
-                              fontSize: '13px',
-                              fontWeight: 700,
-                              letterSpacing: '0.08em',
-                              textTransform: 'uppercase',
-                              cursor: 'pointer',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              boxShadow: '0 2px 8px rgba(161, 82, 95, 0.4)',
-                              transition: 'all 0.15s ease',
-                            }}
-                          >
-                            ACCEPT
-                          </button>
-                        </div>
+                        <button
+                          type="button"
+                          onClick={() => handleDecline(req.id, req.name)}
+                          style={{
+                            height: '34px',
+                            padding: '0 16px',
+                            borderRadius: '17px',
+                            backgroundColor: 'transparent',
+                            border: `1.5px solid ${isDark ? 'rgba(243, 238, 233, 0.35)' : 'rgba(73, 40, 61, 0.35)'}`,
+                            color: themeMulberry,
+                            fontSize: '12px',
+                            fontWeight: 700,
+                            letterSpacing: '0.08em',
+                            textTransform: 'uppercase',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            transition: 'all 0.15s ease',
+                          }}
+                        >
+                          DECLINE
+                        </button>
                       </div>
                     </div>
                   ))}

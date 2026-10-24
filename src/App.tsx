@@ -55,6 +55,7 @@ export const App: React.FC = () => {
   const [profileViewSource, setProfileViewSource] = useState<RoutePath>('/discover');
   const [selectedChatMatch, setSelectedChatMatch] = useState<MatchItem | null>(null);
   const [matchesInitialSubTab, setMatchesInitialSubTab] = useState<'matches' | 'requests'>('matches');
+  const [matchesInitialRequestTab, setMatchesInitialRequestTab] = useState<'incoming' | 'sent'>('incoming');
 
   const [membershipReturnPath, setMembershipReturnPath] = useState<RoutePath>('/join/waitlist');
   const [membershipViewMode, setMembershipViewMode] = useState<'all' | 'membership_only' | 'complimentary_only'>('all');
@@ -588,12 +589,14 @@ export const App: React.FC = () => {
       return (
         <Page15MatchesScreen
           initialSubTab={matchesInitialSubTab}
+          initialRequestTab={matchesInitialRequestTab}
           onOpenChat={(match) => {
             setSelectedChatMatch(match);
             navigate('/member/chat');
           }}
           onViewProfile={(match) => {
             setProfileViewSource('/member/matches');
+            setMatchesInitialSubTab('matches');
             // Convert MatchItem to DiscoverProfile shape for viewing
             const discoverProfile = DUMMY_DISCOVER_PROFILES.find(
               (p) => p.id === match.profileId || p.id === match.id
@@ -606,6 +609,29 @@ export const App: React.FC = () => {
               company: match.company || '',
               photos: [match.photo],
               isVerified: match.isVerified,
+              introduction: '',
+              interests: [],
+              gender: 'woman' as const,
+              activeStatus: 'Active recently',
+            };
+            setSelectedProfileForFullView(discoverProfile);
+            navigate('/member/profile');
+          }}
+          onViewRequestProfile={(req) => {
+            setProfileViewSource('/member/matches');
+            setMatchesInitialSubTab('requests');
+            setMatchesInitialRequestTab('incoming');
+            const discoverProfile = DUMMY_DISCOVER_PROFILES.find(
+              (p) => p.id === req.profileId || p.id === req.id
+            ) || {
+              id: req.profileId || req.id,
+              firstName: req.name.split(' ')[0],
+              age: req.age,
+              city: req.city,
+              designation: req.designation,
+              company: req.company || '',
+              photos: [req.photo],
+              isVerified: req.isVerified,
               introduction: '',
               interests: [],
               gender: 'woman' as const,

@@ -245,7 +245,8 @@ export class MockBlindDateProvider implements BlindDateService {
       this.setStorage(state);
       return 'mutual';
     } else {
-      // Waiting for candidate response
+      // Waiting for candidate response; clear active so next recommendation loads smoothly
+      state.activeRecommendationId = null;
       this.setStorage(state);
       return 'accepted_waiting';
     }

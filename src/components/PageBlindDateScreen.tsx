@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
   Heart,
   X,
@@ -10,8 +10,6 @@ import {
   RefreshCw,
   Clock,
   CheckCircle2,
-  ChevronLeft,
-  ChevronRight,
   GraduationCap,
 } from 'lucide-react';
 import { MemberTopBar } from './MemberTopBar';
@@ -110,18 +108,53 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
       ? [recommendation.preview.previewPhoto]
       : [];
 
-  const currentPhoto = candidatePhotos[activePhotoIndex] || candidatePhotos[0] || '';
-
-  const handlePrevPhoto = (e?: React.MouseEvent) => {
+  const handlePrevPhoto = (e?: React.MouseEvent | React.SyntheticEvent) => {
     e?.stopPropagation();
     if (candidatePhotos.length <= 1) return;
     setActivePhotoIndex((prev) => (prev > 0 ? prev - 1 : candidatePhotos.length - 1));
   };
 
-  const handleNextPhoto = (e?: React.MouseEvent) => {
+  const handleNextPhoto = (e?: React.MouseEvent | React.SyntheticEvent) => {
     e?.stopPropagation();
     if (candidatePhotos.length <= 1) return;
     setActivePhotoIndex((prev) => (prev < candidatePhotos.length - 1 ? prev + 1 : 0));
+  };
+
+  // Sliding / swiping gesture tracking for photos
+  const touchStartXRef = useRef<number | null>(null);
+  const touchStartYRef = useRef<number | null>(null);
+  const [isSwiping, setIsSwiping] = useState(false);
+
+  const handlePointerDown = (e: React.PointerEvent) => {
+    touchStartXRef.current = e.clientX;
+    touchStartYRef.current = e.clientY;
+    setIsSwiping(false);
+  };
+
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (touchStartXRef.current === null) return;
+    const dx = e.clientX - touchStartXRef.current;
+    if (Math.abs(dx) > 10) {
+      setIsSwiping(true);
+    }
+  };
+
+  const handlePointerUp = (e: React.PointerEvent) => {
+    if (touchStartXRef.current === null) return;
+    const dx = e.clientX - touchStartXRef.current;
+    const dy = e.clientY - (touchStartYRef.current || 0);
+
+    // If gesture was predominantly horizontal swipe of >= 35px, advance or reverse photo
+    if (Math.abs(dx) > 35 && Math.abs(dx) > Math.abs(dy)) {
+      if (dx < 0) {
+        handleNextPhoto();
+      } else {
+        handlePrevPhoto();
+      }
+    }
+    touchStartXRef.current = null;
+    touchStartYRef.current = null;
+    setIsSwiping(false);
   };
 
   /**
@@ -131,13 +164,12 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
     if (!recommendation || isSubmitting) return;
 
     setIsSubmitting(true);
+    setStatus('loading');
     try {
       const resultStatus = await blindDateService.acceptRecommendation(
         recommendation.id,
         userId
       );
-
-      setStatus(resultStatus);
 
       if (resultStatus === 'mutual') {
         const mutual = await blindDateService.getMutualConnection(
@@ -164,30 +196,39 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
           };
           addDirectMatch(newMatch);
         }
+        setStatus('mutual');
+      } else {
+        // Smooth simulated transition delay showing 3-dots loading wave
+        await new Promise((resolve) => setTimeout(resolve, 450));
+        await loadRecommendation();
       }
     } catch (err) {
       setErrorMessage(err instanceof Error ? err.message : 'Submission failed. Please try again.');
+      setStatus('error');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   /**
-   * Handle user rejecting recommendation
+   * Handle user rejecting / passing recommendation
    */
   const handleReject = async () => {
     if (!recommendation || isSubmitting) return;
 
     setIsSubmitting(true);
+    setStatus('loading');
     try {
       await blindDateService.rejectRecommendation(
         recommendation.id,
         userId
       );
-      // Retrieve next candidate
+      // Smooth simulated transition delay showing 3-dots loading wave
+      await new Promise((resolve) => setTimeout(resolve, 450));
       await loadRecommendation();
     } catch (err) {
       setErrorMessage(err instanceof Error ? err.message : 'Action failed. Please try again.');
+      setStatus('error');
     } finally {
       setIsSubmitting(false);
     }
@@ -369,7 +410,7 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
           </div>
         )}
 
-        {/* STATE: LOADING */}
+        {/* STATE: LOADING (Animated 3-Dots Wave Loader) */}
         {status === 'loading' && (
           <div
             style={{
@@ -387,17 +428,19 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
               textAlign: 'center',
             }}
           >
+            {/* 3-Dots Bouncing Animation matching reference video 2 */}
             <div
+              className="vennz-loading-dots-container"
               style={{
-                width: '56px',
-                height: '56px',
-                borderRadius: '50%',
-                border: `3px solid ${isDark ? 'rgba(161, 82, 95, 0.3)' : 'rgba(161, 82, 95, 0.2)'}`,
-                borderTopColor: isDark ? '#F9AAAD' : '#A1525F',
-                animation: 'spin 1s linear infinite',
-                marginBottom: '18px',
+                color: isDark ? '#F9AAAD' : '#A1525F',
+                marginBottom: '20px',
+                padding: '12px 0',
               }}
-            />
+            >
+              <div className="vennz-loading-dot" />
+              <div className="vennz-loading-dot" />
+              <div className="vennz-loading-dot" />
+            </div>
             <h3
               style={{
                 fontFamily: 'var(--font-serif)',
@@ -593,8 +636,12 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
               </div>
             )}
 
-            {/* PHOTO VIEWFINDER WITH MULTI-PHOTO GALLERY */}
+            {/* PHOTO VIEWFINDER WITH SMOOTH HORIZONTAL SLIDING (NO ARROWS) */}
             <div
+              onPointerDown={handlePointerDown}
+              onPointerMove={handlePointerMove}
+              onPointerUp={handlePointerUp}
+              onPointerCancel={handlePointerUp}
               style={{
                 position: 'relative',
                 width: '100%',
@@ -602,21 +649,47 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                 overflow: 'hidden',
                 backgroundColor: isDark ? '#1F111E' : '#E8DCE0',
                 userSelect: 'none',
+                touchAction: 'pan-y',
+                cursor: candidatePhotos.length > 1 ? 'grab' : 'default',
               }}
             >
-              <img
-                key={currentPhoto}
-                src={currentPhoto}
-                alt={`${recommendation.preview.displayName} photo ${activePhotoIndex + 1}`}
+              {/* Horizontal Sliding Photo Track */}
+              <div
                 style={{
-                  width: '100%',
+                  display: 'flex',
+                  width: `${candidatePhotos.length * 100}%`,
                   height: '100%',
-                  objectFit: 'cover',
-                  objectPosition: 'center 20%',
-                  display: 'block',
-                  transition: 'opacity 0.25s ease',
+                  transform: `translate3d(-${candidatePhotos.length > 0 ? (activePhotoIndex * 100) / candidatePhotos.length : 0}%, 0, 0)`,
+                  transition: isSwiping ? 'none' : 'transform 0.32s cubic-bezier(0.25, 1, 0.5, 1)',
+                  willChange: 'transform',
                 }}
-              />
+              >
+                {candidatePhotos.map((photo, pIdx) => (
+                  <div
+                    key={pIdx}
+                    style={{
+                      width: `${100 / candidatePhotos.length}%`,
+                      height: '100%',
+                      flexShrink: 0,
+                    }}
+                  >
+                    <img
+                      src={photo}
+                      alt={`${recommendation.preview.displayName} photo ${pIdx + 1}`}
+                      draggable={false}
+                      decoding="async"
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        objectPosition: 'center 20%',
+                        display: 'block',
+                        pointerEvents: 'none',
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
 
               {/* Discreet Privacy Scrim Overlay */}
               <div
@@ -708,7 +781,7 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                 </div>
               )}
 
-              {/* Tap zones for intuitive photo browsing */}
+              {/* Secondary Tap zones for intuitive click/tap photo browsing */}
               <div
                 onClick={handlePrevPhoto}
                 title="Previous photograph"
@@ -717,7 +790,7 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                   top: '50px',
                   bottom: '80px',
                   left: 0,
-                  width: '40%',
+                  width: '35%',
                   zIndex: 10,
                   cursor: candidatePhotos.length > 1 ? 'pointer' : 'default',
                 }}
@@ -730,69 +803,11 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                   top: '50px',
                   bottom: '80px',
                   right: 0,
-                  width: '60%',
+                  width: '65%',
                   zIndex: 10,
                   cursor: candidatePhotos.length > 1 ? 'pointer' : 'default',
                 }}
               />
-
-              {/* Visual Previous/Next Chevron Arrows */}
-              {candidatePhotos.length > 1 && (
-                <>
-                  <button
-                    type="button"
-                    onClick={handlePrevPhoto}
-                    aria-label="Previous photo"
-                    style={{
-                      position: 'absolute',
-                      top: '50%',
-                      left: '12px',
-                      transform: 'translateY(-50%)',
-                      zIndex: 14,
-                      width: '32px',
-                      height: '32px',
-                      borderRadius: '50%',
-                      border: 'none',
-                      backgroundColor: 'rgba(20, 14, 28, 0.65)',
-                      color: '#FFFFFF',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      cursor: 'pointer',
-                      backdropFilter: 'blur(4px)',
-                      boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
-                    }}
-                  >
-                    <ChevronLeft size={18} />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleNextPhoto}
-                    aria-label="Next photo"
-                    style={{
-                      position: 'absolute',
-                      top: '50%',
-                      right: '12px',
-                      transform: 'translateY(-50%)',
-                      zIndex: 14,
-                      width: '32px',
-                      height: '32px',
-                      borderRadius: '50%',
-                      border: 'none',
-                      backgroundColor: 'rgba(20, 14, 28, 0.65)',
-                      color: '#FFFFFF',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      cursor: 'pointer',
-                      backdropFilter: 'blur(4px)',
-                      boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
-                    }}
-                  >
-                    <ChevronRight size={18} />
-                  </button>
-                </>
-              )}
 
               {/* Bottom Photo Identity Badge */}
               <div
