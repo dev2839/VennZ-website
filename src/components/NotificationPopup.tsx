@@ -23,6 +23,13 @@ export const NotificationPopup: React.FC<NotificationPopupProps> = ({ onNavigate
   const [isVisible, setIsVisible] = useState(false);
   const [progress, setProgress] = useState(100);
   const [isHovered, setIsHovered] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const durationMs = 5000;
   const timerRef = useRef<number | null>(null);
@@ -174,12 +181,15 @@ export const NotificationPopup: React.FC<NotificationPopupProps> = ({ onNavigate
       onMouseLeave={() => setIsHovered(false)}
       style={{
         position: 'fixed',
-        top: '76px',
-        right: '20px',
+        top: isMobile ? '16px' : '76px',
+        left: isMobile ? '50%' : 'auto',
+        right: isMobile ? 'auto' : '20px',
+        transform: isMobile
+          ? (isVisible ? 'translateX(-50%) translateY(0) scale(1)' : 'translateX(-50%) translateY(-10px) scale(0.98)')
+          : (isVisible ? 'translateY(0) scale(1)' : 'translateY(-10px) scale(0.98)'),
         zIndex: 1500,
-        maxWidth: '320px',
-        width: 'calc(100vw - 36px)',
-        transform: isVisible ? 'translateY(0) scale(1)' : 'translateY(-10px) scale(0.98)',
+        maxWidth: isMobile ? '300px' : '320px',
+        width: isMobile ? 'calc(100vw - 32px)' : '320px',
         opacity: isVisible ? 1 : 0,
         pointerEvents: isVisible ? 'auto' : 'none',
         transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease',

@@ -43,10 +43,17 @@ const ElevateFolderTab: React.FC<ElevateFolderTabProps> = ({
   isDark,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth <= 768);
 
-  // Tab proportions (38px height, 14px wing slant)
-  const tabHeight = 38;
-  const wingWidth = 14;
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Tab proportions (responsive for mobile)
+  const tabHeight = isMobile ? 34 : 38;
+  const wingWidth = isMobile ? 10 : 14;
 
   // VennZ theme palette colors
   const tabBg = isActive
@@ -123,8 +130,8 @@ const ElevateFolderTab: React.FC<ElevateFolderTabProps> = ({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: '5px',
-          padding: '0 8px',
+          gap: isMobile ? '3px' : '5px',
+          padding: isMobile ? '0 5px' : '0 8px',
           whiteSpace: 'nowrap',
           boxSizing: 'border-box',
           transition: 'background-color 0.18s ease, border-color 0.18s ease',
@@ -133,7 +140,7 @@ const ElevateFolderTab: React.FC<ElevateFolderTabProps> = ({
         <span
           style={{
             fontFamily: 'var(--font-sans)',
-            fontSize: '14.5px',
+            fontSize: isMobile ? '12px' : '14.5px',
             fontWeight: isActive ? 700 : 500,
             letterSpacing: '0.015em',
             color: textColor,
@@ -221,6 +228,14 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
     isMember,
     membershipStatus,
   } = useAuth();
+
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const isDark = appearanceMode === 'after-dark';
   const isPremiumMember = Boolean(isMember || membershipStatus === 'member' || membershipStatus === 'complimentary');
@@ -455,8 +470,8 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
               msOverflowStyle: 'none',
               WebkitOverflowScrolling: 'touch',
               display: 'flex',
-              justifyContent: 'center',
-              padding: '4px 8px 0',
+              justifyContent: isMobile ? 'flex-start' : 'center',
+              padding: isMobile ? '4px 12px 0' : '4px 8px 0',
               boxSizing: 'border-box',
             }}
           >
@@ -689,7 +704,13 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
             ========================================================================= */}
         {activeTab === 'scorecard' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: isMobile ? 'flex-start' : 'flex-end',
+              flexDirection: isMobile ? 'column' : 'row',
+              gap: isMobile ? '10px' : '0',
+            }}>
               <div>
                 <span
                   style={{
@@ -705,7 +726,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                 <h1
                   style={{
                     fontFamily: 'var(--font-serif)',
-                    fontSize: '26px',
+                    fontSize: isMobile ? '22px' : '26px',
                     fontWeight: 600,
                     margin: '4px 0 0',
                     color: themeTextColor,
@@ -717,12 +738,13 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
 
               <div
                 style={{
-                  fontSize: '13.5px',
-                  padding: '5px 12px',
+                  fontSize: isMobile ? '12px' : '13.5px',
+                  padding: '4px 10px',
                   borderRadius: '999px',
                   backgroundColor: isDark ? 'rgba(161, 82, 95, 0.25)' : 'rgba(161, 82, 95, 0.1)',
                   color: themeMulberry,
                   fontWeight: 600,
+                  alignSelf: isMobile ? 'flex-start' : 'auto',
                 }}
               >
                 Top {100 - liveScorecard.cohortPercentile}% VennZ Cohort
@@ -750,11 +772,11 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
               </span>
             </div>
 
-            {/* Key Metrics in One Line */}
+            {/* Key Metrics Grid */}
             <div
               style={{
                 width: '100%',
-                overflowX: 'auto',
+                overflowX: isMobile ? 'visible' : 'auto',
                 scrollbarWidth: 'none',
                 msOverflowStyle: 'none',
                 WebkitOverflowScrolling: 'touch',
@@ -764,9 +786,9 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
               <div
                 style={{
                   display: 'grid',
-                  gridTemplateColumns: 'repeat(6, minmax(120px, 1fr))',
+                  gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(6, minmax(120px, 1fr))',
                   gap: '10px',
-                  minWidth: '740px',
+                  minWidth: isMobile ? 'unset' : '740px',
                   width: '100%',
                   boxSizing: 'border-box',
                 }}
@@ -896,7 +918,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
               <div
                 style={{
                   display: 'grid',
-                  gridTemplateColumns: 'repeat(4, 1fr)',
+                  gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
                   gap: '10px',
                   textAlign: 'center',
                 }}

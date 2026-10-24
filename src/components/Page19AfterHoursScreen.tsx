@@ -689,7 +689,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
             >
               <div>
                 <div style={{ fontSize: '13px', color: textMuted, marginBottom: '4px', letterSpacing: '0.05em' }}>
-                  BLIND CHATS TONIGHT
+                  BLIND CHATS<br />TONIGHT
                 </div>
                 <div style={{ fontSize: '18px', fontWeight: 600, color: textPrimary }}>
                   {chatsUsedTonight} / {maxChatsTonight} used

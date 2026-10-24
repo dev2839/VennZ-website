@@ -187,6 +187,13 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
   // Incognito Mode State
   const [isIncognitoInfoOpen, setIsIncognitoInfoOpen] = useState(false);
   const [incognitoToast, setIncognitoToast] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const isIncognitoActive = Boolean(draft.isIncognito ?? profile.isIncognito);
 
@@ -545,13 +552,41 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                     margin: '6px 0 0',
                     color: colors.accent,
                     fontFamily: 'var(--font-serif)',
-                    fontSize: '38px',
+                    fontSize: isMobile ? '28px' : '38px',
                     fontWeight: 400,
                     lineHeight: 1.1,
                   }}
                 >
                   {displayName}
                 </h1>
+                {/* Preview button beside name */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPreviewPhotoIndex(0);
+                    setIsPreviewOpen(true);
+                  }}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px',
+                    minHeight: isMobile ? '32px' : '38px',
+                    padding: isMobile ? '0 12px' : '0 16px',
+                    border: `1.5px solid ${colors.border}`,
+                    borderRadius: '999px',
+                    background: isDark ? 'rgba(70, 32, 55, 0.4)' : 'rgba(255, 255, 255, 0.9)',
+                    color: colors.accent,
+                    cursor: 'pointer',
+                    fontSize: isMobile ? '12.5px' : '13.5px',
+                    fontWeight: 700,
+                    letterSpacing: '0.03em',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.06)',
+                    marginTop: '6px',
+                  }}
+                >
+                  <Eye size={isMobile ? 14 : 16} /> Preview
+                </button>
                 {isIncognitoActive && (
                   <span
                     style={{
@@ -580,105 +615,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
               </p>
             </div>
 
-            {/* Action Suite: Discover Preview & Edit Profile */}
-            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-              <button
-                type="button"
-                onClick={() => {
-                  setPreviewPhotoIndex(0);
-                  setIsPreviewOpen(true);
-                }}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '8px',
-                  minHeight: '42px',
-                  padding: '0 18px',
-                  border: `1.5px solid ${colors.border}`,
-                  borderRadius: '999px',
-                  background: isDark ? 'rgba(70, 32, 55, 0.4)' : 'rgba(255, 255, 255, 0.9)',
-                  color: colors.accent,
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                  fontWeight: 700,
-                  letterSpacing: '0.04em',
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.06)',
-                }}
-              >
-                <Eye size={16} /> Preview on Discover
-              </button>
 
-              {!isEditing ? (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSaveMessage('');
-                    setIsEditing(true);
-                    setActiveSubTab('profile');
-                  }}
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '8px',
-                    minHeight: '42px',
-                    padding: '0 18px',
-                    border: 0,
-                    borderRadius: '999px',
-                    background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
-                    color: '#FFF8F8',
-                    cursor: 'pointer',
-                    fontSize: '14px',
-                    fontWeight: 700,
-                    letterSpacing: '0.04em',
-                    boxShadow: '0 6px 18px rgba(161, 82, 95, 0.35)',
-                  }}
-                >
-                  <Pencil size={15} /> Edit profile
-                </button>
-              ) : (
-                <>
-                  <button
-                    type="button"
-                    onClick={handleCancel}
-                    style={{
-                      minHeight: '42px',
-                      padding: '0 16px',
-                      border: `1px solid ${colors.border}`,
-                      borderRadius: '999px',
-                      background: 'transparent',
-                      color: colors.accent,
-                      cursor: 'pointer',
-                      fontSize: '14px',
-                      fontWeight: 700,
-                    }}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleSave}
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      minHeight: '42px',
-                      padding: '0 20px',
-                      border: 0,
-                      borderRadius: '999px',
-                      background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
-                      color: '#FFF8F8',
-                      cursor: 'pointer',
-                      fontSize: '14px',
-                      fontWeight: 700,
-                    }}
-                  >
-                    <Check size={16} /> Save changes
-                  </button>
-                </>
-              )}
-            </div>
           </header>
 
           {saveMessage && (
@@ -704,10 +641,10 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              gap: '16px',
-              padding: '16px 20px',
-              marginBottom: '20px',
-              borderRadius: '16px',
+              gap: isMobile ? '10px' : '16px',
+              padding: isMobile ? '10px 14px' : '16px 20px',
+              marginBottom: '16px',
+              borderRadius: isMobile ? '12px' : '16px',
               backgroundColor: isIncognitoActive
                 ? (isDark ? 'rgba(161, 82, 95, 0.22)' : 'rgba(253, 240, 243, 0.95)')
                 : (isDark ? 'rgba(40, 20, 34, 0.65)' : 'rgba(255, 255, 255, 0.9)'),
@@ -718,12 +655,12 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
               transition: 'all 0.3s ease',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flex: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '10px' : '14px', flex: 1 }}>
               <div
                 style={{
-                  width: '42px',
-                  height: '42px',
-                  borderRadius: '12px',
+                  width: isMobile ? '32px' : '42px',
+                  height: isMobile ? '32px' : '42px',
+                  borderRadius: isMobile ? '10px' : '12px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -736,15 +673,15 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                   transition: 'all 0.3s ease',
                 }}
               >
-                <EyeOff size={20} />
+                <EyeOff size={isMobile ? 16 : 20} />
               </div>
 
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
                   <span
                     style={{
                       fontFamily: 'var(--font-serif)',
-                      fontSize: '20px',
+                      fontSize: isMobile ? '16px' : '20px',
                       fontWeight: 600,
                       color: colors.text,
                       letterSpacing: '0.01em',
@@ -797,10 +734,10 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
 
                 <p
                   style={{
-                    margin: '3px 0 0',
-                    fontSize: '14.5px',
+                    margin: '2px 0 0',
+                    fontSize: isMobile ? '12px' : '14.5px',
                     color: colors.muted,
-                    lineHeight: 1.4,
+                    lineHeight: 1.35,
                   }}
                 >
                   {isIncognitoActive
@@ -819,8 +756,8 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
               onClick={handleToggleIncognito}
               style={{
                 position: 'relative',
-                width: '52px',
-                height: '30px',
+                width: isMobile ? '44px' : '52px',
+                height: isMobile ? '26px' : '30px',
                 borderRadius: '999px',
                 border: 'none',
                 backgroundColor: isIncognitoActive ? '#A1525F' : (isDark ? 'rgba(255,255,255,0.18)' : '#D6CCD2'),
@@ -834,12 +771,12 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
             >
               <div
                 style={{
-                  width: '24px',
-                  height: '24px',
+                  width: isMobile ? '20px' : '24px',
+                  height: isMobile ? '20px' : '24px',
                   borderRadius: '50%',
                   backgroundColor: '#FFFFFF',
                   boxShadow: '0 2px 6px rgba(0,0,0,0.25)',
-                  transform: isIncognitoActive ? 'translateX(22px)' : 'translateX(0px)',
+                  transform: isIncognitoActive ? (isMobile ? 'translateX(18px)' : 'translateX(22px)') : 'translateX(0px)',
                   transition: 'transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1)',
                 }}
               />
@@ -850,27 +787,33 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
           <div
             style={{
               display: 'flex',
-              gap: '8px',
+              gap: isMobile ? '4px' : '8px',
               padding: '4px',
               marginBottom: '20px',
               backgroundColor: isDark ? 'rgba(40, 20, 34, 0.6)' : 'rgba(235, 220, 225, 0.5)',
               borderRadius: '999px',
-              width: 'fit-content',
-              flexWrap: 'wrap',
+              width: '100%',
+              maxWidth: '100%',
+              overflowX: 'auto',
+              flexWrap: 'nowrap',
+              WebkitOverflowScrolling: 'touch',
+              boxSizing: 'border-box',
             }}
           >
             <button
               type="button"
               onClick={() => setActiveSubTab('profile')}
               style={{
-                padding: '8px 20px',
+                padding: isMobile ? '8px 14px' : '8px 20px',
                 borderRadius: '999px',
                 border: 'none',
                 backgroundColor: activeSubTab === 'profile' ? (isDark ? '#462037' : '#FFFFFF') : 'transparent',
                 color: activeSubTab === 'profile' ? colors.text : colors.muted,
                 fontWeight: activeSubTab === 'profile' ? 700 : 500,
-                fontSize: '15px',
+                fontSize: isMobile ? '13.5px' : '15px',
                 cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                flexShrink: 0,
                 boxShadow: activeSubTab === 'profile' ? '0 2px 8px rgba(0,0,0,0.1)' : 'none',
                 transition: 'all 0.15s ease',
               }}
@@ -884,14 +827,16 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '6px',
-                padding: '8px 20px',
+                padding: isMobile ? '8px 14px' : '8px 20px',
                 borderRadius: '999px',
                 border: 'none',
                 backgroundColor: activeSubTab === 'elevate' ? (isDark ? '#462037' : '#FFFFFF') : 'transparent',
                 color: activeSubTab === 'elevate' ? (isDark ? '#F9AAAD' : '#A1525F') : colors.muted,
                 fontWeight: activeSubTab === 'elevate' ? 700 : 500,
-                fontSize: '15px',
+                fontSize: isMobile ? '13.5px' : '15px',
                 cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                flexShrink: 0,
                 boxShadow: activeSubTab === 'elevate' ? '0 2px 8px rgba(0,0,0,0.1)' : 'none',
                 transition: 'all 0.15s ease',
               }}
@@ -903,14 +848,16 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
               type="button"
               onClick={() => setActiveSubTab('account')}
               style={{
-                padding: '8px 20px',
+                padding: isMobile ? '8px 14px' : '8px 20px',
                 borderRadius: '999px',
                 border: 'none',
                 backgroundColor: activeSubTab === 'account' ? (isDark ? '#462037' : '#FFFFFF') : 'transparent',
                 color: activeSubTab === 'account' ? colors.text : colors.muted,
                 fontWeight: activeSubTab === 'account' ? 700 : 500,
-                fontSize: '15px',
+                fontSize: isMobile ? '13.5px' : '15px',
                 cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                flexShrink: 0,
                 boxShadow: activeSubTab === 'account' ? '0 2px 8px rgba(0,0,0,0.1)' : 'none',
                 transition: 'all 0.15s ease',
               }}
@@ -921,6 +868,86 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
 
           {activeSubTab === 'profile' ? (
             <>
+              {/* Edit Profile Action Header: positioned just above profile details */}
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                  alignItems: 'center',
+                  marginBottom: '14px',
+                }}
+              >
+                {!isEditing ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSaveMessage('');
+                      setIsEditing(true);
+                      setActiveSubTab('profile');
+                    }}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px',
+                      minHeight: '40px',
+                      padding: '0 20px',
+                      border: 0,
+                      borderRadius: '999px',
+                      background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
+                      color: '#FFF8F8',
+                      cursor: 'pointer',
+                      fontSize: '14px',
+                      fontWeight: 700,
+                      letterSpacing: '0.04em',
+                      boxShadow: '0 6px 18px rgba(161, 82, 95, 0.35)',
+                    }}
+                  >
+                    <Pencil size={15} /> Edit profile
+                  </button>
+                ) : (
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button
+                      type="button"
+                      onClick={handleCancel}
+                      style={{
+                        minHeight: '40px',
+                        padding: '0 16px',
+                        border: `1px solid ${colors.border}`,
+                        borderRadius: '999px',
+                        background: 'transparent',
+                        color: colors.accent,
+                        cursor: 'pointer',
+                        fontSize: '14px',
+                        fontWeight: 700,
+                      }}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleSave}
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        minHeight: '40px',
+                        padding: '0 20px',
+                        border: 0,
+                        borderRadius: '999px',
+                        background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
+                        color: '#FFF8F8',
+                        cursor: 'pointer',
+                        fontSize: '14px',
+                        fontWeight: 700,
+                      }}
+                    >
+                      <Check size={16} /> Save changes
+                    </button>
+                  </div>
+                )}
+              </div>
+
               {/* Profile Completeness & Verification Card */}
               <section
                 style={{
@@ -1037,9 +1064,13 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
 
                 <div
                   style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))',
+                    display: isMobile ? 'flex' : 'grid',
+                    gridTemplateColumns: isMobile ? undefined : 'repeat(auto-fill, minmax(130px, 1fr))',
+                    overflowX: isMobile ? 'auto' : 'visible',
                     gap: '12px',
+                    paddingBottom: isMobile ? '8px' : '0',
+                    WebkitOverflowScrolling: 'touch',
+                    scrollSnapType: isMobile ? 'x mandatory' : undefined,
                   }}
                 >
                   {(draft.photos || []).map((photo: string, index: number) => (
@@ -1047,7 +1078,10 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                       key={`my-photo-${index}-${photo.length}-${photo.slice(-24)}`}
                       style={{
                         position: 'relative',
-                        width: '100%',
+                        width: isMobile ? '120px' : '100%',
+                        minWidth: isMobile ? '120px' : undefined,
+                        flexShrink: isMobile ? 0 : 1,
+                        scrollSnapAlign: isMobile ? 'start' : undefined,
                         aspectRatio: '3 / 4',
                         borderRadius: '12px',
                         overflow: 'hidden',
@@ -1152,7 +1186,9 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
                       style={{
-                        width: '100%',
+                        width: isMobile ? '120px' : '100%',
+                        minWidth: isMobile ? '120px' : undefined,
+                        flexShrink: isMobile ? 0 : 1,
                         aspectRatio: '3 / 4',
                         borderRadius: '12px',
                         border: `1.5px dashed ${colors.border}`,
@@ -1434,77 +1470,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                 </div>
               </section>
 
-              {/* Elevate & Intelligence Quick Link Banner */}
-              <div
-                style={{
-                  marginTop: '20px',
-                  padding: '20px',
-                  borderRadius: '16px',
-                  background: isDark
-                    ? 'linear-gradient(135deg, rgba(70, 32, 55, 0.45) 0%, rgba(40, 20, 34, 0.7) 100%)'
-                    : 'linear-gradient(135deg, rgba(253, 240, 243, 0.95) 0%, rgba(244, 230, 234, 0.8) 100%)',
-                  border: `1.5px solid ${isDark ? 'rgba(161, 82, 95, 0.35)' : 'rgba(161, 82, 95, 0.22)'}`,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  flexWrap: 'wrap',
-                  gap: '14px',
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div
-                    style={{
-                      width: '38px',
-                      height: '38px',
-                      borderRadius: '10px',
-                      background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: '#FFF',
-                      flexShrink: 0,
-                    }}
-                  >
-                    <Sparkles size={18} />
-                  </div>
-                  <div>
-                    <h3
-                      style={{
-                        margin: 0,
-                        fontFamily: 'var(--font-serif)',
-                        fontSize: '18px',
-                        color: colors.text,
-                        fontWeight: 600,
-                      }}
-                    >
-                      Profile Intelligence & Makeover Studio
-                    </h3>
-                    <p style={{ margin: '4px 0 0', fontSize: '14.5px', color: colors.muted }}>
-                      Review live profile telemetry, AI makeover draft suggestions, and custom styling services.
-                    </p>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setActiveSubTab('elevate')}
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    padding: '8px 18px',
-                    borderRadius: '999px',
-                    border: 'none',
-                    background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
-                    color: '#FFF',
-                    fontSize: '14px',
-                    fontWeight: 700,
-                    cursor: 'pointer',
-                    boxShadow: '0 4px 12px rgba(161, 82, 95, 0.25)',
-                  }}
-                >
-                  Open Elevate Studio →
-                </button>
-              </div>
+              
             </>
           ) : activeSubTab === 'elevate' ? (
             /* ELEVATE INTELLIGENCE & CONCIERGE SUITE */

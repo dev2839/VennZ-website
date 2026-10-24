@@ -119,25 +119,30 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
     setIsDragging(false);
   }, [currentProfile?.id]);
 
-  // Preload all profile photos in memory to ensure instant GPU caching and buttery smooth transitions
+  // Preload upcoming photos in the queue
   useEffect(() => {
-    if (!currentProfile?.photos || currentProfile.photos.length <= 1) return;
-    currentProfile.photos.forEach((src) => {
-      const img = new Image();
-      img.src = src;
-    });
-  }, [currentProfile?.id]);
+    if (!currentProfile?.photos || currentProfile.photos.length <= 1 || cardOrder.length === 0) return;
+    const currentFront = cardOrder[0] ?? 0;
+    const nextIdx = (currentFront + 1) % currentProfile.photos.length;
+    const img1 = new Image();
+    img1.src = currentProfile.photos[nextIdx];
+    if (currentProfile.photos.length > 2) {
+      const nextNextIdx = (currentFront + 2) % currentProfile.photos.length;
+      const img2 = new Image();
+      img2.src = currentProfile.photos[nextNextIdx];
+    }
+  }, [cardOrder, currentProfile]);
 
-  // Transition to next photo: slide down in front, drop behind, and glide up into the rear of the stack smoothly
+  // Transition to next photo: slide down in front, drop behind, and glide up into the rear of the stack
   const handleNextPhotoCard = useCallback(() => {
     if (!currentProfile?.photos || currentProfile.photos.length <= 1) return;
     if (isTransitioningRef.current) return;
     isTransitioningRef.current = true;
 
-    // Phase 1: Slide down in front to reveal the next card (which already has its own image & text)
+    // Phase 1: Slide down in front to reveal the next card (which already has its own image & text!)
     setTransitionPhase('drop');
 
-    // Phase 2: Outgoing front card drops behind the deck (zIndex behind Layer 2) and glides up into rear position
+    // Phase 2: Outgoing front card drops behind the deck (zIndex 1) and glides up into rear position
     timeout1Ref.current = setTimeout(() => {
       setTransitionPhase('return');
 
@@ -150,7 +155,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
     }, 280);
   }, [currentProfile]);
 
-  // Active displayed photo index (during drop/return, the incoming front card is cardOrder[1])
+  // Active displayed photo index (during transition, the incoming front card is cardOrder[1])
   const activePhotoIndex = (transitionPhase === 'drop' || transitionPhase === 'return')
     ? (cardOrder.length > 1 ? cardOrder[1] : (cardOrder[0] ?? 0))
     : (cardOrder[0] ?? 0);
@@ -670,7 +675,6 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                       height: '100%',
                       overflow: 'hidden',
                       borderRadius: '24px',
-                      backgroundColor: '#1E161C',
                     }}
                   >
                     {/* Photo Image */}
@@ -679,7 +683,6 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                         src={photoUrl}
                         alt={`${currentProfile.firstName}'s photo ${pIdx + 1}`}
                         draggable={false}
-                        decoding="async"
                         className="ken-burns-img"
                         style={{
                           width: '100%',
@@ -688,8 +691,6 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                           objectPosition: 'center top',
                           display: 'block',
                           pointerEvents: 'none',
-                          backfaceVisibility: 'hidden',
-                          WebkitBackfaceVisibility: 'hidden',
                         }}
                       />
                     ) : (
@@ -1054,8 +1055,8 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                           backgroundColor: '#1E161C',
                           boxShadow: isDark ? '0 8px 24px rgba(0, 0, 0, 0.45)' : '0 8px 22px rgba(73, 40, 61, 0.1)',
                           transform: transitionPhase === 'idle'
-                            ? 'translate3d(0, -16px, 0) scale(0.90) rotate(-2.8deg)'
-                            : 'translate3d(0, -8px, 0) scale(0.95) rotate(2.4deg)',
+                            ? 'translate3d(0, -16px, -30px) scale(0.90) rotate(-2.8deg)'
+                            : 'translate3d(0, -8px, -15px) scale(0.95) rotate(2.4deg)',
                           transformOrigin: 'bottom center',
                           opacity: transitionPhase === 'idle' ? 0.75 : 0.9,
                           filter: transitionPhase === 'idle'
@@ -1066,11 +1067,8 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                             ? 'none'
                             : transitionPhase === 'drop'
                             ? 'transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.28s ease, filter 0.28s ease'
-                            : 'transform 0.30s ease, opacity 0.30s ease, filter 0.30s ease',
+                            : 'none',
                           pointerEvents: 'none',
-                          willChange: 'transform, opacity',
-                          backfaceVisibility: 'hidden',
-                          WebkitBackfaceVisibility: 'hidden',
                         }}
                       >
                         {renderCardBody(thirdIdx, false)}
@@ -1090,7 +1088,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                             ? (isDark ? '0 12px 30px rgba(0, 0, 0, 0.5)' : '0 12px 28px rgba(73, 40, 61, 0.12)')
                             : (isDark ? '0 18px 44px rgba(0, 0, 0, 0.6)' : '0 16px 40px rgba(73, 40, 61, 0.18)'),
                           transform: transitionPhase === 'idle'
-                            ? 'translate3d(0, -8px, 0) scale(0.95) rotate(2.4deg)'
+                            ? 'translate3d(0, -8px, -15px) scale(0.95) rotate(2.4deg)'
                             : 'translate3d(0, 0, 0) scale(1) rotate(0deg)',
                           transformOrigin: 'bottom center',
                           opacity: transitionPhase === 'idle' ? 0.9 : 1,
@@ -1101,12 +1099,9 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                           transition: prefersReducedMotion
                             ? 'none'
                             : transitionPhase === 'drop'
-                            ? 'transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.28s ease, filter 0.28s ease, box-shadow 0.28s ease'
-                            : 'transform 0.30s ease, opacity 0.30s ease, filter 0.30s ease',
+                            ? 'transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.28s ease, filter 0.28s ease'
+                            : 'none',
                           pointerEvents: 'none',
-                          willChange: 'transform, opacity',
-                          backfaceVisibility: 'hidden',
-                          WebkitBackfaceVisibility: 'hidden',
                         }}
                       >
                         {renderCardBody(nextIdx, false)}
@@ -1142,16 +1137,16 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                         transform: transitionPhase === 'idle'
                           ? 'translate3d(0, 0, 0) scale(1) rotate(0deg)'
                           : transitionPhase === 'drop'
-                          ? 'translate3d(8px, 72%, 0) scale(0.96) rotate(3.5deg)'
+                          ? 'translate3d(8px, 76%, 20px) scale(0.96) rotate(3.5deg)'
                           : (thirdIdx !== null
-                            ? 'translate3d(0, -16px, 0) scale(0.90) rotate(-2.8deg)'
-                            : 'translate3d(0, -8px, 0) scale(0.95) rotate(2.4deg)'),
+                            ? 'translate3d(0, -16px, -30px) scale(0.90) rotate(-2.8deg)'
+                            : 'translate3d(0, -8px, -15px) scale(0.95) rotate(2.4deg)'),
                         transformOrigin: 'bottom center',
                         opacity: transitionPhase === 'return' ? (thirdIdx !== null ? 0.75 : 0.9) : 1,
                         filter: transitionPhase === 'return'
                           ? (thirdIdx !== null ? (isDark ? 'brightness(0.68)' : 'brightness(0.78)') : (isDark ? 'brightness(0.78)' : 'brightness(0.88)'))
                           : 'brightness(1)',
-                        zIndex: transitionPhase === 'drop' ? 15 : (thirdIdx !== null ? 2 : 5),
+                        zIndex: transitionPhase === 'drop' ? 15 : (transitionPhase === 'return' ? 1 : 10),
                         cursor: isDragging ? 'grabbing' : (N > 1 ? 'pointer' : 'grab'),
                         touchAction: 'pan-y',
                         transition: isDragging
@@ -1161,12 +1156,9 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                           : transitionPhase === 'drop'
                           ? 'transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1), box-shadow 0.28s ease'
                           : transitionPhase === 'return'
-                          ? 'transform 0.30s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.30s ease, filter 0.30s ease, box-shadow 0.30s ease'
+                          ? 'transform 0.30s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.30s ease, filter 0.30s ease'
                           : 'none',
                         userSelect: 'none',
-                        willChange: 'transform, opacity',
-                        backfaceVisibility: 'hidden',
-                        WebkitBackfaceVisibility: 'hidden',
                       }}
                       title={N > 1 ? 'Click to see next photo · Swipe right to connect, left to pass' : 'Swipe right to connect, left to pass'}
                     >

@@ -896,10 +896,10 @@ export const App: React.FC = () => {
         currentPath !== '/member/blinddate' &&
         currentPath !== '/member/afterhours' &&
         currentPath !== '/member/profile' &&
+        currentPath !== '/join/profile' &&
         (!isMobile ||
           currentPath === '/' ||
           currentPath === '/overview' ||
-          currentPath === '/join/profile' ||
           currentPath === '/member/you' ||
           currentPath === '/member/my-profile') && (
           <WebFooter onNavigate={(path) => navigate(path as RoutePath)} />
