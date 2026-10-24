@@ -191,7 +191,8 @@ export const MobileAuthScreen: React.FC<MobileAuthScreenProps> = ({
             filter: 'brightness(104%) contrast(98%)',
           }}
         >
-          <source src="/videos/auth-loop.mp4" type="video/mp4" />
+          <source src="/videos/auth-loop-mobile.mp4" media="(max-width: 767px)" type="video/mp4" />
+        <source src="/videos/auth-loop.mp4" type="video/mp4" />
           <source src="/videos/auth-bg.mp4" type="video/mp4" />
         </video>
       </div>

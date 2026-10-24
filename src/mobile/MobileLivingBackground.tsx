@@ -90,7 +90,8 @@ export const MobileLivingBackground: React.FC<MobileLivingBackgroundProps> = ({
             filter: 'brightness(105%) contrast(98%)',
           }}
         >
-          <source src="/videos/auth-loop.mp4" type="video/mp4" />
+          <source src="/videos/auth-loop-mobile.mp4" media="(max-width: 767px)" type="video/mp4" />
+        <source src="/videos/auth-loop.mp4" type="video/mp4" />
           <source src="/videos/auth-bg.mp4" type="video/mp4" />
           <source
             src="/videos/Firefly%20Create%20a%20premium,%20realistic%20cinematic%20video%20from%20this%20exact%20image.%20Preserve%20the%20original%20com.mp4"

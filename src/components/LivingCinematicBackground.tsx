@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
 
 interface LivingCinematicBackgroundProps {
   className?: string;
@@ -39,6 +40,7 @@ const CinematicVideoPlayer = React.memo(() => {
         poster="/auth-twilight.jpg"
         preload="auto"
       >
+        <source src="/videos/auth-loop-mobile.mp4" media="(max-width: 767px)" type="video/mp4" />
         <source src="/videos/auth-loop.mp4" type="video/mp4" />
         <source src="/videos/auth-bg.mp4" type="video/mp4" />
         <source
@@ -59,6 +61,9 @@ export const LivingCinematicBackground: React.FC<LivingCinematicBackgroundProps>
   className = '',
   children,
 }) => {
+  const { appearanceMode } = useAuth();
+  const isDark = appearanceMode === 'after-dark';
+
   return (
     <div
       className={`living-cinematic-stage ${className}`}
@@ -67,7 +72,7 @@ export const LivingCinematicBackground: React.FC<LivingCinematicBackgroundProps>
         width: '100%',
         minHeight: '100dvh',
         overflow: 'hidden',
-        backgroundColor: '#140E1C',
+        backgroundColor: isDark ? '#140E1C' : '#FAF1F3',
       }}
     >
       <style>{`
@@ -141,6 +146,19 @@ export const LivingCinematicBackground: React.FC<LivingCinematicBackgroundProps>
 
       {/* Layer 1: Seamless Infinitely Continuous Living Cinematic Video */}
       <CinematicVideoPlayer />
+
+      {/* Light mode luminous scrim */}
+      {!isDark && (
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'linear-gradient(180deg, rgba(251, 243, 245, 0.35) 0%, rgba(250, 241, 243, 0.65) 100%)',
+            zIndex: 2,
+            pointerEvents: 'none',
+          }}
+        />
+      )}
 
       {/* Layer 2: Subtle Horizon Twilight Warmth */}
       <div

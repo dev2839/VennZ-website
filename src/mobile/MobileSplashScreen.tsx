@@ -109,6 +109,15 @@ export const MobileSplashScreen: React.FC<MobileSplashScreenProps> = ({
 
   const [activeIndex, setActiveIndex] = useState(2);
   const touchStartX = useRef<number | null>(null);
+  const section2Ref = useRef<HTMLElement | null>(null);
+
+  const handleScrollToExplore = () => {
+    if (section2Ref.current) {
+      section2Ref.current.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      window.scrollBy({ top: 360, behavior: 'smooth' });
+    }
+  };
 
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
@@ -165,12 +174,12 @@ export const MobileSplashScreen: React.FC<MobileSplashScreenProps> = ({
           position: 'relative',
           zIndex: 10,
           width: '100%',
-          minHeight: '100dvh',
+          minHeight: 'calc(100dvh - 40px)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: '24px 16px calc(32px + env(safe-area-inset-bottom, 16px))',
+          padding: 'calc(20px + env(safe-area-inset-top, 8px)) 16px 16px',
           boxSizing: 'border-box',
         }}
       >
@@ -191,7 +200,7 @@ export const MobileSplashScreen: React.FC<MobileSplashScreenProps> = ({
             id="welcome-vennz-logo-inner"
             style={{
               position: 'relative',
-              width: 'clamp(280px, 76vw, 320px)',
+              width: 'clamp(305px, 85vw, 355px)',
               aspectRatio: '984 / 303',
               display: 'flex',
               alignItems: 'center',
@@ -348,35 +357,44 @@ export const MobileSplashScreen: React.FC<MobileSplashScreenProps> = ({
             </svg>
           </button>
 
-          {/* Subtle scroll indicator */}
-          <div
+          {/* Interactive Scroll to explore button */}
+          <button
+            type="button"
+            onClick={handleScrollToExplore}
+            aria-label="Scroll to explore VennZ features"
             style={{
-              marginTop: '22px',
+              marginTop: '18px',
+              background: 'transparent',
+              border: 'none',
+              padding: '6px 12px',
+              cursor: 'pointer',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
               gap: '4px',
-              opacity: isIntroActive ? 0 : 0.65,
-              transition: 'opacity 0.4s ease 0.32s',
+              opacity: isIntroActive ? 0 : 0.75,
+              transition: 'opacity 0.4s ease 0.32s, transform 0.2s ease',
+              touchAction: 'manipulation',
             }}
           >
-            <span style={{ fontSize: '10.5px', letterSpacing: '0.16em', textTransform: 'uppercase', color: isDark ? '#D4A2AC' : '#683A46', fontWeight: 600 }}>
+            <span style={{ fontSize: '11px', letterSpacing: '0.16em', textTransform: 'uppercase', color: isDark ? '#F9AAAD' : '#A1525F', fontWeight: 600 }}>
               Scroll to explore
             </span>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={isDark ? '#D4A2AC' : '#683A46'} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={isDark ? '#F9AAAD' : '#A1525F'} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
               <path d="m6 9 6 6 6-6" />
             </svg>
-          </div>
+          </button>
         </div>
       </section>
 
       {/* SECTION 2: MOBILE 3D COVERFLOW (Smooth touch swipe, fits screen without horizontal overflow) */}
       <section
+        ref={section2Ref}
         style={{
           position: 'relative',
           zIndex: 10,
           width: '100%',
-          padding: '40px 16px 80px',
+          padding: '16px 16px 60px',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
