@@ -403,7 +403,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
     display: 'block',
     marginBottom: '6px',
     color: colors.muted,
-    fontSize: '10.5px',
+    fontSize: '12.5px',
     fontWeight: 700,
     letterSpacing: '0.12em',
     textTransform: 'uppercase',
@@ -419,7 +419,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
     background: colors.field,
     color: colors.text,
     font: 'inherit',
-    fontSize: '14px',
+    fontSize: '16px',
     outline: 'none',
   };
 
@@ -510,7 +510,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
               background: 'none',
               color: colors.muted,
               cursor: 'pointer',
-              fontSize: '12.5px',
+              fontSize: '14.5px',
               fontWeight: 600,
             }}
           >
@@ -532,7 +532,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
               <div
                 style={{
                   color: colors.rose,
-                  fontSize: '11px',
+                  fontSize: '13px',
                   fontWeight: 700,
                   letterSpacing: '0.14em',
                 }}
@@ -545,7 +545,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                     margin: '6px 0 0',
                     color: colors.accent,
                     fontFamily: 'var(--font-serif)',
-                    fontSize: '36px',
+                    fontSize: '38px',
                     fontWeight: 400,
                     lineHeight: 1.1,
                   }}
@@ -560,7 +560,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                       gap: '5px',
                       padding: '4px 10px',
                       borderRadius: '999px',
-                      fontSize: '11px',
+                      fontSize: '13px',
                       fontWeight: 700,
                       letterSpacing: '0.06em',
                       backgroundColor: isDark ? 'rgba(161, 82, 95, 0.25)' : 'rgba(161, 82, 95, 0.12)',
@@ -574,7 +574,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                   </span>
                 )}
               </div>
-              <p style={{ margin: '8px 0 0', color: colors.muted, fontSize: '13.5px' }}>
+              <p style={{ margin: '8px 0 0', color: colors.muted, fontSize: '15.5px' }}>
                 {[draft.designation, draft.company, draft.city].filter(Boolean).join(' · ') ||
                   'Complete your profile to unlock verified introductions.'}
               </p>
@@ -600,7 +600,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                   background: isDark ? 'rgba(70, 32, 55, 0.4)' : 'rgba(255, 255, 255, 0.9)',
                   color: colors.accent,
                   cursor: 'pointer',
-                  fontSize: '12px',
+                  fontSize: '14px',
                   fontWeight: 700,
                   letterSpacing: '0.04em',
                   boxShadow: '0 4px 12px rgba(0,0,0,0.06)',
@@ -629,7 +629,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                     background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
                     color: '#FFF8F8',
                     cursor: 'pointer',
-                    fontSize: '12px',
+                    fontSize: '14px',
                     fontWeight: 700,
                     letterSpacing: '0.04em',
                     boxShadow: '0 6px 18px rgba(161, 82, 95, 0.35)',
@@ -650,7 +650,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                       background: 'transparent',
                       color: colors.accent,
                       cursor: 'pointer',
-                      fontSize: '12px',
+                      fontSize: '14px',
                       fontWeight: 700,
                     }}
                   >
@@ -670,7 +670,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                       background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
                       color: '#FFF8F8',
                       cursor: 'pointer',
-                      fontSize: '12px',
+                      fontSize: '14px',
                       fontWeight: 700,
                     }}
                   >
@@ -690,7 +690,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                 backgroundColor: isDark ? 'rgba(74, 222, 128, 0.15)' : 'rgba(46, 125, 50, 0.1)',
                 border: '1px solid rgba(74, 222, 128, 0.3)',
                 color: isDark ? '#86EFAC' : '#2E7D32',
-                fontSize: '13px',
+                fontSize: '15px',
                 fontWeight: 600,
               }}
             >
@@ -744,7 +744,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                   <span
                     style={{
                       fontFamily: 'var(--font-serif)',
-                      fontSize: '18px',
+                      fontSize: '20px',
                       fontWeight: 600,
                       color: colors.text,
                       letterSpacing: '0.01em',
@@ -780,7 +780,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                   {isIncognitoActive && (
                     <span
                       style={{
-                        fontSize: '10px',
+                        fontSize: '12px',
                         fontWeight: 700,
                         letterSpacing: '0.08em',
                         textTransform: 'uppercase',
@@ -798,7 +798,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                 <p
                   style={{
                     margin: '3px 0 0',
-                    fontSize: '12.5px',
+                    fontSize: '14.5px',
                     color: colors.muted,
                     lineHeight: 1.4,
                   }}
@@ -869,7 +869,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                 backgroundColor: activeSubTab === 'profile' ? (isDark ? '#462037' : '#FFFFFF') : 'transparent',
                 color: activeSubTab === 'profile' ? colors.text : colors.muted,
                 fontWeight: activeSubTab === 'profile' ? 700 : 500,
-                fontSize: '13px',
+                fontSize: '15px',
                 cursor: 'pointer',
                 boxShadow: activeSubTab === 'profile' ? '0 2px 8px rgba(0,0,0,0.1)' : 'none',
                 transition: 'all 0.15s ease',
@@ -890,7 +890,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                 backgroundColor: activeSubTab === 'elevate' ? (isDark ? '#462037' : '#FFFFFF') : 'transparent',
                 color: activeSubTab === 'elevate' ? (isDark ? '#F9AAAD' : '#A1525F') : colors.muted,
                 fontWeight: activeSubTab === 'elevate' ? 700 : 500,
-                fontSize: '13px',
+                fontSize: '15px',
                 cursor: 'pointer',
                 boxShadow: activeSubTab === 'elevate' ? '0 2px 8px rgba(0,0,0,0.1)' : 'none',
                 transition: 'all 0.15s ease',
@@ -909,7 +909,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                 backgroundColor: activeSubTab === 'account' ? (isDark ? '#462037' : '#FFFFFF') : 'transparent',
                 color: activeSubTab === 'account' ? colors.text : colors.muted,
                 fontWeight: activeSubTab === 'account' ? 700 : 500,
-                fontSize: '13px',
+                fontSize: '15px',
                 cursor: 'pointer',
                 boxShadow: activeSubTab === 'account' ? '0 2px 8px rgba(0,0,0,0.1)' : 'none',
                 transition: 'all 0.15s ease',
@@ -937,7 +937,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
                     <span style={labelStyle}>PROFILE COMPLETENESS</span>
-                    <strong style={{ color: colors.rose, fontSize: '14px', fontWeight: 700 }}>
+                    <strong style={{ color: colors.rose, fontSize: '16px', fontWeight: 700 }}>
                       {completion}%
                     </strong>
                   </div>
@@ -960,7 +960,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                         key={label}
                         style={{
                           color: complete ? colors.accent : colors.muted,
-                          fontSize: '11.5px',
+                          fontSize: '13.5px',
                           fontWeight: complete ? 600 : 400,
                         }}
                       >
@@ -978,7 +978,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                       gap: '8px',
                       marginBottom: '10px',
                       color: colors.accent,
-                      fontSize: '12px',
+                      fontSize: '14px',
                       fontWeight: 700,
                       letterSpacing: '0.06em',
                     }}
@@ -994,7 +994,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                         gap: '8px',
                         padding: '4px 0',
                         color: colors.muted,
-                        fontSize: '12px',
+                        fontSize: '14px',
                       }}
                     >
                       <span>{label}</span>
@@ -1019,17 +1019,17 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                       margin: 0,
                       color: colors.accent,
                       fontFamily: 'var(--font-serif)',
-                      fontSize: '22px',
+                      fontSize: '24px',
                       fontWeight: 400,
                     }}
                   >
                     Photographs
                   </h2>
-                  <span style={{ fontSize: '12px', color: colors.muted }}>
+                  <span style={{ fontSize: '14px', color: colors.muted }}>
                     {draft.photos?.length || 0} of {MAX_PHOTOS} photos
                   </span>
                 </div>
-                <p style={{ margin: '0 0 16px', color: colors.muted, fontSize: '13px' }}>
+                <p style={{ margin: '0 0 16px', color: colors.muted, fontSize: '15px' }}>
                   Your primary photo is the first thing other members see on Discover. Use the crop tool to adjust your framing to 3:4.
                 </p>
 
@@ -1073,7 +1073,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                             backgroundColor: 'rgba(20, 14, 28, 0.85)',
                             backdropFilter: 'blur(4px)',
                             color: '#FFFFFF',
-                            fontSize: '9.5px',
+                            fontSize: '11.5px',
                             fontWeight: 700,
                             letterSpacing: '0.08em',
                           }}
@@ -1100,7 +1100,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                           display: 'flex',
                           alignItems: 'center',
                           gap: '3px',
-                          fontSize: '10px',
+                          fontSize: '12px',
                           fontWeight: 600,
                         }}
                         title="Adjust framing"
@@ -1167,13 +1167,13 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                       }}
                     >
                       <Plus size={22} />
-                      <span style={{ fontSize: '11px', fontWeight: 600 }}>Add Photo</span>
+                      <span style={{ fontSize: '13px', fontWeight: 600 }}>Add Photo</span>
                     </button>
                   )}
                 </div>
 
                 {photoError && (
-                  <p style={{ color: '#E06D6D', fontSize: '12px', marginTop: '8px' }}>{photoError}</p>
+                  <p style={{ color: '#E06D6D', fontSize: '14px', marginTop: '8px' }}>{photoError}</p>
                 )}
               </section>
 
@@ -1184,7 +1184,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                     margin: '0 0 10px',
                     color: colors.accent,
                     fontFamily: 'var(--font-serif)',
-                    fontSize: '22px',
+                    fontSize: '24px',
                     fontWeight: 400,
                   }}
                 >
@@ -1203,7 +1203,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                     style={{
                       margin: 0,
                       fontFamily: 'var(--font-serif)',
-                      fontSize: '16.5px',
+                      fontSize: '18.5px',
                       lineHeight: 1.6,
                       color: colors.text,
                     }}
@@ -1221,17 +1221,17 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                       margin: 0,
                       color: colors.accent,
                       fontFamily: 'var(--font-serif)',
-                      fontSize: '22px',
+                      fontSize: '24px',
                       fontWeight: 400,
                     }}
                   >
                     Interests
                   </h2>
-                  <span style={{ fontSize: '12px', color: colors.muted }}>
+                  <span style={{ fontSize: '14px', color: colors.muted }}>
                     {(draft.interests || []).length} selected
                   </span>
                 </div>
-                <p style={{ margin: '0 0 14px', color: colors.muted, fontSize: '13px' }}>
+                <p style={{ margin: '0 0 14px', color: colors.muted, fontSize: '15px' }}>
                   Shared interests highlight natural alignment when other members view your card on Discover.
                 </p>
 
@@ -1255,7 +1255,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                               : 'transparent',
                             color: selected ? colors.accent : colors.muted,
                             fontWeight: selected ? 700 : 500,
-                            fontSize: '13px',
+                            fontSize: '15px',
                             cursor: 'pointer',
                             transition: 'all 0.15s ease',
                           }}
@@ -1277,7 +1277,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                           border: `1px solid ${colors.border}`,
                           backgroundColor: isDark ? 'rgba(70, 32, 55, 0.35)' : 'rgba(255, 255, 255, 0.8)',
                           color: colors.accent,
-                          fontSize: '12.5px',
+                          fontSize: '14.5px',
                           fontWeight: 600,
                         }}
                       >
@@ -1286,7 +1286,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                     ))}
                   </div>
                 ) : (
-                  <p style={{ color: colors.muted, fontSize: '13px' }}>No interests added yet.</p>
+                  <p style={{ color: colors.muted, fontSize: '15px' }}>No interests added yet.</p>
                 )}
               </section>
 
@@ -1298,17 +1298,17 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                       margin: 0,
                       color: colors.accent,
                       fontFamily: 'var(--font-serif)',
-                      fontSize: '22px',
+                      fontSize: '24px',
                       fontWeight: 400,
                     }}
                   >
                     Your Vibe
                   </h2>
-                  <span style={{ fontSize: '12px', color: colors.muted }}>
+                  <span style={{ fontSize: '14px', color: colors.muted }}>
                     {(draft.vibes || []).length} / 5 selected
                   </span>
                 </div>
-                <p style={{ margin: '0 0 14px', color: colors.muted, fontSize: '13px' }}>
+                <p style={{ margin: '0 0 14px', color: colors.muted, fontSize: '15px' }}>
                   Traits that capture your energy and disposition.
                 </p>
 
@@ -1332,7 +1332,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                               : 'transparent',
                             color: selected ? colors.accent : colors.muted,
                             fontWeight: selected ? 700 : 500,
-                            fontSize: '13px',
+                            fontSize: '15px',
                             cursor: 'pointer',
                             transition: 'all 0.15s ease',
                           }}
@@ -1354,7 +1354,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                           border: `1px solid ${colors.border}`,
                           backgroundColor: isDark ? 'rgba(199, 87, 124, 0.22)' : 'rgba(161, 82, 95, 0.1)',
                           color: colors.accent,
-                          fontSize: '12.5px',
+                          fontSize: '14.5px',
                           fontWeight: 600,
                         }}
                       >
@@ -1363,7 +1363,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                     ))}
                   </div>
                 ) : (
-                  <p style={{ color: colors.muted, fontSize: '13px' }}>No vibes selected yet.</p>
+                  <p style={{ color: colors.muted, fontSize: '15px' }}>No vibes selected yet.</p>
                 )}
               </section>
 
@@ -1374,7 +1374,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                     margin: '0 0 16px',
                     color: colors.accent,
                     fontFamily: 'var(--font-serif)',
-                    fontSize: '22px',
+                    fontSize: '24px',
                     fontWeight: 400,
                   }}
                 >
@@ -1393,7 +1393,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                         style={inputStyle}
                       />
                     ) : (
-                      <p style={{ margin: 0, fontSize: '14px' }}>{draft.city || 'Not specified'}</p>
+                      <p style={{ margin: 0, fontSize: '16px' }}>{draft.city || 'Not specified'}</p>
                     )}
                   </div>
 
@@ -1408,7 +1408,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                         style={inputStyle}
                       />
                     ) : (
-                      <p style={{ margin: 0, fontSize: '14px' }}>{draft.designation || 'Not specified'}</p>
+                      <p style={{ margin: 0, fontSize: '16px' }}>{draft.designation || 'Not specified'}</p>
                     )}
                   </div>
 
@@ -1423,13 +1423,13 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                         style={inputStyle}
                       />
                     ) : (
-                      <p style={{ margin: 0, fontSize: '14px' }}>{draft.company || 'Not specified'}</p>
+                      <p style={{ margin: 0, fontSize: '16px' }}>{draft.company || 'Not specified'}</p>
                     )}
                   </div>
 
                   <div>
                     <span style={labelStyle}>Dating Preference</span>
-                    <p style={{ margin: 0, fontSize: '14px' }}>{draft.datingPreference || 'Everyone'}</p>
+                    <p style={{ margin: 0, fontSize: '16px' }}>{draft.datingPreference || 'Everyone'}</p>
                   </div>
                 </div>
               </section>
@@ -1472,14 +1472,14 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                       style={{
                         margin: 0,
                         fontFamily: 'var(--font-serif)',
-                        fontSize: '16px',
+                        fontSize: '18px',
                         color: colors.text,
                         fontWeight: 600,
                       }}
                     >
                       Profile Intelligence & Makeover Studio
                     </h3>
-                    <p style={{ margin: '4px 0 0', fontSize: '12.5px', color: colors.muted }}>
+                    <p style={{ margin: '4px 0 0', fontSize: '14.5px', color: colors.muted }}>
                       Review live profile telemetry, AI makeover draft suggestions, and custom styling services.
                     </p>
                   </div>
@@ -1496,7 +1496,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                     border: 'none',
                     background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
                     color: '#FFF',
-                    fontSize: '12px',
+                    fontSize: '14px',
                     fontWeight: 700,
                     cursor: 'pointer',
                     boxShadow: '0 4px 12px rgba(161, 82, 95, 0.25)',
@@ -1529,7 +1529,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                     backgroundColor: isDark ? 'rgba(52, 211, 153, 0.2)' : 'rgba(16, 185, 129, 0.15)',
                     border: '1px solid rgba(52, 211, 153, 0.4)',
                     color: isDark ? '#A7F3D0' : '#065F46',
-                    fontSize: '13px',
+                    fontSize: '15px',
                     fontWeight: 600,
                     display: 'flex',
                     alignItems: 'center',
@@ -1559,7 +1559,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                     <h3
                       style={{
                         fontFamily: 'var(--font-serif)',
-                        fontSize: '20px',
+                        fontSize: '22px',
                         fontWeight: 600,
                         margin: 0,
                         color: colors.text,
@@ -1567,7 +1567,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                     >
                       Discovery Preferences
                     </h3>
-                    <p style={{ margin: '3px 0 0', fontSize: '12.5px', color: colors.muted }}>
+                    <p style={{ margin: '3px 0 0', fontSize: '14.5px', color: colors.muted }}>
                       Tailor the profiles you encounter on Discover
                     </p>
                   </div>
@@ -1578,11 +1578,11 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                       <MapPin size={15} color={colors.rose} />
-                      <span style={{ fontSize: '12px', fontWeight: 700, letterSpacing: '0.06em', color: colors.rose, textTransform: 'uppercase' }}>
+                      <span style={{ fontSize: '14px', fontWeight: 700, letterSpacing: '0.06em', color: colors.rose, textTransform: 'uppercase' }}>
                         Maximum Distance
                       </span>
                     </div>
-                    <span style={{ fontFamily: 'var(--font-serif)', fontSize: '17px', fontWeight: 700, color: colors.text }}>
+                    <span style={{ fontFamily: 'var(--font-serif)', fontSize: '19px', fontWeight: 700, color: colors.text }}>
                       {preferences.distanceKm} km
                     </span>
                   </div>
@@ -1623,7 +1623,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                           border: `1px solid ${preferences.distanceKm === km ? colors.accent : colors.border}`,
                           backgroundColor: preferences.distanceKm === km ? (isDark ? 'rgba(161, 82, 95, 0.35)' : 'rgba(161, 82, 95, 0.12)') : 'transparent',
                           color: preferences.distanceKm === km ? colors.text : colors.muted,
-                          fontSize: '11px',
+                          fontSize: '13px',
                           fontWeight: 600,
                           cursor: 'pointer',
                         }}
@@ -1637,17 +1637,17 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                 {/* Age Preference Range */}
                 <div style={{ padding: '16px', borderRadius: '14px', backgroundColor: isDark ? 'rgba(70, 32, 55, 0.35)' : 'rgba(244, 230, 234, 0.45)', border: `1px solid ${colors.border}` }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                    <span style={{ fontSize: '12px', fontWeight: 700, letterSpacing: '0.06em', color: colors.rose, textTransform: 'uppercase' }}>
+                    <span style={{ fontSize: '14px', fontWeight: 700, letterSpacing: '0.06em', color: colors.rose, textTransform: 'uppercase' }}>
                       Age Range Preference
                     </span>
-                    <span style={{ fontFamily: 'var(--font-serif)', fontSize: '17px', fontWeight: 700, color: colors.text }}>
+                    <span style={{ fontFamily: 'var(--font-serif)', fontSize: '19px', fontWeight: 700, color: colors.text }}>
                       {preferences.minAge} – {preferences.maxAge} years
                     </span>
                   </div>
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginTop: '10px' }}>
                     <div>
-                      <span style={{ fontSize: '11px', color: colors.muted, display: 'block', marginBottom: '4px' }}>Minimum Age</span>
+                      <span style={{ fontSize: '13px', color: colors.muted, display: 'block', marginBottom: '4px' }}>Minimum Age</span>
                       <input
                         type="range"
                         min={18}
@@ -1661,7 +1661,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                       />
                     </div>
                     <div>
-                      <span style={{ fontSize: '11px', color: colors.muted, display: 'block', marginBottom: '4px' }}>Maximum Age</span>
+                      <span style={{ fontSize: '13px', color: colors.muted, display: 'block', marginBottom: '4px' }}>Maximum Age</span>
                       <input
                         type="range"
                         min={Math.max(preferences.minAge + 1, 21)}
@@ -1696,7 +1696,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                     <h3
                       style={{
                         fontFamily: 'var(--font-serif)',
-                        fontSize: '20px',
+                        fontSize: '22px',
                         fontWeight: 600,
                         margin: 0,
                         color: colors.text,
@@ -1704,7 +1704,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                     >
                       Language & Region
                     </h3>
-                    <p style={{ margin: '3px 0 0', fontSize: '12.5px', color: colors.muted }}>
+                    <p style={{ margin: '3px 0 0', fontSize: '14.5px', color: colors.muted }}>
                       Preferred language for app interface, concierge, and communication
                     </p>
                   </div>
@@ -1730,7 +1730,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                             ? (isDark ? 'rgba(161, 82, 95, 0.3)' : 'rgba(161, 82, 95, 0.1)')
                             : (isDark ? 'rgba(70, 32, 55, 0.25)' : 'rgba(255, 255, 255, 0.6)'),
                           color: isSelected ? colors.text : colors.muted,
-                          fontSize: '13px',
+                          fontSize: '15px',
                           fontWeight: isSelected ? 700 : 500,
                           cursor: 'pointer',
                           display: 'flex',
@@ -1766,7 +1766,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                     <h3
                       style={{
                         fontFamily: 'var(--font-serif)',
-                        fontSize: '20px',
+                        fontSize: '22px',
                         fontWeight: 600,
                         margin: 0,
                         color: colors.text,
@@ -1774,7 +1774,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                     >
                       Blocked Contacts & Privacy
                     </h3>
-                    <p style={{ margin: '3px 0 0', fontSize: '12.5px', color: colors.muted }}>
+                    <p style={{ margin: '3px 0 0', fontSize: '14.5px', color: colors.muted }}>
                       Contacts who cannot see your profile, send requests, or discover you
                     </p>
                   </div>
@@ -1794,7 +1794,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                       border: `1px solid ${colors.border}`,
                       backgroundColor: isDark ? 'rgba(70, 32, 55, 0.35)' : '#FFFFFF',
                       color: colors.text,
-                      fontSize: '13px',
+                      fontSize: '15px',
                       outline: 'none',
                     }}
                   />
@@ -1806,7 +1806,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                       border: 'none',
                       background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
                       color: '#FFFFFF',
-                      fontSize: '12px',
+                      fontSize: '14px',
                       fontWeight: 700,
                       cursor: 'pointer',
                       whiteSpace: 'nowrap',
@@ -1819,7 +1819,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                 {/* Blocked contacts list */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {preferences.blockedContacts.length === 0 ? (
-                    <div style={{ padding: '16px', borderRadius: '12px', textAlign: 'center', color: colors.muted, fontSize: '13px', backgroundColor: isDark ? 'rgba(70, 32, 55, 0.2)' : 'rgba(0,0,0,0.02)' }}>
+                    <div style={{ padding: '16px', borderRadius: '12px', textAlign: 'center', color: colors.muted, fontSize: '15px', backgroundColor: isDark ? 'rgba(70, 32, 55, 0.2)' : 'rgba(0,0,0,0.02)' }}>
                       No blocked contacts. You have not blocked anyone yet.
                     </div>
                   ) : (
@@ -1838,7 +1838,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                       >
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                           <UserX size={15} color="#E06D6D" />
-                          <span style={{ fontSize: '13px', fontWeight: 600, color: colors.text }}>{contact}</span>
+                          <span style={{ fontSize: '15px', fontWeight: 600, color: colors.text }}>{contact}</span>
                         </div>
                         <button
                           type="button"
@@ -1849,7 +1849,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                             border: `1px solid ${colors.border}`,
                             backgroundColor: 'transparent',
                             color: colors.muted,
-                            fontSize: '11.5px',
+                            fontSize: '13.5px',
                             fontWeight: 600,
                             cursor: 'pointer',
                             transition: 'all 0.15s ease',
@@ -1890,7 +1890,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                   <h3
                     style={{
                       fontFamily: 'var(--font-serif)',
-                      fontSize: '24px',
+                      fontSize: '26px',
                       fontWeight: 500,
                       margin: '2px 0 4px',
                       color: colors.text,
@@ -1903,7 +1903,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                       display: 'inline-flex',
                       alignItems: 'center',
                       gap: '5px',
-                      fontSize: '11px',
+                      fontSize: '13px',
                       fontWeight: 700,
                       color: isMember ? '#86EFAC' : '#FBBF24',
                     }}
@@ -1923,7 +1923,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                         border: `1.5px solid ${colors.border}`,
                         background: 'transparent',
                         color: colors.text,
-                        fontSize: '12px',
+                        fontSize: '14px',
                         fontWeight: 700,
                         cursor: 'pointer',
                       }}
@@ -1941,7 +1941,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                         border: 'none',
                         background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
                         color: '#FFFFFF',
-                        fontSize: '12px',
+                        fontSize: '14px',
                         fontWeight: 700,
                         cursor: 'pointer',
                       }}
@@ -1971,7 +1971,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                   <span
                     style={{
                       fontFamily: 'var(--font-serif)',
-                      fontSize: '28px',
+                      fontSize: '30px',
                       fontWeight: 600,
                       color: colors.rose,
                       display: 'block',
@@ -1994,7 +1994,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                   <span
                     style={{
                       fontFamily: 'var(--font-serif)',
-                      fontSize: '28px',
+                      fontSize: '30px',
                       fontWeight: 600,
                       color: colors.rose,
                       display: 'block',
@@ -2009,7 +2009,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                   <span
                     style={{
                       fontFamily: 'var(--font-serif)',
-                      fontSize: '28px',
+                      fontSize: '30px',
                       fontWeight: 600,
                       color: colors.rose,
                       display: 'block',
@@ -2032,21 +2032,21 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
               >
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
                   <span style={labelStyle}>PEER REFERRAL PRIVILEGE</span>
-                  <span style={{ fontSize: '11px', color: colors.muted }}>
+                  <span style={{ fontSize: '13px', color: colors.muted }}>
                     {remainingInvites} of {MAX_MONTHLY_INVITATIONS} invitations remaining this month
                   </span>
                 </div>
                 <h4
                   style={{
                     fontFamily: 'var(--font-serif)',
-                    fontSize: '18px',
+                    fontSize: '20px',
                     margin: '0 0 6px',
                     color: colors.text,
                   }}
                 >
                   Invite an Ambitious Peer
                 </h4>
-                <p style={{ margin: '0 0 16px', fontSize: '12.5px', color: colors.muted, lineHeight: 1.5 }}>
+                <p style={{ margin: '0 0 16px', fontSize: '14.5px', color: colors.muted, lineHeight: 1.5 }}>
                   Membership to VennZ is strictly curated. Peers applying with your code receive expedited committee review.
                 </p>
 
@@ -2061,7 +2061,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                       border: 'none',
                       background: remainingInvites > 0 ? 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)' : '#666',
                       color: '#FFFFFF',
-                      fontSize: '12px',
+                      fontSize: '14px',
                       fontWeight: 700,
                       cursor: remainingInvites > 0 ? 'pointer' : 'not-allowed',
                       opacity: remainingInvites > 0 ? 1 : 0.6,
@@ -2082,7 +2082,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                         border: `1px solid ${colors.border}`,
                       }}
                     >
-                      <span style={{ fontFamily: 'monospace', fontWeight: 700, fontSize: '14px', letterSpacing: '0.08em' }}>
+                      <span style={{ fontFamily: 'monospace', fontWeight: 700, fontSize: '16px', letterSpacing: '0.08em' }}>
                         {latestGeneratedCode}
                       </span>
                       <button
@@ -2139,7 +2139,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                       <HelpCircle size={16} color={colors.muted} />
-                      <span style={{ fontSize: '13.5px', fontWeight: 500 }}>Concierge Support & Standards</span>
+                      <span style={{ fontSize: '15.5px', fontWeight: 500 }}>Concierge Support & Standards</span>
                     </div>
                     <ChevronRight size={16} color={colors.muted} />
                   </button>
@@ -2164,7 +2164,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                       <LogOut size={16} color={colors.muted} />
-                      <span style={{ fontSize: '13.5px', fontWeight: 500 }}>Sign Out</span>
+                      <span style={{ fontSize: '15.5px', fontWeight: 500 }}>Sign Out</span>
                     </div>
                     <ChevronRight size={16} color={colors.muted} />
                   </button>
@@ -2188,7 +2188,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                       <Trash2 size={16} />
-                      <span style={{ fontSize: '13.5px', fontWeight: 500 }}>Delete Account & Data</span>
+                      <span style={{ fontSize: '15.5px', fontWeight: 500 }}>Delete Account & Data</span>
                     </div>
                     <ChevronRight size={16} />
                   </button>
@@ -2211,12 +2211,12 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
               >
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span style={{ fontFamily: 'var(--font-serif)', fontSize: '14px', fontWeight: 600, color: colors.text }}>
+                    <span style={{ fontFamily: 'var(--font-serif)', fontSize: '16px', fontWeight: 600, color: colors.text }}>
                       VennZ Web Edition
                     </span>
                     <span
                       style={{
-                        fontSize: '10px',
+                        fontSize: '12px',
                         fontWeight: 700,
                         padding: '2px 8px',
                         borderRadius: '999px',
@@ -2231,11 +2231,11 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                       <Check size={10} /> Up to Date
                     </span>
                   </div>
-                  <span style={{ fontSize: '11.5px', color: colors.muted, display: 'block', marginTop: '3px' }}>
+                  <span style={{ fontSize: '13.5px', color: colors.muted, display: 'block', marginTop: '3px' }}>
                     Version 2.4.1 (Build 2026.10.23) · End-to-End Encrypted
                   </span>
                 </div>
-                <div style={{ fontSize: '11px', color: colors.muted }}>
+                <div style={{ fontSize: '13px', color: colors.muted }}>
                   © {new Date().getFullYear()} VennZ Private Club
                 </div>
               </div>
@@ -2328,7 +2328,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                   backgroundColor: 'rgba(255, 255, 255, 0.15)',
                   backdropFilter: 'blur(8px)',
                   color: '#FFFFFF',
-                  fontSize: '11px',
+                  fontSize: '13px',
                   fontWeight: 700,
                   letterSpacing: '0.08em',
                   textTransform: 'uppercase',
@@ -2347,7 +2347,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                   border: '1px solid rgba(255, 255, 255, 0.25)',
                   backgroundColor: 'rgba(0, 0, 0, 0.5)',
                   color: '#FFFFFF',
-                  fontSize: '12px',
+                  fontSize: '14px',
                   fontWeight: 600,
                   cursor: 'pointer',
                   display: 'flex',
@@ -2438,7 +2438,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                   backdropFilter: 'blur(8px)',
                   border: '1px solid rgba(255, 255, 255, 0.2)',
                   color: '#FFFFFF',
-                  fontSize: '11px',
+                  fontSize: '13px',
                   fontWeight: 600,
                   zIndex: 25,
                   pointerEvents: 'none',
@@ -2520,7 +2520,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                       <h2
                         style={{
                           fontFamily: 'var(--font-serif)',
-                          fontSize: '32px',
+                          fontSize: '34px',
                           fontWeight: 400,
                           color: '#FFFFFF',
                           margin: 0,
@@ -2531,7 +2531,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                       </h2>
                       <span
                         style={{
-                          fontSize: '10.5px',
+                          fontSize: '12.5px',
                           fontWeight: 700,
                           letterSpacing: '0.1em',
                           textTransform: 'uppercase',
@@ -2549,7 +2549,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                     {draft.city && (
                       <div
                         style={{
-                          fontSize: '11px',
+                          fontSize: '13px',
                           fontWeight: 700,
                           letterSpacing: '0.1em',
                           textTransform: 'uppercase',
@@ -2568,7 +2568,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                     {(draft.designation || draft.company) && (
                       <div
                         style={{
-                          fontSize: '14px',
+                          fontSize: '16px',
                           fontFamily: 'var(--font-serif)',
                           color: 'rgba(255, 255, 255, 0.95)',
                           lineHeight: '1.3',
@@ -2586,7 +2586,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                     <div style={{ marginBottom: '6px' }}>
                       <span
                         style={{
-                          fontSize: '10px',
+                          fontSize: '12px',
                           fontWeight: 700,
                           letterSpacing: '0.12em',
                           textTransform: 'uppercase',
@@ -2603,7 +2603,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                       style={{
                         fontFamily: 'var(--font-serif)',
                         fontStyle: 'italic',
-                        fontSize: '15.5px',
+                        fontSize: '17.5px',
                         lineHeight: '1.45',
                         color: '#FFFFFF',
                         margin: 0,
@@ -2620,7 +2620,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                     <div style={{ marginBottom: '8px' }}>
                       <span
                         style={{
-                          fontSize: '10px',
+                          fontSize: '12px',
                           fontWeight: 700,
                           letterSpacing: '0.12em',
                           textTransform: 'uppercase',
@@ -2638,7 +2638,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                         <span
                           key={i}
                           style={{
-                            fontSize: '11px',
+                            fontSize: '13px',
                             fontWeight: 600,
                             color: 'rgba(255, 255, 255, 0.95)',
                             backgroundColor: 'rgba(255, 255, 255, 0.16)',
@@ -2660,7 +2660,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                     <div style={{ marginBottom: '8px' }}>
                       <span
                         style={{
-                          fontSize: '10px',
+                          fontSize: '12px',
                           fontWeight: 700,
                           letterSpacing: '0.12em',
                           textTransform: 'uppercase',
@@ -2678,7 +2678,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                         <span
                           key={i}
                           style={{
-                            fontSize: '11px',
+                            fontSize: '13px',
                             fontWeight: 600,
                             color: 'rgba(255, 255, 255, 0.95)',
                             backgroundColor: 'rgba(255, 255, 255, 0.16)',
@@ -2699,7 +2699,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
             {/* Tap instruction */}
             <span
               style={{
-                fontSize: '11px',
+                fontSize: '13px',
                 color: 'rgba(255, 255, 255, 0.65)',
                 marginTop: '10px',
                 letterSpacing: '0.04em',
@@ -2741,10 +2741,10 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                 boxShadow: '0 20px 48px rgba(0,0,0,0.45)',
               }}
             >
-              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '22px', color: colors.text, margin: '0 0 8px 0' }}>
+              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '24px', color: colors.text, margin: '0 0 8px 0' }}>
                 Delete Account & Membership?
               </h3>
-              <p style={{ fontSize: '13px', lineHeight: '1.5', color: colors.muted, margin: '0 0 20px 0' }}>
+              <p style={{ fontSize: '15px', lineHeight: '1.5', color: colors.muted, margin: '0 0 20px 0' }}>
                 All your verified credentials, matches, conversations, and membership privileges will be permanently purged.
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -2760,7 +2760,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                     backgroundColor: '#B91C1C',
                     color: '#FFFFFF',
                     border: 'none',
-                    fontSize: '12.5px',
+                    fontSize: '14.5px',
                     fontWeight: 700,
                     letterSpacing: '0.08em',
                     textTransform: 'uppercase',
@@ -2778,7 +2778,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                     background: 'transparent',
                     color: colors.muted,
                     border: 'none',
-                    fontSize: '12.5px',
+                    fontSize: '14.5px',
                     fontWeight: 600,
                     cursor: 'pointer',
                   }}
@@ -2864,7 +2864,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
               <h3
                 style={{
                   fontFamily: 'var(--font-serif)',
-                  fontSize: '23px',
+                  fontSize: '25px',
                   color: colors.text,
                   margin: '0 0 8px 0',
                   lineHeight: 1.2,
@@ -2875,7 +2875,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
 
               <p
                 style={{
-                  fontSize: '13.5px',
+                  fontSize: '15.5px',
                   lineHeight: '1.6',
                   color: colors.muted,
                   margin: '0 0 18px 0',
@@ -2895,8 +2895,8 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                     border: `1px solid ${colors.border}`,
                   }}
                 >
-                  <span style={{ fontSize: '18px', lineHeight: 1 }}>✨</span>
-                  <div style={{ fontSize: '12.5px', color: colors.text, lineHeight: 1.45 }}>
+                  <span style={{ fontSize: '20px', lineHeight: 1 }}>✨</span>
+                  <div style={{ fontSize: '14.5px', color: colors.text, lineHeight: 1.45 }}>
                     <strong>Visible Only to Right-Swipes:</strong> Only people you like or swipe right on will see your profile in their Discover queue or request list.
                   </div>
                 </div>
@@ -2911,8 +2911,8 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                     border: `1px solid ${colors.border}`,
                   }}
                 >
-                  <span style={{ fontSize: '18px', lineHeight: 1 }}>🛡️</span>
-                  <div style={{ fontSize: '12.5px', color: colors.text, lineHeight: 1.45 }}>
+                  <span style={{ fontSize: '20px', lineHeight: 1 }}>🛡️</span>
+                  <div style={{ fontSize: '14.5px', color: colors.text, lineHeight: 1.45 }}>
                     <strong>Completely Hidden from Public Browse:</strong> You will never appear on anyone else's screen randomly. Friends, colleagues, or strangers cannot stumble across your profile.
                   </div>
                 </div>
@@ -2927,8 +2927,8 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                     border: `1px solid ${colors.border}`,
                   }}
                 >
-                  <span style={{ fontSize: '18px', lineHeight: 1 }}>⚡</span>
-                  <div style={{ fontSize: '12.5px', color: colors.text, lineHeight: 1.45 }}>
+                  <span style={{ fontSize: '20px', lineHeight: 1 }}>⚡</span>
+                  <div style={{ fontSize: '14.5px', color: colors.text, lineHeight: 1.45 }}>
                     <strong>Uninterrupted Matching:</strong> You can continue exploring profiles freely. When someone you liked swipes back, it forms a mutual match immediately.
                   </div>
                 </div>
@@ -2949,7 +2949,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                     background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
                     color: '#FFFFFF',
                     border: 'none',
-                    fontSize: '13px',
+                    fontSize: '15px',
                     fontWeight: 700,
                     letterSpacing: '0.04em',
                     cursor: 'pointer',
@@ -2967,7 +2967,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
                     background: 'transparent',
                     color: colors.muted,
                     border: 'none',
-                    fontSize: '12.5px',
+                    fontSize: '14.5px',
                     fontWeight: 600,
                     cursor: 'pointer',
                   }}
@@ -2995,7 +2995,7 @@ export const MyProfileScreen: React.FC<MyProfileScreenProps> = ({
             boxShadow: '0 8px 24px rgba(0,0,0,0.35)',
             padding: '12px 22px',
             borderRadius: '999px',
-            fontSize: '13px',
+            fontSize: '15px',
             fontWeight: 600,
             display: 'flex',
             alignItems: 'center',

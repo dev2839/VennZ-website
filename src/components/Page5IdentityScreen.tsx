@@ -375,7 +375,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
               alignItems: 'center',
               gap: '6px',
               fontFamily: 'var(--font-sans)',
-              fontSize: '14.5px',
+              fontSize: '16.5px',
               fontWeight: 700,
               letterSpacing: '0.08em',
               textTransform: 'uppercase',
@@ -401,7 +401,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
           {/* Verification Badge */}
           <span
             style={{
-              fontSize: '13px',
+              fontSize: '15px',
               letterSpacing: '0.09em',
               textTransform: 'uppercase',
               fontWeight: 600,
@@ -454,7 +454,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
 
           <p
             style={{
-              fontSize: '16px',
+              fontSize: '18px',
               lineHeight: '1.55',
               color: isDark ? '#BDB0B6' : '#6E5E68',
               margin: '0 0 28px 0',
@@ -492,7 +492,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
             >
               <h2
                 style={{
-                  fontSize: '15px',
+                  fontSize: '17px',
                   fontWeight: 700,
                   letterSpacing: '0.08em',
                   textTransform: 'uppercase',
@@ -513,7 +513,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
               {/* Status Badge */}
               <span
                 style={{
-                  fontSize: '12px',
+                  fontSize: '14px',
                   fontWeight: 700,
                   letterSpacing: '0.08em',
                   padding: '4px 11px',
@@ -537,7 +537,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
             {/* Description */}
             <p
               style={{
-                fontSize: '15px',
+                fontSize: '17px',
                 lineHeight: '1.5',
                 color: isDark ? '#D9CFD5' : '#5E4E58',
                 margin: '0 0 18px 0',
@@ -578,7 +578,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                   </svg>
                 </div>
 
-                <div style={{ fontSize: '15px', color: isDark ? '#D9CFD5' : '#5E4E58', lineHeight: '1.45', maxWidth: '400px' }}>
+                <div style={{ fontSize: '17px', color: isDark ? '#D9CFD5' : '#5E4E58', lineHeight: '1.45', maxWidth: '400px' }}>
                   Face the camera in good lighting. No sunglasses, hats, or filters.
                 </div>
 
@@ -593,7 +593,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                     backgroundColor: isDark ? '#A1525F' : 'var(--color-mulberry)',
                     color: '#FFFFFF',
                     border: isDark ? '1px solid rgba(240, 212, 184, 0.35)' : 'none',
-                    fontSize: '14.5px',
+                    fontSize: '16.5px',
                     fontWeight: 700,
                     letterSpacing: '0.06em',
                     textTransform: 'uppercase',
@@ -632,7 +632,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                     backgroundColor: isDark ? 'rgba(243, 238, 233, 0.08)' : 'rgba(73, 40, 61, 0.06)',
                     border: isDark ? '1px solid rgba(240, 212, 184, 0.25)' : '1px solid rgba(73, 40, 61, 0.18)',
                     color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
-                    fontSize: '13.5px',
+                    fontSize: '15.5px',
                     fontWeight: 600,
                     letterSpacing: '0.04em',
                     textTransform: 'uppercase',
@@ -723,7 +723,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                       backgroundColor: 'rgba(0, 0, 0, 0.65)',
                       backdropFilter: 'blur(6px)',
                       color: '#FFFFFF',
-                      fontSize: '10px',
+                      fontSize: '12px',
                       fontWeight: 700,
                       letterSpacing: '0.08em',
                       padding: '3px 8px',
@@ -758,7 +758,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                       backgroundColor: isDark ? '#A1525F' : 'var(--color-mulberry)',
                       color: '#FFFFFF',
                       border: isDark ? '1px solid rgba(240, 212, 184, 0.35)' : 'none',
-                      fontSize: '13px',
+                      fontSize: '15px',
                       fontWeight: 700,
                       letterSpacing: '0.06em',
                       textTransform: 'uppercase',
@@ -790,7 +790,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                       backgroundColor: isDark ? 'rgba(243, 238, 233, 0.08)' : 'rgba(73, 40, 61, 0.08)',
                       border: isDark ? '1px solid rgba(243, 238, 233, 0.2)' : '1px solid rgba(73, 40, 61, 0.2)',
                       color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
-                      fontSize: '12px',
+                      fontSize: '14px',
                       fontWeight: 700,
                       cursor: 'pointer',
                     }}
@@ -847,7 +847,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                         transform: 'translateX(-50%)',
                         backgroundColor: 'rgba(46, 125, 50, 0.92)',
                         color: '#FFFFFF',
-                        fontSize: '11px',
+                        fontSize: '13px',
                         fontWeight: 700,
                         letterSpacing: '0.06em',
                         textTransform: 'uppercase',
@@ -880,7 +880,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                         backgroundColor: isDark ? 'rgba(243, 238, 233, 0.08)' : 'rgba(73, 40, 61, 0.08)',
                         border: isDark ? '1px solid rgba(243, 238, 233, 0.2)' : '1px solid rgba(73, 40, 61, 0.2)',
                         color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
-                        fontSize: '14px',
+                        fontSize: '16px',
                         fontWeight: 700,
                         letterSpacing: '0.05em',
                         textTransform: 'uppercase',
@@ -917,7 +917,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                         backgroundColor: isDark ? '#A1525F' : 'var(--color-mulberry)',
                         color: '#FFFFFF',
                         border: isDark ? '1px solid rgba(240, 212, 184, 0.35)' : 'none',
-                        fontSize: '14px',
+                        fontSize: '16px',
                         fontWeight: 700,
                         letterSpacing: '0.05em',
                         textTransform: 'uppercase',
@@ -952,7 +952,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                       background: 'none',
                       border: 'none',
                       color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
-                      fontSize: '14px',
+                      fontSize: '16px',
                       fontWeight: 600,
                       textDecoration: 'underline',
                       cursor: 'pointer',
@@ -980,7 +980,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                   gap: '12px',
                 }}
               >
-                <div style={{ color: '#E06D6D', fontSize: '14.5px', lineHeight: '1.5', maxWidth: '440px' }}>
+                <div style={{ color: '#E06D6D', fontSize: '16.5px', lineHeight: '1.5', maxWidth: '440px' }}>
                   {cameraErrorMessage ||
                     'Camera access was not granted. Please allow camera access in your browser or take/upload your selfie using your device camera below.'}
                 </div>
@@ -996,7 +996,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                       border: isDark ? '1px solid rgba(240, 212, 184, 0.35)' : 'none',
                       borderRadius: '10px',
                       padding: '10px 18px',
-                      fontSize: '13.5px',
+                      fontSize: '15.5px',
                       fontWeight: 700,
                       letterSpacing: '0.04em',
                       textTransform: 'uppercase',
@@ -1024,7 +1024,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                       border: isDark ? '1px solid rgba(240, 212, 184, 0.25)' : '1px solid rgba(73, 40, 61, 0.2)',
                       borderRadius: '10px',
                       padding: '10px 16px',
-                      fontSize: '13.5px',
+                      fontSize: '15.5px',
                       fontWeight: 600,
                       letterSpacing: '0.04em',
                       textTransform: 'uppercase',
@@ -1057,7 +1057,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
                   ? '#FDF3F5'
                   : (isDark ? 'rgba(253, 243, 245, 0.35)' : 'rgba(70, 32, 55, 0.45)'),
                 border: 'none',
-                fontSize: '15.5px',
+                fontSize: '17.5px',
                 fontWeight: 700,
                 letterSpacing: '0.08em',
                 textTransform: 'uppercase',
@@ -1103,7 +1103,7 @@ export const Page5IdentityScreen: React.FC<Page5IdentityScreenProps> = ({
             {!canContinue && (
               <div
                 style={{
-                  fontSize: '13.5px',
+                  fontSize: '15.5px',
                   color: isDark ? '#B3A1A8' : '#8A7A84',
                   textAlign: 'center',
                   marginTop: '10px',

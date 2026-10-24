@@ -114,7 +114,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
               alignItems: 'center',
               gap: '6px',
               fontFamily: 'var(--font-sans)',
-              fontSize: '14.5px',
+              fontSize: '16.5px',
               fontWeight: 700,
               letterSpacing: '0.08em',
               textTransform: 'uppercase',
@@ -139,7 +139,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
 
           <span
             style={{
-              fontSize: '13px',
+              fontSize: '15px',
               letterSpacing: '0.09em',
               textTransform: 'uppercase',
               fontWeight: 700,
@@ -180,7 +180,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
           {/* Editorial Kicker */}
           <div
             style={{
-              fontSize: '13px',
+              fontSize: '15px',
               fontWeight: 700,
               letterSpacing: '0.1em',
               textTransform: 'uppercase',
@@ -207,7 +207,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
 
           <p
             style={{
-              fontSize: '16px',
+              fontSize: '18px',
               lineHeight: '1.5',
               color: isDark ? '#BDB0B6' : '#6E5E68',
               margin: '0 0 24px 0',
@@ -238,7 +238,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                     <span
                       style={{
                         fontFamily: 'var(--font-serif)',
-                        fontSize: '34px',
+                        fontSize: '36px',
                         fontWeight: 700,
                         color: isDark ? '#FBF7F2' : 'var(--color-mulberry)',
                         letterSpacing: '-0.02em',
@@ -248,7 +248,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                     </span>
                     <span
                       style={{
-                        fontSize: '16.5px',
+                        fontSize: '18.5px',
                         fontWeight: 500,
                         color: isDark ? '#B3A1A8' : '#7A6B74',
                       }}
@@ -260,7 +260,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
 
                 <div
                   style={{
-                    fontSize: '19px',
+                    fontSize: '21px',
                     fontWeight: 700,
                     fontFamily: 'var(--font-sans)',
                     color: isDark ? '#FFFFFF' : 'var(--color-mulberry)',
@@ -292,7 +292,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                     <div
                       key={idx}
                       style={{
-                        fontSize: '15.5px',
+                        fontSize: '17.5px',
                         lineHeight: '1.45',
                         color: isDark ? '#F3EEE9' : '#272124',
                       }}
@@ -317,7 +317,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                   >
                     <p
                       style={{
-                        fontSize: '15.5px',
+                        fontSize: '17.5px',
                         lineHeight: '1.45',
                         color: isDark ? '#F3EEE9' : '#272124',
                         margin: 0,
@@ -334,7 +334,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
               <div style={{ marginBottom: '22px' }}>
                 <div
                   style={{
-                    fontSize: '13px',
+                    fontSize: '15px',
                     fontWeight: 700,
                     letterSpacing: '0.1em',
                     textTransform: 'uppercase',
@@ -346,7 +346,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                 </div>
                 <p
                   style={{
-                    fontSize: '14px',
+                    fontSize: '16px',
                     lineHeight: '1.55',
                     color: isDark ? '#BDB0B6' : '#6E5E68',
                     margin: '0 0 16px 0',
@@ -394,7 +394,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
               >
                 <span
                   style={{
-                    fontSize: '13px',
+                    fontSize: '15px',
                     fontWeight: 700,
                     letterSpacing: '0.1em',
                     textTransform: 'uppercase',
@@ -407,7 +407,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                 <span
                   style={{
                     fontFamily: 'var(--font-serif)',
-                    fontSize: '18px',
+                    fontSize: '20px',
                     fontWeight: 700,
                     color: isDark ? '#FBF7F2' : 'var(--color-mulberry)',
                     letterSpacing: '0.04em',
@@ -418,7 +418,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
 
               <p
                 style={{
-                  fontSize: '15px',
+                  fontSize: '17px',
                   fontWeight: 600,
                   color: isDark ? '#D9CFD5' : '#5E4E58',
                   margin: '0 0 14px 0',
@@ -450,7 +450,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                       display: 'flex',
                       alignItems: 'flex-start',
                       gap: '10px',
-                      fontSize: '15px',
+                      fontSize: '17px',
                       lineHeight: '1.45',
                       color: isDark ? '#F3EEE9' : '#272124',
                       fontWeight: 500,
@@ -459,7 +459,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                     <span
                       style={{
                         color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
-                        fontSize: '15px',
+                        fontSize: '17px',
                         lineHeight: '1.45',
                         flexShrink: 0,
                       }}
@@ -475,7 +475,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                 style={{
                   borderTop: isDark ? '1px dashed rgba(243, 238, 233, 0.15)' : '1px dashed rgba(73, 40, 61, 0.16)',
                   paddingTop: '12px',
-                  fontSize: '12px',
+                  fontSize: '14px',
                   lineHeight: '1.5',
                   letterSpacing: '0.05em',
                   textTransform: 'uppercase',
@@ -500,7 +500,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
               <>
                 <div
                   style={{
-                    fontSize: '14.5px',
+                    fontSize: '16.5px',
                     fontWeight: 500,
                     color: isDark ? '#D9CFD5' : '#6E5E68',
                     textAlign: 'center',
@@ -519,7 +519,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                     background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
                     color: '#FDF3F5',
                     border: 'none',
-                    fontSize: '16.5px',
+                    fontSize: '18.5px',
                     fontWeight: 700,
                     letterSpacing: '0.08em',
                     textTransform: 'uppercase',
@@ -560,7 +560,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                   background: viewMode === 'complimentary_only' ? 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)' : 'transparent',
                   color: viewMode === 'complimentary_only' ? '#FDF3F5' : (isDark ? '#F9AAAD' : '#462037'),
                   border: viewMode === 'complimentary_only' ? 'none' : (isDark ? '1.5px solid rgba(161, 82, 95, 0.45)' : '1.5px solid rgba(161, 82, 95, 0.35)'),
-                  fontSize: '15px',
+                  fontSize: '17px',
                   fontWeight: 700,
                   letterSpacing: '0.08em',
                   textTransform: 'uppercase',
@@ -644,7 +644,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                   right: '16px',
                   background: 'none',
                   border: 'none',
-                  fontSize: '20px',
+                  fontSize: '22px',
                   color: isDark ? '#B3A1A8' : '#8A7A84',
                   cursor: 'pointer',
                 }}
@@ -667,7 +667,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                     alignItems: 'center',
                     justifyContent: 'center',
                     margin: '0 auto 16px auto',
-                    fontSize: '28px',
+                    fontSize: '30px',
                   }}
                 >
                   ✓
@@ -675,14 +675,14 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                 <h3
                   style={{
                     fontFamily: 'var(--font-serif)',
-                    fontSize: '22px',
+                    fontSize: '24px',
                     margin: '0 0 8px 0',
                     color: isDark ? '#FFFFFF' : 'var(--color-mulberry)',
                   }}
                 >
                   Payment Successful!
                 </h3>
-                <p style={{ fontSize: '13.5px', color: isDark ? '#BDB0B6' : '#6E5E68', margin: 0 }}>
+                <p style={{ fontSize: '15.5px', color: isDark ? '#BDB0B6' : '#6E5E68', margin: 0 }}>
                   Welcome to VennZ. Redirecting to Discover...
                 </p>
               </div>
@@ -700,10 +700,10 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                     margin: '0 auto 16px auto',
                   }}
                 />
-                <h4 style={{ margin: '0 0 6px 0', fontSize: '16px', fontWeight: 600 }}>
+                <h4 style={{ margin: '0 0 6px 0', fontSize: '18px', fontWeight: 600 }}>
                   Processing Payment...
                 </h4>
-                <p style={{ fontSize: '12px', color: isDark ? '#B3A1A8' : '#8A7A84', margin: 0 }}>
+                <p style={{ fontSize: '14px', color: isDark ? '#B3A1A8' : '#8A7A84', margin: 0 }}>
                   Authorizing test transaction securely.
                 </p>
                 <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
@@ -711,10 +711,10 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
             ) : (
               /* NORMAL CHECKOUT FORM */
               <>
-                <div style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: isDark ? '#F9AAAD' : 'var(--color-mulberry)', marginBottom: '4px' }}>
+                <div style={{ fontSize: '13px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: isDark ? '#F9AAAD' : 'var(--color-mulberry)', marginBottom: '4px' }}>
                   DEMO CHECKOUT
                 </div>
-                <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '22px', margin: '0 0 16px 0', color: isDark ? '#FFFFFF' : 'var(--color-mulberry)' }}>
+                <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '24px', margin: '0 0 16px 0', color: isDark ? '#FFFFFF' : 'var(--color-mulberry)' }}>
                   Complete Membership
                 </h3>
 
@@ -731,10 +731,10 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                   }}
                 >
                   <div>
-                    <div style={{ fontSize: '13px', fontWeight: 700 }}>Circle Monthly Access</div>
-                    <div style={{ fontSize: '11px', color: isDark ? '#B3A1A8' : '#8A7A84' }}>Billed monthly · Cancel anytime</div>
+                    <div style={{ fontSize: '15px', fontWeight: 700 }}>Circle Monthly Access</div>
+                    <div style={{ fontSize: '13px', color: isDark ? '#B3A1A8' : '#8A7A84' }}>Billed monthly · Cancel anytime</div>
                   </div>
-                  <div style={{ fontFamily: 'var(--font-serif)', fontSize: '18px', fontWeight: 700, color: isDark ? '#FBF7F2' : 'var(--color-mulberry)' }}>
+                  <div style={{ fontFamily: 'var(--font-serif)', fontSize: '20px', fontWeight: 700, color: isDark ? '#FBF7F2' : 'var(--color-mulberry)' }}>
                     ₹1,499
                   </div>
                 </div>
@@ -751,7 +751,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                       border: paymentMethod === 'card' ? '1.5px solid var(--color-mulberry)' : '1px solid rgba(120, 120, 120, 0.3)',
                       backgroundColor: paymentMethod === 'card' ? (isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(73, 40, 61, 0.08)') : 'transparent',
                       color: isDark ? '#F3EEE9' : 'var(--color-espresso)',
-                      fontSize: '12px',
+                      fontSize: '14px',
                       fontWeight: 600,
                       cursor: 'pointer',
                     }}
@@ -768,7 +768,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                       border: paymentMethod === 'upi' ? '1.5px solid var(--color-mulberry)' : '1px solid rgba(120, 120, 120, 0.3)',
                       backgroundColor: paymentMethod === 'upi' ? (isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(73, 40, 61, 0.08)') : 'transparent',
                       color: isDark ? '#F3EEE9' : 'var(--color-espresso)',
-                      fontSize: '12px',
+                      fontSize: '14px',
                       fontWeight: 600,
                       cursor: 'pointer',
                     }}
@@ -778,9 +778,9 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                 </div>
 
                 {paymentMethod === 'card' ? (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '12px', marginBottom: '18px' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '14px', marginBottom: '18px' }}>
                     <div style={{ marginBottom: '8px' }}>
-                      <label style={{ display: 'block', fontSize: '10px', fontWeight: 600, color: isDark ? '#B3A1A8' : '#8A7A84', marginBottom: '3px' }}>CARD NUMBER</label>
+                      <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: isDark ? '#B3A1A8' : '#8A7A84', marginBottom: '3px' }}>CARD NUMBER</label>
                       <input
                         type="text"
                         readOnly
@@ -792,7 +792,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                           border: isDark ? '1px solid rgba(255, 255, 255, 0.15)' : '1px solid rgba(73, 40, 61, 0.2)',
                           backgroundColor: isDark ? 'rgba(0, 0, 0, 0.2)' : '#FFFFFF',
                           padding: '0 10px',
-                          fontSize: '12px',
+                          fontSize: '14px',
                           color: isDark ? '#FFFFFF' : '#272124',
                           boxSizing: 'border-box',
                         }}
@@ -800,7 +800,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                     </div>
                     <div style={{ display: 'flex', gap: '8px' }}>
                       <div style={{ flex: 1 }}>
-                        <label style={{ display: 'block', fontSize: '10px', fontWeight: 600, color: isDark ? '#B3A1A8' : '#8A7A84', marginBottom: '3px' }}>EXPIRES</label>
+                        <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: isDark ? '#B3A1A8' : '#8A7A84', marginBottom: '3px' }}>EXPIRES</label>
                         <input
                           type="text"
                           readOnly
@@ -812,14 +812,14 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                             border: isDark ? '1px solid rgba(255, 255, 255, 0.15)' : '1px solid rgba(73, 40, 61, 0.2)',
                             backgroundColor: isDark ? 'rgba(0, 0, 0, 0.2)' : '#FFFFFF',
                             padding: '0 10px',
-                            fontSize: '12px',
+                            fontSize: '14px',
                             color: isDark ? '#FFFFFF' : '#272124',
                             boxSizing: 'border-box',
                           }}
                         />
                       </div>
                       <div style={{ flex: 1 }}>
-                        <label style={{ display: 'block', fontSize: '10px', fontWeight: 600, color: isDark ? '#B3A1A8' : '#8A7A84', marginBottom: '3px' }}>CVV</label>
+                        <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: isDark ? '#B3A1A8' : '#8A7A84', marginBottom: '3px' }}>CVV</label>
                         <input
                           type="text"
                           readOnly
@@ -831,7 +831,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                             border: isDark ? '1px solid rgba(255, 255, 255, 0.15)' : '1px solid rgba(73, 40, 61, 0.2)',
                             backgroundColor: isDark ? 'rgba(0, 0, 0, 0.2)' : '#FFFFFF',
                             padding: '0 10px',
-                            fontSize: '12px',
+                            fontSize: '14px',
                             color: isDark ? '#FFFFFF' : '#272124',
                             boxSizing: 'border-box',
                           }}
@@ -841,7 +841,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                   </div>
                 ) : (
                   <div style={{ marginBottom: '18px' }}>
-                    <label style={{ display: 'block', fontSize: '10px', fontWeight: 600, color: isDark ? '#B3A1A8' : '#8A7A84', marginBottom: '3px' }}>VPA / UPI ID</label>
+                    <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: isDark ? '#B3A1A8' : '#8A7A84', marginBottom: '3px' }}>VPA / UPI ID</label>
                     <input
                       type="text"
                       readOnly
@@ -853,7 +853,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                         border: isDark ? '1px solid rgba(255, 255, 255, 0.15)' : '1px solid rgba(73, 40, 61, 0.2)',
                         backgroundColor: isDark ? 'rgba(0, 0, 0, 0.2)' : '#FFFFFF',
                         padding: '0 10px',
-                        fontSize: '12px',
+                        fontSize: '14px',
                         color: isDark ? '#FFFFFF' : '#272124',
                         boxSizing: 'border-box',
                       }}
@@ -861,7 +861,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                   </div>
                 )}
 
-                <div style={{ fontSize: '11px', color: isDark ? '#86EFAC' : '#2E7D32', marginBottom: '16px', fontWeight: 600, textAlign: 'center' }}>
+                <div style={{ fontSize: '13px', color: isDark ? '#86EFAC' : '#2E7D32', marginBottom: '16px', fontWeight: 600, textAlign: 'center' }}>
                   ✓ Demo Environment: Click below to authorize membership payment.
                 </div>
 
@@ -875,7 +875,7 @@ export const Page9MembershipScreen: React.FC<Page9MembershipScreenProps> = ({
                     background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
                     color: '#FDF3F5',
                     border: 'none',
-                    fontSize: '13.5px',
+                    fontSize: '15.5px',
                     fontWeight: 700,
                     letterSpacing: '0.06em',
                     textTransform: 'uppercase',

@@ -604,7 +604,7 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
           ? (isDark ? 'rgba(161,82,95,0.85)' : 'rgba(199,87,124,0.85)')
           : (isDark ? 'rgba(70,32,55,0.5)' : 'rgba(255,255,255,0.6)'),
         color: isSelected ? '#FDF3F5' : (isDark ? '#F9AAAD' : 'var(--color-mulberry)'),
-        fontSize: '14px',
+        fontSize: '16px',
         fontWeight: isSelected ? 700 : 600,
         fontFamily: 'var(--font-sans)',
         letterSpacing: '0.04em',
@@ -685,7 +685,7 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                 alignItems: 'center',
                 gap: '8px',
                 fontFamily: 'var(--font-sans)',
-                fontSize: '14.5px',
+                fontSize: '16.5px',
                 fontWeight: 600,
                 letterSpacing: '0.08em',
                 textTransform: 'uppercase',
@@ -701,7 +701,7 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
 
             <span
               style={{
-                fontSize: '13px',
+                fontSize: '15px',
                 letterSpacing: '0.08em',
                 textTransform: 'uppercase',
                 fontWeight: 600,
@@ -755,17 +755,17 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                   boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
                 }}
               >
-                <span style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.12em', color: isDark ? '#F9AAAD' : '#A1525F' }}>
+                <span style={{ fontSize: '12px', fontWeight: 700, letterSpacing: '0.12em', color: isDark ? '#F9AAAD' : '#A1525F' }}>
                   VENNZ
                 </span>
               </div>
             </div>
 
             {/* Completion Text */}
-            <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '18px', fontWeight: 400, color: isDark ? '#FBF7F2' : 'var(--color-mulberry)', margin: '16px 0 4px 0', transition: 'all 0.3s ease' }}>
+            <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '20px', fontWeight: 400, color: isDark ? '#FBF7F2' : 'var(--color-mulberry)', margin: '16px 0 4px 0', transition: 'all 0.3s ease' }}>
               {completionText}
             </h2>
-            <div style={{ fontSize: '12px', fontWeight: 600, letterSpacing: '0.04em', color: isDark ? '#B3A1A8' : '#8A7A84', textTransform: 'uppercase' }}>
+            <div style={{ fontSize: '14px', fontWeight: 600, letterSpacing: '0.04em', color: isDark ? '#B3A1A8' : '#8A7A84', textTransform: 'uppercase' }}>
               {completedCount} of 6 connected
             </div>
           </div>
@@ -787,11 +787,11 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                 {/* 1. LEGAL FULL NAME */}
                 <div style={{ marginBottom: '22px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '15.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor }}>
                       <span>FULL NAME</span>
                     </label>
                     {verifiedName && (
-                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '11px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#C7577C', backgroundColor: 'rgba(199, 87, 124, 0.12)', border: '1px solid rgba(199, 87, 124, 0.3)', padding: '3px 8px', borderRadius: '6px' }}>
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '13px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#C7577C', backgroundColor: 'rgba(199, 87, 124, 0.12)', border: '1px solid rgba(199, 87, 124, 0.3)', padding: '3px 8px', borderRadius: '6px' }}>
                         <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
                           <path d="M2 6l3 3 5-5" stroke="#C7577C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
@@ -802,7 +802,7 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                   {verifiedName ? (
                     <div style={{ position: 'relative', width: '100%' }}>
                       <input type="text" value={verifiedName} readOnly disabled aria-label="Verified Legal Full Name"
-                        style={{ width: '100%', height: '54px', borderRadius: '13px', border: isDark ? '1px solid rgba(161, 82, 95, 0.35)' : '1px solid rgba(73, 40, 61, 0.22)', backgroundColor: isDark ? 'rgba(40, 18, 32, 0.75)' : 'rgba(240, 230, 235, 0.65)', padding: '0 44px 0 16px', fontSize: '16.5px', fontFamily: 'var(--font-sans)', color: textColor, outline: 'none', boxSizing: 'border-box', cursor: 'not-allowed', opacity: 0.95 }}
+                        style={{ width: '100%', height: '54px', borderRadius: '13px', border: isDark ? '1px solid rgba(161, 82, 95, 0.35)' : '1px solid rgba(73, 40, 61, 0.22)', backgroundColor: isDark ? 'rgba(40, 18, 32, 0.75)' : 'rgba(240, 230, 235, 0.65)', padding: '0 44px 0 16px', fontSize: '18.5px', fontFamily: 'var(--font-sans)', color: textColor, outline: 'none', boxSizing: 'border-box', cursor: 'not-allowed', opacity: 0.95 }}
                       />
                       <div style={{ position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)', color: isDark ? '#A1525F' : '#8A7A84', display: 'flex', alignItems: 'center' }} title="Verified legal identity">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -813,22 +813,22 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                     </div>
                   ) : (
                     <input type="text" value={firstName} onChange={(e) => { setFirstName(e.target.value); if (errors.firstName) setErrors((prev) => ({ ...prev, firstName: '' })); }} placeholder="e.g. Rahul Sharma"
-                      style={{ width: '100%', height: '54px', borderRadius: '13px', border: errors.firstName ? '1.5px solid #E06D6D' : `1px solid ${inputBorderColor}`, backgroundColor: inputBgColor, padding: '0 16px', fontSize: '16.5px', fontFamily: 'var(--font-sans)', color: textColor, outline: 'none', boxSizing: 'border-box' }}
+                      style={{ width: '100%', height: '54px', borderRadius: '13px', border: errors.firstName ? '1.5px solid #E06D6D' : `1px solid ${inputBorderColor}`, backgroundColor: inputBgColor, padding: '0 16px', fontSize: '18.5px', fontFamily: 'var(--font-sans)', color: textColor, outline: 'none', boxSizing: 'border-box' }}
                     />
                   )}
-                  <div style={{ fontSize: '12.5px', color: isDark ? '#B3A1A8' : '#8A7A84', marginTop: '6px' }}>
+                  <div style={{ fontSize: '14.5px', color: isDark ? '#B3A1A8' : '#8A7A84', marginTop: '6px' }}>
                     Legal name verified from DigiLocker. Kept private and never displayed to other users.
                   </div>
-                  {errors.firstName && <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.firstName}</div>}
+                  {errors.firstName && <div style={{ color: '#E06D6D', fontSize: '15px', marginTop: '5px' }}>{errors.firstName}</div>}
                 </div>
 
                 {/* 2. NAME ON VENNZ */}
                 <div style={{ marginBottom: '22px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-                    <label style={{ display: 'block', fontSize: '13.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor }}>
+                    <label style={{ display: 'block', fontSize: '15.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor }}>
                       NAME ON VENNZ
                     </label>
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '11px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: isDark ? '#F9AAAD' : '#A1525F', backgroundColor: isDark ? 'rgba(161, 82, 95, 0.15)' : 'rgba(161, 82, 95, 0.08)', border: isDark ? '1px solid rgba(161, 82, 95, 0.3)' : '1px solid rgba(161, 82, 95, 0.2)', padding: '3px 8px', borderRadius: '6px' }}>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '13px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: isDark ? '#F9AAAD' : '#A1525F', backgroundColor: isDark ? 'rgba(161, 82, 95, 0.15)' : 'rgba(161, 82, 95, 0.08)', border: isDark ? '1px solid rgba(161, 82, 95, 0.3)' : '1px solid rgba(161, 82, 95, 0.2)', padding: '3px 8px', borderRadius: '6px' }}>
                       FIRST NAME ONLY
                     </span>
                   </div>
@@ -846,7 +846,7 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                         border: isDark ? '1px solid rgba(161, 82, 95, 0.35)' : '1px solid rgba(73, 40, 61, 0.22)',
                         backgroundColor: isDark ? 'rgba(40, 18, 32, 0.75)' : 'rgba(240, 230, 235, 0.65)',
                         padding: '0 44px 0 16px',
-                        fontSize: '18px',
+                        fontSize: '20px',
                         fontFamily: 'var(--font-sans)',
                         fontWeight: 700,
                         letterSpacing: '0.04em',
@@ -864,20 +864,20 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                       </svg>
                     </div>
                   </div>
-                  <div style={{ fontSize: '12.5px', color: isDark ? '#B3A1A8' : '#8A7A84', marginTop: '6px' }}>
+                  <div style={{ fontSize: '14.5px', color: isDark ? '#B3A1A8' : '#8A7A84', marginTop: '6px' }}>
                     Your first name is your public identifier on VennZ. Once you match with someone, they will see your full legal name.
                   </div>
-                  {errors.vennzName && <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.vennzName}</div>}
+                  {errors.vennzName && <div style={{ color: '#E06D6D', fontSize: '15px', marginTop: '5px' }}>{errors.vennzName}</div>}
                 </div>
 
                 {/* 3. DATE OF BIRTH */}
                 <div style={{ marginBottom: '22px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-                    <label style={{ display: 'block', fontSize: '13.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor }}>
+                    <label style={{ display: 'block', fontSize: '15.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor }}>
                       DATE OF BIRTH <span style={{ color: '#E06D6D' }}>*</span>
                     </label>
                     {verifiedDob && (
-                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '11px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#C7577C', backgroundColor: 'rgba(199, 87, 124, 0.12)', border: '1px solid rgba(199, 87, 124, 0.3)', padding: '3px 8px', borderRadius: '6px' }}>
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '13px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#C7577C', backgroundColor: 'rgba(199, 87, 124, 0.12)', border: '1px solid rgba(199, 87, 124, 0.3)', padding: '3px 8px', borderRadius: '6px' }}>
                         <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
                           <path d="M2 6l3 3 5-5" stroke="#C7577C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
@@ -888,7 +888,7 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                   {verifiedDob ? (
                     <div style={{ position: 'relative', width: '100%' }}>
                       <input type="text" value={isoToDisplayDate(verifiedDob)} readOnly disabled
-                        style={{ width: '100%', height: '54px', borderRadius: '13px', border: isDark ? '1px solid rgba(161, 82, 95, 0.35)' : '1px solid rgba(73, 40, 61, 0.22)', backgroundColor: isDark ? 'rgba(40, 18, 32, 0.75)' : 'rgba(240, 230, 235, 0.65)', padding: '0 44px 0 16px', fontSize: '16.5px', fontFamily: 'var(--font-sans)', color: textColor, outline: 'none', boxSizing: 'border-box', cursor: 'not-allowed', opacity: 0.95 }}
+                        style={{ width: '100%', height: '54px', borderRadius: '13px', border: isDark ? '1px solid rgba(161, 82, 95, 0.35)' : '1px solid rgba(73, 40, 61, 0.22)', backgroundColor: isDark ? 'rgba(40, 18, 32, 0.75)' : 'rgba(240, 230, 235, 0.65)', padding: '0 44px 0 16px', fontSize: '18.5px', fontFamily: 'var(--font-sans)', color: textColor, outline: 'none', boxSizing: 'border-box', cursor: 'not-allowed', opacity: 0.95 }}
                       />
                       <div style={{ position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)', color: isDark ? '#A1525F' : '#8A7A84', display: 'flex', alignItems: 'center' }}>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -900,7 +900,7 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                   ) : (
                     <div style={{ position: 'relative' }}>
                       <input type="text" value={rawDobInput} onChange={handleManualDobChange} placeholder="DD / MM / YYYY"
-                        style={{ width: '100%', height: '54px', borderRadius: '13px', border: errors.dateOfBirth ? '1.5px solid #E06D6D' : `1px solid ${inputBorderColor}`, backgroundColor: inputBgColor, padding: '0 48px 0 16px', fontSize: '16.5px', fontFamily: 'var(--font-sans)', color: textColor, outline: 'none', boxSizing: 'border-box' }}
+                        style={{ width: '100%', height: '54px', borderRadius: '13px', border: errors.dateOfBirth ? '1.5px solid #E06D6D' : `1px solid ${inputBorderColor}`, backgroundColor: inputBgColor, padding: '0 48px 0 16px', fontSize: '18.5px', fontFamily: 'var(--font-sans)', color: textColor, outline: 'none', boxSizing: 'border-box' }}
                       />
                       <div style={{ position: 'absolute', right: '0', top: '0', width: '54px', height: '54px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', overflow: 'hidden' }} onClick={() => datePickerRef.current?.showPicker && datePickerRef.current.showPicker()}>
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={isDark ? '#F9AAAD' : '#C7577C'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -914,16 +914,16 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                     </div>
                   )}
                   {dateOfBirth && (
-                    <div style={{ fontSize: '13.5px', color: isDark ? '#A1525F' : '#C7577C', marginTop: '8px', fontWeight: 500 }}>
+                    <div style={{ fontSize: '15.5px', color: isDark ? '#A1525F' : '#C7577C', marginTop: '8px', fontWeight: 500 }}>
                       Age: {calculateAge(dateOfBirth)} years old
                     </div>
                   )}
-                  {errors.dateOfBirth && <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.dateOfBirth}</div>}
+                  {errors.dateOfBirth && <div style={{ color: '#E06D6D', fontSize: '15px', marginTop: '5px' }}>{errors.dateOfBirth}</div>}
                 </div>
 
                 {/* 4. CITY */}
                 <div style={{ marginBottom: '22px' }}>
-                  <label style={{ display: 'block', fontSize: '13.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor, marginBottom: '8px' }}>
+                  <label style={{ display: 'block', fontSize: '15.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor, marginBottom: '8px' }}>
                     CITY <span style={{ color: '#E06D6D' }}>*</span>
                   </label>
                   <input
@@ -944,7 +944,7 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                       border: errors.city ? '1.5px solid #E06D6D' : `1px solid ${inputBorderColor}`,
                       backgroundColor: inputBgColor,
                       padding: '0 16px',
-                      fontSize: '16.5px',
+                      fontSize: '18.5px',
                       fontFamily: 'var(--font-sans)',
                       color: textColor,
                       WebkitTextFillColor: textColor,
@@ -953,12 +953,12 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                       boxSizing: 'border-box',
                     }}
                   />
-                  {errors.city && <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.city}</div>}
+                  {errors.city && <div style={{ color: '#E06D6D', fontSize: '15px', marginTop: '5px' }}>{errors.city}</div>}
                 </div>
 
                 {/* 5. GENDER IDENTITY */}
                 <div style={{ marginBottom: '22px' }}>
-                  <label style={{ display: 'block', fontSize: '13.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor, marginBottom: '8px' }}>
+                  <label style={{ display: 'block', fontSize: '15.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor, marginBottom: '8px' }}>
                     GENDER IDENTITY <span style={{ color: '#E06D6D' }}>*</span>
                   </label>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
@@ -985,7 +985,7 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                           border: errors.selfDescribeGender ? '1.5px solid #E06D6D' : `1px solid ${inputBorderColor}`,
                           backgroundColor: inputBgColor,
                           padding: '0 16px',
-                          fontSize: '16.5px',
+                          fontSize: '18.5px',
                           fontFamily: 'var(--font-sans)',
                           color: textColor,
                           WebkitTextFillColor: textColor,
@@ -994,15 +994,15 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                           boxSizing: 'border-box',
                         }}
                       />
-                      {errors.selfDescribeGender && <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.selfDescribeGender}</div>}
+                      {errors.selfDescribeGender && <div style={{ color: '#E06D6D', fontSize: '15px', marginTop: '5px' }}>{errors.selfDescribeGender}</div>}
                     </div>
                   )}
-                  {errors.genderIdentity && <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.genderIdentity}</div>}
+                  {errors.genderIdentity && <div style={{ color: '#E06D6D', fontSize: '15px', marginTop: '5px' }}>{errors.genderIdentity}</div>}
                 </div>
 
                 {/* 6. INTERESTED IN DATING */}
                 <div style={{ marginBottom: '22px' }}>
-                  <label style={{ display: 'block', fontSize: '13.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor, marginBottom: '8px' }}>
+                  <label style={{ display: 'block', fontSize: '15.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor, marginBottom: '8px' }}>
                     INTERESTED IN DATING <span style={{ color: '#E06D6D' }}>*</span>
                   </label>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
@@ -1011,12 +1011,12 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                       if (errors.datingPreference) setErrors(prev => ({...prev, datingPreference: ''}));
                     }))}
                   </div>
-                  {errors.datingPreference && <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.datingPreference}</div>}
+                  {errors.datingPreference && <div style={{ color: '#E06D6D', fontSize: '15px', marginTop: '5px' }}>{errors.datingPreference}</div>}
                 </div>
 
                 {/* 7. CURRENT STATUS */}
                 <div style={{ marginBottom: '22px' }}>
-                  <label style={{ display: 'block', fontSize: '13.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor, marginBottom: '8px' }}>
+                  <label style={{ display: 'block', fontSize: '15.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor, marginBottom: '8px' }}>
                     CURRENT STATUS <span style={{ color: '#E06D6D' }}>*</span>
                   </label>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
@@ -1025,12 +1025,12 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                       if (errors.currentStatus) setErrors(prev => ({...prev, currentStatus: ''}));
                     }))}
                   </div>
-                  {errors.currentStatus && <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.currentStatus}</div>}
+                  {errors.currentStatus && <div style={{ color: '#E06D6D', fontSize: '15px', marginTop: '5px' }}>{errors.currentStatus}</div>}
                 </div>
 
                 {/* 8. DESIGNATION / ROLE */}
                 <div style={{ marginBottom: '22px' }}>
-                  <label style={{ display: 'block', fontSize: '13.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor, marginBottom: '8px' }}>
+                  <label style={{ display: 'block', fontSize: '15.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor, marginBottom: '8px' }}>
                     DESIGNATION / ROLE <span style={{ color: '#E06D6D' }}>*</span>
                   </label>
                   <input
@@ -1049,7 +1049,7 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                       border: errors.designation ? '1.5px solid #E06D6D' : `1px solid ${inputBorderColor}`,
                       backgroundColor: inputBgColor,
                       padding: '0 16px',
-                      fontSize: '16.5px',
+                      fontSize: '18.5px',
                       fontFamily: 'var(--font-sans)',
                       color: textColor,
                       WebkitTextFillColor: textColor,
@@ -1058,12 +1058,12 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                       boxSizing: 'border-box',
                     }}
                   />
-                  {errors.designation && <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.designation}</div>}
+                  {errors.designation && <div style={{ color: '#E06D6D', fontSize: '15px', marginTop: '5px' }}>{errors.designation}</div>}
                 </div>
 
                 {/* 9. COMPANY */}
                 <div style={{ marginBottom: '32px' }}>
-                  <label style={{ display: 'block', fontSize: '13.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor, marginBottom: '8px' }}>
+                  <label style={{ display: 'block', fontSize: '15.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor, marginBottom: '8px' }}>
                     COMPANY (OPTIONAL)
                   </label>
                   <input
@@ -1079,7 +1079,7 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                       border: `1px solid ${inputBorderColor}`,
                       backgroundColor: inputBgColor,
                       padding: '0 16px',
-                      fontSize: '16.5px',
+                      fontSize: '18.5px',
                       fontFamily: 'var(--font-sans)',
                       color: textColor,
                       WebkitTextFillColor: textColor,
@@ -1091,7 +1091,7 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                 </div>
 
                 <button type="submit"
-                  style={{ width: '100%', height: '56px', borderRadius: '28px', background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)', color: '#fff', border: 'none', fontSize: '16px', fontWeight: 600, fontFamily: 'var(--font-sans)', letterSpacing: '0.04em', cursor: 'pointer', boxShadow: '0 8px 24px rgba(161, 82, 95, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+                  style={{ width: '100%', height: '56px', borderRadius: '28px', background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)', color: '#fff', border: 'none', fontSize: '18px', fontWeight: 600, fontFamily: 'var(--font-sans)', letterSpacing: '0.04em', cursor: 'pointer', boxShadow: '0 8px 24px rgba(161, 82, 95, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
                 >
                   Continue to Your Venn →
                 </button>
@@ -1114,14 +1114,14 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                 {/* 10. INTERESTS */}
                 <div style={{ marginBottom: '24px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
-                    <label style={{ display: 'block', fontSize: '13.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor }}>
+                    <label style={{ display: 'block', fontSize: '15.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor }}>
                       INTERESTS <span style={{ color: '#E06D6D' }}>*</span>
                     </label>
-                    <span style={{ fontSize: '12px', fontWeight: 600, color: interests.length >= 3 ? (isDark ? '#86EFAC' : '#2E7D32') : (isDark ? '#F9AAAD' : '#A1525F') }}>
+                    <span style={{ fontSize: '14px', fontWeight: 600, color: interests.length >= 3 ? (isDark ? '#86EFAC' : '#2E7D32') : (isDark ? '#F9AAAD' : '#A1525F') }}>
                       {interests.length} / 6 selected
                     </span>
                   </div>
-                  <p style={{ fontSize: '13px', color: isDark ? '#B3A1A8' : '#8A7A84', margin: '0 0 12px 0' }}>
+                  <p style={{ fontSize: '15px', color: isDark ? '#B3A1A8' : '#8A7A84', margin: '0 0 12px 0' }}>
                     Select 3 to 6 interests that reflect who you are.
                   </p>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
@@ -1134,20 +1134,20 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                       if (errors.interests) setErrors(prev => ({...prev, interests: ''}));
                     }))}
                   </div>
-                  {errors.interests && <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '6px' }}>{errors.interests}</div>}
+                  {errors.interests && <div style={{ color: '#E06D6D', fontSize: '15px', marginTop: '6px' }}>{errors.interests}</div>}
                 </div>
 
                 {/* 11. YOUR VIBE */}
                 <div style={{ marginBottom: '24px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
-                    <label style={{ display: 'block', fontSize: '13.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor }}>
+                    <label style={{ display: 'block', fontSize: '15.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor }}>
                       YOUR VIBE <span style={{ color: '#E06D6D' }}>*</span>
                     </label>
-                    <span style={{ fontSize: '12px', fontWeight: 600, color: vibes.length >= 2 ? (isDark ? '#86EFAC' : '#2E7D32') : (isDark ? '#F9AAAD' : '#A1525F') }}>
+                    <span style={{ fontSize: '14px', fontWeight: 600, color: vibes.length >= 2 ? (isDark ? '#86EFAC' : '#2E7D32') : (isDark ? '#F9AAAD' : '#A1525F') }}>
                       {vibes.length} / 5 selected
                     </span>
                   </div>
-                  <p style={{ fontSize: '13px', color: isDark ? '#B3A1A8' : '#8A7A84', margin: '0 0 12px 0' }}>
+                  <p style={{ fontSize: '15px', color: isDark ? '#B3A1A8' : '#8A7A84', margin: '0 0 12px 0' }}>
                     Choose 2 to 5 traits that capture your essence.
                   </p>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
@@ -1160,12 +1160,12 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                       if (errors.vibes) setErrors(prev => ({...prev, vibes: ''}));
                     }))}
                   </div>
-                  {errors.vibes && <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '6px' }}>{errors.vibes}</div>}
+                  {errors.vibes && <div style={{ color: '#E06D6D', fontSize: '15px', marginTop: '6px' }}>{errors.vibes}</div>}
                 </div>
 
                 {/* 12. PHOTOS */}
                 <div ref={photosSectionRef} style={{ marginBottom: '22px' }}>
-                  <label style={{ display: 'block', fontSize: '13.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor, marginBottom: '8px' }}>
+                  <label style={{ display: 'block', fontSize: '15.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor, marginBottom: '8px' }}>
                     PHOTOGRAPHS <span style={{ color: '#E06D6D' }}>*</span>
                   </label>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
@@ -1173,7 +1173,7 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                       <div key={`setup-photo-${index}-${photo.length}-${photo.slice(-24)}`} style={{ position: 'relative', width: '100%', aspectRatio: '3/4', borderRadius: '12px', overflow: 'hidden', backgroundColor: 'rgba(0,0,0,0.1)', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
                         <img src={photo} alt={`Upload ${index + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                         {index === 0 && (
-                          <div style={{ position: 'absolute', bottom: '8px', left: '50%', transform: 'translateX(-50%)', backgroundColor: 'rgba(20, 14, 28, 0.75)', backdropFilter: 'blur(4px)', color: '#fff', fontSize: '10px', fontWeight: 700, padding: '4px 10px', borderRadius: '12px', letterSpacing: '0.08em', boxShadow: '0 2px 8px rgba(0,0,0,0.2)' }}>
+                          <div style={{ position: 'absolute', bottom: '8px', left: '50%', transform: 'translateX(-50%)', backgroundColor: 'rgba(20, 14, 28, 0.75)', backdropFilter: 'blur(4px)', color: '#fff', fontSize: '12px', fontWeight: 700, padding: '4px 10px', borderRadius: '12px', letterSpacing: '0.08em', boxShadow: '0 2px 8px rgba(0,0,0,0.2)' }}>
                             MAIN
                           </div>
                         )}
@@ -1195,7 +1195,7 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                             display: 'flex',
                             alignItems: 'center',
                             gap: '4px',
-                            fontSize: '10.5px',
+                            fontSize: '12.5px',
                             fontWeight: 600,
                             cursor: 'pointer',
                           }}
@@ -1222,20 +1222,20 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                           <line x1="12" y1="5" x2="12" y2="19"></line>
                           <line x1="5" y1="12" x2="19" y2="12"></line>
                         </svg>
-                        <span style={{ fontSize: '12px', fontWeight: 600, color: isDark ? '#B3A1A8' : '#8A7A84' }}>Add Photo</span>
+                        <span style={{ fontSize: '14px', fontWeight: 600, color: isDark ? '#B3A1A8' : '#8A7A84' }}>Add Photo</span>
                         <input type="file" ref={fileInputRef} onChange={handlePhotoUpload} accept="image/jpeg, image/png, image/webp" multiple style={{ display: 'none' }} />
                       </div>
                     )}
                   </div>
-                  {errors.photos && <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '8px' }}>{errors.photos}</div>}
-                  <button type="button" onClick={handleAddSamplePhotos} style={{ marginTop: '16px', padding: '8px 16px', backgroundColor: 'rgba(161, 82, 95, 0.15)', color: isDark ? '#F9AAAD' : '#C7577C', border: '1px solid rgba(161, 82, 95, 0.3)', borderRadius: '8px', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>
+                  {errors.photos && <div style={{ color: '#E06D6D', fontSize: '15px', marginTop: '8px' }}>{errors.photos}</div>}
+                  <button type="button" onClick={handleAddSamplePhotos} style={{ marginTop: '16px', padding: '8px 16px', backgroundColor: 'rgba(161, 82, 95, 0.15)', color: isDark ? '#F9AAAD' : '#C7577C', border: '1px solid rgba(161, 82, 95, 0.3)', borderRadius: '8px', fontSize: '15px', fontWeight: 600, cursor: 'pointer' }}>
                     {isUpdatingPhotosMode ? 'Demo: Add 1 Sample Photo' : 'Demo: Auto-fill 3 Sample Photos'}
                   </button>
                 </div>
 
                 {/* 13. INVITATION CODE */}
                 <div style={{ marginBottom: '22px' }}>
-                  <label style={{ display: 'block', fontSize: '13.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor, marginBottom: '8px' }}>
+                  <label style={{ display: 'block', fontSize: '15.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor, marginBottom: '8px' }}>
                     INVITATION CODE (OPTIONAL)
                   </label>
                   <input
@@ -1251,7 +1251,7 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                       border: `1px solid ${inputBorderColor}`,
                       backgroundColor: inputBgColor,
                       padding: '0 16px',
-                      fontSize: '16.5px',
+                      fontSize: '18.5px',
                       fontFamily: 'var(--font-sans)',
                       color: textColor,
                       WebkitTextFillColor: textColor,
@@ -1265,10 +1265,10 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                 {/* 14. ABOUT YOU / DESCRIPTION */}
                 <div style={{ marginBottom: '32px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-                    <label style={{ display: 'block', fontSize: '13.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor }}>
+                    <label style={{ display: 'block', fontSize: '15.5px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: labelColor }}>
                       ABOUT YOU <span style={{ color: '#E06D6D' }}>*</span>
                     </label>
-                    <span style={{ fontSize: '12px', color: introduction.length > 240 ? '#E06D6D' : (isDark ? '#B3A1A8' : '#8A7A84') }}>
+                    <span style={{ fontSize: '14px', color: introduction.length > 240 ? '#E06D6D' : (isDark ? '#B3A1A8' : '#8A7A84') }}>
                       {introduction.length} / 240 characters
                     </span>
                   </div>
@@ -1287,7 +1287,7 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                       border: errors.introduction || introduction.length > 240 ? '1.5px solid #E06D6D' : `1px solid ${inputBorderColor}`,
                       backgroundColor: inputBgColor,
                       padding: '16px',
-                      fontSize: '16.5px',
+                      fontSize: '18.5px',
                       fontFamily: 'var(--font-sans)',
                       color: textColor,
                       WebkitTextFillColor: textColor,
@@ -1298,13 +1298,13 @@ export const Page4ProfileScreen: React.FC<Page4ProfileScreenProps> = ({
                       minHeight: '100px',
                     }}
                   />
-                  {errors.introduction && <div style={{ color: '#E06D6D', fontSize: '13px', marginTop: '5px' }}>{errors.introduction}</div>}
+                  {errors.introduction && <div style={{ color: '#E06D6D', fontSize: '15px', marginTop: '5px' }}>{errors.introduction}</div>}
                 </div>
 
-                {errors.general && <div style={{ color: '#E06D6D', fontSize: '14px', marginBottom: '20px', padding: '12px', backgroundColor: 'rgba(224, 109, 109, 0.1)', borderRadius: '8px', border: '1px solid rgba(224, 109, 109, 0.3)' }}>{errors.general}</div>}
+                {errors.general && <div style={{ color: '#E06D6D', fontSize: '16px', marginBottom: '20px', padding: '12px', backgroundColor: 'rgba(224, 109, 109, 0.1)', borderRadius: '8px', border: '1px solid rgba(224, 109, 109, 0.3)' }}>{errors.general}</div>}
 
                 <button type="submit" disabled={introduction.length > 240}
-                  style={{ width: '100%', height: '56px', borderRadius: '28px', background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)', color: '#fff', border: 'none', fontSize: '16px', fontWeight: 600, fontFamily: 'var(--font-sans)', letterSpacing: '0.04em', cursor: introduction.length > 240 ? 'not-allowed' : 'pointer', opacity: introduction.length > 240 ? 0.6 : 1, boxShadow: introduction.length > 240 ? 'none' : '0 8px 24px rgba(161, 82, 95, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+                  style={{ width: '100%', height: '56px', borderRadius: '28px', background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)', color: '#fff', border: 'none', fontSize: '18px', fontWeight: 600, fontFamily: 'var(--font-sans)', letterSpacing: '0.04em', cursor: introduction.length > 240 ? 'not-allowed' : 'pointer', opacity: introduction.length > 240 ? 0.6 : 1, boxShadow: introduction.length > 240 ? 'none' : '0 8px 24px rgba(161, 82, 95, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
                 >
                   {isUpdatingPhotosMode ? 'Submit Updated Photographs' : 'Your Venn is ready →'}
                 </button>

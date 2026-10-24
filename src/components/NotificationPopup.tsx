@@ -230,7 +230,7 @@ export const NotificationPopup: React.FC<NotificationPopupProps> = ({ onNavigate
             <span
               style={{
                 fontFamily: 'var(--font-sans)',
-                fontSize: '9px',
+                fontSize: '11px',
                 fontWeight: 700,
                 letterSpacing: '0.12em',
                 textTransform: 'uppercase',
@@ -239,8 +239,8 @@ export const NotificationPopup: React.FC<NotificationPopupProps> = ({ onNavigate
             >
               {categoryLabel}
             </span>
-            <span style={{ fontSize: '9px', color: isDark ? '#8A7A84' : '#A38E9B' }}>•</span>
-            <span style={{ fontSize: '9.5px', color: isDark ? '#D4A2AC' : '#8A7A84' }}>
+            <span style={{ fontSize: '11px', color: isDark ? '#8A7A84' : '#A38E9B' }}>•</span>
+            <span style={{ fontSize: '11.5px', color: isDark ? '#D4A2AC' : '#8A7A84' }}>
               {activeNotif.timestamp || 'Just now'}
             </span>
           </div>
@@ -249,7 +249,7 @@ export const NotificationPopup: React.FC<NotificationPopupProps> = ({ onNavigate
           <h4
             style={{
               fontFamily: 'var(--font-sans)',
-              fontSize: '12px',
+              fontSize: '14px',
               fontWeight: 600,
               color: isDark ? '#FFFFFF' : '#140E1C',
               margin: 0,
@@ -265,7 +265,7 @@ export const NotificationPopup: React.FC<NotificationPopupProps> = ({ onNavigate
           {/* Message (single line or tight two lines) */}
           <p
             style={{
-              fontSize: '11px',
+              fontSize: '13px',
               lineHeight: '1.3',
               color: isDark ? '#D4A2AC' : '#683A46',
               margin: 0,
@@ -299,7 +299,7 @@ export const NotificationPopup: React.FC<NotificationPopupProps> = ({ onNavigate
             alignItems: 'center',
             justifyContent: 'center',
             cursor: 'pointer',
-            fontSize: '12px',
+            fontSize: '14px',
             flexShrink: 0,
             padding: 0,
             transition: 'color 0.15s ease',

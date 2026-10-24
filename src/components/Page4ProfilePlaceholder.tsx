@@ -115,7 +115,7 @@ export const Page4ProfilePlaceholder: React.FC<Page4ProfilePlaceholderProps> = (
         <h2
           style={{
             fontFamily: 'var(--font-serif)',
-            fontSize: '28px',
+            fontSize: '30px',
             fontWeight: 400,
             letterSpacing: '0.02em',
             margin: '0 0 8px 0',
@@ -127,7 +127,7 @@ export const Page4ProfilePlaceholder: React.FC<Page4ProfilePlaceholderProps> = (
 
         <p
           style={{
-            fontSize: '14.5px',
+            fontSize: '16.5px',
             color: 'var(--color-dusty-lilac)',
             margin: '0 0 24px 0',
           }}
@@ -149,7 +149,7 @@ export const Page4ProfilePlaceholder: React.FC<Page4ProfilePlaceholderProps> = (
         >
           <div
             style={{
-              fontSize: '11px',
+              fontSize: '13px',
               color: 'var(--color-mushroom)',
               textTransform: 'uppercase',
               letterSpacing: '0.06em',
@@ -158,17 +158,17 @@ export const Page4ProfilePlaceholder: React.FC<Page4ProfilePlaceholderProps> = (
           >
             Verified Member State
           </div>
-          <div style={{ fontSize: '16px', fontWeight: 600, color: 'var(--color-warm-porcelain)' }}>
+          <div style={{ fontSize: '18px', fontWeight: 600, color: 'var(--color-warm-porcelain)' }}>
             {countryCode || '+91'} {phoneNumber || '6896568960'}
           </div>
-          <div style={{ fontSize: '12px', color: 'var(--color-dusty-lilac)', marginTop: '4px' }}>
+          <div style={{ fontSize: '14px', color: 'var(--color-dusty-lilac)', marginTop: '4px' }}>
             Status: OTP Verification Successful (Code: 123456)
           </div>
         </div>
 
         <p
           style={{
-            fontSize: '13.5px',
+            fontSize: '15.5px',
             lineHeight: '1.5',
             color: 'rgba(243, 238, 233, 0.7)',
             margin: 0,
@@ -191,7 +191,7 @@ export const Page4ProfilePlaceholder: React.FC<Page4ProfilePlaceholderProps> = (
             backgroundColor: 'transparent',
             color: 'var(--color-warm-porcelain)',
             fontFamily: 'var(--font-sans)',
-            fontSize: '14.5px',
+            fontSize: '16.5px',
             fontWeight: 500,
             cursor: 'pointer',
           }}

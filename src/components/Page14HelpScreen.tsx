@@ -194,7 +194,7 @@ export const Page14HelpScreen: React.FC<Page14HelpScreenProps> = ({
                 gap: '6px',
                 color: themeMulberry,
                 cursor: 'pointer',
-                fontSize: '11px',
+                fontSize: '13px',
                 fontWeight: 700,
                 letterSpacing: '0.12em',
                 textTransform: 'uppercase',
@@ -208,7 +208,7 @@ export const Page14HelpScreen: React.FC<Page14HelpScreenProps> = ({
 
             <span
               style={{
-                fontSize: '11px',
+                fontSize: '13px',
                 fontWeight: 700,
                 letterSpacing: '0.12em',
                 textTransform: 'uppercase',
@@ -224,7 +224,7 @@ export const Page14HelpScreen: React.FC<Page14HelpScreenProps> = ({
             <h1
               style={{
                 fontFamily: 'var(--font-serif)',
-                fontSize: '32px',
+                fontSize: '34px',
                 lineHeight: '1.2',
                 fontWeight: 400,
                 color: themeMulberry,
@@ -237,7 +237,7 @@ export const Page14HelpScreen: React.FC<Page14HelpScreenProps> = ({
 
             <p
               style={{
-                fontSize: '13.5px',
+                fontSize: '15.5px',
                 lineHeight: '1.55',
                 color: themeMuted,
                 margin: 0,
@@ -251,7 +251,7 @@ export const Page14HelpScreen: React.FC<Page14HelpScreenProps> = ({
           <div style={{ marginBottom: '20px' }}>
             <div
               style={{
-                fontSize: '10.5px',
+                fontSize: '12.5px',
                 fontWeight: 700,
                 letterSpacing: '0.14em',
                 textTransform: 'uppercase',
@@ -283,7 +283,7 @@ export const Page14HelpScreen: React.FC<Page14HelpScreenProps> = ({
                       border: isSelected ? '1.5px solid #C7577C' : `1px solid ${themeBorder}`,
                       background: isSelected ? 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)' : themeCardBg,
                       color: isSelected ? '#FDF3F5' : themeMulberry,
-                      fontSize: '11px',
+                      fontSize: '13px',
                       fontWeight: isSelected ? 800 : 600,
                       letterSpacing: '0.08em',
                       textTransform: 'uppercase',
@@ -324,7 +324,7 @@ export const Page14HelpScreen: React.FC<Page14HelpScreenProps> = ({
                   outline: 'none',
                   backgroundColor: 'transparent',
                   fontFamily: 'var(--font-sans)',
-                  fontSize: '13.5px',
+                  fontSize: '15.5px',
                   lineHeight: '1.6',
                   color: themeTextColor,
                   resize: 'none',
@@ -339,7 +339,7 @@ export const Page14HelpScreen: React.FC<Page14HelpScreenProps> = ({
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 padding: '6px 4px 0 4px',
-                fontSize: '11px',
+                fontSize: '13px',
                 color: themeMuted,
               }}
             >
@@ -366,7 +366,7 @@ export const Page14HelpScreen: React.FC<Page14HelpScreenProps> = ({
               background: isSubmitEnabled ? 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)' : (isDark ? 'rgba(70, 32, 55, 0.4)' : 'rgba(161, 82, 95, 0.16)'),
               color: isSubmitEnabled ? '#FDF3F5' : themeMuted,
               border: 'none',
-              fontSize: '12px',
+              fontSize: '14px',
               fontWeight: 700,
               letterSpacing: '0.1em',
               textTransform: 'uppercase',
@@ -395,13 +395,13 @@ export const Page14HelpScreen: React.FC<Page14HelpScreenProps> = ({
           >
             {/* EMAIL */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: themeMuted }}>
+              <span style={{ fontSize: '13px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: themeMuted }}>
                 EMAIL
               </span>
               <a
                 href="mailto:care@theinnercircle.in"
                 style={{
-                  fontSize: '13px',
+                  fontSize: '15px',
                   fontWeight: 600,
                   color: themeMulberry,
                   textDecoration: 'none',
@@ -413,10 +413,10 @@ export const Page14HelpScreen: React.FC<Page14HelpScreenProps> = ({
 
             {/* HOURS */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: themeMuted }}>
+              <span style={{ fontSize: '13px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: themeMuted }}>
                 HOURS
               </span>
-              <span style={{ fontSize: '13px', fontWeight: 600, color: themeTextColor }}>
+              <span style={{ fontSize: '15px', fontWeight: 600, color: themeTextColor }}>
                 Mon–Sat, 10am–7pm IST
               </span>
             </div>
@@ -433,7 +433,7 @@ export const Page14HelpScreen: React.FC<Page14HelpScreenProps> = ({
               backgroundColor: 'transparent',
               border: `1.5px solid ${isDark ? 'rgba(243, 238, 233, 0.4)' : 'rgba(73, 40, 61, 0.35)'}`,
               color: themeMulberry,
-              fontSize: '12px',
+              fontSize: '14px',
               fontWeight: 700,
               letterSpacing: '0.1em',
               textTransform: 'uppercase',
@@ -505,7 +505,7 @@ export const Page14HelpScreen: React.FC<Page14HelpScreenProps> = ({
             <h3
               style={{
                 fontFamily: 'var(--font-serif)',
-                fontSize: '22px',
+                fontSize: '24px',
                 color: themeMulberry,
                 margin: '0 0 6px 0',
               }}
@@ -516,7 +516,7 @@ export const Page14HelpScreen: React.FC<Page14HelpScreenProps> = ({
             <span
               style={{
                 display: 'inline-block',
-                fontSize: '11px',
+                fontSize: '13px',
                 fontWeight: 700,
                 letterSpacing: '0.1em',
                 color: themeMuted,
@@ -528,7 +528,7 @@ export const Page14HelpScreen: React.FC<Page14HelpScreenProps> = ({
 
             <p
               style={{
-                fontSize: '13px',
+                fontSize: '15px',
                 lineHeight: '1.55',
                 color: themeMuted,
                 margin: '0 0 20px 0',
@@ -547,7 +547,7 @@ export const Page14HelpScreen: React.FC<Page14HelpScreenProps> = ({
                 background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
                 color: '#FDF3F5',
                 border: 'none',
-                fontSize: '12px',
+                fontSize: '14px',
                 fontWeight: 700,
                 letterSpacing: '0.08em',
                 textTransform: 'uppercase',

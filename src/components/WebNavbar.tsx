@@ -231,7 +231,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                 <span
                   style={{
                     fontFamily: 'var(--font-sans)',
-                    fontSize: '10.5px',
+                    fontSize: '12.5px',
                     fontWeight: 600,
                     letterSpacing: '0.18em',
                     textTransform: 'uppercase',
@@ -276,7 +276,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                     borderRadius: '9999px',
                     padding: '8px 18px',
                     fontFamily: 'var(--font-sans)',
-                    fontSize: '14px',
+                    fontSize: '16px',
                     fontWeight: isActive ? 600 : 500,
                     letterSpacing: '0.08em',
                     color: isActive ? activeColor : inactiveColor,
@@ -405,7 +405,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                   <span
                     style={{
                       fontFamily: 'var(--font-sans)',
-                      fontSize: '11px',
+                      fontSize: '13px',
                       fontWeight: 600,
                       letterSpacing: '0.14em',
                       textTransform: 'uppercase',
@@ -425,7 +425,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                         style={{
                           background: 'none',
                           border: 'none',
-                          fontSize: '10px',
+                          fontSize: '12px',
                           fontWeight: 700,
                           letterSpacing: '0.04em',
                           color: isDark ? '#F9AAAD' : '#A1525F',
@@ -439,7 +439,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                     )}
                     <span
                       style={{
-                        fontSize: '11px',
+                        fontSize: '13px',
                         color: isDark ? '#D4A2AC' : '#8A7A84',
                       }}
                     >
@@ -450,7 +450,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
 
                 <div style={{ overflowY: 'auto', maxHeight: '340px' }}>
                   {notifications.length === 0 ? (
-                    <div style={{ padding: '24px', textAlign: 'center', color: inactiveColor, fontSize: '13px' }}>
+                    <div style={{ padding: '24px', textAlign: 'center', color: inactiveColor, fontSize: '15px' }}>
                       No new notifications
                     </div>
                   ) : (
@@ -489,7 +489,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                       >
                         <div
                           style={{
-                            fontSize: '10px',
+                            fontSize: '12px',
                             fontWeight: 600,
                             letterSpacing: '0.12em',
                             textTransform: 'uppercase',
@@ -502,7 +502,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                         <h4
                           style={{
                             fontFamily: 'var(--font-serif)',
-                            fontSize: '15.5px',
+                            fontSize: '17.5px',
                             color: textColor,
                             margin: '0 0 3px',
                             fontWeight: 400,
@@ -510,7 +510,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                         >
                           {notif.title}
                         </h4>
-                        <p style={{ margin: 0, fontSize: '12px', color: inactiveColor, lineHeight: 1.4 }}>
+                        <p style={{ margin: 0, fontSize: '14px', color: inactiveColor, lineHeight: 1.4 }}>
                           {notif.message}
                         </p>
                       </div>
@@ -529,7 +529,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                     justifyContent: 'space-between',
                   }}
                 >
-                  <span style={{ fontSize: '11px', color: isDark ? '#B3A1A8' : '#8A7A84' }}>
+                  <span style={{ fontSize: '13px', color: isDark ? '#B3A1A8' : '#8A7A84' }}>
                     Tap update to preview popup
                   </span>
                   <button
@@ -541,7 +541,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                     style={{
                       background: 'none',
                       border: 'none',
-                      fontSize: '11px',
+                      fontSize: '13px',
                       fontWeight: 600,
                       color: isDark ? '#F9AAAD' : '#A1525F',
                       cursor: 'pointer',
@@ -650,7 +650,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                 {profile.photos && profile.photos[0] ? (
                   <img src={profile.photos[0]} alt="You" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 ) : (
-                  <span style={{ fontSize: '13px', fontWeight: 600, color: '#FDF3F5' }}>
+                  <span style={{ fontSize: '15px', fontWeight: 600, color: '#FDF3F5' }}>
                     {(profile.firstName || 'U')[0]}
                   </span>
                 )}
@@ -665,7 +665,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                   padding: '6px 10px',
                   backgroundColor: 'transparent',
                   color: textColor,
-                  fontSize: '13.5px',
+                  fontSize: '15.5px',
                   fontWeight: 600,
                   border: 'none',
                   cursor: 'pointer',
@@ -716,7 +716,7 @@ export const WebNavbar: React.FC<WebNavbarProps> = ({ currentPath, onNavigate })
                   border: 'none',
                   backgroundColor: isActive ? (isDark ? 'rgba(199, 87, 124, 0.22)' : 'rgba(161, 82, 95, 0.12)') : 'transparent',
                   color: isActive ? activeColor : textColor,
-                  fontSize: '13px',
+                  fontSize: '15px',
                   fontWeight: isActive ? 600 : 500,
                   letterSpacing: '0.08em',
                   cursor: 'pointer',

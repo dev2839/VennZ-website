@@ -71,7 +71,7 @@ export const Page6SubmittedPlaceholder: React.FC<Page6SubmittedPlaceholderProps>
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              fontSize: '13px',
+              fontSize: '15px',
               fontWeight: 700,
               letterSpacing: '0.08em',
               textTransform: 'uppercase',
@@ -119,7 +119,7 @@ export const Page6SubmittedPlaceholder: React.FC<Page6SubmittedPlaceholderProps>
         <h1
           style={{
             fontFamily: 'var(--font-serif)',
-            fontSize: '32px',
+            fontSize: '34px',
             lineHeight: '1.2',
             color: 'var(--color-mulberry)',
             margin: 0,
@@ -128,7 +128,7 @@ export const Page6SubmittedPlaceholder: React.FC<Page6SubmittedPlaceholderProps>
           Application Submitted!
         </h1>
 
-        <p style={{ fontSize: '14.5px', lineHeight: '1.5', color: '#5E4E58', margin: 0 }}>
+        <p style={{ fontSize: '16.5px', lineHeight: '1.5', color: '#5E4E58', margin: 0 }}>
           Thank you, <strong>{profile.firstName || 'Member'}</strong>. Your application to VennZ has been received and is now hand-reviewed by our membership committee.
         </p>
 
@@ -141,7 +141,7 @@ export const Page6SubmittedPlaceholder: React.FC<Page6SubmittedPlaceholderProps>
             width: '100%',
             boxSizing: 'border-box',
             textAlign: 'left',
-            fontSize: '13px',
+            fontSize: '15px',
             color: '#5E4E58',
             marginTop: '8px',
           }}

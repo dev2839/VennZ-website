@@ -41,14 +41,14 @@ const VerifiedRow: React.FC<{ label: string }> = ({ label }) => (
         <path d="M2 6l3 3 5-5" stroke="#F9AAAD" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     </span>
-    <span style={{ fontSize: '14px', color: '#F8E2E6', fontWeight: 500 }}>{label}</span>
+    <span style={{ fontSize: '16px', color: '#F8E2E6', fontWeight: 500 }}>{label}</span>
   </div>
 );
 
 const PrivacyRow: React.FC<{ text: string }> = ({ text }) => (
   <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
-    <span style={{ color: '#A1525F', fontSize: '13px', lineHeight: '20px', flexShrink: 0 }}>•</span>
-    <span style={{ fontSize: '13px', color: '#D4A2AC', lineHeight: 1.5 }}>{text}</span>
+    <span style={{ color: '#A1525F', fontSize: '15px', lineHeight: '20px', flexShrink: 0 }}>•</span>
+    <span style={{ fontSize: '15px', color: '#D4A2AC', lineHeight: 1.5 }}>{text}</span>
   </div>
 );
 
@@ -183,7 +183,7 @@ export const Page3DigiLockerScreen: React.FC<Page3DigiLockerScreenProps> = ({
     border: 'none',
     background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
     color: '#FDF3F5',
-    fontSize: '15px',
+    fontSize: '17px',
     fontWeight: 600,
     letterSpacing: '0.03em',
     cursor: 'pointer',
@@ -203,7 +203,7 @@ export const Page3DigiLockerScreen: React.FC<Page3DigiLockerScreenProps> = ({
     border: '1px solid rgba(161, 82, 95, 0.4)',
     background: 'transparent',
     color: '#D4A2AC',
-    fontSize: '14px',
+    fontSize: '16px',
     fontWeight: 500,
     cursor: 'pointer',
     transition: 'all 0.2s ease',
@@ -242,7 +242,7 @@ export const Page3DigiLockerScreen: React.FC<Page3DigiLockerScreenProps> = ({
             <h2
               style={{
                 fontFamily: 'var(--font-serif)',
-                fontSize: '24px',
+                fontSize: '26px',
                 fontWeight: 400,
                 color: '#FDF3F5',
                 margin: '0 0 8px 0',
@@ -251,7 +251,7 @@ export const Page3DigiLockerScreen: React.FC<Page3DigiLockerScreenProps> = ({
             >
               Identity Verification
             </h2>
-            <p style={{ fontSize: '13.5px', color: '#D4A2AC', margin: 0, lineHeight: 1.5 }}>
+            <p style={{ fontSize: '15.5px', color: '#D4A2AC', margin: 0, lineHeight: 1.5 }}>
               VennZ uses DigiLocker to verify your identity. This is a one-time step.
             </p>
           </div>
@@ -260,7 +260,7 @@ export const Page3DigiLockerScreen: React.FC<Page3DigiLockerScreenProps> = ({
           <div style={{ marginBottom: '20px' }}>
             <p
               style={{
-                fontSize: '11px',
+                fontSize: '13px',
                 fontWeight: 600,
                 letterSpacing: '0.1em',
                 textTransform: 'uppercase',
@@ -341,10 +341,10 @@ export const Page3DigiLockerScreen: React.FC<Page3DigiLockerScreenProps> = ({
             </svg>
           </div>
           <div>
-            <p style={{ fontFamily: 'var(--font-serif)', fontSize: '20px', color: '#FDF3F5', margin: '0 0 8px 0' }}>
+            <p style={{ fontFamily: 'var(--font-serif)', fontSize: '22px', color: '#FDF3F5', margin: '0 0 8px 0' }}>
               Connecting to DigiLocker
             </p>
-            <p style={{ fontSize: '13px', color: '#D4A2AC', margin: 0 }}>
+            <p style={{ fontSize: '15px', color: '#D4A2AC', margin: 0 }}>
               Please wait while we initiate the secure connection…
             </p>
           </div>
@@ -381,14 +381,14 @@ export const Page3DigiLockerScreen: React.FC<Page3DigiLockerScreenProps> = ({
                 <circle cx="6" cy="6" r="5" stroke="#4CAF50" strokeWidth="1.5" />
                 <path d="M3.5 6l1.8 1.8L8.5 4" stroke="#4CAF50" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-              <span style={{ fontSize: '11px', color: '#A1525F', letterSpacing: '0.08em', fontWeight: 600 }}>
+              <span style={{ fontSize: '13px', color: '#A1525F', letterSpacing: '0.08em', fontWeight: 600 }}>
                 SECURE CONNECTION · DIGILOCKER
               </span>
             </div>
             <h2
               style={{
                 fontFamily: 'var(--font-serif)',
-                fontSize: '22px',
+                fontSize: '24px',
                 color: '#FDF3F5',
                 margin: '0 0 8px 0',
                 fontWeight: 400,
@@ -396,14 +396,14 @@ export const Page3DigiLockerScreen: React.FC<Page3DigiLockerScreenProps> = ({
             >
               VennZ is requesting permission
             </h2>
-            <p style={{ fontSize: '13px', color: '#D4A2AC', margin: 0, lineHeight: 1.5 }}>
+            <p style={{ fontSize: '15px', color: '#D4A2AC', margin: 0, lineHeight: 1.5 }}>
               VennZ would like to access the following information from your DigiLocker account
             </p>
           </div>
 
           {/* Permissions requested */}
           <div style={{ marginBottom: '16px' }}>
-            <p style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#A1525F', margin: '0 0 10px 0' }}>
+            <p style={{ fontSize: '13px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#A1525F', margin: '0 0 10px 0' }}>
               Permissions requested
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -422,7 +422,7 @@ export const Page3DigiLockerScreen: React.FC<Page3DigiLockerScreenProps> = ({
               marginBottom: '24px',
             }}
           >
-            <p style={{ fontSize: '12.5px', color: '#A1525F', margin: 0, lineHeight: 1.5 }}>
+            <p style={{ fontSize: '14.5px', color: '#A1525F', margin: 0, lineHeight: 1.5 }}>
               <strong style={{ color: '#D4A2AC' }}>VennZ will not access</strong> your Aadhaar number, documents, certificates, or any other information stored in DigiLocker.
             </p>
           </div>
@@ -461,10 +461,10 @@ export const Page3DigiLockerScreen: React.FC<Page3DigiLockerScreenProps> = ({
             </svg>
           </div>
           <div>
-            <p style={{ fontFamily: 'var(--font-serif)', fontSize: '20px', color: '#FDF3F5', margin: '0 0 8px 0' }}>
+            <p style={{ fontFamily: 'var(--font-serif)', fontSize: '22px', color: '#FDF3F5', margin: '0 0 8px 0' }}>
               Verifying your identity
             </p>
-            <p style={{ fontSize: '13px', color: '#D4A2AC', margin: 0 }}>
+            <p style={{ fontSize: '15px', color: '#D4A2AC', margin: 0 }}>
               Securely retrieving your verified information…
             </p>
           </div>
@@ -494,10 +494,10 @@ export const Page3DigiLockerScreen: React.FC<Page3DigiLockerScreenProps> = ({
             </svg>
           </div>
           <div>
-            <p style={{ fontFamily: 'var(--font-serif)', fontSize: '22px', color: '#FDF3F5', margin: '0 0 8px 0' }}>
+            <p style={{ fontFamily: 'var(--font-serif)', fontSize: '24px', color: '#FDF3F5', margin: '0 0 8px 0' }}>
               Identity Verified
             </p>
-            <p style={{ fontSize: '13px', color: '#D4A2AC', margin: 0 }}>
+            <p style={{ fontSize: '15px', color: '#D4A2AC', margin: 0 }}>
               Your name and date of birth have been securely verified. Continuing to profile setup…
             </p>
           </div>
@@ -527,10 +527,10 @@ export const Page3DigiLockerScreen: React.FC<Page3DigiLockerScreenProps> = ({
                 <path d="M18 6L6 18M6 6l12 12" />
               </svg>
             </div>
-            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '20px', color: '#FDF3F5', margin: '0 0 8px 0', fontWeight: 400 }}>
+            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '22px', color: '#FDF3F5', margin: '0 0 8px 0', fontWeight: 400 }}>
               Verification Declined
             </h3>
-            <p style={{ fontSize: '13.5px', color: '#D4A2AC', margin: 0, lineHeight: 1.55 }}>
+            <p style={{ fontSize: '15.5px', color: '#D4A2AC', margin: 0, lineHeight: 1.55 }}>
               DigiLocker verification is required to join VennZ. We need to confirm your identity to maintain a trusted, verified community.
             </p>
           </div>
@@ -579,10 +579,10 @@ export const Page3DigiLockerScreen: React.FC<Page3DigiLockerScreenProps> = ({
                 <path d="M12 8v4M12 16h.01" />
               </svg>
             </div>
-            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '20px', color: '#FDF3F5', margin: '0 0 8px 0', fontWeight: 400 }}>
+            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '22px', color: '#FDF3F5', margin: '0 0 8px 0', fontWeight: 400 }}>
               Something went wrong
             </h3>
-            <p style={{ fontSize: '13px', color: '#D4A2AC', margin: 0, lineHeight: 1.55 }}>
+            <p style={{ fontSize: '15px', color: '#D4A2AC', margin: 0, lineHeight: 1.55 }}>
               {errorMessage || 'Unable to complete DigiLocker verification. Please try again.'}
             </p>
           </div>
@@ -682,7 +682,7 @@ export const Page3DigiLockerScreen: React.FC<Page3DigiLockerScreenProps> = ({
                 borderRadius: '100px',
                 padding: '9px 16px',
                 color: '#F9AAAD',
-                fontSize: '13px',
+                fontSize: '15px',
                 fontWeight: 500,
                 cursor: 'pointer',
                 fontFamily: 'var(--font-sans)',

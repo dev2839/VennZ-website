@@ -216,7 +216,7 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
               alignItems: 'center',
               gap: '6px',
               fontFamily: 'var(--font-sans)',
-              fontSize: '14.5px',
+              fontSize: '16.5px',
               fontWeight: 700,
               letterSpacing: '0.08em',
               textTransform: 'uppercase',
@@ -242,7 +242,7 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
           {/* Context Badge */}
           <span
             style={{
-              fontSize: '13px',
+              fontSize: '15px',
               letterSpacing: '0.09em',
               textTransform: 'uppercase',
               fontWeight: 600,
@@ -295,7 +295,7 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
 
           <p
             style={{
-              fontSize: '16px',
+              fontSize: '18px',
               lineHeight: '1.5',
               color: isDark ? '#BDB0B6' : '#6E5E68',
               margin: '0 0 28px 0',
@@ -318,7 +318,7 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
                 <label
                   htmlFor="context-linkedin"
                   style={{
-                    fontSize: '13.5px',
+                    fontSize: '15.5px',
                     fontWeight: 600,
                     letterSpacing: '0.06em',
                     textTransform: 'uppercase',
@@ -329,7 +329,7 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
                 </label>
                 <span
                   style={{
-                    fontSize: '12px',
+                    fontSize: '14px',
                     letterSpacing: '0.04em',
                     color: isDark ? '#AFA2A9' : '#8A7A84',
                     textTransform: 'uppercase',
@@ -371,7 +371,7 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
                   backdropFilter: 'blur(8px)',
                   WebkitBackdropFilter: 'blur(8px)',
                   padding: '0 16px',
-                  fontSize: '16.5px',
+                  fontSize: '18.5px',
                   fontFamily: 'var(--font-sans)',
                   color: isDark ? '#FBF7F2' : 'var(--color-espresso)',
                   WebkitTextFillColor: isDark ? '#FBF7F2' : 'var(--color-espresso)',
@@ -390,7 +390,7 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
                 <div
                   style={{
                     color: '#E06D6D',
-                    fontSize: '13px',
+                    fontSize: '15px',
                     marginTop: '6px',
                     lineHeight: '1.4',
                   }}
@@ -428,7 +428,7 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
                     cursor: hasLinkedin ? 'pointer' : 'not-allowed',
                   }}
                 />
-                <span style={{ fontSize: '13px', color: isDark ? '#D9CFD5' : '#5E4E58' }}>
+                <span style={{ fontSize: '15px', color: isDark ? '#D9CFD5' : '#5E4E58' }}>
                   Display LinkedIn publicly on my VennZ profile {!hasLinkedin && '(enter URL above to enable)'}
                 </span>
               </label>
@@ -447,7 +447,7 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
                 <label
                   htmlFor="context-instagram"
                   style={{
-                    fontSize: '13.5px',
+                    fontSize: '15.5px',
                     fontWeight: 600,
                     letterSpacing: '0.06em',
                     textTransform: 'uppercase',
@@ -458,7 +458,7 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
                 </label>
                 <span
                   style={{
-                    fontSize: '12px',
+                    fontSize: '14px',
                     letterSpacing: '0.04em',
                     color: isDark ? '#AFA2A9' : '#8A7A84',
                     textTransform: 'uppercase',
@@ -501,7 +501,7 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
                   backdropFilter: 'blur(8px)',
                   WebkitBackdropFilter: 'blur(8px)',
                   padding: '0 16px',
-                  fontSize: '16.5px',
+                  fontSize: '18.5px',
                   fontFamily: 'var(--font-sans)',
                   color: isDark ? '#FBF7F2' : 'var(--color-espresso)',
                   WebkitTextFillColor: isDark ? '#FBF7F2' : 'var(--color-espresso)',
@@ -520,7 +520,7 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
                 <div
                   style={{
                     color: '#E06D6D',
-                    fontSize: '13px',
+                    fontSize: '15px',
                     marginTop: '6px',
                     lineHeight: '1.4',
                   }}
@@ -558,7 +558,7 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
                     cursor: hasInstagram ? 'pointer' : 'not-allowed',
                   }}
                 />
-                <span style={{ fontSize: '13px', color: isDark ? '#D9CFD5' : '#5E4E58' }}>
+                <span style={{ fontSize: '15px', color: isDark ? '#D9CFD5' : '#5E4E58' }}>
                   Display Instagram publicly on my VennZ profile {!hasInstagram && '(enter handle above to enable)'}
                 </span>
               </label>
@@ -604,7 +604,7 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
 
               <p
                 style={{
-                  fontSize: '14px',
+                  fontSize: '16px',
                   lineHeight: '1.5',
                   color: isDark ? '#C0B3B9' : '#6B5A65',
                   margin: 0,
@@ -636,7 +636,7 @@ export const Page6ContextScreen: React.FC<Page6ContextScreenProps> = ({
                   background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
                   color: '#FDF3F5',
                   border: 'none',
-                  fontSize: '16.5px',
+                  fontSize: '18.5px',
                   fontWeight: 700,
                   letterSpacing: '0.08em',
                   textTransform: 'uppercase',

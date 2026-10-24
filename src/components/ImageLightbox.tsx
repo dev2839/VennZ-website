@@ -102,7 +102,7 @@ export const ImageLightbox: React.FC<ImageLightboxProps> = ({
           <span
             style={{
               fontFamily: 'var(--font-serif)',
-              fontSize: '18px',
+              fontSize: '20px',
               letterSpacing: '0.1em',
               color: 'var(--color-warm-porcelain)',
               textTransform: 'uppercase',
@@ -114,7 +114,7 @@ export const ImageLightbox: React.FC<ImageLightboxProps> = ({
             <span
               style={{
                 fontFamily: 'var(--font-sans)',
-                fontSize: '12px',
+                fontSize: '14px',
                 color: 'var(--color-dusty-lilac)',
                 borderLeft: '1px solid rgba(243, 238, 233, 0.2)',
                 paddingLeft: '12px',
@@ -130,7 +130,7 @@ export const ImageLightbox: React.FC<ImageLightboxProps> = ({
             <span
               style={{
                 fontFamily: 'var(--font-sans)',
-                fontSize: '13px',
+                fontSize: '15px',
                 color: 'rgba(243, 238, 233, 0.65)',
                 letterSpacing: '0.05em',
               }}

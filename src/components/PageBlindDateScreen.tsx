@@ -296,7 +296,7 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
               backgroundColor: isDark ? 'rgba(161, 82, 95, 0.25)' : 'rgba(161, 82, 95, 0.12)',
               border: `1px solid ${themeBorder}`,
               color: isDark ? '#F9AAAD' : '#A1525F',
-              fontSize: '11px',
+              fontSize: '13px',
               fontWeight: 700,
               letterSpacing: '0.12em',
               textTransform: 'uppercase',
@@ -311,7 +311,7 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
             style={{
               margin: '0 0 6px',
               fontFamily: 'var(--font-serif)',
-              fontSize: '32px',
+              fontSize: '34px',
               fontWeight: 400,
               color: themeTextColor,
               letterSpacing: '-0.01em',
@@ -323,7 +323,7 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
           <p
             style={{
               margin: '0 auto',
-              fontSize: '13px',
+              fontSize: '15px',
               color: themeMuted,
               lineHeight: 1.5,
               maxWidth: '440px',
@@ -344,7 +344,7 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
               backgroundColor: 'rgba(224, 109, 109, 0.15)',
               border: '1px solid rgba(224, 109, 109, 0.3)',
               color: '#E06D6D',
-              fontSize: '13px',
+              fontSize: '15px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
@@ -401,14 +401,14 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
             <h3
               style={{
                 fontFamily: 'var(--font-serif)',
-                fontSize: '20px',
+                fontSize: '22px',
                 margin: '0 0 8px',
                 color: themeTextColor,
               }}
             >
               Selecting Your Introduction
             </h3>
-            <p style={{ margin: 0, fontSize: '13px', color: themeMuted, maxWidth: '320px' }}>
+            <p style={{ margin: 0, fontSize: '15px', color: themeMuted, maxWidth: '320px' }}>
               Synthesizing lifestyle alignment, verified standards, and mutual preferences...
             </p>
           </div>
@@ -452,7 +452,7 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
             <h3
               style={{
                 fontFamily: 'var(--font-serif)',
-                fontSize: '22px',
+                fontSize: '24px',
                 margin: '0 0 8px',
                 color: themeTextColor,
               }}
@@ -460,7 +460,7 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
               You're All Caught Up
             </h3>
 
-            <p style={{ margin: '0 0 24px', fontSize: '13px', color: themeMuted, maxWidth: '340px', lineHeight: 1.5 }}>
+            <p style={{ margin: '0 0 24px', fontSize: '15px', color: themeMuted, maxWidth: '340px', lineHeight: 1.5 }}>
               VennZ only recommends candidates who strictly match our mutual criteria. Check back soon or explore today's standard introductions.
             </p>
 
@@ -474,7 +474,7 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                   background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
                   color: '#FFFFFF',
                   border: 'none',
-                  fontSize: '13px',
+                  fontSize: '15px',
                   fontWeight: 700,
                   letterSpacing: '0.04em',
                   cursor: 'pointer',
@@ -492,7 +492,7 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                   background: 'transparent',
                   color: isDark ? '#F9AAAD' : '#A1525F',
                   border: `1.5px solid ${themeBorder}`,
-                  fontSize: '12.5px',
+                  fontSize: '14.5px',
                   fontWeight: 600,
                   cursor: 'pointer',
                   display: 'flex',
@@ -542,10 +542,10 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <CheckCircle2 size={20} />
                   <div>
-                    <div style={{ fontSize: '13px', fontWeight: 700, letterSpacing: '0.04em' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 700, letterSpacing: '0.04em' }}>
                       MUTUAL CONNECTION CONFIRMED
                     </div>
-                    <div style={{ fontSize: '11.5px', opacity: 0.9 }}>
+                    <div style={{ fontSize: '13.5px', opacity: 0.9 }}>
                       Both of you agreed to connect. Full profile unlocked.
                     </div>
                   </div>
@@ -559,7 +559,7 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                     border: 'none',
                     padding: '6px 14px',
                     borderRadius: '999px',
-                    fontSize: '12px',
+                    fontSize: '14px',
                     fontWeight: 700,
                     cursor: 'pointer',
                     whiteSpace: 'nowrap',
@@ -587,7 +587,7 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                 }}
               >
                 <Clock size={18} />
-                <div style={{ fontSize: '12.5px', fontWeight: 600, lineHeight: 1.4 }}>
+                <div style={{ fontSize: '14.5px', fontWeight: 600, lineHeight: 1.4 }}>
                   <span>Curated invitation delivered. Awaiting response from {recommendation.preview.displayName}.</span>
                 </div>
               </div>
@@ -676,7 +676,7 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                   backgroundColor: 'rgba(20, 14, 28, 0.72)',
                   backdropFilter: 'blur(8px)',
                   color: '#FFFFFF',
-                  fontSize: '11px',
+                  fontSize: '13px',
                   fontWeight: 600,
                   border: '1px solid rgba(255, 255, 255, 0.18)',
                   zIndex: 12,
@@ -698,7 +698,7 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                     backgroundColor: 'rgba(20, 14, 28, 0.72)',
                     backdropFilter: 'blur(8px)',
                     color: '#FFFFFF',
-                    fontSize: '11px',
+                    fontSize: '13px',
                     fontWeight: 600,
                     border: '1px solid rgba(255, 255, 255, 0.18)',
                     zIndex: 12,
@@ -811,7 +811,7 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                     style={{
                       margin: 0,
                       fontFamily: 'var(--font-serif)',
-                      fontSize: '30px',
+                      fontSize: '32px',
                       fontWeight: 400,
                       color: '#FFFFFF',
                       lineHeight: 1.1,
@@ -825,7 +825,7 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                   {recommendation.preview.activeStatus && (
                     <span
                       style={{
-                        fontSize: '11px',
+                        fontSize: '13px',
                         padding: '2px 8px',
                         borderRadius: '999px',
                         backgroundColor: 'rgba(255, 255, 255, 0.22)',
@@ -844,7 +844,7 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                     display: 'flex',
                     alignItems: 'center',
                     gap: '12px',
-                    fontSize: '13.5px',
+                    fontSize: '15.5px',
                     color: 'rgba(255, 255, 255, 0.92)',
                     flexWrap: 'wrap',
                   }}
@@ -878,7 +878,7 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                     backgroundColor: isDark ? 'rgba(161, 82, 95, 0.22)' : 'rgba(253, 235, 239, 0.85)',
                     border: `1px solid ${themeBorder}`,
                     color: isDark ? '#F9AAAD' : '#A1525F',
-                    fontSize: '12.5px',
+                    fontSize: '14.5px',
                     fontWeight: 600,
                     display: 'flex',
                     alignItems: 'center',
@@ -895,7 +895,7 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                 <span
                   style={{
                     display: 'block',
-                    fontSize: '11px',
+                    fontSize: '13px',
                     fontWeight: 700,
                     letterSpacing: '0.12em',
                     textTransform: 'uppercase',
@@ -908,7 +908,7 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                 <p
                   style={{
                     margin: 0,
-                    fontSize: '14.5px',
+                    fontSize: '16.5px',
                     lineHeight: 1.6,
                     color: themeTextColor,
                   }}
@@ -931,7 +931,7 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <Briefcase size={15} color={isDark ? '#F9AAAD' : '#A1525F'} />
-                  <span style={{ fontSize: '13.5px', color: themeTextColor, fontWeight: 600 }}>
+                  <span style={{ fontSize: '15.5px', color: themeTextColor, fontWeight: 600 }}>
                     {recommendation.preview.designation}
                     {recommendation.preview.company && ` at ${recommendation.preview.company}`}
                   </span>
@@ -939,21 +939,21 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                 {recommendation.preview.education && (
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <GraduationCap size={15} color={isDark ? '#F9AAAD' : '#A1525F'} />
-                    <span style={{ fontSize: '13px', color: themeMuted }}>
+                    <span style={{ fontSize: '15px', color: themeMuted }}>
                       {recommendation.preview.education}
                     </span>
                   </div>
                 )}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <MapPin size={15} color={isDark ? '#F9AAAD' : '#A1525F'} />
-                  <span style={{ fontSize: '13px', color: themeMuted }}>
+                  <span style={{ fontSize: '15px', color: themeMuted }}>
                     {recommendation.preview.city}
                   </span>
                 </div>
                 {recommendation.preview.datingPreference && (
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <Heart size={15} color={isDark ? '#F9AAAD' : '#A1525F'} />
-                    <span style={{ fontSize: '13px', color: themeMuted }}>
+                    <span style={{ fontSize: '15px', color: themeMuted }}>
                       Interested in dating {recommendation.preview.datingPreference.toLowerCase()}
                     </span>
                   </div>
@@ -967,7 +967,7 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                   <span
                     style={{
                       display: 'block',
-                      fontSize: '11px',
+                      fontSize: '13px',
                       fontWeight: 700,
                       letterSpacing: '0.12em',
                       textTransform: 'uppercase',
@@ -982,7 +982,7 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                       <span
                         key={interest}
                         style={{
-                          fontSize: '12px',
+                          fontSize: '14px',
                           fontWeight: 600,
                           padding: '5px 13px',
                           borderRadius: '999px',
@@ -998,7 +998,7 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                       <span
                         key={vibe}
                         style={{
-                          fontSize: '12px',
+                          fontSize: '14px',
                           fontWeight: 600,
                           padding: '5px 13px',
                           borderRadius: '999px',
@@ -1029,7 +1029,7 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                     >
                       <div
                         style={{
-                          fontSize: '11px',
+                          fontSize: '13px',
                           fontWeight: 700,
                           color: isDark ? '#F9AAAD' : '#A1525F',
                           textTransform: 'uppercase',
@@ -1039,7 +1039,7 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                       >
                         {prompt.title}
                       </div>
-                      <div style={{ fontSize: '13.5px', color: themeTextColor, lineHeight: 1.5 }}>
+                      <div style={{ fontSize: '15.5px', color: themeTextColor, lineHeight: 1.5 }}>
                         {prompt.content}
                       </div>
                     </div>
@@ -1057,7 +1057,7 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                   borderRadius: '12px',
                   backgroundColor: isDark ? 'rgba(0, 0, 0, 0.25)' : 'rgba(0, 0, 0, 0.03)',
                   border: `1px solid ${themeBorder}`,
-                  fontSize: '12px',
+                  fontSize: '14px',
                   color: themeMuted,
                   lineHeight: 1.45,
                 }}
@@ -1085,7 +1085,7 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                         border: `1.5px solid ${themeBorder}`,
                         backgroundColor: 'transparent',
                         color: themeMuted,
-                        fontSize: '13px',
+                        fontSize: '15px',
                         fontWeight: 700,
                         letterSpacing: '0.04em',
                         cursor: isSubmitting ? 'not-allowed' : 'pointer',
@@ -1111,7 +1111,7 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                         border: 'none',
                         background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
                         color: '#FFFFFF',
-                        fontSize: '13.5px',
+                        fontSize: '15.5px',
                         fontWeight: 700,
                         letterSpacing: '0.04em',
                         cursor: isSubmitting ? 'not-allowed' : 'pointer',
@@ -1139,7 +1139,7 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                         backgroundColor: isDark ? 'rgba(161, 82, 95, 0.25)' : 'rgba(161, 82, 95, 0.12)',
                         border: `1px solid ${themeBorder}`,
                         color: isDark ? '#F9AAAD' : '#A1525F',
-                        fontSize: '13px',
+                        fontSize: '15px',
                         fontWeight: 700,
                         display: 'flex',
                         alignItems: 'center',
@@ -1160,7 +1160,7 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                         border: 'none',
                         backgroundColor: 'transparent',
                         color: themeMuted,
-                        fontSize: '12px',
+                        fontSize: '14px',
                         fontWeight: 600,
                         cursor: 'pointer',
                         textDecoration: 'underline',
@@ -1182,7 +1182,7 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                         border: 'none',
                         background: 'linear-gradient(135deg, #15803D 0%, #22C55E 100%)',
                         color: '#FFFFFF',
-                        fontSize: '14px',
+                        fontSize: '16px',
                         fontWeight: 700,
                         cursor: 'pointer',
                         display: 'flex',
@@ -1206,7 +1206,7 @@ export const PageBlindDateScreen: React.FC<PageBlindDateScreenProps> = ({
                         border: 'none',
                         backgroundColor: 'transparent',
                         color: themeMuted,
-                        fontSize: '12px',
+                        fontSize: '14px',
                         fontWeight: 600,
                         cursor: 'pointer',
                         textDecoration: 'underline',

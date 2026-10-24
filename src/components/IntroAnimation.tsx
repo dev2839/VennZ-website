@@ -224,7 +224,7 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) =>
             background: 'transparent',
             border: 'none',
             color: skipColor,
-            fontSize: '11.5px',
+            fontSize: '13.5px',
             letterSpacing: '0.18em',
             textTransform: 'uppercase',
             fontWeight: 600,

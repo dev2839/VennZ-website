@@ -258,7 +258,7 @@ export const PhotoCropModal: React.FC<PhotoCropModalProps> = ({
             <div>
               <span
                 style={{
-                  fontSize: '10px',
+                  fontSize: '12px',
                   fontWeight: 700,
                   letterSpacing: '0.14em',
                   textTransform: 'uppercase',
@@ -273,7 +273,7 @@ export const PhotoCropModal: React.FC<PhotoCropModalProps> = ({
                 id="photo-crop-title"
                 style={{
                   fontFamily: 'var(--font-serif)',
-                  fontSize: '20px',
+                  fontSize: '22px',
                   fontWeight: 500,
                   margin: 0,
                   color: isDark ? '#FDF3F5' : '#462037',
@@ -387,7 +387,7 @@ export const PhotoCropModal: React.FC<PhotoCropModalProps> = ({
                   backgroundColor: 'rgba(0, 0, 0, 0.65)',
                   backdropFilter: 'blur(6px)',
                   color: '#FFFFFF',
-                  fontSize: '10px',
+                  fontSize: '12px',
                   fontWeight: 600,
                   letterSpacing: '0.04em',
                   display: 'flex',
@@ -403,7 +403,7 @@ export const PhotoCropModal: React.FC<PhotoCropModalProps> = ({
 
             <span
               style={{
-                fontSize: '11px',
+                fontSize: '13px',
                 color: isDark ? '#B3A1A8' : '#8A7A84',
                 marginTop: '10px',
                 textAlign: 'center',
@@ -469,7 +469,7 @@ export const PhotoCropModal: React.FC<PhotoCropModalProps> = ({
               </button>
               <span
                 style={{
-                  fontSize: '12px',
+                  fontSize: '14px',
                   fontWeight: 600,
                   width: '38px',
                   textAlign: 'right',
@@ -494,7 +494,7 @@ export const PhotoCropModal: React.FC<PhotoCropModalProps> = ({
                   border: isDark ? '1px solid rgba(161, 82, 95, 0.35)' : '1px solid rgba(161, 82, 95, 0.2)',
                   backgroundColor: isDark ? 'rgba(70, 32, 55, 0.45)' : 'rgba(250, 241, 243, 0.8)',
                   color: isDark ? '#FDF3F5' : '#462037',
-                  fontSize: '12px',
+                  fontSize: '14px',
                   fontWeight: 600,
                   cursor: 'pointer',
                 }}
@@ -512,7 +512,7 @@ export const PhotoCropModal: React.FC<PhotoCropModalProps> = ({
                   border: 'none',
                   backgroundColor: 'transparent',
                   color: isDark ? '#B3A1A8' : '#8A7A84',
-                  fontSize: '12px',
+                  fontSize: '14px',
                   fontWeight: 600,
                   cursor: 'pointer',
                 }}
@@ -541,7 +541,7 @@ export const PhotoCropModal: React.FC<PhotoCropModalProps> = ({
                 border: isDark ? '1px solid rgba(161, 82, 95, 0.35)' : '1px solid rgba(161, 82, 95, 0.2)',
                 backgroundColor: 'transparent',
                 color: isDark ? '#FDF3F5' : '#462037',
-                fontSize: '13px',
+                fontSize: '15px',
                 fontWeight: 600,
                 cursor: 'pointer',
               }}
@@ -558,7 +558,7 @@ export const PhotoCropModal: React.FC<PhotoCropModalProps> = ({
                 border: 'none',
                 background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
                 color: '#FFFFFF',
-                fontSize: '13px',
+                fontSize: '15px',
                 fontWeight: 700,
                 letterSpacing: '0.04em',
                 cursor: 'pointer',

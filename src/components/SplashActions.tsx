@@ -39,7 +39,7 @@ export const SplashActions: React.FC<SplashActionsProps> = ({
         <p
           style={{
             fontFamily: 'var(--font-sans)',
-            fontSize: '13.5px',
+            fontSize: '15.5px',
             fontWeight: 500,
             textTransform: 'uppercase',
             letterSpacing: '0.14em',
@@ -78,7 +78,7 @@ export const SplashActions: React.FC<SplashActionsProps> = ({
           background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
           color: '#FDF3F5',
           fontFamily: 'var(--font-sans)',
-          fontSize: '16.5px',
+          fontSize: '18.5px',
           fontWeight: 600,
           borderRadius: '9999px',
           border: isDark ? '1px solid rgba(249, 170, 173, 0.4)' : '1px solid rgba(161, 82, 95, 0.25)',

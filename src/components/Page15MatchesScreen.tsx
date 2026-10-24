@@ -235,7 +235,7 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
                 color: activeSubTab === 'matches'
                   ? (isDark ? '#FDF3F5' : 'var(--color-mulberry)')
                   : themeMuted,
-                fontSize: '11.5px',
+                fontSize: '13.5px',
                 fontWeight: activeSubTab === 'matches' ? 600 : 400,
                 letterSpacing: '0.1em',
                 textTransform: 'uppercase',
@@ -263,7 +263,7 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
                 color: activeSubTab === 'requests'
                   ? (isDark ? '#FDF3F5' : 'var(--color-mulberry)')
                   : themeMuted,
-                fontSize: '11.5px',
+                fontSize: '13.5px',
                 fontWeight: activeSubTab === 'requests' ? 600 : 400,
                 letterSpacing: '0.1em',
                 textTransform: 'uppercase',
@@ -283,7 +283,7 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <div role="group" aria-label="Request type" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', borderBottom: `1px solid ${themeBorder}` }}>
                 {([['incoming', `INCOMING · ${incomingRequests.length}`], ['sent', `SENT · ${sentRequests.length}`]] as const).map(([tab, label]) => (
-                  <button key={tab} type="button" onClick={() => setActiveRequestTab(tab)} aria-pressed={activeRequestTab === tab} style={{ minHeight: '42px', border: 0, borderBottom: activeRequestTab === tab ? `2px solid ${themeMulberry}` : '2px solid transparent', background: 'transparent', color: activeRequestTab === tab ? themeMulberry : themeMuted, cursor: 'pointer', fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em' }}>{label}</button>
+                  <button key={tab} type="button" onClick={() => setActiveRequestTab(tab)} aria-pressed={activeRequestTab === tab} style={{ minHeight: '42px', border: 0, borderBottom: activeRequestTab === tab ? `2px solid ${themeMulberry}` : '2px solid transparent', background: 'transparent', color: activeRequestTab === tab ? themeMulberry : themeMuted, cursor: 'pointer', fontSize: '12px', fontWeight: 700, letterSpacing: '0.08em' }}>{label}</button>
                 ))}
               </div>
 
@@ -323,7 +323,7 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
                         <h3
                           style={{
                             fontFamily: 'var(--font-serif)',
-                            fontSize: '20px',
+                            fontSize: '22px',
                             fontWeight: 600,
                             color: themeMulberry,
                             margin: '0 0 3px 0',
@@ -338,7 +338,7 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
 
                         <div
                           style={{
-                            fontSize: '10.5px',
+                            fontSize: '12.5px',
                             fontWeight: 700,
                             letterSpacing: '0.1em',
                             textTransform: 'uppercase',
@@ -351,7 +351,7 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
 
                         <div
                           style={{
-                            fontSize: '13px',
+                            fontSize: '15px',
                             color: isDark ? '#E5D8DF' : '#4A3B45',
                             marginBottom: '10px',
                             whiteSpace: 'nowrap',
@@ -362,7 +362,7 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
                           {req.designation}
                         </div>
 
-                        <button type="button" onClick={() => setSelectedRequest(req)} style={{ alignSelf: 'flex-start', marginBottom: '9px', padding: '2px 0', border: 0, background: 'transparent', color: themeMuted, cursor: 'pointer', fontSize: '10px', fontWeight: 700, textDecoration: 'underline', textUnderlineOffset: '3px' }}>
+                        <button type="button" onClick={() => setSelectedRequest(req)} style={{ alignSelf: 'flex-start', marginBottom: '9px', padding: '2px 0', border: 0, background: 'transparent', color: themeMuted, cursor: 'pointer', fontSize: '12px', fontWeight: 700, textDecoration: 'underline', textUnderlineOffset: '3px' }}>
                           VIEW REQUEST PROFILE
                         </button>
 
@@ -378,7 +378,7 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
                               backgroundColor: 'transparent',
                               border: `1.5px solid ${isDark ? 'rgba(243, 238, 233, 0.35)' : 'rgba(73, 40, 61, 0.35)'}`,
                               color: themeMulberry,
-                              fontSize: '11px',
+                              fontSize: '13px',
                               fontWeight: 700,
                               letterSpacing: '0.08em',
                               textTransform: 'uppercase',
@@ -402,7 +402,7 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
                               background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
                               color: '#FDF3F5',
                               border: 'none',
-                              fontSize: '11px',
+                              fontSize: '13px',
                               fontWeight: 700,
                               letterSpacing: '0.08em',
                               textTransform: 'uppercase',
@@ -431,10 +431,10 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
                     border: themeCardBorder,
                   }}
                 >
-                  <p style={{ margin: '0 0 4px 0', fontSize: '14px', fontWeight: 600, color: themeMulberry }}>
+                  <p style={{ margin: '0 0 4px 0', fontSize: '16px', fontWeight: 600, color: themeMulberry }}>
                     No pending incoming requests.
                   </p>
-                  <span style={{ fontSize: '12.5px', color: themeMuted }}>
+                  <span style={{ fontSize: '14.5px', color: themeMuted }}>
                     New handpicked introductions arrive daily.
                   </span>
                 </div>
@@ -444,7 +444,7 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
               {activeRequestTab === 'sent' && <div>
                 <div
                   style={{
-                    fontSize: '11px',
+                    fontSize: '13px',
                     fontWeight: 700,
                     letterSpacing: '0.14em',
                     textTransform: 'uppercase',
@@ -472,7 +472,7 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
                           <span
                             style={{
                               fontFamily: 'var(--font-serif)',
-                              fontSize: '17px',
+                              fontSize: '19px',
                               fontWeight: 600,
                               color: themeMulberry,
                               marginBottom: '3px',
@@ -482,7 +482,7 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
                           </span>
                           <span
                             style={{
-                              fontSize: '10.5px',
+                              fontSize: '12.5px',
                               fontWeight: 700,
                               letterSpacing: '0.08em',
                               textTransform: 'uppercase',
@@ -495,7 +495,7 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
 
                         <span
                           style={{
-                            fontSize: '10.5px',
+                            fontSize: '12.5px',
                             fontWeight: 700,
                             letterSpacing: '0.09em',
                             textTransform: 'uppercase',
@@ -503,13 +503,13 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
                           }}
                           >
                             <span style={{ display: 'block' }}>{sent.status}</span>
-                            <span style={{ display: 'block', marginTop: '4px', color: themeMuted, fontSize: '10px', fontWeight: 400, letterSpacing: 0, textTransform: 'none' }}>{formatRequestTime(sent.timestamp)}</span>
+                            <span style={{ display: 'block', marginTop: '4px', color: themeMuted, fontSize: '12px', fontWeight: 400, letterSpacing: 0, textTransform: 'none' }}>{formatRequestTime(sent.timestamp)}</span>
                         </span>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <div style={{ padding: '12px 0', color: themeMuted, fontSize: '13px' }}>
+                  <div style={{ padding: '12px 0', color: themeMuted, fontSize: '15px' }}>
                     No outgoing requests sent yet.
                   </div>
                 )}
@@ -525,7 +525,7 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
                       background: 'none',
                       border: 'none',
                       color: themeMuted,
-                      fontSize: '11px',
+                      fontSize: '13px',
                       fontWeight: 700,
                       letterSpacing: '0.12em',
                       textTransform: 'uppercase',
@@ -552,7 +552,7 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               {matches.length > 0 && <label style={{ position: 'relative', display: 'block', margin: '0 0 12px' }}>
                 <Search size={16} aria-hidden="true" style={{ position: 'absolute', top: '13px', left: '12px', color: themeMuted }} />
-                <input type="search" aria-label="Search matches" value={matchSearch} onChange={(event) => setMatchSearch(event.target.value)} placeholder="Search matches" style={{ width: '100%', height: '42px', boxSizing: 'border-box', padding: '0 12px 0 36px', border: `1px solid ${themeBorder}`, borderRadius: '6px', background: themeCardBg, color: themeTextColor, font: 'inherit', fontSize: '13px' }} />
+                <input type="search" aria-label="Search matches" value={matchSearch} onChange={(event) => setMatchSearch(event.target.value)} placeholder="Search matches" style={{ width: '100%', height: '42px', boxSizing: 'border-box', padding: '0 12px 0 36px', border: `1px solid ${themeBorder}`, borderRadius: '6px', background: themeCardBg, color: themeTextColor, font: 'inherit', fontSize: '15px' }} />
               </label>}
               {filteredMatches.length > 0 ? (
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -612,11 +612,11 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
                         {/* Middle: Name & Latest Message Preview */}
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginBottom: '4px' }}>
-                            <span style={{ fontFamily: 'var(--font-serif)', fontSize: '18px', fontWeight: 600, color: themeMulberry }}>{match.name}</span>
+                            <span style={{ fontFamily: 'var(--font-serif)', fontSize: '20px', fontWeight: 600, color: themeMulberry }}>{match.name}</span>
                             {match.isVerified && (
                               <span
                                 style={{
-                                  fontSize: '9.5px',
+                                  fontSize: '11.5px',
                                   fontWeight: 700,
                                   letterSpacing: '0.08em',
                                   textTransform: 'uppercase',
@@ -632,7 +632,7 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
                           <p
                             style={{
                               margin: 0,
-                              fontSize: '13px',
+                              fontSize: '15px',
                               color: themeMuted,
                               lineHeight: '1.35',
                               whiteSpace: 'nowrap',
@@ -642,7 +642,7 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
                           >
                             {match.lastMessage || "Thank you for accepting — I’m Meera. How has your week been?"}
                           </p>
-                          <span style={{ display: 'block', marginTop: '4px', color: themeMuted, fontSize: '10px' }}>{formatActivityTime(match.lastMessageTime || match.matchedAt)}</span>
+                          <span style={{ display: 'block', marginTop: '4px', color: themeMuted, fontSize: '12px' }}>{formatActivityTime(match.lastMessageTime || match.matchedAt)}</span>
                         </div>
                       </button>
 
@@ -653,7 +653,7 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
                           onClick={() => onOpenChat(match)}
                           aria-label={`Open chat with ${match.name}${isUnread ? ', unread message' : ''}`}
                           style={{
-                            fontSize: '11.5px',
+                            fontSize: '13.5px',
                             fontWeight: 700,
                             letterSpacing: '0.1em',
                             textTransform: 'uppercase',
@@ -685,7 +685,7 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
                   <h4
                     style={{
                       fontFamily: 'var(--font-serif)',
-                      fontSize: '20px',
+                      fontSize: '22px',
                       fontWeight: 400,
                       color: themeMulberry,
                       margin: '0 0 8px 0',
@@ -695,7 +695,7 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
                   </h4>
                   <p
                     style={{
-                      fontSize: '13.5px',
+                      fontSize: '15.5px',
                       lineHeight: '1.5',
                       color: themeMuted,
                       margin: '0 0 18px 0',
@@ -712,7 +712,7 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
                       background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
                       color: '#FDF3F5',
                       border: 'none',
-                      fontSize: '11.5px',
+                      fontSize: '13.5px',
                       fontWeight: 700,
                       letterSpacing: '0.08em',
                       textTransform: 'uppercase',
@@ -740,7 +740,7 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
             zIndex: 55,
             backgroundColor: isDark ? '#462037' : 'rgba(70, 32, 55, 0.95)',
             color: '#FDF3F5',
-            fontSize: '12.5px',
+            fontSize: '14.5px',
             fontWeight: 600,
             padding: '9px 18px',
             borderRadius: '9999px',
@@ -759,24 +759,24 @@ export const Page15MatchesScreen: React.FC<Page15MatchesScreenProps> = ({
               <button type="button" aria-label="Close" onClick={() => { setSelectedRequest(null); setDeclineAllOpen(false); setAcceptedProfileId(null); }} style={{ position: 'absolute', top: '12px', right: '12px', display: 'grid', placeItems: 'center', width: '32px', height: '32px', border: 'none', borderRadius: '50%', background: 'transparent', color: themeMuted, cursor: 'pointer' }}><X size={17} /></button>
               {selectedRequest ? <>
                 <img src={selectedRequest.photo} alt={selectedRequest.name} style={{ width: '100%', maxHeight: '250px', aspectRatio: '4 / 3', objectFit: 'cover', borderRadius: '6px', background: '#1E161C' }} />
-                <h2 id="matches-dialog-title" style={{ margin: '15px 35px 4px 0', color: themeMulberry, fontFamily: 'var(--font-serif)', fontSize: '25px', fontWeight: 400 }}>{selectedRequest.name}, {selectedRequest.age}</h2>
-                <p style={{ margin: 0, color: themeMuted, fontSize: '12px' }}>{selectedRequest.city} · {selectedRequest.designation}{selectedRequest.company ? ` · ${selectedRequest.company}` : ''}</p>
-                <p style={{ margin: '10px 0 18px', color: themeMuted, fontSize: '11px' }}>Request received {formatRequestTime(selectedRequest.timestamp)}</p>
+                <h2 id="matches-dialog-title" style={{ margin: '15px 35px 4px 0', color: themeMulberry, fontFamily: 'var(--font-serif)', fontSize: '27px', fontWeight: 400 }}>{selectedRequest.name}, {selectedRequest.age}</h2>
+                <p style={{ margin: 0, color: themeMuted, fontSize: '14px' }}>{selectedRequest.city} · {selectedRequest.designation}{selectedRequest.company ? ` · ${selectedRequest.company}` : ''}</p>
+                <p style={{ margin: '10px 0 18px', color: themeMuted, fontSize: '13px' }}>Request received {formatRequestTime(selectedRequest.timestamp)}</p>
                 <div style={{ display: 'flex', gap: '8px' }}>
-                  <button type="button" onClick={() => handleDecline(selectedRequest.id, selectedRequest.name)} style={{ flex: 1, minHeight: '42px', border: `1px solid ${themeBorder}`, borderRadius: '22px', background: 'transparent', color: themeMulberry, cursor: 'pointer', fontSize: '11px', fontWeight: 700 }}>DECLINE</button>
-                  <button type="button" onClick={() => handleAccept(selectedRequest.id, selectedRequest.name)} style={{ flex: 1, minHeight: '42px', border: 0, borderRadius: '22px', background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)', color: '#FFF8F8', cursor: 'pointer', fontSize: '11px', fontWeight: 700 }}>ACCEPT</button>
+                  <button type="button" onClick={() => handleDecline(selectedRequest.id, selectedRequest.name)} style={{ flex: 1, minHeight: '42px', border: `1px solid ${themeBorder}`, borderRadius: '22px', background: 'transparent', color: themeMulberry, cursor: 'pointer', fontSize: '13px', fontWeight: 700 }}>DECLINE</button>
+                  <button type="button" onClick={() => handleAccept(selectedRequest.id, selectedRequest.name)} style={{ flex: 1, minHeight: '42px', border: 0, borderRadius: '22px', background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)', color: '#FFF8F8', cursor: 'pointer', fontSize: '13px', fontWeight: 700 }}>ACCEPT</button>
                 </div>
               </> : declineAllOpen ? <>
-                <h2 id="matches-dialog-title" style={{ margin: '5px 35px 10px 0', color: themeMulberry, fontFamily: 'var(--font-serif)', fontSize: '23px', fontWeight: 400 }}>Decline all requests?</h2>
-                <p style={{ color: themeMuted, fontSize: '13px', lineHeight: 1.5 }}>This will clear all {incomingRequests.length} incoming requests. You won’t be able to restore them.</p>
+                <h2 id="matches-dialog-title" style={{ margin: '5px 35px 10px 0', color: themeMulberry, fontFamily: 'var(--font-serif)', fontSize: '25px', fontWeight: 400 }}>Decline all requests?</h2>
+                <p style={{ color: themeMuted, fontSize: '15px', lineHeight: 1.5 }}>This will clear all {incomingRequests.length} incoming requests. You won’t be able to restore them.</p>
                 <div style={{ display: 'flex', gap: '8px', marginTop: '18px' }}>
-                  <button type="button" onClick={() => setDeclineAllOpen(false)} style={{ flex: 1, minHeight: '42px', border: `1px solid ${themeBorder}`, borderRadius: '22px', background: 'transparent', color: themeMulberry, cursor: 'pointer', fontSize: '11px', fontWeight: 700 }}>CANCEL</button>
-                  <button type="button" onClick={confirmDeclineAll} style={{ flex: 1, minHeight: '42px', border: 0, borderRadius: '22px', background: '#A33B4A', color: '#fff', cursor: 'pointer', fontSize: '11px', fontWeight: 700 }}>DECLINE ALL</button>
+                  <button type="button" onClick={() => setDeclineAllOpen(false)} style={{ flex: 1, minHeight: '42px', border: `1px solid ${themeBorder}`, borderRadius: '22px', background: 'transparent', color: themeMulberry, cursor: 'pointer', fontSize: '13px', fontWeight: 700 }}>CANCEL</button>
+                  <button type="button" onClick={confirmDeclineAll} style={{ flex: 1, minHeight: '42px', border: 0, borderRadius: '22px', background: '#A33B4A', color: '#fff', cursor: 'pointer', fontSize: '13px', fontWeight: 700 }}>DECLINE ALL</button>
                 </div>
               </> : <>
-                <h2 id="matches-dialog-title" style={{ margin: '5px 35px 10px 0', color: themeMulberry, fontFamily: 'var(--font-serif)', fontSize: '23px', fontWeight: 400 }}>You’re connected{acceptedMatch ? ` with ${acceptedMatch.name}` : ''}</h2>
-                <p style={{ color: themeMuted, fontSize: '13px', lineHeight: 1.5 }}>Your introduction has been accepted. Start a private conversation whenever you’re ready.</p>
-                <button type="button" disabled={!acceptedMatch} onClick={() => { if (acceptedMatch) onOpenChat(acceptedMatch); setAcceptedProfileId(null); }} style={{ width: '100%', minHeight: '44px', marginTop: '12px', border: 0, borderRadius: '22px', background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)', color: '#FFF8F8', cursor: acceptedMatch ? 'pointer' : 'default', opacity: acceptedMatch ? 1 : 0.6, fontSize: '11px', fontWeight: 700 }}>START CONVERSATION</button>
+                <h2 id="matches-dialog-title" style={{ margin: '5px 35px 10px 0', color: themeMulberry, fontFamily: 'var(--font-serif)', fontSize: '25px', fontWeight: 400 }}>You’re connected{acceptedMatch ? ` with ${acceptedMatch.name}` : ''}</h2>
+                <p style={{ color: themeMuted, fontSize: '15px', lineHeight: 1.5 }}>Your introduction has been accepted. Start a private conversation whenever you’re ready.</p>
+                <button type="button" disabled={!acceptedMatch} onClick={() => { if (acceptedMatch) onOpenChat(acceptedMatch); setAcceptedProfileId(null); }} style={{ width: '100%', minHeight: '44px', marginTop: '12px', border: 0, borderRadius: '22px', background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)', color: '#FFF8F8', cursor: acceptedMatch ? 'pointer' : 'default', opacity: acceptedMatch ? 1 : 0.6, fontSize: '13px', fontWeight: 700 }}>START CONVERSATION</button>
               </>}
             </section>
           </div>

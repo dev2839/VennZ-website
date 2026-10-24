@@ -83,7 +83,7 @@ export const Page10OverviewScreen: React.FC<Page10OverviewScreenProps> = ({
               alignItems: 'center',
               gap: '6px',
               fontFamily: 'var(--font-sans)',
-              fontSize: '13px',
+              fontSize: '15px',
               fontWeight: 700,
               letterSpacing: '0.08em',
               textTransform: 'uppercase',
@@ -108,7 +108,7 @@ export const Page10OverviewScreen: React.FC<Page10OverviewScreenProps> = ({
 
           <span
             style={{
-              fontSize: '11px',
+              fontSize: '13px',
               letterSpacing: '0.09em',
               textTransform: 'uppercase',
               fontWeight: 700,
@@ -159,7 +159,7 @@ export const Page10OverviewScreen: React.FC<Page10OverviewScreenProps> = ({
           >
             <span
               style={{
-                fontSize: '11px',
+                fontSize: '13px',
                 fontWeight: 700,
                 letterSpacing: '0.12em',
                 textTransform: 'uppercase',
@@ -174,7 +174,7 @@ export const Page10OverviewScreen: React.FC<Page10OverviewScreenProps> = ({
           <h1
             style={{
               fontFamily: 'var(--font-serif)',
-              fontSize: '32px',
+              fontSize: '34px',
               lineHeight: '1.2',
               fontWeight: 400,
               color: isDark ? '#FDF3F5' : '#462037',
@@ -188,7 +188,7 @@ export const Page10OverviewScreen: React.FC<Page10OverviewScreenProps> = ({
           {/* Subtitle */}
           <p
             style={{
-              fontSize: '14px',
+              fontSize: '16px',
               lineHeight: '1.55',
               color: isDark ? '#D4A2AC' : '#683A46',
               margin: '0 0 28px 0',
@@ -214,7 +214,7 @@ export const Page10OverviewScreen: React.FC<Page10OverviewScreenProps> = ({
           >
             <div
               style={{
-                fontSize: '11px',
+                fontSize: '13px',
                 fontWeight: 700,
                 letterSpacing: '0.1em',
                 textTransform: 'uppercase',
@@ -248,7 +248,7 @@ export const Page10OverviewScreen: React.FC<Page10OverviewScreenProps> = ({
                       display: 'flex',
                       alignItems: 'center',
                       gap: '12px',
-                      fontSize: '14px',
+                      fontSize: '16px',
                       lineHeight: '1.4',
                     }}
                   >
@@ -276,7 +276,7 @@ export const Page10OverviewScreen: React.FC<Page10OverviewScreenProps> = ({
           {isComplimentary && (
             <div
               style={{
-                fontSize: '12.5px',
+                fontSize: '14.5px',
                 fontWeight: 600,
                 letterSpacing: '0.03em',
                 color: isDark ? '#B3A1A8' : '#7A6B74',
@@ -305,7 +305,7 @@ export const Page10OverviewScreen: React.FC<Page10OverviewScreenProps> = ({
               background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
               color: '#FDF3F5',
               border: 'none',
-              fontSize: '13.5px',
+              fontSize: '15.5px',
               fontWeight: 700,
               letterSpacing: '0.08em',
               textTransform: 'uppercase',

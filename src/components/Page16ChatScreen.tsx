@@ -626,7 +626,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
               <h2
                 style={{
                   fontFamily: 'var(--font-serif)',
-                  fontSize: '21px',
+                  fontSize: '23px',
                   fontWeight: 600,
                   color: colors.text,
                   margin: 0,
@@ -637,7 +637,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
               </h2>
               <span
                 style={{
-                  fontSize: '11px',
+                  fontSize: '13px',
                   fontWeight: 700,
                   color: isDark ? '#F9AAAD' : '#A1525F',
                   backgroundColor: isDark ? 'rgba(199, 87, 124, 0.22)' : 'rgba(161, 82, 95, 0.12)',
@@ -656,7 +656,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                 style={{
                   background: 'none',
                   border: 'none',
-                  fontSize: '12px',
+                  fontSize: '14px',
                   fontWeight: 600,
                   color: isDark ? '#F9AAAD' : '#A1525F',
                   cursor: 'pointer',
@@ -673,7 +673,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                   style={{
                     backgroundColor: isDark ? '#C7577C' : '#A1525F',
                     color: '#FFF',
-                    fontSize: '10.5px',
+                    fontSize: '12.5px',
                     fontWeight: 700,
                     padding: '1px 6px',
                     borderRadius: '999px',
@@ -710,7 +710,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                   background: 'transparent',
                   border: 'none',
                   outline: 'none',
-                  fontSize: '13.5px',
+                  fontSize: '15.5px',
                   color: colors.text,
                   fontFamily: 'var(--font-sans)',
                 }}
@@ -755,7 +755,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                   padding: '36px 16px',
                   textAlign: 'center',
                   color: colors.muted,
-                  fontSize: '13px',
+                  fontSize: '15px',
                 }}
               >
                 No conversations match &ldquo;{searchQuery}&rdquo;.
@@ -845,7 +845,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                         <span
                           style={{
                             fontFamily: 'var(--font-serif)',
-                            fontSize: '15.5px',
+                            fontSize: '17.5px',
                             fontWeight: isSelected ? 600 : 500,
                             color: colors.text,
                             overflow: 'hidden',
@@ -856,7 +856,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                           {cMatch.name}
                         </span>
                         {timeText && (
-                          <span style={{ fontSize: '11px', color: colors.muted, flexShrink: 0 }}>
+                          <span style={{ fontSize: '13px', color: colors.muted, flexShrink: 0 }}>
                             {timeText}
                           </span>
                         )}
@@ -864,7 +864,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
 
                       <div
                         style={{
-                          fontSize: '12.5px',
+                          fontSize: '14.5px',
                           color: colors.muted,
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
@@ -992,7 +992,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                   <span
                     style={{
                       fontFamily: 'var(--font-serif)',
-                      fontSize: '17px',
+                      fontSize: '19px',
                       fontWeight: 600,
                       color: colors.text,
                       lineHeight: 1.15,
@@ -1003,7 +1003,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                   {activeMatch.isVerified && (
                     <span
                       style={{
-                        fontSize: '9.5px',
+                        fontSize: '11.5px',
                         fontWeight: 700,
                         letterSpacing: '0.08em',
                         color: '#86EFAC',
@@ -1021,7 +1021,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                     </span>
                   )}
                 </div>
-                <span style={{ fontSize: '11px', color: colors.muted, lineHeight: 1.2 }}>
+                <span style={{ fontSize: '13px', color: colors.muted, lineHeight: 1.2 }}>
                   {[activeMatch.designation, activeMatch.city].filter(Boolean).join(' · ')}
                 </span>
               </div>
@@ -1134,7 +1134,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                           textAlign: 'left',
                           background: 'none',
                           border: 'none',
-                          fontSize: '12.5px',
+                          fontSize: '14.5px',
                           fontWeight: 600,
                           color: colors.text,
                           cursor: 'pointer',
@@ -1156,7 +1156,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                           textAlign: 'left',
                           background: 'none',
                           border: 'none',
-                          fontSize: '12.5px',
+                          fontSize: '14.5px',
                           fontWeight: 600,
                           color: colors.text,
                           cursor: 'pointer',
@@ -1181,7 +1181,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                           textAlign: 'left',
                           background: 'none',
                           border: 'none',
-                          fontSize: '12.5px',
+                          fontSize: '14.5px',
                           fontWeight: 600,
                           color: '#E06D6D',
                           cursor: 'pointer',
@@ -1215,7 +1215,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
               <div style={{ textAlign: 'center', margin: '8px 0 24px' }}>
                 <span
                   style={{
-                    fontSize: '11px',
+                    fontSize: '13px',
                     fontWeight: 600,
                     letterSpacing: '0.06em',
                     color: colors.muted,
@@ -1261,20 +1261,20 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                       <div
                         style={{
                           fontFamily: 'var(--font-serif)',
-                          fontSize: '19px',
+                          fontSize: '21px',
                           fontWeight: 600,
                           color: colors.text,
                         }}
                       >
                         {activeMatch.name}
                       </div>
-                      <div style={{ fontSize: '12.5px', color: colors.muted, marginTop: '3px' }}>
+                      <div style={{ fontSize: '14.5px', color: colors.muted, marginTop: '3px' }}>
                         {[activeMatch.designation, activeMatch.city].filter(Boolean).join(' · ')}
                       </div>
                     </div>
                     <p
                       style={{
-                        fontSize: '13px',
+                        fontSize: '15px',
                         color: colors.muted,
                         maxWidth: '340px',
                         lineHeight: 1.5,
@@ -1345,7 +1345,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                               ? '0 4px 18px rgba(0, 0, 0, 0.25)'
                               : '0 4px 14px rgba(161, 82, 95, 0.08)',
                             fontFamily: 'var(--font-sans)',
-                            fontSize: '14.5px',
+                            fontSize: '16.5px',
                             lineHeight: '1.45',
                             wordBreak: 'break-word',
                           }}
@@ -1361,7 +1361,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                             gap: '4px',
                             marginTop: '3px',
                             padding: isMe ? '0 4px 0 0' : '0 0 0 4px',
-                            fontSize: '10.5px',
+                            fontSize: '12.5px',
                             color: colors.muted,
                           }}
                         >
@@ -1445,7 +1445,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                         background: 'transparent',
                         border: 'none',
                         outline: 'none',
-                        fontSize: '12.5px',
+                        fontSize: '14.5px',
                         color: colors.text,
                         fontFamily: 'var(--font-sans)',
                       }}
@@ -1489,7 +1489,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                           border: 'none',
                           borderRadius: '8px',
                           padding: '4px 8px',
-                          fontSize: '15px',
+                          fontSize: '17px',
                           cursor: 'pointer',
                           transition: 'background-color 0.15s ease',
                         }}
@@ -1513,7 +1513,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                   }}
                 >
                   {displayedEmojis.length === 0 ? (
-                    <div style={{ gridColumn: 'span 8', textAlign: 'center', color: colors.muted, fontSize: '12px', padding: '20px 0' }}>
+                    <div style={{ gridColumn: 'span 8', textAlign: 'center', color: colors.muted, fontSize: '14px', padding: '20px 0' }}>
                       No matching emojis found
                     </div>
                   ) : (
@@ -1525,7 +1525,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                         style={{
                           background: 'none',
                           border: 'none',
-                          fontSize: '20px',
+                          fontSize: '22px',
                           lineHeight: '1',
                           padding: '6px',
                           borderRadius: '8px',
@@ -1605,7 +1605,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                   border: 'none',
                   outline: 'none',
                   fontFamily: 'var(--font-sans)',
-                  fontSize: '15px',
+                  fontSize: '17px',
                   color: colors.text,
                   padding: '8px 6px',
                 }}
@@ -1674,10 +1674,10 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                 boxShadow: '0 20px 48px rgba(0,0,0,0.45)',
               }}
             >
-              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '22px', color: colors.text, margin: '0 0 8px 0' }}>
+              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '24px', color: colors.text, margin: '0 0 8px 0' }}>
                 Unmatch with {activeMatch.name}?
               </h3>
-              <p style={{ fontSize: '13px', lineHeight: '1.5', color: colors.muted, margin: '0 0 20px 0' }}>
+              <p style={{ fontSize: '15px', lineHeight: '1.5', color: colors.muted, margin: '0 0 20px 0' }}>
                 This conversation and match will be permanently removed for both of you.
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -1690,7 +1690,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                     backgroundColor: '#C94A4A',
                     color: '#FFFFFF',
                     border: 'none',
-                    fontSize: '12.5px',
+                    fontSize: '14.5px',
                     fontWeight: 700,
                     letterSpacing: '0.08em',
                     textTransform: 'uppercase',
@@ -1708,7 +1708,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                     background: 'transparent',
                     color: colors.muted,
                     border: 'none',
-                    fontSize: '12.5px',
+                    fontSize: '14.5px',
                     fontWeight: 600,
                     cursor: 'pointer',
                   }}
@@ -1751,10 +1751,10 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                 boxShadow: '0 20px 48px rgba(0,0,0,0.45)',
               }}
             >
-              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '22px', color: colors.text, margin: '0 0 8px 0' }}>
+              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '24px', color: colors.text, margin: '0 0 8px 0' }}>
                 Block {activeMatch.name}?
               </h3>
-              <p style={{ fontSize: '13px', lineHeight: '1.5', color: colors.muted, margin: '0 0 20px 0' }}>
+              <p style={{ fontSize: '15px', lineHeight: '1.5', color: colors.muted, margin: '0 0 20px 0' }}>
                 {activeMatch.name} will be removed and will never appear in your introductions again.
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -1767,7 +1767,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                     backgroundColor: '#B91C1C',
                     color: '#FFFFFF',
                     border: 'none',
-                    fontSize: '12.5px',
+                    fontSize: '14.5px',
                     fontWeight: 700,
                     letterSpacing: '0.08em',
                     textTransform: 'uppercase',
@@ -1785,7 +1785,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
                     background: 'transparent',
                     color: colors.muted,
                     border: 'none',
-                    fontSize: '12.5px',
+                    fontSize: '14.5px',
                     fontWeight: 600,
                     cursor: 'pointer',
                   }}
@@ -1809,7 +1809,7 @@ export const Page16ChatScreen: React.FC<Page16ChatScreenProps> = ({
             zIndex: 90,
             backgroundColor: isDark ? '#462037' : 'rgba(70, 32, 55, 0.95)',
             color: '#FDF3F5',
-            fontSize: '12.5px',
+            fontSize: '14.5px',
             fontWeight: 600,
             padding: '9px 18px',
             borderRadius: '9999px',

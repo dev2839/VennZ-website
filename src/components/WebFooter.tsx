@@ -62,7 +62,7 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
               }}
             />
           </div>
-          <p style={{ fontSize: '14.5px', lineHeight: 1.6, color: textColor, margin: 0, fontWeight: 400 }}>
+          <p style={{ fontSize: '16.5px', lineHeight: 1.6, color: textColor, margin: 0, fontWeight: 400 }}>
             An exclusive, verified community connecting ambitious individuals through rigorous standards, intentional matchmaking, and private mixer gatherings.
           </p>
         </div>
@@ -72,7 +72,7 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
           <h5
             style={{
               fontFamily: 'var(--font-sans)',
-              fontSize: '13px',
+              fontSize: '15px',
               fontWeight: 700,
               letterSpacing: '0.14em',
               textTransform: 'uppercase',
@@ -84,7 +84,7 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
           </h5>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
             {['Curated Introductions', 'Identity Verification', 'Private Mixers', 'Elevate Concierge'].map((item) => (
-              <li key={item} style={{ fontSize: '14.5px', color: textColor, fontWeight: 400 }}>
+              <li key={item} style={{ fontSize: '16.5px', color: textColor, fontWeight: 400 }}>
                 {item}
               </li>
             ))}
@@ -96,7 +96,7 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
           <h5
             style={{
               fontFamily: 'var(--font-sans)',
-              fontSize: '13px',
+              fontSize: '15px',
               fontWeight: 700,
               letterSpacing: '0.14em',
               textTransform: 'uppercase',
@@ -121,7 +121,7 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
                     background: 'none',
                     border: 'none',
                     padding: 0,
-                    fontSize: '14.5px',
+                    fontSize: '16.5px',
                     color: textColor,
                     fontWeight: 500,
                     cursor: 'pointer',
@@ -143,7 +143,7 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
           <h5
             style={{
               fontFamily: 'var(--font-sans)',
-              fontSize: '13px',
+              fontSize: '15px',
               fontWeight: 700,
               letterSpacing: '0.14em',
               textTransform: 'uppercase',
@@ -153,7 +153,7 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
           >
             Membership
           </h5>
-          <p style={{ fontSize: '14.5px', lineHeight: 1.6, color: textColor, margin: '0', fontWeight: 400 }}>
+          <p style={{ fontSize: '16.5px', lineHeight: 1.6, color: textColor, margin: '0', fontWeight: 400 }}>
             Membership is strictly by application review or peer referral. All members are verified with live biometric confirmation.
           </p>
         </div>
@@ -169,7 +169,7 @@ export const WebFooter: React.FC<WebFooterProps> = ({ onNavigate }) => {
           alignItems: 'center',
           justifyContent: 'space-between',
           gap: '14px',
-          fontSize: '13.5px',
+          fontSize: '15.5px',
           color: mutedColor,
         }}
       >

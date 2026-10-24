@@ -173,7 +173,7 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
                 gap: '6px',
                 color: themeMulberry,
                 cursor: 'pointer',
-                fontSize: '11px',
+                fontSize: '13px',
                 fontWeight: 700,
                 letterSpacing: '0.12em',
                 textTransform: 'uppercase',
@@ -192,7 +192,7 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '5px',
-                  fontSize: '11px',
+                  fontSize: '13px',
                   fontWeight: 700,
                   letterSpacing: '0.04em',
                   color: isDark ? '#6EE7B7' : '#047857',
@@ -221,7 +221,7 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '4px',
-                  fontSize: '11px',
+                  fontSize: '13px',
                   fontWeight: 700,
                   letterSpacing: '0.1em',
                   textTransform: 'uppercase',
@@ -258,7 +258,7 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
                 <h1
                   style={{
                     fontFamily: 'var(--font-serif)',
-                    fontSize: '34px',
+                    fontSize: '36px',
                     fontWeight: 400,
                     color: themeMulberry,
                     margin: '0 0 6px 0',
@@ -274,7 +274,7 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
                     display: 'flex',
                     alignItems: 'center',
                     gap: '8px',
-                    fontSize: '15px',
+                    fontSize: '17px',
                     color: themeMuted,
                     fontWeight: 500,
                     flexWrap: 'wrap',
@@ -294,7 +294,7 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
                   padding: '6px 14px',
                   borderRadius: '20px',
                   color: themeMulberry,
-                  fontSize: '13px',
+                  fontSize: '15px',
                   fontWeight: 600,
                 }}
               >
@@ -363,7 +363,7 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
                     color: '#FFF',
                     padding: '3px 9px',
                     borderRadius: '10px',
-                    fontSize: '11px',
+                    fontSize: '13px',
                     fontWeight: 600,
                     letterSpacing: '0.04em',
                   }}
@@ -417,7 +417,7 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
                 <h3
                   style={{
                     margin: 0,
-                    fontSize: '12px',
+                    fontSize: '14px',
                     fontWeight: 700,
                     letterSpacing: '0.12em',
                     textTransform: 'uppercase',
@@ -432,7 +432,7 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
                 style={{
                   fontFamily: 'var(--font-serif)',
                   fontStyle: 'italic',
-                  fontSize: '16px',
+                  fontSize: '18px',
                   lineHeight: '1.6',
                   color: isDark ? '#F5E6ED' : '#2D1B28',
                   margin: 0,
@@ -476,7 +476,7 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
                 <h3
                   style={{
                     margin: 0,
-                    fontSize: '12px',
+                    fontSize: '14px',
                     fontWeight: 700,
                     letterSpacing: '0.12em',
                     textTransform: 'uppercase',
@@ -498,7 +498,7 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
                       gap: '6px',
                       padding: '7px 14px',
                       borderRadius: '20px',
-                      fontSize: '13px',
+                      fontSize: '15px',
                       fontWeight: 600,
                       backgroundColor: chipBg,
                       border: `1px solid ${chipBorder}`,
@@ -506,7 +506,7 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
                       boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
                     }}
                   >
-                    <span style={{ fontSize: '13px' }}>✨</span>
+                    <span style={{ fontSize: '15px' }}>✨</span>
                     {vibe}
                   </span>
                 ))}
@@ -548,7 +548,7 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
                 <h3
                   style={{
                     margin: 0,
-                    fontSize: '12px',
+                    fontSize: '14px',
                     fontWeight: 700,
                     letterSpacing: '0.12em',
                     textTransform: 'uppercase',
@@ -569,7 +569,7 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
                       gap: '6px',
                       padding: '7px 14px',
                       borderRadius: '20px',
-                      fontSize: '13px',
+                      fontSize: '15px',
                       fontWeight: 600,
                       backgroundColor: chipBg,
                       border: `1px solid ${chipBorder}`,
@@ -619,7 +619,7 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
                 <h3
                   style={{
                     margin: 0,
-                    fontSize: '12px',
+                    fontSize: '14px',
                     fontWeight: 700,
                     letterSpacing: '0.12em',
                     textTransform: 'uppercase',
@@ -640,10 +640,10 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
                     </svg>
                   </div>
                   <div>
-                    <div style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.06em', color: themeMuted, fontWeight: 700 }}>
+                    <div style={{ fontSize: '13px', textTransform: 'uppercase', letterSpacing: '0.06em', color: themeMuted, fontWeight: 700 }}>
                       Designation
                     </div>
-                    <div style={{ fontSize: '14px', fontWeight: 600, color: themeTextColor }}>
+                    <div style={{ fontSize: '16px', fontWeight: 600, color: themeTextColor }}>
                       {profile.designation}
                     </div>
                   </div>
@@ -665,10 +665,10 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
                       </svg>
                     </div>
                     <div>
-                      <div style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.06em', color: themeMuted, fontWeight: 700 }}>
+                      <div style={{ fontSize: '13px', textTransform: 'uppercase', letterSpacing: '0.06em', color: themeMuted, fontWeight: 700 }}>
                         Company
                       </div>
-                      <div style={{ fontSize: '14px', fontWeight: 600, color: themeTextColor }}>
+                      <div style={{ fontSize: '16px', fontWeight: 600, color: themeTextColor }}>
                         {profile.company}
                       </div>
                     </div>
@@ -684,10 +684,10 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
                     </svg>
                   </div>
                   <div>
-                    <div style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.06em', color: themeMuted, fontWeight: 700 }}>
+                    <div style={{ fontSize: '13px', textTransform: 'uppercase', letterSpacing: '0.06em', color: themeMuted, fontWeight: 700 }}>
                       Current Status
                     </div>
-                    <div style={{ fontSize: '13.5px', fontWeight: 600, color: themeTextColor }}>
+                    <div style={{ fontSize: '15.5px', fontWeight: 600, color: themeTextColor }}>
                       {profile.currentStatus || 'Working Professional'}
                     </div>
                   </div>
@@ -732,7 +732,7 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
                     <h3
                       style={{
                         margin: 0,
-                        fontSize: '12px',
+                        fontSize: '14px',
                         fontWeight: 700,
                         letterSpacing: '0.12em',
                         textTransform: 'uppercase',
@@ -741,7 +741,7 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
                     >
                       Verified Public Socials
                     </h3>
-                    <div style={{ fontSize: '11px', color: themeMuted, marginTop: '2px' }}>
+                    <div style={{ fontSize: '13px', color: themeMuted, marginTop: '2px' }}>
                       Shared publicly by member choice for authenticity
                     </div>
                   </div>
@@ -749,7 +749,7 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
 
                 <span
                   style={{
-                    fontSize: '10.5px',
+                    fontSize: '12.5px',
                     fontWeight: 700,
                     letterSpacing: '0.08em',
                     color: isDark ? '#86EFAC' : '#15803D',
@@ -799,15 +799,15 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
                         <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
                       </svg>
                       <div>
-                        <div style={{ fontSize: '13.5px', fontWeight: 700, color: isDark ? '#E5E7EB' : '#111827' }}>
+                        <div style={{ fontSize: '15.5px', fontWeight: 700, color: isDark ? '#E5E7EB' : '#111827' }}>
                           LinkedIn
                         </div>
-                        <div style={{ fontSize: '11px', color: '#0A66C2', fontWeight: 600 }}>
+                        <div style={{ fontSize: '13px', color: '#0A66C2', fontWeight: 600 }}>
                           View professional profile
                         </div>
                       </div>
                     </div>
-                    <div style={{ color: '#0A66C2', fontSize: '13px', fontWeight: 700 }}>
+                    <div style={{ color: '#0A66C2', fontSize: '15px', fontWeight: 700 }}>
                       ↗
                     </div>
                   </a>
@@ -845,15 +845,15 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
                         <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
                       </svg>
                       <div>
-                        <div style={{ fontSize: '13.5px', fontWeight: 700, color: isDark ? '#E5E7EB' : '#111827' }}>
+                        <div style={{ fontSize: '15.5px', fontWeight: 700, color: isDark ? '#E5E7EB' : '#111827' }}>
                           Instagram
                         </div>
-                        <div style={{ fontSize: '11px', color: '#E1306C', fontWeight: 600 }}>
+                        <div style={{ fontSize: '13px', color: '#E1306C', fontWeight: 600 }}>
                           {profile.instagramUsername.startsWith('@') ? profile.instagramUsername : `@${profile.instagramUsername}`}
                         </div>
                       </div>
                     </div>
-                    <div style={{ color: '#E1306C', fontSize: '13px', fontWeight: 700 }}>
+                    <div style={{ color: '#E1306C', fontSize: '15px', fontWeight: 700 }}>
                       ↗
                     </div>
                   </a>
@@ -882,7 +882,7 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
                 backgroundColor: isDark ? 'rgba(70, 32, 55, 0.75)' : 'rgba(255, 255, 255, 0.85)',
                 color: themeMulberry,
                 border: isDark ? '1.5px solid rgba(161, 82, 95, 0.4)' : '1.5px solid rgba(161, 82, 95, 0.25)',
-                fontSize: '12.5px',
+                fontSize: '14.5px',
                 fontWeight: 700,
                 letterSpacing: '0.09em',
                 textTransform: 'uppercase',
@@ -912,7 +912,7 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
                 background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
                 color: '#FDF3F5',
                 border: 'none',
-                fontSize: '12.5px',
+                fontSize: '14.5px',
                 fontWeight: 700,
                 letterSpacing: '0.09em',
                 textTransform: 'uppercase',
@@ -941,7 +941,7 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
                 background: 'none',
                 border: 'none',
                 color: themeMuted,
-                fontSize: '10.5px',
+                fontSize: '12.5px',
                 fontWeight: 600,
                 letterSpacing: '0.08em',
                 textTransform: 'uppercase',
@@ -986,10 +986,10 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
                 boxShadow: isDark ? '0 16px 36px rgba(0,0,0,0.5)' : '0 16px 36px rgba(0,0,0,0.2)',
               }}
             >
-              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '20px', color: themeMulberry, margin: '0 0 8px 0' }}>
+              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '22px', color: themeMulberry, margin: '0 0 8px 0' }}>
                 Member Safety
               </h3>
-              <p style={{ fontSize: '13px', lineHeight: '1.5', color: isDark ? '#E5D8DF' : '#6E5E68', margin: '0 0 18px 0' }}>
+              <p style={{ fontSize: '15px', lineHeight: '1.5', color: isDark ? '#E5D8DF' : '#6E5E68', margin: '0 0 18px 0' }}>
                 Would you like to pass and block {profile.firstName}? They will no longer appear in your introductions.
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -1005,7 +1005,7 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
                     backgroundColor: '#C94A4A',
                     color: '#FFFFFF',
                     border: 'none',
-                    fontSize: '12px',
+                    fontSize: '14px',
                     fontWeight: 700,
                     letterSpacing: '0.06em',
                     textTransform: 'uppercase',
@@ -1023,7 +1023,7 @@ export const Page12FullProfileScreen: React.FC<Page12FullProfileScreenProps> = (
                     background: 'transparent',
                     color: themeMuted,
                     border: 'none',
-                    fontSize: '12px',
+                    fontSize: '14px',
                     fontWeight: 600,
                     cursor: 'pointer',
                   }}

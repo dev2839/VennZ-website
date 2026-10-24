@@ -133,7 +133,7 @@ const ElevateFolderTab: React.FC<ElevateFolderTabProps> = ({
         <span
           style={{
             fontFamily: 'var(--font-sans)',
-            fontSize: '12.5px',
+            fontSize: '14.5px',
             fontWeight: isActive ? 700 : 500,
             letterSpacing: '0.015em',
             color: textColor,
@@ -145,7 +145,7 @@ const ElevateFolderTab: React.FC<ElevateFolderTabProps> = ({
         {count !== undefined && count > 0 && (
           <span
             style={{
-              fontSize: '10px',
+              fontSize: '12px',
               fontWeight: 700,
               padding: '1px 5px',
               borderRadius: '999px',
@@ -397,7 +397,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
               backgroundColor: 'rgba(56, 142, 60, 0.16)',
               border: '1px solid rgba(56, 142, 60, 0.4)',
               color: isDark ? '#A5D6A7' : '#2E7D32',
-              fontSize: '13px',
+              fontSize: '15px',
               fontWeight: 600,
               marginBottom: '18px',
               display: 'flex',
@@ -413,7 +413,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
         <div style={{ textAlign: 'center', margin: '4px 0 18px' }}>
           <span
             style={{
-              fontSize: '11px',
+              fontSize: '13px',
               letterSpacing: '0.14em',
               fontWeight: 700,
               textTransform: 'uppercase',
@@ -425,7 +425,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
           <h1
             style={{
               fontFamily: 'var(--font-serif)',
-              fontSize: '28px',
+              fontSize: '30px',
               fontWeight: 500,
               letterSpacing: '-0.02em',
               margin: '6px 0 0',
@@ -553,7 +553,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                           <span
                             style={{
-                              fontSize: '11px',
+                              fontSize: '13px',
                               fontFamily: 'monospace',
                               letterSpacing: '0.08em',
                               padding: '2px 7px',
@@ -568,7 +568,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                           <h2
                             style={{
                               fontFamily: 'var(--font-serif)',
-                              fontSize: '20px',
+                              fontSize: '22px',
                               fontWeight: 600,
                               margin: 0,
                               color: themeTextColor,
@@ -579,7 +579,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                         </div>
                         <p
                           style={{
-                            fontSize: '13px',
+                            fontSize: '15px',
                             color: themeMuted,
                             margin: '6px 0 0',
                             lineHeight: '1.45',
@@ -590,10 +590,10 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                       </div>
 
                       <div style={{ textAlign: 'right', flexShrink: 0, marginLeft: '12px' }}>
-                        <div style={{ fontSize: '18px', fontWeight: 700, color: themeTextColor }}>
+                        <div style={{ fontSize: '20px', fontWeight: 700, color: themeTextColor }}>
                           ₹{service.startingPrice.toLocaleString('en-IN')}
                         </div>
-                        <div style={{ fontSize: '11px', color: themeMuted }}>{service.typicalDuration}</div>
+                        <div style={{ fontSize: '13px', color: themeMuted }}>{service.typicalDuration}</div>
                       </div>
                     </div>
 
@@ -607,11 +607,11 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                         display: 'flex',
                         alignItems: 'center',
                         gap: '8px',
-                        fontSize: '11.5px',
+                        fontSize: '13.5px',
                         color: themeMulberry,
                       }}
                     >
-                      <span style={{ fontSize: '13px' }}>🔒</span>
+                      <span style={{ fontSize: '15px' }}>🔒</span>
                       <span>
                         <strong>Least-Privilege Staff Scope:</strong> {service.privacyAccessScope}
                       </span>
@@ -622,7 +622,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                       style={{
                         margin: '4px 0 0',
                         paddingLeft: '18px',
-                        fontSize: '12.5px',
+                        fontSize: '14.5px',
                         color: themeTextColor,
                         lineHeight: '1.6',
                         display: 'grid',
@@ -649,7 +649,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                       {isOrdered && (
                         <span
                           style={{
-                            fontSize: '11.5px',
+                            fontSize: '13.5px',
                             fontWeight: 600,
                             color: isDark ? '#A5D6A7' : '#2E7D32',
                             marginRight: 'auto',
@@ -668,7 +668,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                           border: 'none',
                           background: themeAccentGrad,
                           color: '#FFFFFF',
-                          fontSize: '13px',
+                          fontSize: '15px',
                           fontWeight: 600,
                           cursor: 'pointer',
                           transition: 'opacity 0.2s',
@@ -693,7 +693,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
               <div>
                 <span
                   style={{
-                    fontSize: '11px',
+                    fontSize: '13px',
                     letterSpacing: '0.12em',
                     fontWeight: 700,
                     textTransform: 'uppercase',
@@ -705,7 +705,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                 <h1
                   style={{
                     fontFamily: 'var(--font-serif)',
-                    fontSize: '24px',
+                    fontSize: '26px',
                     fontWeight: 600,
                     margin: '4px 0 0',
                     color: themeTextColor,
@@ -717,7 +717,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
 
               <div
                 style={{
-                  fontSize: '11.5px',
+                  fontSize: '13.5px',
                   padding: '5px 12px',
                   borderRadius: '999px',
                   backgroundColor: isDark ? 'rgba(161, 82, 95, 0.25)' : 'rgba(161, 82, 95, 0.1)',
@@ -736,7 +736,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                 borderRadius: '10px',
                 backgroundColor: isDark ? 'rgba(70, 32, 55, 0.45)' : 'rgba(255, 255, 255, 0.65)',
                 border: `1px solid ${themeBorder}`,
-                fontSize: '12px',
+                fontSize: '14px',
                 color: themeMuted,
                 display: 'flex',
                 alignItems: 'center',
@@ -795,7 +795,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                   >
                     <div
                       style={{
-                        fontSize: '9.5px',
+                        fontSize: '11.5px',
                         color: themeMuted,
                         textTransform: 'uppercase',
                         letterSpacing: '0.04em',
@@ -809,7 +809,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                     <div>
                       <div
                         style={{
-                          fontSize: '22px',
+                          fontSize: '24px',
                           fontWeight: 700,
                           margin: '4px 0 2px',
                           color: themeTextColor,
@@ -820,7 +820,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                       </div>
                       <div
                         style={{
-                          fontSize: '10.5px',
+                          fontSize: '12.5px',
                           color: themeMulberry,
                           fontWeight: 500,
                           whiteSpace: 'nowrap',
@@ -846,14 +846,14 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                 border: `1px solid ${themeBorder}`,
               }}
             >
-              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '18px', margin: '0 0 14px', color: themeTextColor }}>
+              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '20px', margin: '0 0 14px', color: themeTextColor }}>
                 Conversion Funnel Dynamics
               </h3>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 {liveScorecard.conversionFunnels.map((funnel, i) => (
                   <div key={i}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12.5px', marginBottom: '4px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14.5px', marginBottom: '4px' }}>
                       <span>{funnel.stage}</span>
                       <span style={{ fontWeight: 600 }}>{funnel.count} ({funnel.conversionPercent}%)</span>
                     </div>
@@ -889,7 +889,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                 border: `1px solid ${themeBorder}`,
               }}
             >
-              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '18px', margin: '0 0 14px', color: themeTextColor }}>
+              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '20px', margin: '0 0 14px', color: themeTextColor }}>
                 Performance Over Time (Last 4 Weeks)
               </h3>
 
@@ -911,10 +911,10 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                       border: `1px solid ${themeBorder}`,
                     }}
                   >
-                    <div style={{ fontSize: '11.5px', fontWeight: 600, color: themeMulberry }}>{item.week}</div>
-                    <div style={{ fontSize: '18px', fontWeight: 700, margin: '8px 0 2px' }}>{item.views}</div>
-                    <div style={{ fontSize: '10.5px', color: themeMuted }}>Views</div>
-                    <div style={{ fontSize: '11.5px', fontWeight: 600, marginTop: '6px', color: themeTextColor }}>
+                    <div style={{ fontSize: '13.5px', fontWeight: 600, color: themeMulberry }}>{item.week}</div>
+                    <div style={{ fontSize: '20px', fontWeight: 700, margin: '8px 0 2px' }}>{item.views}</div>
+                    <div style={{ fontSize: '12.5px', color: themeMuted }}>Views</div>
+                    <div style={{ fontSize: '13.5px', fontWeight: 600, marginTop: '6px', color: themeTextColor }}>
                       {item.requests} reqs · {item.matches} match
                     </div>
                   </div>
@@ -931,7 +931,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                 border: `1px solid ${themeBorder}`,
               }}
             >
-              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '18px', margin: '0 0 12px', color: themeTextColor }}>
+              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '20px', margin: '0 0 12px', color: themeTextColor }}>
                 Actionable Telemetry Insights
               </h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -942,7 +942,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                       display: 'flex',
                       alignItems: 'flex-start',
                       gap: '10px',
-                      fontSize: '13px',
+                      fontSize: '15px',
                       lineHeight: '1.5',
                       color: themeTextColor,
                     }}
@@ -968,7 +968,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                     border: 'none',
                     background: themeAccentGrad,
                     color: '#FFFFFF',
-                    fontSize: '14px',
+                    fontSize: '16px',
                     fontWeight: 600,
                     cursor: 'pointer',
                   }}
@@ -989,7 +989,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
               <div>
                 <span
                   style={{
-                    fontSize: '11px',
+                    fontSize: '13px',
                     letterSpacing: '0.12em',
                     fontWeight: 700,
                     textTransform: 'uppercase',
@@ -1001,7 +1001,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                 <h1
                   style={{
                     fontFamily: 'var(--font-serif)',
-                    fontSize: '24px',
+                    fontSize: '26px',
                     fontWeight: 600,
                     margin: '4px 0 0',
                     color: themeTextColor,
@@ -1013,7 +1013,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
 
               <div
                 style={{
-                  fontSize: '12px',
+                  fontSize: '14px',
                   padding: '5px 12px',
                   borderRadius: '999px',
                   backgroundColor: isDark ? 'rgba(161, 82, 95, 0.25)' : 'rgba(161, 82, 95, 0.1)',
@@ -1032,7 +1032,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                 borderRadius: '10px',
                 backgroundColor: isDark ? 'rgba(70, 32, 55, 0.45)' : 'rgba(255, 255, 255, 0.65)',
                 border: `1px solid ${themeBorder}`,
-                fontSize: '12px',
+                fontSize: '14px',
                 color: themeMuted,
                 display: 'flex',
                 alignItems: 'center',
@@ -1055,7 +1055,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                   backgroundColor: 'rgba(56, 142, 60, 0.16)',
                   border: '1px solid rgba(56, 142, 60, 0.4)',
                   color: isDark ? '#A5D6A7' : '#2E7D32',
-                  fontSize: '13px',
+                  fontSize: '15px',
                   fontWeight: 600,
                 }}
               >
@@ -1065,7 +1065,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
 
             {/* The 5 Key Pillars */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '19px', margin: '4px 0 0', color: themeTextColor }}>
+              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '21px', margin: '4px 0 0', color: themeTextColor }}>
                 The 5 Editorial Pillars
               </h3>
 
@@ -1080,10 +1080,10 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                   }}
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                    <div style={{ fontSize: '15px', fontWeight: 600, color: themeTextColor }}>{pillar.name}</div>
+                    <div style={{ fontSize: '17px', fontWeight: 600, color: themeTextColor }}>{pillar.name}</div>
                     <div
                       style={{
-                        fontSize: '12px',
+                        fontSize: '14px',
                         fontWeight: 700,
                         padding: '3px 9px',
                         borderRadius: '6px',
@@ -1095,10 +1095,10 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                     </div>
                   </div>
 
-                  <p style={{ fontSize: '12.5px', color: themeMuted, margin: '0 0 6px', lineHeight: '1.45' }}>
+                  <p style={{ fontSize: '14.5px', color: themeMuted, margin: '0 0 6px', lineHeight: '1.45' }}>
                     <strong>Assessment:</strong> {pillar.currentAssessment}
                   </p>
-                  <p style={{ fontSize: '12.5px', color: themeTextColor, margin: 0, lineHeight: '1.45' }}>
+                  <p style={{ fontSize: '14.5px', color: themeTextColor, margin: 0, lineHeight: '1.45' }}>
                     <strong>Actionable Recommendation:</strong> {pillar.recommendation}
                   </p>
                 </div>
@@ -1114,7 +1114,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                 border: `1px solid ${themeBorder}`,
               }}
             >
-              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '18px', margin: '0 0 14px', color: themeTextColor }}>
+              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '20px', margin: '0 0 14px', color: themeTextColor }}>
                 Actionable Before & After Transformations
               </h3>
 
@@ -1129,7 +1129,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                       border: `1px solid ${themeBorder}`,
                     }}
                   >
-                    <div style={{ fontSize: '13px', fontWeight: 700, color: themeMulberry, marginBottom: '8px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 700, color: themeMulberry, marginBottom: '8px' }}>
                       {comp.area}
                     </div>
 
@@ -1140,10 +1140,10 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                           borderRadius: '8px',
                           backgroundColor: isDark ? 'rgba(255, 255, 255, 0.03)' : 'rgba(255, 255, 255, 0.8)',
                           border: `1px solid ${themeBorder}`,
-                          fontSize: '12px',
+                          fontSize: '14px',
                         }}
                       >
-                        <span style={{ fontSize: '10.5px', fontWeight: 700, color: '#E06D6D', textTransform: 'uppercase' }}>
+                        <span style={{ fontSize: '12.5px', fontWeight: 700, color: '#E06D6D', textTransform: 'uppercase' }}>
                           Current State
                         </span>
                         <p style={{ margin: '4px 0 0', color: themeMuted, lineHeight: '1.4' }}>{comp.before}</p>
@@ -1155,17 +1155,17 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                           borderRadius: '8px',
                           backgroundColor: isDark ? 'rgba(161, 82, 95, 0.15)' : 'rgba(161, 82, 95, 0.08)',
                           border: `1px solid rgba(199, 87, 124, 0.4)`,
-                          fontSize: '12px',
+                          fontSize: '14px',
                         }}
                       >
-                        <span style={{ fontSize: '10.5px', fontWeight: 700, color: isDark ? '#A5D6A7' : '#2E7D32', textTransform: 'uppercase' }}>
+                        <span style={{ fontSize: '12.5px', fontWeight: 700, color: isDark ? '#A5D6A7' : '#2E7D32', textTransform: 'uppercase' }}>
                           Editorial Recommendation
                         </span>
                         <p style={{ margin: '4px 0 0', color: themeTextColor, fontWeight: 500, lineHeight: '1.4' }}>{comp.after}</p>
                       </div>
                     </div>
 
-                    <div style={{ fontSize: '11.5px', color: themeMuted, marginTop: '8px', fontStyle: 'italic' }}>
+                    <div style={{ fontSize: '13.5px', color: themeMuted, marginTop: '8px', fontStyle: 'italic' }}>
                       Rationale: {comp.rationale}
                     </div>
                   </div>
@@ -1186,10 +1186,10 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
               }}
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '18px', margin: 0, color: themeTextColor }}>
+                <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '20px', margin: 0, color: themeTextColor }}>
                   Curated 240-Character Bio Draft
                 </h3>
-                <span style={{ fontSize: '11px', color: themeMuted }}>
+                <span style={{ fontSize: '13px', color: themeMuted }}>
                   {liveMakeover.suggestedBioDraft.length}/240 chars
                 </span>
               </div>
@@ -1200,7 +1200,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                   borderRadius: '10px',
                   backgroundColor: isDark ? 'rgba(20, 14, 28, 0.7)' : 'rgba(250, 241, 243, 0.9)',
                   border: `1px solid ${themeBorder}`,
-                  fontSize: '13.5px',
+                  fontSize: '15.5px',
                   lineHeight: '1.5',
                   color: themeTextColor,
                   margin: '10px 0 14px',
@@ -1225,7 +1225,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                   color: isBioAlreadyApplied || appliedBioSuccess
                     ? (isDark ? '#6EE7B7' : '#047857')
                     : '#FFFFFF',
-                  fontSize: '13.5px',
+                  fontSize: '15.5px',
                   fontWeight: 700,
                   cursor: isApplyingBio ? 'wait' : 'pointer',
                   width: '100%',
@@ -1265,13 +1265,13 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                   </>
                 ) : isBioAlreadyApplied || appliedBioSuccess ? (
                   <>
-                    <span style={{ fontSize: '15px' }}>✓</span>
+                    <span style={{ fontSize: '17px' }}>✓</span>
                     <span>Applied to your profile</span>
                   </>
                 ) : (
                   <>
                     <span>Apply this bio to my profile</span>
-                    <span style={{ fontSize: '15px' }}>→</span>
+                    <span style={{ fontSize: '17px' }}>→</span>
                   </>
                 )}
               </button>
@@ -1285,7 +1285,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                     backgroundColor: isDark ? 'rgba(16, 185, 129, 0.16)' : 'rgba(16, 185, 129, 0.12)',
                     border: '1px solid rgba(16, 185, 129, 0.35)',
                     color: isDark ? '#A7F3D0' : '#065F46',
-                    fontSize: '12.5px',
+                    fontSize: '14.5px',
                     fontWeight: 600,
                     display: 'flex',
                     alignItems: 'center',
@@ -1312,7 +1312,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                     border: 'none',
                     background: themeAccentGrad,
                     color: '#FFFFFF',
-                    fontSize: '14px',
+                    fontSize: '16px',
                     fontWeight: 600,
                     cursor: 'pointer',
                   }}
@@ -1333,7 +1333,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
             <div>
               <span
                 style={{
-                  fontSize: '11px',
+                  fontSize: '13px',
                   letterSpacing: '0.12em',
                   fontWeight: 700,
                   textTransform: 'uppercase',
@@ -1345,7 +1345,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
               <h1
                 style={{
                   fontFamily: 'var(--font-serif)',
-                  fontSize: '24px',
+                  fontSize: '26px',
                   fontWeight: 600,
                   margin: '4px 0 0',
                   color: themeTextColor,
@@ -1365,7 +1365,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                   textAlign: 'center',
                 }}
               >
-                <p style={{ fontSize: '14px', color: themeMuted, margin: '0 0 16px' }}>
+                <p style={{ fontSize: '16px', color: themeMuted, margin: '0 0 16px' }}>
                   You have not placed any Elevate orders yet.
                 </p>
                 <button
@@ -1377,7 +1377,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                     border: 'none',
                     background: themeAccentGrad,
                     color: '#FFFFFF',
-                    fontSize: '13px',
+                    fontSize: '15px',
                     fontWeight: 600,
                     cursor: 'pointer',
                   }}
@@ -1408,12 +1408,12 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                         <div>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <span style={{ fontSize: '12px', fontFamily: 'monospace', color: themeMulberry, fontWeight: 700 }}>
+                            <span style={{ fontSize: '14px', fontFamily: 'monospace', color: themeMulberry, fontWeight: 700 }}>
                               #{order.id}
                             </span>
                             <span
                               style={{
-                                fontSize: '11px',
+                                fontSize: '13px',
                                 padding: '3px 8px',
                                 borderRadius: '6px',
                                 backgroundColor: isRefundRequested
@@ -1434,14 +1434,14 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                             </span>
                           </div>
 
-                          <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '18px', margin: '4px 0 0', color: themeTextColor }}>
+                          <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '20px', margin: '4px 0 0', color: themeTextColor }}>
                             {order.serviceName}
                           </h3>
                         </div>
 
                         <div style={{ textAlign: 'right' }}>
-                          <div style={{ fontSize: '16px', fontWeight: 700 }}>₹{order.price.toLocaleString('en-IN')}</div>
-                          <div style={{ fontSize: '11px', color: themeMuted }}>
+                          <div style={{ fontSize: '18px', fontWeight: 700 }}>₹{order.price.toLocaleString('en-IN')}</div>
+                          <div style={{ fontSize: '13px', color: themeMuted }}>
                             {new Date(order.createdAt).toLocaleDateString('en-IN', {
                               day: 'numeric',
                               month: 'short',
@@ -1457,7 +1457,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                           borderRadius: '12px',
                           backgroundColor: isDark ? 'rgba(20, 14, 28, 0.55)' : 'rgba(250, 241, 243, 0.75)',
                           border: `1px solid ${themeBorder}`,
-                          fontSize: '12px',
+                          fontSize: '14px',
                         }}
                       >
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
@@ -1470,7 +1470,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                           <span>🔒</span>
                           <span>
                             <strong>Enforced Access Scope:</strong>{' '}
-                            <code style={{ fontSize: '11px', color: themeMulberry }}>
+                            <code style={{ fontSize: '13px', color: themeMulberry }}>
                               {order.reviewerAccess.accessScope}
                             </code>{' '}
                             · Zero access to unauthorized member assets.
@@ -1488,14 +1488,14 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                             border: `1px solid rgba(199, 87, 124, 0.3)`,
                           }}
                         >
-                          <div style={{ fontSize: '12.5px', fontWeight: 700, color: themeTextColor }}>
+                          <div style={{ fontSize: '14.5px', fontWeight: 700, color: themeTextColor }}>
                             Deliverable: {order.deliverable.title}
                           </div>
-                          <p style={{ fontSize: '12px', color: themeMuted, margin: '4px 0 0', lineHeight: '1.45' }}>
+                          <p style={{ fontSize: '14px', color: themeMuted, margin: '4px 0 0', lineHeight: '1.45' }}>
                             {order.deliverable.summary}
                           </p>
                           {order.deliverable.notesFromReviewer && (
-                            <div style={{ fontSize: '11.5px', fontStyle: 'italic', marginTop: '6px', color: themeMulberry }}>
+                            <div style={{ fontSize: '13.5px', fontStyle: 'italic', marginTop: '6px', color: themeMulberry }}>
                               Reviewer Note: "{order.deliverable.notesFromReviewer}"
                             </div>
                           )}
@@ -1512,11 +1512,11 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                         }}
                       >
                         {order.refundState.status === 'requested' ? (
-                          <span style={{ fontSize: '11.5px', color: '#FFB74D', fontWeight: 600 }}>
+                          <span style={{ fontSize: '13.5px', color: '#FFB74D', fontWeight: 600 }}>
                             Refund Requested · Desk Review Pending
                           </span>
                         ) : order.refundState.status === 'processed' ? (
-                          <span style={{ fontSize: '11.5px', color: isDark ? '#A5D6A7' : '#2E7D32', fontWeight: 600 }}>
+                          <span style={{ fontSize: '13.5px', color: isDark ? '#A5D6A7' : '#2E7D32', fontWeight: 600 }}>
                             Refund Processed (₹{order.price.toLocaleString('en-IN')})
                           </span>
                         ) : (
@@ -1532,7 +1532,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                               border: `1px solid ${themeBorder}`,
                               backgroundColor: 'transparent',
                               color: themeMuted,
-                              fontSize: '11.5px',
+                              fontSize: '13.5px',
                               cursor: 'pointer',
                             }}
                           >
@@ -1556,7 +1556,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                               border: 'none',
                               background: themeAccentGrad,
                               color: '#FFFFFF',
-                              fontSize: '12px',
+                              fontSize: '14px',
                               fontWeight: 600,
                               cursor: 'pointer',
                             }}
@@ -1609,10 +1609,10 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div>
-                  <span style={{ fontSize: '11px', fontFamily: 'monospace', color: themeMulberry, fontWeight: 700 }}>
+                  <span style={{ fontSize: '13px', fontFamily: 'monospace', color: themeMulberry, fontWeight: 700 }}>
                     SERVICE {selectedService.number}
                   </span>
-                  <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '22px', margin: '4px 0 0' }}>
+                  <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '24px', margin: '4px 0 0' }}>
                     {selectedService.name}
                   </h2>
                 </div>
@@ -1622,7 +1622,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                   style={{
                     background: 'transparent',
                     border: 'none',
-                    fontSize: '20px',
+                    fontSize: '22px',
                     color: themeMuted,
                     cursor: 'pointer',
                   }}
@@ -1631,7 +1631,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                 </button>
               </div>
 
-              <p style={{ fontSize: '13px', color: themeMuted, margin: '12px 0 16px', lineHeight: '1.5' }}>
+              <p style={{ fontSize: '15px', color: themeMuted, margin: '12px 0 16px', lineHeight: '1.5' }}>
                 {selectedService.description}
               </p>
 
@@ -1642,7 +1642,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                   borderRadius: '12px',
                   backgroundColor: isDark ? 'rgba(161, 82, 95, 0.15)' : 'rgba(161, 82, 95, 0.08)',
                   border: `1px solid ${themeBorder}`,
-                  fontSize: '12px',
+                  fontSize: '14px',
                   color: themeMulberry,
                   marginBottom: '16px',
                 }}
@@ -1661,8 +1661,8 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                   borderTop: `1px solid ${themeBorder}`,
                 }}
               >
-                <span style={{ fontSize: '13px', color: themeMuted }}>Order Total:</span>
-                <span style={{ fontSize: '22px', fontWeight: 700 }}>
+                <span style={{ fontSize: '15px', color: themeMuted }}>Order Total:</span>
+                <span style={{ fontSize: '24px', fontWeight: 700 }}>
                   ₹{selectedService.startingPrice.toLocaleString('en-IN')}
                 </span>
               </div>
@@ -1678,7 +1678,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                     border: `1px solid ${themeBorder}`,
                     backgroundColor: 'transparent',
                     color: themeTextColor,
-                    fontSize: '13px',
+                    fontSize: '15px',
                     cursor: 'pointer',
                   }}
                 >
@@ -1694,7 +1694,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                     border: 'none',
                     background: themeAccentGrad,
                     color: '#FFFFFF',
-                    fontSize: '13px',
+                    fontSize: '15px',
                     fontWeight: 600,
                     cursor: 'pointer',
                   }}
@@ -1738,15 +1738,15 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                 color: themeTextColor,
               }}
             >
-              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '20px', margin: '0 0 8px' }}>
+              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '22px', margin: '0 0 8px' }}>
                 Request Elevate Refund
               </h3>
-              <p style={{ fontSize: '13px', color: themeMuted, margin: '0 0 16px', lineHeight: '1.45' }}>
+              <p style={{ fontSize: '15px', color: themeMuted, margin: '0 0 16px', lineHeight: '1.45' }}>
                 Order #{refundOrderId} · Please specify the reason for your refund request. Our member concierge desk reviews all requests within 24 hours.
               </p>
 
               {refundSubmittedMessage ? (
-                <div style={{ color: isDark ? '#A5D6A7' : '#2E7D32', fontSize: '13px', fontWeight: 600, padding: '12px 0' }}>
+                <div style={{ color: isDark ? '#A5D6A7' : '#2E7D32', fontSize: '15px', fontWeight: 600, padding: '12px 0' }}>
                   ✓ {refundSubmittedMessage}
                 </div>
               ) : (
@@ -1763,7 +1763,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                       border: `1px solid ${themeBorder}`,
                       backgroundColor: isDark ? 'rgba(20, 14, 28, 0.7)' : 'rgba(250, 241, 243, 0.8)',
                       color: themeTextColor,
-                      fontSize: '13px',
+                      fontSize: '15px',
                       boxSizing: 'border-box',
                       marginBottom: '16px',
                       outline: 'none',
@@ -1782,7 +1782,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                         border: `1px solid ${themeBorder}`,
                         backgroundColor: 'transparent',
                         color: themeTextColor,
-                        fontSize: '13px',
+                        fontSize: '15px',
                         cursor: 'pointer',
                       }}
                     >
@@ -1799,7 +1799,7 @@ export const Page17ElevateScreen: React.FC<Page17ElevateScreenProps> = ({
                         border: 'none',
                         background: themeAccentGrad,
                         color: '#FFFFFF',
-                        fontSize: '13px',
+                        fontSize: '15px',
                         fontWeight: 600,
                         cursor: refundReason.trim() ? 'pointer' : 'not-allowed',
                         opacity: refundReason.trim() ? 1 : 0.6,

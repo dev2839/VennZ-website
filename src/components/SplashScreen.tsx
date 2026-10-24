@@ -275,7 +275,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
         >
           <span
             style={{
-              fontSize: '11px',
+              fontSize: '13px',
               fontWeight: 700,
               letterSpacing: '0.22em',
               textTransform: 'uppercase',
@@ -415,7 +415,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
                 >
                   <span
                     style={{
-                      fontSize: '10.5px',
+                      fontSize: '12.5px',
                       fontWeight: 700,
                       letterSpacing: '0.14em',
                       textTransform: 'uppercase',
@@ -433,7 +433,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
                   <span
                     style={{
                       fontFamily: 'var(--font-sans)',
-                      fontSize: '13px',
+                      fontSize: '15px',
                       fontWeight: 700,
                       color: '#FDF3F5',
                       letterSpacing: '0.04em',
@@ -468,7 +468,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      fontSize: '26px',
+                      fontSize: '28px',
                       color: isDark ? '#F9AAAD' : '#FDF3F5',
                       boxShadow: '0 8px 22px rgba(20, 14, 28, 0.4)',
                       border: isDark ? '1px solid rgba(161, 82, 95, 0.4)' : '1px solid rgba(255, 255, 255, 0.3)',
@@ -481,7 +481,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
                   </div>
                   <span
                     style={{
-                      fontSize: '11px',
+                      fontSize: '13px',
                       fontWeight: 600,
                       letterSpacing: '0.16em',
                       textTransform: 'uppercase',
@@ -497,7 +497,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
                   <h4
                     style={{
                       fontFamily: 'var(--font-serif)',
-                      fontSize: '20px',
+                      fontSize: '22px',
                       fontWeight: 600,
                       color: '#FDF3F5',
                       margin: '0 0 6px 0',
@@ -510,7 +510,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
                   <p
                     style={{
                       fontFamily: 'var(--font-sans)',
-                      fontSize: '12px',
+                      fontSize: '14px',
                       lineHeight: '1.45',
                       color: isDark ? 'rgba(253, 243, 245, 0.85)' : 'rgba(253, 243, 245, 0.9)',
                       margin: 0,
@@ -567,7 +567,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
               color: '#FDF3F5',
               padding: '13px 36px',
               borderRadius: '999px',
-              fontSize: '15px',
+              fontSize: '17px',
               fontFamily: 'var(--font-sans)',
               fontWeight: 600,
               letterSpacing: '0.03em',
@@ -597,7 +597,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
                 color: isDark ? '#FDF3F5' : '#462037',
                 padding: '13px 32px',
                 borderRadius: '999px',
-                fontSize: '15px',
+                fontSize: '17px',
                 fontFamily: 'var(--font-sans)',
                 fontWeight: 600,
                 letterSpacing: '0.03em',

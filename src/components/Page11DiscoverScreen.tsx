@@ -518,7 +518,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                 backgroundColor: isDark ? 'rgba(161, 82, 95, 0.28)' : 'rgba(253, 235, 239, 0.95)',
                 border: '1px solid rgba(161, 82, 95, 0.35)',
                 color: isDark ? '#F9AAAD' : '#A1525F',
-                fontSize: '11.5px',
+                fontSize: '13.5px',
                 fontWeight: 600,
                 boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
               }}
@@ -547,7 +547,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <span
               style={{
-                fontSize: '11px',
+                fontSize: '13px',
                 fontWeight: 700,
                 letterSpacing: '0.12em',
                 textTransform: 'uppercase',
@@ -560,7 +560,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
 
           <span
             style={{
-              fontSize: '11px',
+              fontSize: '13px',
               fontWeight: 700,
               letterSpacing: '0.08em',
               textTransform: 'uppercase',
@@ -601,7 +601,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
               <div style={{ display: 'flex', flexDirection: 'column' }}>
                 <span
                   style={{
-                    fontSize: '11px',
+                    fontSize: '13px',
                     fontWeight: 700,
                     letterSpacing: '0.04em',
                     color: themeMulberry,
@@ -611,7 +611,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                 </span>
                 <span
                   style={{
-                    fontSize: '9.5px',
+                    fontSize: '11.5px',
                     color: themeMuted,
                     letterSpacing: '0.02em',
                   }}
@@ -627,7 +627,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                   borderRadius: '6px',
                   backgroundColor: isDark ? '#1C1619' : 'rgba(40, 20, 32, 0.88)',
                   color: '#FAF4E8',
-                  fontSize: '10px',
+                  fontSize: '12px',
                   fontWeight: 600,
                   letterSpacing: '0.03em',
                   fontFamily: 'var(--font-mono, monospace)',
@@ -703,7 +703,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                           justifyContent: 'center',
                           backgroundColor: isDark ? '#2D1B28' : '#F2E8EB',
                           color: themeMulberry,
-                          fontSize: '48px',
+                          fontSize: '50px',
                           fontFamily: 'var(--font-serif)',
                         }}
                       >
@@ -757,7 +757,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                           backdropFilter: 'blur(8px)',
                           border: '1px solid rgba(255, 255, 255, 0.2)',
                           color: '#FFFFFF',
-                          fontSize: '11px',
+                          fontSize: '13px',
                           fontWeight: 600,
                           letterSpacing: '0.04em',
                           zIndex: 25,
@@ -812,7 +812,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                               <h2
                                 style={{
                                   fontFamily: 'var(--font-serif)',
-                                  fontSize: '30px',
+                                  fontSize: '32px',
                                   fontWeight: 400,
                                   color: '#FFFFFF',
                                   margin: 0,
@@ -826,7 +826,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                               {details.isVerified && (
                                 <span
                                   style={{
-                                    fontSize: '10.5px',
+                                    fontSize: '12.5px',
                                     fontWeight: 700,
                                     letterSpacing: '0.1em',
                                     textTransform: 'uppercase',
@@ -851,7 +851,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                             {details.city && (
                               <div
                                 style={{
-                                  fontSize: '11px',
+                                  fontSize: '13px',
                                   fontWeight: 700,
                                   letterSpacing: '0.1em',
                                   textTransform: 'uppercase',
@@ -873,7 +873,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                             {details.work && (
                               <div
                                 style={{
-                                  fontSize: '14px',
+                                  fontSize: '16px',
                                   fontFamily: 'var(--font-serif)',
                                   fontWeight: 500,
                                   color: 'rgba(255, 255, 255, 0.95)',
@@ -892,7 +892,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                             <div style={{ marginBottom: '6px' }}>
                               <span
                                 style={{
-                                  fontSize: '10px',
+                                  fontSize: '12px',
                                   fontWeight: 700,
                                   letterSpacing: '0.12em',
                                   textTransform: 'uppercase',
@@ -910,7 +910,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                               style={{
                                 fontFamily: 'var(--font-serif)',
                                 fontStyle: 'italic',
-                                fontSize: '15.5px',
+                                fontSize: '17.5px',
                                 lineHeight: '1.45',
                                 color: '#FFFFFF',
                                 margin: 0,
@@ -932,7 +932,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                             <div style={{ marginBottom: '8px' }}>
                               <span
                                 style={{
-                                  fontSize: '10px',
+                                  fontSize: '12px',
                                   fontWeight: 700,
                                   letterSpacing: '0.12em',
                                   textTransform: 'uppercase',
@@ -951,7 +951,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                                 <span
                                   key={tIdx}
                                   style={{
-                                    fontSize: '11px',
+                                    fontSize: '13px',
                                     fontWeight: 600,
                                     color: 'rgba(255, 255, 255, 0.95)',
                                     backgroundColor: 'rgba(255, 255, 255, 0.16)',
@@ -974,7 +974,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                             <div style={{ marginBottom: '8px' }}>
                               <span
                                 style={{
-                                  fontSize: '10px',
+                                  fontSize: '12px',
                                   fontWeight: 700,
                                   letterSpacing: '0.12em',
                                   textTransform: 'uppercase',
@@ -993,7 +993,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                                 <span
                                   key={vIdx}
                                   style={{
-                                    fontSize: '11px',
+                                    fontSize: '13px',
                                     fontWeight: 600,
                                     color: 'rgba(255, 255, 255, 0.95)',
                                     backgroundColor: 'rgba(255, 255, 255, 0.16)',
@@ -1178,7 +1178,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                           backgroundColor: 'rgba(20, 14, 28, 0.65)',
                           backdropFilter: 'blur(8px)',
                           fontFamily: 'var(--font-sans)',
-                          fontSize: '17px',
+                          fontSize: '19px',
                           fontWeight: 800,
                           letterSpacing: '0.12em',
                           textTransform: 'uppercase',
@@ -1206,7 +1206,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                           backgroundColor: 'rgba(20, 14, 28, 0.65)',
                           backdropFilter: 'blur(8px)',
                           fontFamily: 'var(--font-sans)',
-                          fontSize: '17px',
+                          fontSize: '19px',
                           fontWeight: 800,
                           letterSpacing: '0.12em',
                           textTransform: 'uppercase',
@@ -1290,7 +1290,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                           alignItems: 'center',
                           gap: '7px',
                           cursor: 'pointer',
-                          fontSize: '12px',
+                          fontSize: '14px',
                           fontWeight: 600,
                           letterSpacing: '0.04em',
                           boxShadow: isDark ? '0 4px 14px rgba(0, 0, 0, 0.25)' : '0 4px 14px rgba(161, 82, 95, 0.08)',
@@ -1439,7 +1439,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
                     <div
                       style={{
-                        fontSize: '11px',
+                        fontSize: '13px',
                         fontWeight: 700,
                         letterSpacing: '0.12em',
                         textTransform: 'uppercase',
@@ -1454,7 +1454,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                     </div>
 
                     {section.subtitle && (
-                      <span style={{ fontSize: '11.5px', color: themeMuted, fontWeight: 500 }}>
+                      <span style={{ fontSize: '13.5px', color: themeMuted, fontWeight: 500 }}>
                         {section.subtitle}
                       </span>
                     )}
@@ -1465,7 +1465,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                     style={{
                       fontFamily: 'var(--font-serif)',
                       fontStyle: 'italic',
-                      fontSize: '15.5px',
+                      fontSize: '17.5px',
                       lineHeight: '1.55',
                       color: isDark ? '#E5D8DF' : '#3E2F39',
                       margin: 0,
@@ -1483,7 +1483,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                         background: 'none',
                         border: 'none',
                         padding: '4px 0',
-                        fontSize: '13.5px',
+                        fontSize: '15.5px',
                         fontWeight: 700,
                         letterSpacing: '0.02em',
                         color: themeMulberry,
@@ -1548,7 +1548,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
             <h2
               style={{
                 fontFamily: 'var(--font-serif)',
-                fontSize: '26px',
+                fontSize: '28px',
                 lineHeight: '1.25',
                 color: themeMulberry,
                 margin: '0 0 12px 0',
@@ -1560,7 +1560,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
 
             <p
               style={{
-                fontSize: '14px',
+                fontSize: '16px',
                 lineHeight: '1.5',
                 color: themeMuted,
                 margin: '0 0 20px 0',
@@ -1572,7 +1572,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
 
             <div
               style={{
-                fontSize: '20px',
+                fontSize: '22px',
                 fontFamily: 'var(--font-serif)',
                 fontWeight: 700,
                 color: themeMulberry,
@@ -1584,7 +1584,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
 
             <div
               style={{
-                fontSize: '12px',
+                fontSize: '14px',
                 fontWeight: 500,
                 color: themeMuted,
                 textAlign: 'center',
@@ -1610,7 +1610,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                 background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
                 color: '#FDF3F5',
                 border: 'none',
-                fontSize: '13.5px',
+                fontSize: '15.5px',
                 fontWeight: 700,
                 letterSpacing: '0.08em',
                 cursor: 'pointer',
@@ -1651,7 +1651,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
           >
             <div
               style={{
-                fontSize: '11px',
+                fontSize: '13px',
                 fontWeight: 700,
                 letterSpacing: '0.12em',
                 textTransform: 'uppercase',
@@ -1664,7 +1664,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
             <h2
               style={{
                 fontFamily: 'var(--font-serif)',
-                fontSize: '25px',
+                fontSize: '27px',
                 lineHeight: '1.25',
                 color: themeMulberry,
                 margin: '0 0 12px 0',
@@ -1675,7 +1675,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
             </h2>
             <p
               style={{
-                fontSize: '14px',
+                fontSize: '16px',
                 lineHeight: '1.5',
                 color: themeMuted,
                 margin: '0 0 20px 0',
@@ -1686,7 +1686,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
             </p>
             <div
               style={{
-                fontSize: '19px',
+                fontSize: '21px',
                 fontFamily: 'var(--font-serif)',
                 fontWeight: 700,
                 color: themeMulberry,
@@ -1697,7 +1697,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
             </div>
             <div
               style={{
-                fontSize: '12px',
+                fontSize: '14px',
                 fontWeight: 500,
                 color: themeMuted,
                 textAlign: 'center',
@@ -1722,7 +1722,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                 backgroundColor: 'var(--color-mulberry)',
                 color: '#FFFFFF',
                 border: 'none',
-                fontSize: '13px',
+                fontSize: '15px',
                 fontWeight: 700,
                 letterSpacing: '0.08em',
                 cursor: 'pointer',
@@ -1755,7 +1755,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
             {/* DISCOVER EYEBROW */}
             <div
               style={{
-                fontSize: '11px',
+                fontSize: '13px',
                 fontWeight: 700,
                 letterSpacing: '0.18em',
                 textTransform: 'uppercase',
@@ -1769,7 +1769,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
             <h2
               style={{
                 fontFamily: 'var(--font-serif)',
-                fontSize: '28px',
+                fontSize: '30px',
                 color: themeMulberry,
                 margin: '0 0 12px 0',
                 lineHeight: '1.25',
@@ -1781,7 +1781,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
 
             <p
               style={{
-                fontSize: '14.5px',
+                fontSize: '16.5px',
                 lineHeight: '1.55',
                 color: themeMuted,
                 margin: '0 0 28px 0',
@@ -1800,7 +1800,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                   backgroundColor: isDark ? 'rgba(243, 238, 233, 0.1)' : 'rgba(73, 40, 61, 0.08)',
                   border: `1px solid ${themeBorder}`,
                   color: themeMulberry,
-                  fontSize: '12px',
+                  fontSize: '14px',
                   fontWeight: 700,
                   letterSpacing: '0.08em',
                   textTransform: 'uppercase',
@@ -1820,7 +1820,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                     backgroundColor: userDatingPref === 'WOMEN' ? (isDark ? '#F3EEE9' : 'var(--color-mulberry)') : (isDark ? 'rgba(243, 238, 233, 0.1)' : 'rgba(73, 40, 61, 0.06)'),
                     color: userDatingPref === 'WOMEN' ? (isDark ? '#140E1C' : '#FFFFFF') : themeMulberry,
                     border: `1px solid ${themeBorder}`,
-                    fontSize: '11px',
+                    fontSize: '13px',
                     fontWeight: 700,
                     cursor: 'pointer',
                   }}
@@ -1836,7 +1836,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                     backgroundColor: userDatingPref === 'MEN' ? (isDark ? '#F3EEE9' : 'var(--color-mulberry)') : (isDark ? 'rgba(243, 238, 233, 0.1)' : 'rgba(73, 40, 61, 0.06)'),
                     color: userDatingPref === 'MEN' ? (isDark ? '#140E1C' : '#FFFFFF') : themeMulberry,
                     border: `1px solid ${themeBorder}`,
-                    fontSize: '11px',
+                    fontSize: '13px',
                     fontWeight: 700,
                     cursor: 'pointer',
                   }}
@@ -1852,7 +1852,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                     backgroundColor: (!userDatingPref || userDatingPref === 'EVERYONE') ? (isDark ? '#F3EEE9' : 'var(--color-mulberry)') : (isDark ? 'rgba(243, 238, 233, 0.1)' : 'rgba(73, 40, 61, 0.06)'),
                     color: (!userDatingPref || userDatingPref === 'EVERYONE') ? (isDark ? '#140E1C' : '#FFFFFF') : themeMulberry,
                     border: `1px solid ${themeBorder}`,
-                    fontSize: '11px',
+                    fontSize: '13px',
                     fontWeight: 700,
                     cursor: 'pointer',
                   }}
@@ -1876,7 +1876,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
             zIndex: 55,
             backgroundColor: 'rgba(39, 33, 36, 0.95)',
             color: '#FFFFFF',
-            fontSize: '12.5px',
+            fontSize: '14.5px',
             fontWeight: 600,
             padding: '9px 18px',
             borderRadius: '9999px',
@@ -1920,7 +1920,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
           >
             <div
               style={{
-                fontSize: '10.5px',
+                fontSize: '12.5px',
                 fontWeight: 700,
                 letterSpacing: '0.12em',
                 textTransform: 'uppercase',
@@ -1933,7 +1933,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
             <h3
               style={{
                 fontFamily: 'var(--font-serif)',
-                fontSize: '22px',
+                fontSize: '24px',
                 color: themeMulberry,
                 margin: '0 0 10px 0',
                 fontWeight: 400,
@@ -1943,7 +1943,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
             </h3>
             <p
               style={{
-                fontSize: '13px',
+                fontSize: '15px',
                 lineHeight: '1.5',
                 color: themeMuted,
                 margin: '0 0 16px 0',
@@ -1955,7 +1955,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
             </p>
             <div
               style={{
-                fontSize: '17px',
+                fontSize: '19px',
                 fontFamily: 'var(--font-serif)',
                 fontWeight: 700,
                 color: themeMulberry,
@@ -1967,7 +1967,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <div
                 style={{
-                  fontSize: '11.5px',
+                  fontSize: '13.5px',
                   fontWeight: 500,
                   color: themeMuted,
                   textAlign: 'center',
@@ -1992,7 +1992,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                   backgroundColor: 'var(--color-mulberry)',
                   color: '#FFFFFF',
                   border: 'none',
-                  fontSize: '12.5px',
+                  fontSize: '14.5px',
                   fontWeight: 700,
                   letterSpacing: '0.08em',
                   cursor: 'pointer',
@@ -2010,7 +2010,7 @@ export const Page11DiscoverScreen: React.FC<Page11DiscoverScreenProps> = ({
                   backgroundColor: 'transparent',
                   color: themeMuted,
                   border: 'none',
-                  fontSize: '12px',
+                  fontSize: '14px',
                   cursor: 'pointer',
                 }}
               >

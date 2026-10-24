@@ -572,7 +572,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                 borderRadius: '999px',
                 backgroundColor: isDark ? 'rgba(161, 82, 95, 0.25)' : 'rgba(199, 87, 124, 0.12)',
                 color: accentRose,
-                fontSize: '11px',
+                fontSize: '13px',
                 fontWeight: 600,
                 letterSpacing: '0.12em',
                 textTransform: 'uppercase',
@@ -586,7 +586,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
             <h1
               style={{
                 fontFamily: 'var(--font-serif)',
-                fontSize: '28px',
+                fontSize: '30px',
                 fontWeight: 600,
                 letterSpacing: '-0.01em',
                 margin: '0 0 10px',
@@ -599,7 +599,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
 
             <p
               style={{
-                fontSize: '14px',
+                fontSize: '16px',
                 color: textMuted,
                 margin: '0 auto',
                 maxWidth: '460px',
@@ -638,7 +638,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                 />
                 <span
                   style={{
-                    fontSize: '12px',
+                    fontSize: '14px',
                     fontWeight: 700,
                     letterSpacing: '0.08em',
                     color: isWindowActive ? '#10B981' : '#F59E0B',
@@ -657,7 +657,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                   border: isDark ? '1px solid rgba(249,170,173,0.3)' : '1px solid rgba(161,82,95,0.25)',
                   borderRadius: '999px',
                   padding: '4px 10px',
-                  fontSize: '11px',
+                  fontSize: '13px',
                   color: accentRose,
                   cursor: 'pointer',
                   fontWeight: 600,
@@ -669,8 +669,8 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
 
             {!isWindowActive && (
               <div style={{ textAlign: 'center', padding: '12px 0' }}>
-                <div style={{ fontSize: '12px', color: textMuted, marginBottom: '6px' }}>DOORS OPEN IN</div>
-                <div style={{ fontSize: '26px', fontWeight: 700, fontFamily: 'monospace', color: textPrimary }}>
+                <div style={{ fontSize: '14px', color: textMuted, marginBottom: '6px' }}>DOORS OPEN IN</div>
+                <div style={{ fontSize: '28px', fontWeight: 700, fontFamily: 'monospace', color: textPrimary }}>
                   {getNextWindowRemaining()}
                 </div>
               </div>
@@ -688,24 +688,24 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
               }}
             >
               <div>
-                <div style={{ fontSize: '11px', color: textMuted, marginBottom: '4px', letterSpacing: '0.05em' }}>
+                <div style={{ fontSize: '13px', color: textMuted, marginBottom: '4px', letterSpacing: '0.05em' }}>
                   BLIND CHATS TONIGHT
                 </div>
-                <div style={{ fontSize: '16px', fontWeight: 600, color: textPrimary }}>
+                <div style={{ fontSize: '18px', fontWeight: 600, color: textPrimary }}>
                   {chatsUsedTonight} / {maxChatsTonight} used
-                  <span style={{ fontSize: '11px', color: accentRose, marginLeft: '6px' }}>
+                  <span style={{ fontSize: '13px', color: accentRose, marginLeft: '6px' }}>
                     ({isPremium ? 'Premium' : 'Free'})
                   </span>
                 </div>
               </div>
 
               <div>
-                <div style={{ fontSize: '11px', color: textMuted, marginBottom: '4px', letterSpacing: '0.05em' }}>
+                <div style={{ fontSize: '13px', color: textMuted, marginBottom: '4px', letterSpacing: '0.05em' }}>
                   WEEKLY MUTUAL MATCHES
                 </div>
-                <div style={{ fontSize: '16px', fontWeight: 600, color: textPrimary }}>
+                <div style={{ fontSize: '18px', fontWeight: 600, color: textPrimary }}>
                   {maxWeeklyMatches === -1 ? 'Unlimited' : `${weeklyMatchesCount} / ${maxWeeklyMatches} used`}
-                  <span style={{ fontSize: '11px', color: accentRose, marginLeft: '6px' }}>
+                  <span style={{ fontSize: '13px', color: accentRose, marginLeft: '6px' }}>
                     ({isPremium ? 'Premium' : 'Free'})
                   </span>
                 </div>
@@ -724,7 +724,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                   justifyContent: 'space-between',
                 }}
               >
-                <span style={{ fontSize: '12px', color: textMuted }}>
+                <span style={{ fontSize: '14px', color: textMuted }}>
                   Upgrade for 7 chats/night & unlimited weekly matches
                 </span>
                 <button
@@ -734,7 +734,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                     background: 'none',
                     border: 'none',
                     color: accentRose,
-                    fontSize: '12px',
+                    fontSize: '14px',
                     fontWeight: 700,
                     cursor: 'pointer',
                     textDecoration: 'underline',
@@ -758,7 +758,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
               boxSizing: 'border-box',
             }}
           >
-            <div style={{ fontSize: '13px', fontWeight: 700, letterSpacing: '0.06em', marginBottom: '14px', color: accentRose }}>
+            <div style={{ fontSize: '15px', fontWeight: 700, letterSpacing: '0.06em', marginBottom: '14px', color: accentRose }}>
               AFTER HOURS PROTOCOL
             </div>
 
@@ -768,8 +768,8 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                   <ShieldLockIcon color={accentRose} size={15} />
                 </div>
                 <div>
-                  <div style={{ fontSize: '13px', fontWeight: 600, color: textPrimary }}>Protected Anonymity</div>
-                  <div style={{ fontSize: '12px', color: textMuted, marginTop: '2px' }}>
+                  <div style={{ fontSize: '15px', fontWeight: 600, color: textPrimary }}>Protected Anonymity</div>
+                  <div style={{ fontSize: '14px', color: textMuted, marginTop: '2px' }}>
                     Only your first name/initial and age are visible (e.g. M., 27). No photos, bios, company, or handles.
                   </div>
                 </div>
@@ -780,8 +780,8 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                   <SparkleIcon color={accentRose} size={15} />
                 </div>
                 <div>
-                  <div style={{ fontSize: '13px', fontWeight: 600, color: textPrimary }}>8-Minute Window & Mutual Reveal</div>
-                  <div style={{ fontSize: '12px', color: textMuted, marginTop: '2px' }}>
+                  <div style={{ fontSize: '15px', fontWeight: 600, color: textPrimary }}>8-Minute Window & Mutual Reveal</div>
+                  <div style={{ fontSize: '14px', color: textMuted, marginTop: '2px' }}>
                     Both participants must explicitly click Reveal & Match to convert into permanent matches. If either passes, neither profile is ever revealed.
                   </div>
                 </div>
@@ -792,8 +792,8 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                   <MoonIcon color={accentRose} size={15} />
                 </div>
                 <div>
-                  <div style={{ fontSize: '13px', fontWeight: 600, color: textPrimary }}>Pure Conversation</div>
-                  <div style={{ fontSize: '12px', color: textMuted, marginTop: '2px' }}>
+                  <div style={{ fontSize: '15px', fontWeight: 600, color: textPrimary }}>Pure Conversation</div>
+                  <div style={{ fontSize: '14px', color: textMuted, marginTop: '2px' }}>
                     No photos, URLs, files, or copy/paste. First-in-first-out pairing with up to 4 years age difference.
                   </div>
                 </div>
@@ -809,7 +809,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                 background: 'none',
                 border: 'none',
                 color: textMuted,
-                fontSize: '11px',
+                fontSize: '13px',
                 cursor: 'pointer',
                 textAlign: 'left',
                 padding: 0,
@@ -842,7 +842,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                   ? 'rgba(161, 82, 95, 0.3)'
                   : 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
                 color: '#FFF',
-                fontSize: '15px',
+                fontSize: '17px',
                 fontWeight: 600,
                 letterSpacing: '0.04em',
                 cursor: !isWindowActive || chatsUsedTonight >= maxChatsTonight ? 'not-allowed' : 'pointer',
@@ -913,7 +913,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
           <h2
             style={{
               fontFamily: 'var(--font-serif)',
-              fontSize: '24px',
+              fontSize: '26px',
               margin: '0 0 8px',
               color: textPrimary,
             }}
@@ -921,7 +921,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
             Entering After Hours Queue...
           </h2>
 
-          <p style={{ fontSize: '13px', color: textMuted, maxWidth: '400px', lineHeight: 1.5, margin: '0 0 16px' }}>
+          <p style={{ fontSize: '15px', color: textMuted, maxWidth: '400px', lineHeight: 1.5, margin: '0 0 16px' }}>
             First-In-First-Out pairing with verified members within ±4 years age gap.
           </p>
 
@@ -934,7 +934,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
               borderRadius: '999px',
               backgroundColor: cardBg,
               border: cardBorder,
-              fontSize: '12px',
+              fontSize: '14px',
               color: accentRose,
               marginBottom: '28px',
             }}
@@ -949,7 +949,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
               background: 'none',
               border: 'none',
               color: textMuted,
-              fontSize: '13px',
+              fontSize: '15px',
               cursor: 'pointer',
               textDecoration: 'underline',
             }}
@@ -1012,7 +1012,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                   : remainingSeconds < 180
                   ? '#F59E0B'
                   : accentRose,
-                fontSize: '13px',
+                fontSize: '15px',
                 fontWeight: 700,
                 fontFamily: 'monospace',
                 letterSpacing: '0.04em',
@@ -1051,7 +1051,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
             {/* Center: Room Code */}
             <div
               style={{
-                fontSize: '12px',
+                fontSize: '14px',
                 fontWeight: 700,
                 letterSpacing: '0.12em',
                 fontFamily: 'monospace',
@@ -1073,7 +1073,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                   borderRadius: '999px',
                   padding: '4px 12px',
                   color: textMuted,
-                  fontSize: '11px',
+                  fontSize: '13px',
                   fontWeight: 600,
                   cursor: 'pointer',
                   transition: 'all 0.15s ease',
@@ -1090,7 +1090,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                   borderRadius: '999px',
                   padding: '4px 12px',
                   color: textMuted,
-                  fontSize: '11px',
+                  fontSize: '13px',
                   fontWeight: 600,
                   cursor: 'pointer',
                   transition: 'all 0.15s ease',
@@ -1108,7 +1108,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                 padding: '10px 16px',
                 backgroundColor: 'rgba(16, 185, 129, 0.95)',
                 color: '#FFFFFF',
-                fontSize: '12.5px',
+                fontSize: '14.5px',
                 fontWeight: 600,
                 textAlign: 'center',
                 boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
@@ -1214,7 +1214,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                     </div>
                     <span
                       style={{
-                        fontSize: '11.5px',
+                        fontSize: '13.5px',
                         fontWeight: 600,
                         letterSpacing: '0.04em',
                         color: '#FFFFFF',
@@ -1244,7 +1244,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                   >
                     <span
                       style={{
-                        fontSize: '12px',
+                        fontSize: '14px',
                         color: 'rgba(255, 255, 255, 0.85)',
                         letterSpacing: '0.04em',
                         marginBottom: '6px',
@@ -1254,7 +1254,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                     </span>
                     <span
                       style={{
-                        fontSize: '12.5px',
+                        fontSize: '14.5px',
                         fontWeight: 800,
                         color: '#F7C873',
                         letterSpacing: '0.18em',
@@ -1280,7 +1280,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                       border: '1px solid rgba(255, 255, 255, 0.25)',
                       backdropFilter: 'blur(8px)',
                       color: '#FFFFFF',
-                      fontSize: '10.5px',
+                      fontSize: '12.5px',
                       fontWeight: 600,
                       display: 'flex',
                       alignItems: 'center',
@@ -1300,7 +1300,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                   <span
                     style={{
                       fontFamily: 'var(--font-serif)',
-                      fontSize: '18px',
+                      fontSize: '20px',
                       fontWeight: 600,
                       color: textPrimary,
                     }}
@@ -1310,7 +1310,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
 
                   <span
                     style={{
-                      fontSize: '9.5px',
+                      fontSize: '11.5px',
                       fontWeight: 700,
                       letterSpacing: '0.08em',
                       padding: '2px 8px',
@@ -1324,7 +1324,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                   </span>
                 </div>
 
-                <div style={{ fontSize: '12px', color: textMuted, marginTop: '2px' }}>
+                <div style={{ fontSize: '14px', color: textMuted, marginTop: '2px' }}>
                   {isMutualMatchRevealed ? `${partner.city} · ${partner.designation}` : partnerPersona.tagline}
                 </div>
 
@@ -1336,7 +1336,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                     borderRadius: '10px',
                     backgroundColor: isDark ? 'rgba(30, 18, 38, 0.45)' : 'rgba(250, 241, 243, 0.65)',
                     border: `1px solid ${cardBorder}`,
-                    fontSize: '12px',
+                    fontSize: '14px',
                     fontStyle: 'italic',
                     color: textPrimary,
                     lineHeight: 1.4,
@@ -1354,7 +1354,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 padding: '0 4px 10px',
-                fontSize: '11px',
+                fontSize: '13px',
                 color: textMuted,
               }}
             >
@@ -1368,7 +1368,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                 textAlign: 'center',
                 padding: '8px 14px',
                 marginBottom: '12px',
-                fontSize: '12px',
+                fontSize: '14px',
                 color: textMuted,
                 fontStyle: 'italic',
               }}
@@ -1396,7 +1396,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                       border: isMe ? 'none' : cardBorder,
                       borderRadius: isMe ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
                       padding: '10px 14px',
-                      fontSize: '13.5px',
+                      fontSize: '15.5px',
                       lineHeight: 1.45,
                       boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
                     }}
@@ -1404,7 +1404,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                     <div>{msg.text}</div>
                     <div
                       style={{
-                        fontSize: '9.5px',
+                        fontSize: '11.5px',
                         color: isMe ? 'rgba(255,255,255,0.7)' : textMuted,
                         marginTop: '3px',
                         textAlign: isMe ? 'right' : 'left',
@@ -1446,7 +1446,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                       border: 'none',
                       background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
                       color: '#FFFFFF',
-                      fontSize: '13px',
+                      fontSize: '15px',
                       fontWeight: 700,
                       letterSpacing: '0.04em',
                       cursor: 'pointer',
@@ -1472,7 +1472,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                       backgroundColor: isDark ? 'rgba(70, 32, 55, 0.45)' : 'rgba(244, 230, 234, 0.7)',
                       border: '1.5px solid rgba(245, 158, 11, 0.5)',
                       color: isDark ? '#FBBF24' : '#D97706',
-                      fontSize: '12.5px',
+                      fontSize: '14.5px',
                       fontWeight: 700,
                       display: 'flex',
                       alignItems: 'center',
@@ -1506,7 +1506,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                       border: '1px solid rgba(52, 211, 153, 0.4)',
                       background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.88) 0%, rgba(5, 150, 105, 0.95) 100%)',
                       color: '#FFFFFF',
-                      fontSize: '13px',
+                      fontSize: '15px',
                       fontWeight: 700,
                       letterSpacing: '0.04em',
                       cursor: 'pointer',
@@ -1526,7 +1526,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
               {inputWarning && (
                 <div
                   style={{
-                    fontSize: '11px',
+                    fontSize: '13px',
                     color: '#EF4444',
                     marginBottom: '6px',
                     padding: '4px 8px',
@@ -1546,7 +1546,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                     background: 'none',
                     border: `1px solid ${cardBorder}`,
                     color: textMuted,
-                    fontSize: '12px',
+                    fontSize: '14px',
                     fontWeight: 600,
                     padding: '8px 12px',
                     borderRadius: '999px',
@@ -1580,7 +1580,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                     border: cardBorder,
                     backgroundColor: isDark ? 'rgba(20, 14, 28, 0.85)' : '#FFFFFF',
                     color: textPrimary,
-                    fontSize: '13.5px',
+                    fontSize: '15.5px',
                     outline: 'none',
                     fontFamily: 'var(--font-sans)',
                   }}
@@ -1677,7 +1677,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                   alignItems: 'center',
                   justifyContent: 'center',
                   cursor: 'pointer',
-                  fontSize: '14px',
+                  fontSize: '16px',
                 }}
               >
                 ✕
@@ -1688,10 +1688,10 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                   backgroundColor: isDark ? '#140E1C' : '#FFFFFF',
                 }}
               >
-                <div style={{ fontSize: '18px', fontWeight: 600, color: textPrimary }}>
+                <div style={{ fontSize: '20px', fontWeight: 600, color: textPrimary }}>
                   {partner.firstName}, {partner.age}
                 </div>
-                <div style={{ fontSize: '12.5px', color: textMuted, marginTop: '2px' }}>
+                <div style={{ fontSize: '14.5px', color: textMuted, marginTop: '2px' }}>
                   {partner.city} · {partner.designation}
                 </div>
               </div>
@@ -1729,10 +1729,10 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                 boxShadow: '0 16px 45px rgba(0,0,0,0.5)',
               }}
             >
-              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '20px', margin: '0 0 6px', color: textPrimary }}>
+              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '22px', margin: '0 0 6px', color: textPrimary }}>
                 Share Socials
               </h3>
-              <p style={{ fontSize: '12.5px', color: textMuted, margin: '0 0 16px', lineHeight: 1.45 }}>
+              <p style={{ fontSize: '14.5px', color: textMuted, margin: '0 0 16px', lineHeight: 1.45 }}>
                 You and {partner.firstName} mutually unblurred! Pick a handle to exchange:
               </p>
               <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
@@ -1748,7 +1748,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                       border: `1px solid ${socialPlatform === plat ? accentRose : cardBorder}`,
                       backgroundColor: socialPlatform === plat ? (isDark ? 'rgba(161,82,95,0.3)' : 'rgba(161,82,95,0.12)') : 'transparent',
                       color: socialPlatform === plat ? textPrimary : textMuted,
-                      fontSize: '12px',
+                      fontSize: '14px',
                       fontWeight: 600,
                       textTransform: 'capitalize',
                       cursor: 'pointer',
@@ -1770,7 +1770,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                   border: cardBorder,
                   backgroundColor: isDark ? 'rgba(70,32,55,0.3)' : '#F9F5F6',
                   color: textPrimary,
-                  fontSize: '13.5px',
+                  fontSize: '15.5px',
                   marginBottom: '18px',
                   outline: 'none',
                   boxSizing: 'border-box',
@@ -1787,7 +1787,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                     border: cardBorder,
                     background: 'transparent',
                     color: textMuted,
-                    fontSize: '12.5px',
+                    fontSize: '14.5px',
                     fontWeight: 600,
                     cursor: 'pointer',
                   }}
@@ -1808,7 +1808,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                     border: 'none',
                     background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
                     color: '#FFFFFF',
-                    fontSize: '12.5px',
+                    fontSize: '14.5px',
                     fontWeight: 700,
                     cursor: 'pointer',
                   }}
@@ -1856,7 +1856,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
               <h3
                 style={{
                   fontFamily: 'var(--font-serif)',
-                  fontSize: '22px',
+                  fontSize: '24px',
                   margin: '12px 0 8px',
                   color: textPrimary,
                 }}
@@ -1864,7 +1864,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                 8-Minute Window Concluded
               </h3>
 
-              <p style={{ fontSize: '13px', color: textMuted, margin: '0 0 20px', lineHeight: 1.5 }}>
+              <p style={{ fontSize: '15px', color: textMuted, margin: '0 0 20px', lineHeight: 1.5 }}>
                 Without mutual consent, the conversation dissolves into the night. Neither profile was revealed, ensuring complete privacy.
               </p>
 
@@ -1881,7 +1881,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                   border: 'none',
                   background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
                   color: '#FFF',
-                  fontSize: '14px',
+                  fontSize: '16px',
                   fontWeight: 600,
                   cursor: 'pointer',
                 }}
@@ -1921,15 +1921,15 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                 border: cardBorder,
               }}
             >
-              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '20px', margin: '0 0 6px', color: textPrimary }}>
+              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '22px', margin: '0 0 6px', color: textPrimary }}>
                 Report Participant
               </h3>
-              <p style={{ fontSize: '12px', color: textMuted, margin: '0 0 16px' }}>
+              <p style={{ fontSize: '14px', color: textMuted, margin: '0 0 16px' }}>
                 Reports are encrypted and reviewed confidentially by VennZ Trust & Safety.
               </p>
 
               {reportSuccessMessage ? (
-                <div style={{ color: '#10B981', fontSize: '13px', padding: '16px 0', textAlign: 'center' }}>
+                <div style={{ color: '#10B981', fontSize: '15px', padding: '16px 0', textAlign: 'center' }}>
                   {reportSuccessMessage}
                 </div>
               ) : (
@@ -1948,7 +1948,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                           display: 'flex',
                           alignItems: 'center',
                           gap: '8px',
-                          fontSize: '13px',
+                          fontSize: '15px',
                           color: textPrimary,
                           cursor: 'pointer',
                         }}
@@ -1977,7 +1977,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                       border: cardBorder,
                       backgroundColor: isDark ? 'rgba(0,0,0,0.3)' : '#FAF1F3',
                       color: textPrimary,
-                      fontSize: '12px',
+                      fontSize: '14px',
                       marginBottom: '16px',
                       outline: 'none',
                     }}
@@ -1994,7 +1994,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                         border: cardBorder,
                         background: 'none',
                         color: textMuted,
-                        fontSize: '13px',
+                        fontSize: '15px',
                         cursor: 'pointer',
                       }}
                     >
@@ -2010,7 +2010,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                         border: 'none',
                         backgroundColor: '#EF4444',
                         color: '#FFF',
-                        fontSize: '13px',
+                        fontSize: '15px',
                         fontWeight: 600,
                         cursor: 'pointer',
                       }}
@@ -2054,10 +2054,10 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                 border: cardBorder,
               }}
             >
-              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '20px', margin: '0 0 8px', color: textPrimary }}>
+              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '22px', margin: '0 0 8px', color: textPrimary }}>
                 Block Participant?
               </h3>
-              <p style={{ fontSize: '13px', color: textMuted, margin: '0 0 20px', lineHeight: 1.5 }}>
+              <p style={{ fontSize: '15px', color: textMuted, margin: '0 0 20px', lineHeight: 1.5 }}>
                 You will not be paired with this participant in any future After Hours session or Discover queue.
               </p>
 
@@ -2072,7 +2072,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                     border: cardBorder,
                     background: 'none',
                     color: textMuted,
-                    fontSize: '13px',
+                    fontSize: '15px',
                     cursor: 'pointer',
                   }}
                 >
@@ -2088,7 +2088,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                     border: 'none',
                     backgroundColor: '#EF4444',
                     color: '#FFF',
-                    fontSize: '13px',
+                    fontSize: '15px',
                     fontWeight: 600,
                     cursor: 'pointer',
                   }}
@@ -2131,31 +2131,31 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                 overflowY: 'auto',
               }}
             >
-              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '20px', margin: '0 0 6px', color: textPrimary }}>
+              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '22px', margin: '0 0 6px', color: textPrimary }}>
                 Data Retention by Category
               </h3>
-              <p style={{ fontSize: '12px', color: textMuted, margin: '0 0 16px' }}>
+              <p style={{ fontSize: '14px', color: textMuted, margin: '0 0 16px' }}>
                 VennZ stores only data necessary for safety, legal compliance, and community trust.
               </p>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '20px' }}>
                 <div style={{ padding: '12px', borderRadius: '10px', backgroundColor: cardBg, border: cardBorder }}>
-                  <div style={{ fontSize: '13px', fontWeight: 600, color: accentRose }}>1. Ephemeral Conversation Logs</div>
-                  <div style={{ fontSize: '12px', color: textMuted, marginTop: '4px', lineHeight: 1.45 }}>
+                  <div style={{ fontSize: '15px', fontWeight: 600, color: accentRose }}>1. Ephemeral Conversation Logs</div>
+                  <div style={{ fontSize: '14px', color: textMuted, marginTop: '4px', lineHeight: 1.45 }}>
                     Blind conversation messages are held in ephemeral browser memory during the 8-minute window. If no mutual match is reached, logs are discarded upon session close.
                   </div>
                 </div>
 
                 <div style={{ padding: '12px', borderRadius: '10px', backgroundColor: cardBg, border: cardBorder }}>
-                  <div style={{ fontSize: '13px', fontWeight: 600, color: accentRose }}>2. Trust & Safety Reports</div>
-                  <div style={{ fontSize: '12px', color: textMuted, marginTop: '4px', lineHeight: 1.45 }}>
+                  <div style={{ fontSize: '15px', fontWeight: 600, color: accentRose }}>2. Trust & Safety Reports</div>
+                  <div style={{ fontSize: '14px', color: textMuted, marginTop: '4px', lineHeight: 1.45 }}>
                     Reports of harassment or code-of-conduct violations are retained encrypted for 180 days to support safety investigations and legal compliance.
                   </div>
                 </div>
 
                 <div style={{ padding: '12px', borderRadius: '10px', backgroundColor: cardBg, border: cardBorder }}>
-                  <div style={{ fontSize: '13px', fontWeight: 600, color: accentRose }}>3. Mutual Match Records</div>
-                  <div style={{ fontSize: '12px', color: textMuted, marginTop: '4px', lineHeight: 1.45 }}>
+                  <div style={{ fontSize: '15px', fontWeight: 600, color: accentRose }}>3. Mutual Match Records</div>
+                  <div style={{ fontSize: '14px', color: textMuted, marginTop: '4px', lineHeight: 1.45 }}>
                     Profiles and permanent conversation threads are stored only after bilateral mutual consent is confirmed by both parties.
                   </div>
                 </div>
@@ -2171,7 +2171,7 @@ export const Page19AfterHoursScreen: React.FC<Page19AfterHoursScreenProps> = ({
                   border: 'none',
                   background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
                   color: '#FFF',
-                  fontSize: '13px',
+                  fontSize: '15px',
                   fontWeight: 600,
                   cursor: 'pointer',
                 }}

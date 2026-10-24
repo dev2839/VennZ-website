@@ -60,7 +60,7 @@ export const Page5IdentityPlaceholder: React.FC<Page5IdentityPlaceholderProps> =
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              fontSize: '13px',
+              fontSize: '15px',
               fontWeight: 600,
               letterSpacing: '0.08em',
               textTransform: 'uppercase',
@@ -73,7 +73,7 @@ export const Page5IdentityPlaceholder: React.FC<Page5IdentityPlaceholderProps> =
             <span>BACK</span>
           </button>
 
-          <span style={{ fontSize: '11px', letterSpacing: '0.08em', color: 'var(--color-dusty-lilac)', textTransform: 'uppercase' }}>
+          <span style={{ fontSize: '13px', letterSpacing: '0.08em', color: 'var(--color-dusty-lilac)', textTransform: 'uppercase' }}>
             STEP 3 OF 4
           </span>
         </div>
@@ -115,7 +115,7 @@ export const Page5IdentityPlaceholder: React.FC<Page5IdentityPlaceholderProps> =
         <h2
           style={{
             fontFamily: 'var(--font-serif)',
-            fontSize: '28px',
+            fontSize: '30px',
             fontWeight: 400,
             letterSpacing: '0.02em',
             margin: '0 0 6px 0',
@@ -127,7 +127,7 @@ export const Page5IdentityPlaceholder: React.FC<Page5IdentityPlaceholderProps> =
 
         <p
           style={{
-            fontSize: '13.5px',
+            fontSize: '15.5px',
             color: 'var(--color-dusty-lilac)',
             margin: '0 0 20px 0',
           }}
@@ -147,23 +147,23 @@ export const Page5IdentityPlaceholder: React.FC<Page5IdentityPlaceholderProps> =
             textAlign: 'left',
           }}
         >
-          <div style={{ fontSize: '11px', color: 'var(--color-mushroom)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '10px' }}>
+          <div style={{ fontSize: '13px', color: 'var(--color-mushroom)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '10px' }}>
             Collected Member Profile Data
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', fontSize: '13px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', fontSize: '15px' }}>
             <div>
-              <span style={{ color: 'var(--color-dusty-lilac)', fontSize: '11px', display: 'block' }}>FIRST NAME</span>
+              <span style={{ color: 'var(--color-dusty-lilac)', fontSize: '13px', display: 'block' }}>FIRST NAME</span>
               <strong style={{ color: 'var(--color-warm-porcelain)' }}>{profile.firstName || 'Not provided'}</strong>
             </div>
 
             <div>
-              <span style={{ color: 'var(--color-dusty-lilac)', fontSize: '11px', display: 'block' }}>CITY</span>
+              <span style={{ color: 'var(--color-dusty-lilac)', fontSize: '13px', display: 'block' }}>CITY</span>
               <strong style={{ color: 'var(--color-warm-porcelain)' }}>{profile.city || 'Not provided'}</strong>
             </div>
 
             <div>
-              <span style={{ color: 'var(--color-dusty-lilac)', fontSize: '11px', display: 'block' }}>GENDER</span>
+              <span style={{ color: 'var(--color-dusty-lilac)', fontSize: '13px', display: 'block' }}>GENDER</span>
               <strong style={{ color: 'var(--color-warm-porcelain)' }}>
                 {profile.genderIdentity === 'PREFER TO SELF-DESCRIBE'
                   ? profile.selfDescribeGender || 'Self-describe'
@@ -172,17 +172,17 @@ export const Page5IdentityPlaceholder: React.FC<Page5IdentityPlaceholderProps> =
             </div>
 
             <div>
-              <span style={{ color: 'var(--color-dusty-lilac)', fontSize: '11px', display: 'block' }}>INTERESTED IN</span>
+              <span style={{ color: 'var(--color-dusty-lilac)', fontSize: '13px', display: 'block' }}>INTERESTED IN</span>
               <strong style={{ color: 'var(--color-warm-porcelain)' }}>{profile.datingPreference || 'Not provided'}</strong>
             </div>
 
             <div>
-              <span style={{ color: 'var(--color-dusty-lilac)', fontSize: '11px', display: 'block' }}>STATUS</span>
+              <span style={{ color: 'var(--color-dusty-lilac)', fontSize: '13px', display: 'block' }}>STATUS</span>
               <strong style={{ color: 'var(--color-warm-porcelain)' }}>{profile.currentStatus || 'Not provided'}</strong>
             </div>
 
             <div>
-              <span style={{ color: 'var(--color-dusty-lilac)', fontSize: '11px', display: 'block' }}>VERIFIED PHONE</span>
+              <span style={{ color: 'var(--color-dusty-lilac)', fontSize: '13px', display: 'block' }}>VERIFIED PHONE</span>
               <strong style={{ color: 'var(--color-warm-porcelain)' }}>{countryCode} {phoneNumber || '6896568960'}</strong>
             </div>
           </div>
@@ -190,7 +190,7 @@ export const Page5IdentityPlaceholder: React.FC<Page5IdentityPlaceholderProps> =
           {/* Photo Thumbnails */}
           {profile.photos.length > 0 && (
             <div style={{ marginTop: '14px', paddingTop: '12px', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
-              <span style={{ color: 'var(--color-dusty-lilac)', fontSize: '11px', display: 'block', marginBottom: '8px' }}>
+              <span style={{ color: 'var(--color-dusty-lilac)', fontSize: '13px', display: 'block', marginBottom: '8px' }}>
                 UPLOADED PHOTOGRAPHS ({profile.photos.length})
               </span>
               <div style={{ display: 'flex', gap: '8px', overflowX: 'auto' }}>
@@ -213,7 +213,7 @@ export const Page5IdentityPlaceholder: React.FC<Page5IdentityPlaceholderProps> =
           )}
         </div>
 
-        <p style={{ fontSize: '12.5px', lineHeight: '1.5', color: 'rgba(243, 238, 233, 0.7)', margin: 0 }}>
+        <p style={{ fontSize: '14.5px', lineHeight: '1.5', color: 'rgba(243, 238, 233, 0.7)', margin: 0 }}>
           Identity Verification (Government ID & Selfie check) will be built in the next step after Page 4 approval.
         </p>
       </div>
@@ -231,7 +231,7 @@ export const Page5IdentityPlaceholder: React.FC<Page5IdentityPlaceholderProps> =
             backgroundColor: 'transparent',
             color: 'var(--color-warm-porcelain)',
             fontFamily: 'var(--font-sans)',
-            fontSize: '14px',
+            fontSize: '16px',
             fontWeight: 500,
             cursor: 'pointer',
           }}

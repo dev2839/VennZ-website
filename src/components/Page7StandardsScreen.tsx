@@ -133,7 +133,7 @@ export const Page7StandardsScreen: React.FC<Page7StandardsScreenProps> = ({
               alignItems: 'center',
               gap: '6px',
               fontFamily: 'var(--font-sans)',
-              fontSize: '14.5px',
+              fontSize: '16.5px',
               fontWeight: 700,
               letterSpacing: '0.08em',
               textTransform: 'uppercase',
@@ -159,7 +159,7 @@ export const Page7StandardsScreen: React.FC<Page7StandardsScreenProps> = ({
           {/* Standards Badge */}
           <span
             style={{
-              fontSize: '13px',
+              fontSize: '15px',
               letterSpacing: '0.09em',
               textTransform: 'uppercase',
               fontWeight: 600,
@@ -212,7 +212,7 @@ export const Page7StandardsScreen: React.FC<Page7StandardsScreenProps> = ({
 
           <p
             style={{
-              fontSize: '16px',
+              fontSize: '18px',
               lineHeight: '1.5',
               color: isDark ? '#BDB0B6' : '#6E5E68',
               margin: '0 0 24px 0',
@@ -252,7 +252,7 @@ export const Page7StandardsScreen: React.FC<Page7StandardsScreenProps> = ({
                 <div
                   style={{
                     fontFamily: 'var(--font-serif)',
-                    fontSize: '20px',
+                    fontSize: '22px',
                     lineHeight: '1.2',
                     color: isDark ? '#F9AAAD' : 'var(--color-mulberry)',
                     fontWeight: 600,
@@ -267,7 +267,7 @@ export const Page7StandardsScreen: React.FC<Page7StandardsScreenProps> = ({
                 {/* Standard Text */}
                 <p
                   style={{
-                    fontSize: '15.5px',
+                    fontSize: '17.5px',
                     lineHeight: '1.5',
                     color: isDark ? '#F3EEE9' : '#382833',
                     margin: 0,
@@ -351,7 +351,7 @@ export const Page7StandardsScreen: React.FC<Page7StandardsScreenProps> = ({
               {/* Checkbox Legal Text with Distinguishable Links */}
               <div
                 style={{
-                  fontSize: '14.5px',
+                  fontSize: '16.5px',
                   lineHeight: '1.5',
                   color: isDark ? '#D9CFD5' : '#4E3E48',
                 }}
@@ -426,7 +426,7 @@ export const Page7StandardsScreen: React.FC<Page7StandardsScreenProps> = ({
                     ? '#FDF3F5'
                     : isDark ? 'rgba(253, 243, 245, 0.35)' : 'rgba(70, 32, 55, 0.45)',
                   border: 'none',
-                  fontSize: '16.5px',
+                  fontSize: '18.5px',
                   fontWeight: 700,
                   letterSpacing: '0.08em',
                   textTransform: 'uppercase',
@@ -473,7 +473,7 @@ export const Page7StandardsScreen: React.FC<Page7StandardsScreenProps> = ({
               {!isAccepted && (
                 <div
                   style={{
-                    fontSize: '11.5px',
+                    fontSize: '13.5px',
                     color: isDark ? '#AFA2A9' : '#8A7A84',
                     textAlign: 'center',
                     marginTop: '8px',
@@ -537,7 +537,7 @@ export const Page7StandardsScreen: React.FC<Page7StandardsScreenProps> = ({
             <h3
               style={{
                 fontFamily: 'var(--font-serif)',
-                fontSize: '22px',
+                fontSize: '24px',
                 color: isDark ? '#FDF3F5' : '#462037',
                 margin: '0 0 12px 0',
               }}
@@ -546,7 +546,7 @@ export const Page7StandardsScreen: React.FC<Page7StandardsScreenProps> = ({
             </h3>
             <p
               style={{
-                fontSize: '13px',
+                fontSize: '15px',
                 lineHeight: '1.5',
                 color: isDark ? '#D4A2AC' : '#683A46',
                 margin: '0 0 20px 0',
@@ -569,7 +569,7 @@ export const Page7StandardsScreen: React.FC<Page7StandardsScreenProps> = ({
                 background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
                 color: '#FDF3F5',
                 border: 'none',
-                fontSize: '13px',
+                fontSize: '15px',
                 fontWeight: 700,
                 letterSpacing: '0.06em',
                 textTransform: 'uppercase',

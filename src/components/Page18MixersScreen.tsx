@@ -473,7 +473,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
 
               <div
                 style={{
-                  fontSize: '11px',
+                  fontSize: '13px',
                   fontWeight: 700,
                   letterSpacing: '0.14em',
                   textTransform: 'uppercase',
@@ -487,7 +487,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
               <h1
                 style={{
                   fontFamily: 'var(--font-serif)',
-                  fontSize: '30px',
+                  fontSize: '32px',
                   lineHeight: '1.2',
                   color: themeMulberry,
                   margin: '0 0 14px 0',
@@ -499,7 +499,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
 
               <p
                 style={{
-                  fontSize: '14px',
+                  fontSize: '16px',
                   lineHeight: '1.6',
                   color: themeMuted,
                   margin: '0 0 24px 0',
@@ -534,11 +534,11 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                       borderRadius: '12px',
                       backgroundColor: isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(73, 40, 61, 0.05)',
                       border: `1px solid ${themeBorder}`,
-                      fontSize: '12.5px',
+                      fontSize: '14.5px',
                       color: themeMulberry,
                     }}
                   >
-                    <span style={{ color: isDark ? '#DFB76C' : 'var(--color-mulberry)', fontSize: '14px' }}>✦</span>
+                    <span style={{ color: isDark ? '#DFB76C' : 'var(--color-mulberry)', fontSize: '16px' }}>✦</span>
                     <span>{item}</span>
                   </div>
                 ))}
@@ -546,7 +546,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
 
               <div
                 style={{
-                  fontSize: '20px',
+                  fontSize: '22px',
                   fontFamily: 'var(--font-serif)',
                   fontWeight: 700,
                   color: themeMulberry,
@@ -558,7 +558,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
 
               <div
                 style={{
-                  fontSize: '12px',
+                  fontSize: '14px',
                   fontWeight: 500,
                   color: isDark ? '#C7B9C2' : '#7A6B74',
                   textAlign: 'center',
@@ -584,7 +584,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                   background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
                   color: '#FDF3F5',
                   border: 'none',
-                  fontSize: '13.5px',
+                  fontSize: '15.5px',
                   fontWeight: 700,
                   letterSpacing: '0.08em',
                   cursor: 'pointer',
@@ -619,7 +619,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
               <div style={{ textAlign: 'left', padding: '16px 2px 20px 2px' }}>
                 <div
                   style={{
-                    fontSize: '11px',
+                    fontSize: '13px',
                     fontWeight: 400,
                     letterSpacing: '0.16em',
                     textTransform: 'uppercase',
@@ -632,7 +632,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                 <h1
                   style={{
                     fontFamily: 'var(--font-serif)',
-                    fontSize: '28px',
+                    fontSize: '30px',
                     fontWeight: 400,
                     color: themeMulberry,
                     letterSpacing: '0.01em',
@@ -644,8 +644,8 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                 </h1>
                 <p
                   style={{
-                    fontSize: '13.5px',
-                    fontWeight: 300,
+                    fontSize: '15.5px',
+                    fontWeight: 400,
                     lineHeight: '1.6',
                     color: themeMuted,
                     letterSpacing: '0.01em',
@@ -685,21 +685,21 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      fontSize: '12px',
+                      fontSize: '14px',
                     }}
                   >
                     🎫
                   </div>
                   <div>
-                    <div style={{ fontSize: '12.5px', fontWeight: 400, color: themeTextColor }}>
+                    <div style={{ fontSize: '14.5px', fontWeight: 400, color: themeTextColor }}>
                       My Events Hub
                     </div>
-                    <div style={{ fontSize: '11px', fontWeight: 300, color: themeMuted }}>
+                    <div style={{ fontSize: '13px', fontWeight: 400, color: themeMuted }}>
                       {upcomingBookings.length} confirmed · {interestedEvents.length} interested · {mixerWaitlists.length} waitlists
                     </div>
                   </div>
                 </div>
-                <span style={{ fontSize: '12px', color: themeMuted, fontWeight: 400 }}>
+                <span style={{ fontSize: '14px', color: themeMuted, fontWeight: 400 }}>
                   View →
                 </span>
               </div>
@@ -713,7 +713,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                     backgroundColor: 'rgba(56, 142, 60, 0.16)',
                     border: '1px solid rgba(56, 142, 60, 0.4)',
                     color: isDark ? '#A5D6A7' : '#2E7D32',
-                    fontSize: '12.5px',
+                    fontSize: '14.5px',
                     fontWeight: 600,
                     marginBottom: '18px',
                     display: 'flex',
@@ -743,7 +743,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                     border: homeSubTab === 'events' ? '1px solid rgba(199, 87, 124, 0.8)' : `1px solid ${themeBorder}`,
                     background: homeSubTab === 'events' ? themeButtonBg : (isDark ? 'rgba(42, 20, 34, 0.45)' : 'rgba(255, 255, 255, 0.65)'),
                     color: homeSubTab === 'events' ? '#FFFFFF' : themeMulberry,
-                    fontSize: '12px',
+                    fontSize: '14px',
                     fontWeight: homeSubTab === 'events' ? 700 : 500,
                     cursor: 'pointer',
                     transition: 'all 0.2s ease',
@@ -761,7 +761,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                     border: homeSubTab === 'demand' ? '1px solid rgba(199, 87, 124, 0.8)' : `1px solid ${themeBorder}`,
                     background: homeSubTab === 'demand' ? themeButtonBg : (isDark ? 'rgba(42, 20, 34, 0.45)' : 'rgba(255, 255, 255, 0.65)'),
                     color: homeSubTab === 'demand' ? '#FFFFFF' : themeMulberry,
-                    fontSize: '12px',
+                    fontSize: '14px',
                     fontWeight: homeSubTab === 'demand' ? 700 : 500,
                     cursor: 'pointer',
                     transition: 'all 0.2s ease',
@@ -785,39 +785,39 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                     }}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                      <span style={{ fontSize: '15px' }}>📍</span>
-                      <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '17px', fontWeight: 600, color: themeTextColor, margin: 0 }}>
+                      <span style={{ fontSize: '17px' }}>📍</span>
+                      <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '19px', fontWeight: 600, color: themeTextColor, margin: 0 }}>
                         How VennZ Mixers Launch City-by-City
                       </h3>
                     </div>
-                    <p style={{ fontSize: '12.5px', color: themeMuted, margin: '0 0 14px', lineHeight: '1.5' }}>
+                    <p style={{ fontSize: '14.5px', color: themeMuted, margin: '0 0 14px', lineHeight: '1.5' }}>
                       To guarantee intimate attendance, security, and discrete curation, VennZ never launches physical events speculatively. Each city advances through three strict operational phases:
                     </p>
 
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: '10px' }}>
                       <div style={{ padding: '12px 14px', borderRadius: '12px', backgroundColor: isDark ? 'rgba(20, 14, 28, 0.6)' : 'rgba(250, 241, 243, 0.7)', border: `1px solid ${themeBorder}` }}>
-                        <div style={{ fontSize: '11px', fontWeight: 700, color: isDark ? '#F9AAAD' : '#A1525F', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                        <div style={{ fontSize: '13px', fontWeight: 700, color: isDark ? '#F9AAAD' : '#A1525F', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
                           Phase 1: Gauging Demand
                         </div>
-                        <p style={{ fontSize: '12px', color: themeTextColor, margin: '5px 0 0', lineHeight: '1.45' }}>
+                        <p style={{ fontSize: '14px', color: themeTextColor, margin: '5px 0 0', lineHeight: '1.45' }}>
                           Members join the city waitlist (no upfront charge). VennZ tracks community density to confirm adequate verified member numbers.
                         </p>
                       </div>
 
                       <div style={{ padding: '12px 14px', borderRadius: '12px', backgroundColor: isDark ? 'rgba(20, 14, 28, 0.6)' : 'rgba(250, 241, 243, 0.7)', border: `1px solid ${themeBorder}` }}>
-                        <div style={{ fontSize: '11px', fontWeight: 700, color: isDark ? '#FFB74D' : '#B45309', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                        <div style={{ fontSize: '13px', fontWeight: 700, color: isDark ? '#FFB74D' : '#B45309', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
                           Phase 2: Partner Vetting
                         </div>
-                        <p style={{ fontSize: '12px', color: themeTextColor, margin: '5px 0 0', lineHeight: '1.45' }}>
+                        <p style={{ fontSize: '14px', color: themeTextColor, margin: '5px 0 0', lineHeight: '1.45' }}>
                           Threshold reached. Ops teams physically inspect private conservatories, courtyards, acoustics, safety, and hospitality staff protocols.
                         </p>
                       </div>
 
                       <div style={{ padding: '12px 14px', borderRadius: '12px', backgroundColor: isDark ? 'rgba(20, 14, 28, 0.6)' : 'rgba(250, 241, 243, 0.7)', border: `1px solid ${themeBorder}` }}>
-                        <div style={{ fontSize: '11px', fontWeight: 700, color: isDark ? '#A5D6A7' : '#2E7D32', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                        <div style={{ fontSize: '13px', fontWeight: 700, color: isDark ? '#A5D6A7' : '#2E7D32', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
                           Phase 3: Scheduled & Live
                         </div>
-                        <p style={{ fontSize: '12px', color: themeTextColor, margin: '5px 0 0', lineHeight: '1.45' }}>
+                        <p style={{ fontSize: '14px', color: themeTextColor, margin: '5px 0 0', lineHeight: '1.45' }}>
                           Venue contracts and safety standards certified. Gathering dates go live on the calendar for verified member bookings.
                         </p>
                       </div>
@@ -846,12 +846,12 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '8px' }}>
                           <div style={{ flex: 1, minWidth: '220px' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '19px', fontWeight: 600, color: themeTextColor, margin: 0 }}>
+                              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '21px', fontWeight: 600, color: themeTextColor, margin: 0 }}>
                                 {demandItem.city}
                               </h3>
                               <span
                                 style={{
-                                  fontSize: '10px',
+                                  fontSize: '12px',
                                   padding: '3px 9px',
                                   borderRadius: '999px',
                                   backgroundColor: phaseInfo.badgeBg,
@@ -867,19 +867,19 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                                 <span>●</span> {phaseInfo.phaseTag}
                               </span>
                             </div>
-                            <div style={{ fontSize: '11.5px', color: themeMuted, marginTop: '5px', lineHeight: '1.45' }}>
+                            <div style={{ fontSize: '13.5px', color: themeMuted, marginTop: '5px', lineHeight: '1.45' }}>
                               {phaseInfo.description}
                             </div>
-                            <div style={{ fontSize: '11px', color: themeMuted, marginTop: '3px' }}>
+                            <div style={{ fontSize: '13px', color: themeMuted, marginTop: '3px' }}>
                               <strong>Venues Under Review:</strong> {demandItem.suggestedVenuesInReview.join(' · ')}
                             </div>
                           </div>
 
                           <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                            <div style={{ fontSize: '15px', fontWeight: 700, color: themeTextColor }}>
+                            <div style={{ fontSize: '17px', fontWeight: 700, color: themeTextColor }}>
                               {demandItem.activeMembersInterested} / {demandItem.demandThresholdToLaunch}
                             </div>
-                            <div style={{ fontSize: '10.5px', color: themeMuted }}>
+                            <div style={{ fontSize: '12.5px', color: themeMuted }}>
                               Members Registered
                             </div>
                           </div>
@@ -905,7 +905,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                               }}
                             />
                           </div>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: themeMuted, marginTop: '5px' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: themeMuted, marginTop: '5px' }}>
                             <span style={{ fontWeight: 600, color: themeTextColor }}>{demandItem.estimatedTimeline}</span>
                             <span>{percent}% of launch threshold</span>
                           </div>
@@ -923,7 +923,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                                 ? (isDark ? 'rgba(129, 199, 132, 0.18)' : 'rgba(46, 125, 50, 0.12)')
                                 : themeButtonBg,
                               color: isOnWaitlist ? (isDark ? '#81C784' : '#2E7D32') : themeButtonText,
-                              fontSize: '11.5px',
+                              fontSize: '13.5px',
                               fontWeight: 600,
                               cursor: 'pointer',
                               letterSpacing: '0.04em',
@@ -945,7 +945,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                   {/* Section Header: UPCOMING */}
                   <div
                     style={{
-                      fontSize: '11px',
+                      fontSize: '13px',
                       fontWeight: 400,
                       letterSpacing: '0.16em',
                       textTransform: 'uppercase',
@@ -1024,7 +1024,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                                   ? 'rgba(217, 119, 6, 0.88)'
                                   : 'rgba(50, 50, 50, 0.88)',
                               color: '#FFFFFF',
-                              fontSize: '10px',
+                              fontSize: '12px',
                               fontWeight: 400,
                               letterSpacing: '0.08em',
                               textTransform: 'uppercase',
@@ -1045,7 +1045,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                                 borderRadius: '12px',
                                 backgroundColor: 'rgba(0, 0, 0, 0.72)',
                                 color: '#F3EEE9',
-                                fontSize: '10px',
+                                fontSize: '12px',
                                 fontWeight: 500,
                                 letterSpacing: '0.04em',
                                 backdropFilter: 'blur(6px)',
@@ -1064,8 +1064,8 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                                 borderRadius: '12px',
                                 backgroundColor: 'rgba(0, 0, 0, 0.65)',
                                 color: '#F3EEE9',
-                                fontSize: '10px',
-                                fontWeight: 300,
+                                fontSize: '12px',
+                                fontWeight: 400,
                                 letterSpacing: '0.04em',
                                 backdropFilter: 'blur(6px)',
                               }}
@@ -1081,7 +1081,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                               bottom: '12px',
                               left: '14px',
                               color: '#FFFFFF',
-                              fontSize: '11px',
+                              fontSize: '13px',
                               fontWeight: 400,
                               letterSpacing: '0.12em',
                               textTransform: 'uppercase',
@@ -1098,7 +1098,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                             <h2
                               style={{
                                 fontFamily: 'var(--font-serif)',
-                                fontSize: '20px',
+                                fontSize: '22px',
                                 fontWeight: 400,
                                 color: themeMulberry,
                                 margin: '0 0 4px 0',
@@ -1108,10 +1108,10 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                               {event.eventName}
                             </h2>
 
-                            <div style={{ fontSize: '12.5px', fontWeight: 300, color: themeTextColor, marginBottom: '2px' }}>
+                            <div style={{ fontSize: '14.5px', fontWeight: 400, color: themeTextColor, marginBottom: '2px' }}>
                               {event.date} · {event.startTime} – {event.endTime}
                             </div>
-                            <div style={{ fontSize: '11.5px', fontWeight: 300, color: themeMuted }}>
+                            <div style={{ fontSize: '13.5px', fontWeight: 400, color: themeMuted }}>
                               {event.area} · {event.venue}
                             </div>
                           </div>
@@ -1131,18 +1131,18 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                             {isMember ? (
                               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                                 <div>
-                                  <span style={{ fontSize: '10.5px', fontWeight: 400, letterSpacing: '0.08em', textTransform: 'uppercase', color: themeMuted, marginRight: '6px' }}>
+                                  <span style={{ fontSize: '12.5px', fontWeight: 400, letterSpacing: '0.08em', textTransform: 'uppercase', color: themeMuted, marginRight: '6px' }}>
                                     REGULAR
                                   </span>
-                                  <span style={{ fontSize: '12.5px', fontWeight: 300, textDecoration: 'line-through', color: themeMuted }}>
+                                  <span style={{ fontSize: '14.5px', fontWeight: 400, textDecoration: 'line-through', color: themeMuted }}>
                                     ₹{event.regularPrice.toLocaleString('en-IN')}
                                   </span>
                                 </div>
                                 <div style={{ textAlign: 'right' }}>
-                                  <span style={{ fontSize: '10.5px', fontWeight: 400, letterSpacing: '0.08em', textTransform: 'uppercase', color: themeMuted, marginRight: '6px' }}>
+                                  <span style={{ fontSize: '12.5px', fontWeight: 400, letterSpacing: '0.08em', textTransform: 'uppercase', color: themeMuted, marginRight: '6px' }}>
                                     MEMBER
                                   </span>
-                                  <span style={{ fontSize: '17px', fontWeight: 500, color: themeMulberry }}>
+                                  <span style={{ fontSize: '19px', fontWeight: 500, color: themeMulberry }}>
                                     ₹{event.memberPrice.toLocaleString('en-IN')}
                                   </span>
                                 </div>
@@ -1150,18 +1150,18 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                             ) : (
                               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                                 <div>
-                                  <span style={{ fontSize: '10.5px', fontWeight: 400, letterSpacing: '0.08em', textTransform: 'uppercase', color: themeMuted, marginRight: '6px' }}>
+                                  <span style={{ fontSize: '12.5px', fontWeight: 400, letterSpacing: '0.08em', textTransform: 'uppercase', color: themeMuted, marginRight: '6px' }}>
                                     FIRST LOOK
                                   </span>
-                                  <span style={{ fontSize: '16px', fontWeight: 500, color: themeTextColor }}>
+                                  <span style={{ fontSize: '18px', fontWeight: 500, color: themeTextColor }}>
                                     ₹{event.regularPrice.toLocaleString('en-IN')}
                                   </span>
                                 </div>
                                 <div style={{ textAlign: 'right' }}>
-                                  <span style={{ fontSize: '10.5px', fontWeight: 400, letterSpacing: '0.08em', textTransform: 'uppercase', color: themeMuted, marginRight: '6px' }}>
+                                  <span style={{ fontSize: '12.5px', fontWeight: 400, letterSpacing: '0.08em', textTransform: 'uppercase', color: themeMuted, marginRight: '6px' }}>
                                     MEMBER
                                   </span>
-                                  <span style={{ fontSize: '13.5px', fontWeight: 400, color: themeMuted }}>
+                                  <span style={{ fontSize: '15.5px', fontWeight: 400, color: themeMuted }}>
                                     ₹{event.memberPrice.toLocaleString('en-IN')}
                                   </span>
                                 </div>
@@ -1170,11 +1170,11 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
 
                             {/* Savings callout */}
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: `1px solid ${themeBorder}`, paddingTop: '6px', marginTop: '2px' }}>
-                              <span style={{ fontSize: '11px', fontWeight: 400, color: isDark ? '#81C784' : '#2E7D32' }}>
+                              <span style={{ fontSize: '13px', fontWeight: 400, color: isDark ? '#81C784' : '#2E7D32' }}>
                                 Members save ₹{(event.regularPrice - event.memberPrice).toLocaleString('en-IN')}
                               </span>
                               {!isMember && (
-                                <span style={{ fontSize: '10.5px', fontWeight: 300, color: themeMuted }}>
+                                <span style={{ fontSize: '12.5px', fontWeight: 400, color: themeMuted }}>
                                   Unlock member pricing
                                 </span>
                               )}
@@ -1183,7 +1183,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
 
                           {/* First Look Subtle Note */}
                           {!isMember && (
-                            <div style={{ fontSize: '11px', fontWeight: 300, color: themeMuted, lineHeight: '1.4' }}>
+                            <div style={{ fontSize: '13px', fontWeight: 400, color: themeMuted, lineHeight: '1.4' }}>
                               Become a member and unlock exclusive event pricing.
                             </div>
                           )}
@@ -1200,7 +1200,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                                 backgroundColor: 'transparent',
                                 border: `1px solid ${themeBorder}`,
                                 color: themeMulberry,
-                                fontSize: '11.5px',
+                                fontSize: '13.5px',
                                 fontWeight: 400,
                                 letterSpacing: '0.08em',
                                 textTransform: 'uppercase',
@@ -1224,7 +1224,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                                     : themeButtonBg,
                                   color: isInterested ? themeMuted : themeButtonText,
                                   border: isInterested ? `1px solid ${themeBorder}` : 'none',
-                                  fontSize: '11.5px',
+                                  fontSize: '13.5px',
                                   fontWeight: 500,
                                   letterSpacing: '0.08em',
                                   textTransform: 'uppercase',
@@ -1244,7 +1244,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                                   backgroundColor: isDark ? 'rgba(255, 255, 255, 0.06)' : 'rgba(73, 40, 61, 0.06)',
                                   color: themeMuted,
                                   border: `1px solid ${themeBorder}`,
-                                  fontSize: '11.5px',
+                                  fontSize: '13.5px',
                                   fontWeight: 400,
                                   letterSpacing: '0.08em',
                                   textTransform: 'uppercase',
@@ -1264,7 +1264,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                                   backgroundColor: isDark ? 'rgba(129, 199, 132, 0.18)' : 'rgba(46, 125, 50, 0.12)',
                                   color: isDark ? '#81C784' : '#2E7D32',
                                   border: `1px solid ${isDark ? 'rgba(129, 199, 132, 0.35)' : 'rgba(46, 125, 50, 0.3)'}`,
-                                  fontSize: '11px',
+                                  fontSize: '13px',
                                   fontWeight: 600,
                                   letterSpacing: '0.06em',
                                   textTransform: 'uppercase',
@@ -1300,7 +1300,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                                     ? (isDark ? '#81C784' : '#2E7D32')
                                     : themeMulberry,
                                   border: `1px solid ${themeBorder}`,
-                                  fontSize: '11px',
+                                  fontSize: '13px',
                                   fontWeight: 600,
                                   letterSpacing: '0.06em',
                                   textTransform: 'uppercase',
@@ -1320,7 +1320,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                                   backgroundColor: themeButtonBg,
                                   color: themeButtonText,
                                   border: 'none',
-                                  fontSize: '11.5px',
+                                  fontSize: '13.5px',
                                   fontWeight: 500,
                                   letterSpacing: '0.08em',
                                   textTransform: 'uppercase',
@@ -1357,7 +1357,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                   alignItems: 'center',
                   gap: '6px',
                   color: themeMulberry,
-                  fontSize: '11px',
+                  fontSize: '13px',
                   fontWeight: 400,
                   letterSpacing: '0.12em',
                   textTransform: 'uppercase',
@@ -1419,7 +1419,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                           ? 'rgba(217, 119, 6, 0.88)'
                           : 'rgba(50, 50, 50, 0.88)',
                       color: '#FFFFFF',
-                      fontSize: '10px',
+                      fontSize: '12px',
                       fontWeight: 400,
                       letterSpacing: '0.08em',
                       textTransform: 'uppercase',
@@ -1431,7 +1431,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                   <h1
                     style={{
                       fontFamily: 'var(--font-serif)',
-                      fontSize: '24px',
+                      fontSize: '26px',
                       fontWeight: 400,
                       color: '#FFFFFF',
                       margin: 0,
@@ -1458,13 +1458,13 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div>
-                    <div style={{ fontSize: '10.5px', fontWeight: 400, letterSpacing: '0.12em', textTransform: 'uppercase', color: themeMuted, marginBottom: '2px' }}>
+                    <div style={{ fontSize: '12.5px', fontWeight: 400, letterSpacing: '0.12em', textTransform: 'uppercase', color: themeMuted, marginBottom: '2px' }}>
                       DATE & TIME
                     </div>
-                    <div style={{ fontSize: '13.5px', fontWeight: 400, color: themeTextColor }}>
+                    <div style={{ fontSize: '15.5px', fontWeight: 400, color: themeTextColor }}>
                       {selectedEvent.date}
                     </div>
-                    <div style={{ fontSize: '12px', fontWeight: 300, color: themeMuted }}>
+                    <div style={{ fontSize: '14px', fontWeight: 400, color: themeMuted }}>
                       {selectedEvent.startTime} – {selectedEvent.endTime}
                     </div>
                   </div>
@@ -1475,7 +1475,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                         borderRadius: '14px',
                         backgroundColor: isDark ? 'rgba(161, 82, 95, 0.22)' : 'rgba(161, 82, 95, 0.1)',
                         border: `1px solid ${themeBorder}`,
-                        fontSize: '11px',
+                        fontSize: '13px',
                         fontWeight: 600,
                         color: themeMulberry,
                         textAlign: 'right',
@@ -1490,8 +1490,8 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                         borderRadius: '14px',
                         backgroundColor: isDark ? 'rgba(255, 255, 255, 0.06)' : 'rgba(73, 40, 61, 0.05)',
                         border: `1px solid ${themeBorder}`,
-                        fontSize: '11px',
-                        fontWeight: 300,
+                        fontSize: '13px',
+                        fontWeight: 400,
                         color: themeTextColor,
                         textAlign: 'right',
                       }}
@@ -1502,13 +1502,13 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                 </div>
 
                 <div style={{ borderTop: `1px solid ${themeBorder}`, paddingTop: '10px' }}>
-                  <div style={{ fontSize: '10.5px', fontWeight: 400, letterSpacing: '0.12em', textTransform: 'uppercase', color: themeMuted, marginBottom: '2px' }}>
+                  <div style={{ fontSize: '12.5px', fontWeight: 400, letterSpacing: '0.12em', textTransform: 'uppercase', color: themeMuted, marginBottom: '2px' }}>
                     LOCATION & VENUE
                   </div>
-                  <div style={{ fontSize: '13px', fontWeight: 400, color: themeTextColor }}>
+                  <div style={{ fontSize: '15px', fontWeight: 400, color: themeTextColor }}>
                     {selectedEvent.city} · {selectedEvent.area}
                   </div>
-                  <div style={{ fontSize: '12px', fontWeight: 300, color: themeMuted }}>
+                  <div style={{ fontSize: '14px', fontWeight: 400, color: themeMuted }}>
                     {selectedEvent.venue}
                   </div>
                 </div>
@@ -1518,7 +1518,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
               <div style={{ marginBottom: '20px', padding: '0 2px' }}>
                 <div
                   style={{
-                    fontSize: '11px',
+                    fontSize: '13px',
                     fontWeight: 400,
                     letterSpacing: '0.16em',
                     textTransform: 'uppercase',
@@ -1530,8 +1530,8 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                 </div>
                 <p
                   style={{
-                    fontSize: '13.5px',
-                    fontWeight: 300,
+                    fontSize: '15.5px',
+                    fontWeight: 400,
                     lineHeight: '1.6',
                     color: themeTextColor,
                     letterSpacing: '0.01em',
@@ -1554,7 +1554,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
               >
                 <div
                   style={{
-                    fontSize: '11px',
+                    fontSize: '13px',
                     fontWeight: 400,
                     letterSpacing: '0.16em',
                     textTransform: 'uppercase',
@@ -1581,13 +1581,13 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                         display: 'flex',
                         alignItems: 'baseline',
                         gap: '10px',
-                        fontSize: '13px',
-                        fontWeight: 300,
+                        fontSize: '15px',
+                        fontWeight: 400,
                         lineHeight: '1.5',
                         color: themeTextColor,
                       }}
                     >
-                      <span style={{ color: isDark ? '#D88A9F' : '#9B4D6E', fontSize: '12px' }}>—</span>
+                      <span style={{ color: isDark ? '#D88A9F' : '#9B4D6E', fontSize: '14px' }}>—</span>
                       <span>{item}</span>
                     </li>
                   ))}
@@ -1604,10 +1604,10 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                   marginBottom: '20px',
                 }}
               >
-                <div style={{ fontSize: '10.5px', fontWeight: 400, letterSpacing: '0.12em', textTransform: 'uppercase', color: themeMuted, marginBottom: '4px' }}>
+                <div style={{ fontSize: '12.5px', fontWeight: 400, letterSpacing: '0.12em', textTransform: 'uppercase', color: themeMuted, marginBottom: '4px' }}>
                   VENUE ADVISORY
                 </div>
-                <div style={{ fontSize: '12.5px', fontWeight: 300, color: themeTextColor, lineHeight: '1.45' }}>
+                <div style={{ fontSize: '14.5px', fontWeight: 400, color: themeTextColor, lineHeight: '1.45' }}>
                   {selectedEvent.isVenueAnnounced
                     ? `Hosted at ${selectedEvent.venue}. Private entrance details and valet options will be sent with your event pass.`
                     : 'The precise address in South Mumbai will be revealed exclusively to ticket holders 48 hours before the mixer to preserve an intimate, private room.'}
@@ -1625,12 +1625,12 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                  <div style={{ fontSize: '10.5px', fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: isDark ? '#D88A9F' : '#9B4D6E' }}>
+                  <div style={{ fontSize: '12.5px', fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: isDark ? '#D88A9F' : '#9B4D6E' }}>
                     OPERATIONAL READINESS & LEGAL SETUP
                   </div>
                   <span
                     style={{
-                      fontSize: '10px',
+                      fontSize: '12px',
                       padding: '2px 8px',
                       borderRadius: '8px',
                       backgroundColor: isEventReadyForPaidLaunch(selectedEvent)
@@ -1646,7 +1646,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                   </span>
                 </div>
 
-                <p style={{ fontSize: '12px', color: themeMuted, margin: '0 0 12px 0', lineHeight: '1.45' }}>
+                <p style={{ fontSize: '14px', color: themeMuted, margin: '0 0 12px 0', lineHeight: '1.45' }}>
                   VennZ Compliance Protocol: Paid physical gatherings do not launch until venue leases, licensed event partners, security & medical safety, cancellation terms, attendee conduct, and vendor contracts are fully certified.
                 </p>
 
@@ -1670,11 +1670,11 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
-                        fontSize: '11px',
+                        fontSize: '13px',
                       }}
                     >
                       <span style={{ color: themeTextColor }}>{item.label}</span>
-                      <span style={{ fontWeight: 600, color: item.ready ? (isDark ? '#A5D6A7' : '#2E7D32') : '#FFB74D', fontSize: '10.5px' }}>
+                      <span style={{ fontWeight: 600, color: item.ready ? (isDark ? '#A5D6A7' : '#2E7D32') : '#FFB74D', fontSize: '12.5px' }}>
                         {item.ready ? '✓ Certified' : '⏳ In Progress'}
                       </span>
                     </div>
@@ -1692,10 +1692,10 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                   marginBottom: '20px',
                 }}
               >
-                <div style={{ fontSize: '10.5px', fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: isDark ? '#D88A9F' : '#9B4D6E', marginBottom: '8px' }}>
+                <div style={{ fontSize: '12.5px', fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: isDark ? '#D88A9F' : '#9B4D6E', marginBottom: '8px' }}>
                   OPERATIONAL DEMARCATION OF ROLES
                 </div>
-                <div style={{ fontSize: '12px', color: themeMuted, marginBottom: '14px', lineHeight: '1.45' }}>
+                <div style={{ fontSize: '14px', color: themeMuted, marginBottom: '14px', lineHeight: '1.45' }}>
                   VennZ clearly distinguishes platform membership & curation from our licensed event partner's on-ground physical production.
                 </div>
 
@@ -1709,10 +1709,10 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                       border: `1px solid ${themeBorder}`,
                     }}
                   >
-                    <div style={{ fontSize: '12px', fontWeight: 700, color: themeMulberry, marginBottom: '6px' }}>
+                    <div style={{ fontSize: '14px', fontWeight: 700, color: themeMulberry, marginBottom: '6px' }}>
                       VennZ Platform Role
                     </div>
-                    <ul style={{ margin: 0, paddingLeft: '16px', fontSize: '11px', color: themeTextColor, lineHeight: '1.6' }}>
+                    <ul style={{ margin: 0, paddingLeft: '16px', fontSize: '13px', color: themeTextColor, lineHeight: '1.6' }}>
                       {(selectedEvent.partnerRoleDefinition?.vennzPlatformScope || [
                         'Member admission verification & DigiLocker screening',
                         'Curated attendee room balancing',
@@ -1734,16 +1734,16 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                       border: `1px solid ${themeBorder}`,
                     }}
                   >
-                    <div style={{ fontSize: '12px', fontWeight: 700, color: themeTextColor, marginBottom: '2px' }}>
+                    <div style={{ fontSize: '14px', fontWeight: 700, color: themeTextColor, marginBottom: '2px' }}>
                       Licensed Event Partner Role
                     </div>
-                    <div style={{ fontSize: '10.5px', color: themeMuted, marginBottom: '6px' }}>
+                    <div style={{ fontSize: '12.5px', color: themeMuted, marginBottom: '6px' }}>
                       {selectedEvent.partnerRoleDefinition?.partnerName || 'Licensed Hospitality Partner'}
                       {selectedEvent.partnerRoleDefinition?.partnerLicenseInfo && (
                         <span> · {selectedEvent.partnerRoleDefinition.partnerLicenseInfo}</span>
                       )}
                     </div>
-                    <ul style={{ margin: 0, paddingLeft: '16px', fontSize: '11px', color: themeTextColor, lineHeight: '1.6' }}>
+                    <ul style={{ margin: 0, paddingLeft: '16px', fontSize: '13px', color: themeTextColor, lineHeight: '1.6' }}>
                       {(selectedEvent.partnerRoleDefinition?.partnerOperationalScope || [
                         'Venue lease execution & spatial acoustics',
                         'FSSAI-certified food, mixology & refreshment service',
@@ -1768,10 +1768,10 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                   marginBottom: '20px',
                 }}
               >
-                <div style={{ fontSize: '10.5px', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: themeMuted, marginBottom: '4px' }}>
+                <div style={{ fontSize: '12.5px', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: themeMuted, marginBottom: '4px' }}>
                   CANCELLATION & REFUND POLICY
                 </div>
-                <div style={{ fontSize: '12px', fontWeight: 300, color: themeTextColor, lineHeight: '1.45' }}>
+                <div style={{ fontSize: '14px', fontWeight: 400, color: themeTextColor, lineHeight: '1.45' }}>
                   {selectedEvent.cancellationPolicy ||
                     'Full refund available up to 48 hours before mixer start. Within 48 hours, cancellations receive 100% platform credit toward future mixers or Elevate services.'}
                 </div>
@@ -1787,29 +1787,29 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                   marginBottom: '24px',
                 }}
               >
-                <div style={{ fontSize: '10.5px', fontWeight: 400, letterSpacing: '0.14em', textTransform: 'uppercase', color: isDark ? '#D88A9F' : '#9B4D6E', marginBottom: '8px' }}>
+                <div style={{ fontSize: '12.5px', fontWeight: 400, letterSpacing: '0.14em', textTransform: 'uppercase', color: isDark ? '#D88A9F' : '#9B4D6E', marginBottom: '8px' }}>
                   MEMBER BENEFIT
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '6px' }}>
-                  <span style={{ fontSize: '12px', fontWeight: 300, color: themeMuted }}>Regular Price</span>
-                  <span style={{ fontSize: '13px', fontWeight: 300, textDecoration: 'line-through', color: themeMuted }}>
+                  <span style={{ fontSize: '14px', fontWeight: 400, color: themeMuted }}>Regular Price</span>
+                  <span style={{ fontSize: '15px', fontWeight: 400, textDecoration: 'line-through', color: themeMuted }}>
                     ₹{selectedEvent.regularPrice.toLocaleString('en-IN')}
                   </span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', borderBottom: `1px solid ${themeBorder}`, paddingBottom: '8px', marginBottom: '8px' }}>
-                  <span style={{ fontSize: '13px', fontWeight: 400, color: themeTextColor }}>
+                  <span style={{ fontSize: '15px', fontWeight: 400, color: themeTextColor }}>
                     {isMember ? 'Your Member Price' : 'Member Price'}
                   </span>
-                  <span style={{ fontSize: '18px', fontWeight: 500, color: themeMulberry }}>
+                  <span style={{ fontSize: '20px', fontWeight: 500, color: themeMulberry }}>
                     ₹{selectedEvent.memberPrice.toLocaleString('en-IN')}
                   </span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: '12px', fontWeight: 400, color: isDark ? '#81C784' : '#2E7D32' }}>
+                  <span style={{ fontSize: '14px', fontWeight: 400, color: isDark ? '#81C784' : '#2E7D32' }}>
                     {isMember ? 'You save ₹1,000 as a verified member' : 'Members save ₹1,000'}
                   </span>
                   {!isMember && (
-                    <span style={{ fontSize: '11px', fontWeight: 300, color: themeMuted }}>
+                    <span style={{ fontSize: '13px', fontWeight: 400, color: themeMuted }}>
                       First Look: ₹{selectedEvent.regularPrice.toLocaleString('en-IN')}
                     </span>
                   )}
@@ -1847,7 +1847,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                       border: isUserOnCityWaitlist(selectedEvent.city)
                         ? `1px solid ${isDark ? 'rgba(129, 199, 132, 0.4)' : 'rgba(46, 125, 50, 0.35)'}`
                         : 'none',
-                      fontSize: '12px',
+                      fontSize: '14px',
                       fontWeight: 600,
                       letterSpacing: '0.08em',
                       textTransform: 'uppercase',
@@ -1872,7 +1872,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                         : themeButtonBg,
                       color: mixerInterestedEventIds.includes(selectedEvent.id) ? themeMuted : themeButtonText,
                       border: mixerInterestedEventIds.includes(selectedEvent.id) ? `1px solid ${themeBorder}` : 'none',
-                      fontSize: '12px',
+                      fontSize: '14px',
                       fontWeight: 500,
                       letterSpacing: '0.08em',
                       textTransform: 'uppercase',
@@ -1892,7 +1892,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                       backgroundColor: isDark ? 'rgba(255, 255, 255, 0.06)' : 'rgba(73, 40, 61, 0.06)',
                       color: themeMuted,
                       border: `1px solid ${themeBorder}`,
-                      fontSize: '12px',
+                      fontSize: '14px',
                       fontWeight: 400,
                       letterSpacing: '0.08em',
                       textTransform: 'uppercase',
@@ -1912,7 +1912,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                       backgroundColor: isDark ? 'rgba(129, 199, 132, 0.22)' : 'rgba(46, 125, 50, 0.15)',
                       color: isDark ? '#81C784' : '#2E7D32',
                       border: `1px solid ${isDark ? 'rgba(129, 199, 132, 0.4)' : 'rgba(46, 125, 50, 0.35)'}`,
-                      fontSize: '12px',
+                      fontSize: '14px',
                       fontWeight: 600,
                       letterSpacing: '0.08em',
                       textTransform: 'uppercase',
@@ -1932,7 +1932,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                       backgroundColor: themeButtonBg,
                       color: themeButtonText,
                       border: 'none',
-                      fontSize: '12px',
+                      fontSize: '14px',
                       fontWeight: 500,
                       letterSpacing: '0.08em',
                       textTransform: 'uppercase',
@@ -1963,7 +1963,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                   alignItems: 'center',
                   gap: '6px',
                   color: themeMulberry,
-                  fontSize: '11px',
+                  fontSize: '13px',
                   fontWeight: 400,
                   letterSpacing: '0.12em',
                   textTransform: 'uppercase',
@@ -1978,7 +1978,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
               <div style={{ marginBottom: '20px' }}>
                 <div
                   style={{
-                    fontSize: '10.5px',
+                    fontSize: '12.5px',
                     fontWeight: 400,
                     letterSpacing: '0.14em',
                     textTransform: 'uppercase',
@@ -1991,7 +1991,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                 <h1
                   style={{
                     fontFamily: 'var(--font-serif)',
-                    fontSize: '24px',
+                    fontSize: '26px',
                     fontWeight: 400,
                     color: themeMulberry,
                     margin: 0,
@@ -2032,7 +2032,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                   <h3
                     style={{
                       fontFamily: 'var(--font-serif)',
-                      fontSize: '16.5px',
+                      fontSize: '18.5px',
                       fontWeight: 400,
                       color: themeMulberry,
                       margin: '0 0 2px 0',
@@ -2040,10 +2040,10 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                   >
                     {selectedEvent.eventName}
                   </h3>
-                  <div style={{ fontSize: '12px', fontWeight: 300, color: themeTextColor }}>
+                  <div style={{ fontSize: '14px', fontWeight: 400, color: themeTextColor }}>
                     {selectedEvent.date}
                   </div>
-                  <div style={{ fontSize: '11.5px', fontWeight: 300, color: themeMuted }}>
+                  <div style={{ fontSize: '13.5px', fontWeight: 400, color: themeMuted }}>
                     {selectedEvent.startTime} – {selectedEvent.endTime} · {selectedEvent.area}
                   </div>
                 </div>
@@ -2059,35 +2059,35 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                   marginBottom: '20px',
                 }}
               >
-                <div style={{ fontSize: '11px', fontWeight: 400, letterSpacing: '0.14em', textTransform: 'uppercase', color: themeMuted, marginBottom: '12px' }}>
+                <div style={{ fontSize: '13px', fontWeight: 400, letterSpacing: '0.14em', textTransform: 'uppercase', color: themeMuted, marginBottom: '12px' }}>
                   YOUR PRICE
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontSize: '12.5px', fontWeight: 300, color: themeMuted }}>
+                    <span style={{ fontSize: '14.5px', fontWeight: 400, color: themeMuted }}>
                       Regular Event Price
                     </span>
-                    <span style={{ fontSize: '12.5px', fontWeight: 300, color: themeMuted }}>
+                    <span style={{ fontSize: '14.5px', fontWeight: 400, color: themeMuted }}>
                       ₹{selectedEvent.regularPrice.toLocaleString('en-IN')}
                     </span>
                   </div>
 
                   {isMember ? (
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span style={{ fontSize: '12.5px', fontWeight: 400, color: isDark ? '#81C784' : '#2E7D32' }}>
+                      <span style={{ fontSize: '14.5px', fontWeight: 400, color: isDark ? '#81C784' : '#2E7D32' }}>
                         Member Privilege (-₹1,000)
                       </span>
-                      <span style={{ fontSize: '12.5px', fontWeight: 400, color: isDark ? '#81C784' : '#2E7D32' }}>
+                      <span style={{ fontSize: '14.5px', fontWeight: 400, color: isDark ? '#81C784' : '#2E7D32' }}>
                         -₹1,000
                       </span>
                     </div>
                   ) : (
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span style={{ fontSize: '12px', fontWeight: 300, color: themeMuted }}>
+                      <span style={{ fontSize: '14px', fontWeight: 400, color: themeMuted }}>
                         First Look Rate
                       </span>
-                      <span style={{ fontSize: '12px', fontWeight: 300, color: themeMuted }}>
+                      <span style={{ fontSize: '14px', fontWeight: 400, color: themeMuted }}>
                         Standard
                       </span>
                     </div>
@@ -2103,10 +2103,10 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                       alignItems: 'center',
                     }}
                   >
-                    <span style={{ fontSize: '13.5px', fontWeight: 400, color: themeTextColor }}>
+                    <span style={{ fontSize: '15.5px', fontWeight: 400, color: themeTextColor }}>
                       Total Amount Payable
                     </span>
-                    <span style={{ fontSize: '18px', fontWeight: 500, color: themeMulberry }}>
+                    <span style={{ fontSize: '20px', fontWeight: 500, color: themeMulberry }}>
                       ₹{(isMember ? selectedEvent.memberPrice : selectedEvent.regularPrice).toLocaleString('en-IN')}
                     </span>
                   </div>
@@ -2124,10 +2124,10 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                     marginBottom: '20px',
                   }}
                 >
-                  <div style={{ fontSize: '11px', fontWeight: 400, color: isDark ? '#D88A9F' : '#9B4D6E', marginBottom: '2px' }}>
+                  <div style={{ fontSize: '13px', fontWeight: 400, color: isDark ? '#D88A9F' : '#9B4D6E', marginBottom: '2px' }}>
                     MEMBERSHIP PRIVILEGE
                   </div>
-                  <div style={{ fontSize: '12px', fontWeight: 300, color: themeTextColor, lineHeight: '1.45' }}>
+                  <div style={{ fontSize: '14px', fontWeight: 400, color: themeTextColor, lineHeight: '1.45' }}>
                     You are reserving under complimentary First Look access. Full circle members save ₹1,000 on every private gathering.
                   </div>
                 </div>
@@ -2145,7 +2145,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                     backgroundColor: isDark ? 'rgba(129, 199, 132, 0.22)' : 'rgba(46, 125, 50, 0.15)',
                     color: isDark ? '#81C784' : '#2E7D32',
                     border: `1px solid ${isDark ? 'rgba(129, 199, 132, 0.4)' : 'rgba(46, 125, 50, 0.35)'}`,
-                    fontSize: '12px',
+                    fontSize: '14px',
                     fontWeight: 600,
                     letterSpacing: '0.08em',
                     textTransform: 'uppercase',
@@ -2165,7 +2165,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                     backgroundColor: themeButtonBg,
                     color: themeButtonText,
                     border: 'none',
-                    fontSize: '12px',
+                    fontSize: '14px',
                     fontWeight: 500,
                     letterSpacing: '0.08em',
                     textTransform: 'uppercase',
@@ -2198,7 +2198,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                   alignItems: 'center',
                   gap: '6px',
                   color: themeMulberry,
-                  fontSize: '11px',
+                  fontSize: '13px',
                   fontWeight: 400,
                   letterSpacing: '0.12em',
                   textTransform: 'uppercase',
@@ -2214,7 +2214,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                 <h1
                   style={{
                     fontFamily: 'var(--font-serif)',
-                    fontSize: '24px',
+                    fontSize: '26px',
                     fontWeight: 400,
                     color: themeMulberry,
                     margin: '0 0 4px 0',
@@ -2222,7 +2222,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                 >
                   My Events
                 </h1>
-                <p style={{ fontSize: '13px', fontWeight: 300, lineHeight: '1.5', color: themeMuted, margin: 0 }}>
+                <p style={{ fontSize: '15px', fontWeight: 400, lineHeight: '1.5', color: themeMuted, margin: 0 }}>
                   Manage your confirmed mixer reservations, interest lists, and past gatherings.
                 </p>
               </div>
@@ -2249,7 +2249,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                     border: myEventsTab === 'upcoming' ? 'none' : 'transparent',
                     backgroundColor: myEventsTab === 'upcoming' ? (isDark ? '#F3EEE9' : '#FFFFFF') : 'transparent',
                     color: myEventsTab === 'upcoming' ? (isDark ? '#140E1C' : 'var(--color-mulberry)') : themeMuted,
-                    fontSize: '11px',
+                    fontSize: '13px',
                     fontWeight: myEventsTab === 'upcoming' ? 500 : 400,
                     letterSpacing: '0.08em',
                     textTransform: 'uppercase',
@@ -2268,7 +2268,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                     border: myEventsTab === 'interested' ? 'none' : 'transparent',
                     backgroundColor: myEventsTab === 'interested' ? (isDark ? '#F3EEE9' : '#FFFFFF') : 'transparent',
                     color: myEventsTab === 'interested' ? (isDark ? '#140E1C' : 'var(--color-mulberry)') : themeMuted,
-                    fontSize: '11px',
+                    fontSize: '13px',
                     fontWeight: myEventsTab === 'interested' ? 500 : 400,
                     letterSpacing: '0.08em',
                     textTransform: 'uppercase',
@@ -2287,7 +2287,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                     border: myEventsTab === 'past' ? 'none' : 'transparent',
                     backgroundColor: myEventsTab === 'past' ? (isDark ? '#F3EEE9' : '#FFFFFF') : 'transparent',
                     color: myEventsTab === 'past' ? (isDark ? '#140E1C' : 'var(--color-mulberry)') : themeMuted,
-                    fontSize: '11px',
+                    fontSize: '13px',
                     fontWeight: myEventsTab === 'past' ? 500 : 400,
                     letterSpacing: '0.08em',
                     textTransform: 'uppercase',
@@ -2312,10 +2312,10 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                         textAlign: 'center',
                       }}
                     >
-                      <div style={{ fontSize: '14px', fontWeight: 400, color: themeTextColor, marginBottom: '6px' }}>
+                      <div style={{ fontSize: '16px', fontWeight: 400, color: themeTextColor, marginBottom: '6px' }}>
                         No upcoming bookings
                       </div>
-                      <p style={{ fontSize: '12.5px', fontWeight: 300, color: themeMuted, lineHeight: '1.5', margin: '0 0 16px 0' }}>
+                      <p style={{ fontSize: '14.5px', fontWeight: 400, color: themeMuted, lineHeight: '1.5', margin: '0 0 16px 0' }}>
                         Browse our upcoming calendar to reserve a seat at an intimate gathering.
                       </p>
                       <button
@@ -2327,7 +2327,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                           backgroundColor: themeButtonBg,
                           color: themeButtonText,
                           border: 'none',
-                          fontSize: '11.5px',
+                          fontSize: '13.5px',
                           fontWeight: 500,
                           letterSpacing: '0.08em',
                           textTransform: 'uppercase',
@@ -2354,13 +2354,13 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                       >
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                           <div>
-                            <div style={{ fontFamily: 'var(--font-serif)', fontSize: '17px', fontWeight: 400, color: themeMulberry, marginBottom: '2px' }}>
+                            <div style={{ fontFamily: 'var(--font-serif)', fontSize: '19px', fontWeight: 400, color: themeMulberry, marginBottom: '2px' }}>
                               {b.eventName}
                             </div>
-                            <div style={{ fontSize: '12px', fontWeight: 300, color: themeTextColor }}>
+                            <div style={{ fontSize: '14px', fontWeight: 400, color: themeTextColor }}>
                               {b.date} · {b.startTime}
                             </div>
-                            <div style={{ fontSize: '11.5px', fontWeight: 300, color: themeMuted }}>
+                            <div style={{ fontSize: '13.5px', fontWeight: 400, color: themeMuted }}>
                               {b.area} · {b.venue}
                             </div>
                           </div>
@@ -2370,7 +2370,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                               borderRadius: '10px',
                               backgroundColor: isDark ? 'rgba(129, 199, 132, 0.18)' : 'rgba(46, 125, 50, 0.12)',
                               color: isDark ? '#81C784' : '#2E7D32',
-                              fontSize: '10px',
+                              fontSize: '12px',
                               fontWeight: 400,
                               letterSpacing: '0.06em',
                               textTransform: 'uppercase',
@@ -2390,10 +2390,10 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                           }}
                         >
                           <div>
-                            <div style={{ fontSize: '10px', fontWeight: 400, color: themeMuted, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                            <div style={{ fontSize: '12px', fontWeight: 400, color: themeMuted, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
                               BOOKING ID
                             </div>
-                            <div style={{ fontSize: '12px', fontWeight: 400, color: themeMulberry }}>
+                            <div style={{ fontSize: '14px', fontWeight: 400, color: themeMulberry }}>
                               {b.id}
                             </div>
                           </div>
@@ -2406,7 +2406,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                               backgroundColor: themeButtonBg,
                               color: themeButtonText,
                               border: 'none',
-                              fontSize: '11px',
+                              fontSize: '13px',
                               fontWeight: 500,
                               letterSpacing: '0.08em',
                               textTransform: 'uppercase',
@@ -2435,10 +2435,10 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                         textAlign: 'center',
                       }}
                     >
-                      <div style={{ fontSize: '14px', fontWeight: 400, color: themeTextColor, marginBottom: '6px' }}>
+                      <div style={{ fontSize: '16px', fontWeight: 400, color: themeTextColor, marginBottom: '6px' }}>
                         No events on interest list
                       </div>
-                      <p style={{ fontSize: '12.5px', fontWeight: 300, color: themeMuted, lineHeight: '1.5', margin: 0 }}>
+                      <p style={{ fontSize: '14.5px', fontWeight: 400, color: themeMuted, lineHeight: '1.5', margin: 0 }}>
                         When you click "Show Interest" on an event in planning, it will appear here.
                       </p>
                     </div>
@@ -2457,13 +2457,13 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                         }}
                       >
                         <div>
-                          <div style={{ fontFamily: 'var(--font-serif)', fontSize: '17px', fontWeight: 400, color: themeMulberry, marginBottom: '2px' }}>
+                          <div style={{ fontFamily: 'var(--font-serif)', fontSize: '19px', fontWeight: 400, color: themeMulberry, marginBottom: '2px' }}>
                             {event.eventName}
                           </div>
-                          <div style={{ fontSize: '12px', fontWeight: 300, color: themeTextColor }}>
+                          <div style={{ fontSize: '14px', fontWeight: 400, color: themeTextColor }}>
                             {event.date} · {event.startTime}
                           </div>
-                          <div style={{ fontSize: '11px', fontWeight: 400, color: isDark ? '#FFB74D' : '#D97706', marginTop: '2px' }}>
+                          <div style={{ fontSize: '13px', fontWeight: 400, color: isDark ? '#FFB74D' : '#D97706', marginTop: '2px' }}>
                             On interest list · We will notify you
                           </div>
                         </div>
@@ -2477,7 +2477,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                             backgroundColor: 'transparent',
                             border: `1px solid ${themeBorder}`,
                             color: themeMulberry,
-                            fontSize: '11px',
+                            fontSize: '13px',
                             fontWeight: 400,
                             letterSpacing: '0.08em',
                             textTransform: 'uppercase',
@@ -2505,10 +2505,10 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                         textAlign: 'center',
                       }}
                     >
-                      <div style={{ fontSize: '14px', fontWeight: 400, color: themeTextColor, marginBottom: '4px' }}>
+                      <div style={{ fontSize: '16px', fontWeight: 400, color: themeTextColor, marginBottom: '4px' }}>
                         No past events yet
                       </div>
-                      <p style={{ fontSize: '12px', fontWeight: 300, color: themeMuted, margin: 0 }}>
+                      <p style={{ fontSize: '14px', fontWeight: 400, color: themeMuted, margin: 0 }}>
                         Completed gatherings will be archived here.
                       </p>
                     </div>
@@ -2528,13 +2528,13 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                         }}
                       >
                         <div>
-                          <div style={{ fontFamily: 'var(--font-serif)', fontSize: '17px', fontWeight: 400, color: themeMulberry, marginBottom: '2px' }}>
+                          <div style={{ fontFamily: 'var(--font-serif)', fontSize: '19px', fontWeight: 400, color: themeMulberry, marginBottom: '2px' }}>
                             {b.eventName}
                           </div>
-                          <div style={{ fontSize: '12px', fontWeight: 300, color: themeMuted }}>
+                          <div style={{ fontSize: '14px', fontWeight: 400, color: themeMuted }}>
                             {b.date} · {b.area}
                           </div>
-                          <div style={{ fontSize: '11.5px', fontWeight: 300, color: themeMuted }}>
+                          <div style={{ fontSize: '13.5px', fontWeight: 400, color: themeMuted }}>
                             Booking ID: {b.id}
                           </div>
                         </div>
@@ -2545,7 +2545,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                             borderRadius: '12px',
                             backgroundColor: isDark ? 'rgba(255, 255, 255, 0.06)' : 'rgba(73, 40, 61, 0.05)',
                             color: themeMuted,
-                            fontSize: '10.5px',
+                            fontSize: '12.5px',
                             fontWeight: 400,
                             letterSpacing: '0.06em',
                             textTransform: 'uppercase',
@@ -2577,7 +2577,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                   alignItems: 'center',
                   gap: '6px',
                   color: themeMulberry,
-                  fontSize: '11px',
+                  fontSize: '13px',
                   fontWeight: 400,
                   letterSpacing: '0.12em',
                   textTransform: 'uppercase',
@@ -2592,7 +2592,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
               <div style={{ textAlign: 'center', marginBottom: '16px' }}>
                 <div
                   style={{
-                    fontSize: '10.5px',
+                    fontSize: '12.5px',
                     fontWeight: 400,
                     letterSpacing: '0.16em',
                     textTransform: 'uppercase',
@@ -2605,7 +2605,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                 <h1
                   style={{
                     fontFamily: 'var(--font-serif)',
-                    fontSize: '24px',
+                    fontSize: '26px',
                     fontWeight: 400,
                     color: themeMulberry,
                     margin: 0,
@@ -2629,12 +2629,12 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                 {/* Top Section */}
                 <div style={{ padding: '22px 20px 18px 20px', position: 'relative' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-                    <span style={{ fontSize: '10px', fontWeight: 400, letterSpacing: '0.14em', textTransform: 'uppercase', color: themeMuted }}>
+                    <span style={{ fontSize: '12px', fontWeight: 400, letterSpacing: '0.14em', textTransform: 'uppercase', color: themeMuted }}>
                       MEMBER PASS
                     </span>
                     <span
                       style={{
-                        fontSize: '9.5px',
+                        fontSize: '11.5px',
                         fontWeight: 400,
                         letterSpacing: '0.1em',
                         textTransform: 'uppercase',
@@ -2651,7 +2651,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                   <h2
                     style={{
                       fontFamily: 'var(--font-serif)',
-                      fontSize: '22px',
+                      fontSize: '24px',
                       fontWeight: 400,
                       color: themeMulberry,
                       margin: '0 0 6px 0',
@@ -2660,13 +2660,13 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                     {selectedBooking.eventName}
                   </h2>
 
-                  <div style={{ fontSize: '13px', fontWeight: 400, color: themeTextColor, marginBottom: '2px' }}>
+                  <div style={{ fontSize: '15px', fontWeight: 400, color: themeTextColor, marginBottom: '2px' }}>
                     {selectedBooking.date}
                   </div>
-                  <div style={{ fontSize: '12px', fontWeight: 300, color: themeMuted }}>
+                  <div style={{ fontSize: '14px', fontWeight: 400, color: themeMuted }}>
                     {selectedBooking.startTime} – {selectedBooking.endTime} · {selectedBooking.area}
                   </div>
-                  <div style={{ fontSize: '11.5px', fontWeight: 300, color: isDark ? '#D5C5CF' : '#8A7A84', marginTop: '4px' }}>
+                  <div style={{ fontSize: '13.5px', fontWeight: 400, color: isDark ? '#D5C5CF' : '#8A7A84', marginTop: '4px' }}>
                     Venue: {selectedBooking.venue}
                   </div>
                 </div>
@@ -2716,18 +2716,18 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                 <div style={{ padding: '16px 20px 22px 20px' }}>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '20px' }}>
                     <div>
-                      <div style={{ fontSize: '10px', fontWeight: 400, letterSpacing: '0.12em', textTransform: 'uppercase', color: themeMuted, marginBottom: '2px' }}>
+                      <div style={{ fontSize: '12px', fontWeight: 400, letterSpacing: '0.12em', textTransform: 'uppercase', color: themeMuted, marginBottom: '2px' }}>
                         MEMBER
                       </div>
-                      <div style={{ fontSize: '14px', fontWeight: 400, color: themeTextColor }}>
+                      <div style={{ fontSize: '16px', fontWeight: 400, color: themeTextColor }}>
                         {profile.firstName ? `${profile.firstName} (Member)` : 'VennZ Member'}
                       </div>
                     </div>
                     <div>
-                      <div style={{ fontSize: '10px', fontWeight: 400, letterSpacing: '0.12em', textTransform: 'uppercase', color: themeMuted, marginBottom: '2px' }}>
+                      <div style={{ fontSize: '12px', fontWeight: 400, letterSpacing: '0.12em', textTransform: 'uppercase', color: themeMuted, marginBottom: '2px' }}>
                         BOOKING ID
                       </div>
-                      <div style={{ fontSize: '14px', fontWeight: 400, color: themeMulberry }}>
+                      <div style={{ fontSize: '16px', fontWeight: 400, color: themeMulberry }}>
                         {selectedBooking.id}
                       </div>
                     </div>
@@ -2787,7 +2787,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
 
                     <span
                       style={{
-                        fontSize: '10.5px',
+                        fontSize: '12.5px',
                         fontWeight: 400,
                         letterSpacing: '0.12em',
                         textTransform: 'uppercase',
@@ -2798,7 +2798,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                     </span>
                   </div>
 
-                  <div style={{ textAlign: 'center', marginTop: '14px', fontSize: '11px', fontWeight: 300, color: themeMuted }}>
+                  <div style={{ textAlign: 'center', marginTop: '14px', fontSize: '13px', fontWeight: 400, color: themeMuted }}>
                     Please display this digital pass at the private door host desk.
                   </div>
                 </div>
@@ -2815,7 +2815,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                   backgroundColor: 'transparent',
                   border: `1px solid ${themeBorder}`,
                   color: themeMulberry,
-                  fontSize: '11.5px',
+                  fontSize: '13.5px',
                   fontWeight: 400,
                   letterSpacing: '0.08em',
                   textTransform: 'uppercase',
@@ -2879,10 +2879,10 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                 <style>
                   {`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}
                 </style>
-                <div style={{ fontSize: '13.5px', fontWeight: 400, color: themeTextColor, marginBottom: '4px' }}>
+                <div style={{ fontSize: '15.5px', fontWeight: 400, color: themeTextColor, marginBottom: '4px' }}>
                   Confirming Reservation...
                 </div>
-                <div style={{ fontSize: '11.5px', fontWeight: 300, color: themeMuted }}>
+                <div style={{ fontSize: '13.5px', fontWeight: 400, color: themeMuted }}>
                   Securing your seat in the room
                 </div>
               </div>
@@ -2895,7 +2895,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                     borderRadius: '50%',
                     backgroundColor: isDark ? 'rgba(129, 199, 132, 0.2)' : 'rgba(46, 125, 50, 0.12)',
                     color: isDark ? '#81C784' : '#2E7D32',
-                    fontSize: '24px',
+                    fontSize: '26px',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -2905,14 +2905,14 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                   ✓
                 </div>
 
-                <div style={{ fontSize: '10.5px', fontWeight: 400, letterSpacing: '0.12em', textTransform: 'uppercase', color: isDark ? '#81C784' : '#2E7D32', marginBottom: '4px' }}>
+                <div style={{ fontSize: '12.5px', fontWeight: 400, letterSpacing: '0.12em', textTransform: 'uppercase', color: isDark ? '#81C784' : '#2E7D32', marginBottom: '4px' }}>
                   BOOKING CONFIRMED
                 </div>
 
                 <h3
                   style={{
                     fontFamily: 'var(--font-serif)',
-                    fontSize: '22px',
+                    fontSize: '24px',
                     fontWeight: 400,
                     color: themeMulberry,
                     margin: '0 0 10px 0',
@@ -2934,13 +2934,13 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                     gap: '4px',
                   }}
                 >
-                  <div style={{ fontSize: '12.5px', fontWeight: 400, color: themeTextColor }}>
+                  <div style={{ fontSize: '14.5px', fontWeight: 400, color: themeTextColor }}>
                     {confirmedBooking.date} · {confirmedBooking.startTime}
                   </div>
-                  <div style={{ fontSize: '11.5px', fontWeight: 300, color: themeMuted }}>
+                  <div style={{ fontSize: '13.5px', fontWeight: 400, color: themeMuted }}>
                     {confirmedBooking.area} · ₹{confirmedBooking.amountPaid.toLocaleString('en-IN')} Paid
                   </div>
-                  <div style={{ fontSize: '11.5px', fontWeight: 400, color: themeMulberry, borderTop: `1px solid ${themeBorder}`, paddingTop: '6px', marginTop: '2px' }}>
+                  <div style={{ fontSize: '13.5px', fontWeight: 400, color: themeMulberry, borderTop: `1px solid ${themeBorder}`, paddingTop: '6px', marginTop: '2px' }}>
                     Booking ID: {confirmedBooking.id}
                   </div>
                 </div>
@@ -2955,7 +2955,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                       backgroundColor: themeButtonBg,
                       color: themeButtonText,
                       border: 'none',
-                      fontSize: '12px',
+                      fontSize: '14px',
                       fontWeight: 500,
                       letterSpacing: '0.08em',
                       textTransform: 'uppercase',
@@ -2979,7 +2979,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                       background: 'transparent',
                       color: themeMuted,
                       border: 'none',
-                      fontSize: '12px',
+                      fontSize: '14px',
                       fontWeight: 400,
                       cursor: 'pointer',
                     }}
@@ -3035,7 +3035,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                 <div>
                   <span
                     style={{
-                      fontSize: '10.5px',
+                      fontSize: '12.5px',
                       fontWeight: 700,
                       letterSpacing: '0.12em',
                       textTransform: 'uppercase',
@@ -3044,7 +3044,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                   >
                     CITY DEMAND REGISTRATION
                   </span>
-                  <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '22px', margin: '4px 0 0', color: themeMulberry }}>
+                  <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '24px', margin: '4px 0 0', color: themeMulberry }}>
                     {isOnWaitlist ? `Manage ${liveDemand.city} Waitlist` : `Join ${liveDemand.city} Waitlist`}
                   </h2>
                 </div>
@@ -3054,7 +3054,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                   style={{
                     background: 'transparent',
                     border: 'none',
-                    fontSize: '20px',
+                    fontSize: '22px',
                     color: themeMuted,
                     cursor: 'pointer',
                   }}
@@ -3079,7 +3079,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '6px' }}>
                   <span
                     style={{
-                      fontSize: '10px',
+                      fontSize: '12px',
                       padding: '3px 8px',
                       borderRadius: '999px',
                       backgroundColor: phase.badgeBg,
@@ -3091,7 +3091,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                   >
                     ● {phase.phaseTag}
                   </span>
-                  <span style={{ fontSize: '13px', fontWeight: 700, color: themeTextColor }}>
+                  <span style={{ fontSize: '15px', fontWeight: 700, color: themeTextColor }}>
                     {liveDemand.activeMembersInterested} / {liveDemand.demandThresholdToLaunch} Members Registered
                   </span>
                 </div>
@@ -3115,7 +3115,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                   />
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: themeMuted }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: themeMuted }}>
                   <span style={{ fontWeight: 600, color: themeTextColor }}>{liveDemand.estimatedTimeline}</span>
                   <span>{percent}% threshold</span>
                 </div>
@@ -3127,7 +3127,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                   borderRadius: '12px',
                   backgroundColor: isDark ? 'rgba(161, 82, 95, 0.12)' : 'rgba(161, 82, 95, 0.06)',
                   border: `1px solid ${themeBorder}`,
-                  fontSize: '11px',
+                  fontSize: '13px',
                   color: themeMuted,
                   marginBottom: '14px',
                   lineHeight: '1.45',
@@ -3139,7 +3139,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
               <form onSubmit={handleJoinCityWaitlistSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                 {/* Preferred Neighborhood / Area */}
                 <div>
-                  <label style={{ fontSize: '11.5px', fontWeight: 600, color: themeMulberry, display: 'block', marginBottom: '6px' }}>
+                  <label style={{ fontSize: '13.5px', fontWeight: 600, color: themeMulberry, display: 'block', marginBottom: '6px' }}>
                     Preferred Neighborhood / Area in {liveDemand.city}
                   </label>
                   <input
@@ -3154,7 +3154,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                       border: `1px solid ${themeBorder}`,
                       backgroundColor: isDark ? 'rgba(20, 14, 28, 0.7)' : 'rgba(250, 241, 243, 0.8)',
                       color: themeTextColor,
-                      fontSize: '13px',
+                      fontSize: '15px',
                       boxSizing: 'border-box',
                       outline: 'none',
                     }}
@@ -3163,7 +3163,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
 
                 {/* Day & Timing Preference */}
                 <div>
-                  <label style={{ fontSize: '11.5px', fontWeight: 600, color: themeMulberry, display: 'block', marginBottom: '6px' }}>
+                  <label style={{ fontSize: '13.5px', fontWeight: 600, color: themeMulberry, display: 'block', marginBottom: '6px' }}>
                     Ideal Day & Schedule Timing
                   </label>
                   <select
@@ -3176,7 +3176,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                       border: `1px solid ${themeBorder}`,
                       backgroundColor: isDark ? 'rgba(20, 14, 28, 0.7)' : 'rgba(250, 241, 243, 0.8)',
                       color: themeTextColor,
-                      fontSize: '13px',
+                      fontSize: '15px',
                       boxSizing: 'border-box',
                       outline: 'none',
                     }}
@@ -3190,7 +3190,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
 
                 {/* Dietary Catering Logistics */}
                 <div>
-                  <label style={{ fontSize: '11.5px', fontWeight: 600, color: themeMulberry, display: 'block', marginBottom: '6px' }}>
+                  <label style={{ fontSize: '13.5px', fontWeight: 600, color: themeMulberry, display: 'block', marginBottom: '6px' }}>
                     Dietary Catering Preference (Operational Only)
                   </label>
                   <select
@@ -3203,7 +3203,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                       border: `1px solid ${themeBorder}`,
                       backgroundColor: isDark ? 'rgba(20, 14, 28, 0.7)' : 'rgba(250, 241, 243, 0.8)',
                       color: themeTextColor,
-                      fontSize: '13px',
+                      fontSize: '15px',
                       boxSizing: 'border-box',
                       outline: 'none',
                     }}
@@ -3219,7 +3219,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                 {/* Notice & Disclaimer */}
                 <div
                   style={{
-                    fontSize: '11px',
+                    fontSize: '13px',
                     color: themeMuted,
                     lineHeight: '1.45',
                     padding: '4px 0',
@@ -3240,7 +3240,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                         border: `1px solid ${isDark ? 'rgba(239, 68, 68, 0.4)' : 'rgba(220, 38, 38, 0.3)'}`,
                         backgroundColor: isDark ? 'rgba(239, 68, 68, 0.12)' : 'rgba(254, 242, 242, 0.85)',
                         color: isDark ? '#FCA5A5' : '#DC2626',
-                        fontSize: '12px',
+                        fontSize: '14px',
                         fontWeight: 600,
                         cursor: 'pointer',
                       }}
@@ -3256,7 +3256,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                         border: 'none',
                         background: themeButtonBg,
                         color: themeButtonText,
-                        fontSize: '12px',
+                        fontSize: '14px',
                         fontWeight: 600,
                         cursor: 'pointer',
                       }}
@@ -3276,7 +3276,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                         border: `1px solid ${themeBorder}`,
                         backgroundColor: 'transparent',
                         color: themeTextColor,
-                        fontSize: '12.5px',
+                        fontSize: '14.5px',
                         cursor: 'pointer',
                       }}
                     >
@@ -3291,7 +3291,7 @@ export const Page18MixersScreen: React.FC<Page18MixersScreenProps> = ({
                         border: 'none',
                         background: themeButtonBg,
                         color: themeButtonText,
-                        fontSize: '12.5px',
+                        fontSize: '14.5px',
                         fontWeight: 600,
                         cursor: 'pointer',
                       }}

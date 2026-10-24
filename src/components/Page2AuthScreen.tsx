@@ -283,7 +283,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
               borderRadius: '100px',
               padding: '9px 16px',
               color: '#F9AAAD',
-              fontSize: '13px',
+              fontSize: '15px',
               fontWeight: 500,
               letterSpacing: '0.04em',
               cursor: 'pointer',
@@ -394,11 +394,11 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                  <span style={{ fontSize: '13px', fontWeight: 600, color: '#FDF3F5' }}>Notifications</span>
-                  <span style={{ fontSize: '11px', color: '#F9AAAD' }}>{unreadNotificationsCount} new</span>
+                  <span style={{ fontSize: '15px', fontWeight: 600, color: '#FDF3F5' }}>Notifications</span>
+                  <span style={{ fontSize: '13px', color: '#F9AAAD' }}>{unreadNotificationsCount} new</span>
                 </div>
                 {notifications.length === 0 ? (
-                  <p style={{ fontSize: '12px', color: '#F8E2E6', opacity: 0.7, margin: 0, textAlign: 'center', padding: '12px 0' }}>
+                  <p style={{ fontSize: '14px', color: '#F8E2E6', opacity: 0.7, margin: 0, textAlign: 'center', padding: '12px 0' }}>
                     No new notifications
                   </p>
                 ) : (
@@ -410,11 +410,11 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
                           padding: '8px 10px',
                           borderRadius: '10px',
                           backgroundColor: 'rgba(70, 32, 55, 0.4)',
-                          fontSize: '12px',
+                          fontSize: '14px',
                         }}
                       >
                         <div style={{ fontWeight: 600, color: '#FDF3F5', marginBottom: '2px' }}>{notif.title}</div>
-                        <div style={{ color: '#F8E2E6', opacity: 0.8, fontSize: '11px' }}>{notif.message}</div>
+                        <div style={{ color: '#F8E2E6', opacity: 0.8, fontSize: '13px' }}>{notif.message}</div>
                       </div>
                     ))}
                   </div>
@@ -504,7 +504,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
 
           <p
             style={{
-              fontSize: '15px',
+              fontSize: '17px',
               lineHeight: 1.6,
               color: '#F8E2E6',
               margin: 0,
@@ -548,7 +548,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
                 background: 'rgba(161, 82, 95, 0.22)',
                 border: '1px solid rgba(249, 170, 173, 0.3)',
                 color: '#F9AAAD',
-                fontSize: '11px',
+                fontSize: '13px',
                 fontWeight: 600,
                 letterSpacing: '0.12em',
                 textTransform: 'uppercase',
@@ -574,7 +574,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
 
             <p
               style={{
-                fontSize: '14px',
+                fontSize: '16px',
                 lineHeight: 1.55,
                 color: '#F8E2E6',
                 opacity: 0.85,
@@ -603,7 +603,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
                 justifyContent: 'center',
                 gap: '12px',
                 color: '#FDF3F5',
-                fontSize: '15px',
+                fontSize: '17px',
                 fontWeight: 600,
                 cursor: 'pointer',
                 boxShadow: '0 6px 18px rgba(0, 0, 0, 0.25)',
@@ -647,7 +647,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
                 justifyContent: 'center',
                 gap: '12px',
                 color: '#FDF3F5',
-                fontSize: '15px',
+                fontSize: '17px',
                 fontWeight: 600,
                 cursor: 'pointer',
                 boxShadow: '0 6px 18px rgba(0, 0, 0, 0.25)',
@@ -663,7 +663,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
           {/* Privacy & Terms Note */}
           <p
             style={{
-              fontSize: '11px',
+              fontSize: '13px',
               lineHeight: 1.55,
               color: '#F8E2E6',
               opacity: 0.6,
@@ -728,7 +728,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
                 <h3
                   style={{
                     fontFamily: 'var(--font-serif)',
-                    fontSize: '20px',
+                    fontSize: '22px',
                     margin: 0,
                     color: '#F9AAAD',
                   }}
@@ -737,7 +737,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
                 </h3>
               </div>
 
-              <p style={{ fontSize: '13.5px', lineHeight: 1.6, color: '#F8E2E6', margin: '0 0 16px 0', opacity: 0.9 }}>
+              <p style={{ fontSize: '15.5px', lineHeight: 1.6, color: '#F8E2E6', margin: '0 0 16px 0', opacity: 0.9 }}>
                 {oauthModal.message}
               </p>
 
@@ -749,7 +749,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
                     padding: '10px 14px',
                     borderRadius: '10px',
                     fontFamily: 'monospace',
-                    fontSize: '12px',
+                    fontSize: '14px',
                     color: '#F9AAAD',
                     marginBottom: '18px',
                     display: 'flex',
@@ -757,7 +757,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
                     gap: '4px',
                   }}
                 >
-                  <span style={{ fontSize: '11px', opacity: 0.7 }}>Environment Variable:</span>
+                  <span style={{ fontSize: '13px', opacity: 0.7 }}>Environment Variable:</span>
                   <code>{oauthModal.missingEnv}</code>
                 </div>
               )}
@@ -775,7 +775,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
                       border: 'none',
                       color: '#FDF3F5',
                       fontWeight: 600,
-                      fontSize: '14px',
+                      fontSize: '16px',
                       cursor: 'pointer',
                       display: 'flex',
                       alignItems: 'center',
@@ -801,7 +801,7 @@ export const Page2AuthScreen: React.FC<Page2AuthScreenProps> = ({
                     border: '1px solid rgba(161, 82, 95, 0.3)',
                     background: 'rgba(70, 32, 55, 0.4)',
                     color: '#F8E2E6',
-                    fontSize: '13.5px',
+                    fontSize: '15.5px',
                     fontWeight: 500,
                     cursor: 'pointer',
                     transition: 'all 0.15s ease',

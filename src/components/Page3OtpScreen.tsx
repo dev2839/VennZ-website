@@ -235,7 +235,7 @@ export const Page3OtpScreen: React.FC<Page3OtpScreenProps> = ({
                 alignItems: 'center',
                 gap: '8px',
                 fontFamily: 'var(--font-sans)',
-                fontSize: '14.5px',
+                fontSize: '16.5px',
                 fontWeight: 600,
                 letterSpacing: '0.08em',
                 textTransform: 'uppercase',
@@ -287,7 +287,7 @@ export const Page3OtpScreen: React.FC<Page3OtpScreenProps> = ({
             <h2
               style={{
                 fontFamily: 'var(--font-sans)',
-                fontSize: '20px',
+                fontSize: '22px',
                 fontWeight: 600,
                 color: 'var(--color-warm-porcelain)',
                 margin: '14px 0 0 0',
@@ -301,7 +301,7 @@ export const Page3OtpScreen: React.FC<Page3OtpScreenProps> = ({
             <p
               style={{
                 fontFamily: 'var(--font-sans)',
-                fontSize: '15.5px',
+                fontSize: '17.5px',
                 lineHeight: '1.5',
                 color: 'var(--color-dusty-lilac)',
                 margin: '8px 0 0 0',
@@ -383,7 +383,7 @@ export const Page3OtpScreen: React.FC<Page3OtpScreenProps> = ({
                           border: 'none',
                           outline: 'none',
                           fontFamily: 'var(--font-serif)',
-                          fontSize: '24px',
+                          fontSize: '26px',
                           color: '#FFFFFF',
                           fontWeight: 500,
                           caretColor: 'var(--color-warm-porcelain)',
@@ -398,8 +398,8 @@ export const Page3OtpScreen: React.FC<Page3OtpScreenProps> = ({
                             position: 'absolute',
                             pointerEvents: 'none',
                             color: 'rgba(243, 238, 233, 0.35)',
-                            fontSize: '18px',
-                            fontWeight: 300,
+                            fontSize: '20px',
+                            fontWeight: 400,
                             lineHeight: 1,
                             bottom: '18px',
                           }}
@@ -417,7 +417,7 @@ export const Page3OtpScreen: React.FC<Page3OtpScreenProps> = ({
                 <div
                   style={{
                     color: '#ff8a8a',
-                    fontSize: '14px',
+                    fontSize: '16px',
                     fontFamily: 'var(--font-sans)',
                     textAlign: 'left',
                     marginTop: '10px',
@@ -438,7 +438,7 @@ export const Page3OtpScreen: React.FC<Page3OtpScreenProps> = ({
                     border: '1px dashed rgba(243, 238, 233, 0.35)',
                     borderRadius: '8px',
                     padding: '8px 14px',
-                    fontSize: '13.5px',
+                    fontSize: '15.5px',
                     fontWeight: 600,
                     letterSpacing: '0.04em',
                     color: 'var(--color-warm-porcelain)',
@@ -458,14 +458,14 @@ export const Page3OtpScreen: React.FC<Page3OtpScreenProps> = ({
                     e.currentTarget.style.background = 'rgba(243, 238, 233, 0.1)';
                   }}
                 >
-                  <span style={{ fontSize: '13px', color: 'var(--color-dusty-lilac)' }}>✦</span>
+                  <span style={{ fontSize: '15px', color: 'var(--color-dusty-lilac)' }}>✦</span>
                   <span>DEMO — FILL THE CODE</span>
                   <span
                     style={{
                       backgroundColor: 'rgba(243, 238, 233, 0.18)',
                       padding: '2px 7px',
                       borderRadius: '4px',
-                      fontSize: '12px',
+                      fontSize: '14px',
                       color: '#FFFFFF',
                     }}
                   >
@@ -486,7 +486,7 @@ export const Page3OtpScreen: React.FC<Page3OtpScreenProps> = ({
                     background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
                     color: '#FDF3F5',
                     fontFamily: 'var(--font-sans)',
-                    fontSize: '16.5px',
+                    fontSize: '18.5px',
                     fontWeight: 600,
                     letterSpacing: '0.04em',
                     borderRadius: '9999px',
@@ -547,7 +547,7 @@ export const Page3OtpScreen: React.FC<Page3OtpScreenProps> = ({
                     border: 'none',
                     color: 'var(--color-warm-porcelain)',
                     fontFamily: 'var(--font-sans)',
-                    fontSize: '14.5px',
+                    fontSize: '16.5px',
                     fontWeight: 600,
                     letterSpacing: '0.08em',
                     textTransform: 'uppercase',

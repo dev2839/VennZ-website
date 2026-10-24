@@ -34,7 +34,7 @@ export const StatusBar: React.FC<StatusBarProps> = ({
         style={{
           fontFamily: 'var(--font-sans)',
           fontWeight: 600,
-          fontSize: '15px',
+          fontSize: '17px',
           letterSpacing: '-0.2px',
           color: textColor,
         }}

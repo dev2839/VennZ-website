@@ -923,7 +923,7 @@ export const App: React.FC = () => {
             <h3
               style={{
                 fontFamily: 'var(--font-serif)',
-                fontSize: '24px',
+                fontSize: '26px',
                 color: isDark ? '#FDF3F5' : '#462037',
                 marginBottom: '8px',
               }}
@@ -933,7 +933,7 @@ export const App: React.FC = () => {
 
             <p
               style={{
-                fontSize: '14px',
+                fontSize: '16px',
                 lineHeight: '1.6',
                 color: isDark ? '#D4A2AC' : '#683A46',
                 marginBottom: '24px',
@@ -956,7 +956,7 @@ export const App: React.FC = () => {
                 border: 'none',
                 background: 'linear-gradient(135deg, #A1525F 0%, #C7577C 100%)',
                 color: '#FDF3F5',
-                fontSize: '14.5px',
+                fontSize: '16.5px',
                 fontWeight: 600,
                 letterSpacing: '0.04em',
                 cursor: 'pointer',

@@ -116,7 +116,7 @@ export const Page3OtpPlaceholder: React.FC<Page3OtpPlaceholderProps> = ({
         <h2
           style={{
             fontFamily: 'var(--font-serif)',
-            fontSize: '28px',
+            fontSize: '30px',
             fontWeight: 400,
             letterSpacing: '0.02em',
             margin: '0 0 10px 0',
@@ -127,7 +127,7 @@ export const Page3OtpPlaceholder: React.FC<Page3OtpPlaceholderProps> = ({
 
         <p
           style={{
-            fontSize: '14.5px',
+            fontSize: '16.5px',
             lineHeight: '1.5',
             color: 'var(--color-dusty-lilac)',
             margin: '0 0 24px 0',
@@ -150,7 +150,7 @@ export const Page3OtpPlaceholder: React.FC<Page3OtpPlaceholderProps> = ({
         >
           <div
             style={{
-              fontSize: '11px',
+              fontSize: '13px',
               color: 'var(--color-mushroom)',
               textTransform: 'uppercase',
               letterSpacing: '0.06em',
@@ -162,12 +162,12 @@ export const Page3OtpPlaceholder: React.FC<Page3OtpPlaceholderProps> = ({
 
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div>
-              <div style={{ fontSize: '16px', fontWeight: 600, color: 'var(--color-warm-porcelain)' }}>
+              <div style={{ fontSize: '18px', fontWeight: 600, color: 'var(--color-warm-porcelain)' }}>
                 {authMethod === 'google'
                   ? googleUser?.email || 'Google Account'
                   : `${countryCode} ${phoneNumber || 'No phone entered'}`}
               </div>
-              <div style={{ fontSize: '12px', color: 'var(--color-dusty-lilac)', marginTop: '2px' }}>
+              <div style={{ fontSize: '14px', color: 'var(--color-dusty-lilac)', marginTop: '2px' }}>
                 Auth method: {authMethod || 'phone'}
               </div>
             </div>
@@ -176,7 +176,7 @@ export const Page3OtpPlaceholder: React.FC<Page3OtpPlaceholderProps> = ({
               type="button"
               onClick={onBack}
               style={{
-                fontSize: '12.5px',
+                fontSize: '14.5px',
                 color: 'var(--color-warm-porcelain)',
                 textDecoration: 'underline',
                 background: 'transparent',
@@ -191,7 +191,7 @@ export const Page3OtpPlaceholder: React.FC<Page3OtpPlaceholderProps> = ({
 
         <p
           style={{
-            fontSize: '13px',
+            fontSize: '15px',
             lineHeight: '1.5',
             color: 'rgba(243, 238, 233, 0.7)',
             margin: 0,
@@ -214,7 +214,7 @@ export const Page3OtpPlaceholder: React.FC<Page3OtpPlaceholderProps> = ({
             backgroundColor: 'transparent',
             color: 'var(--color-warm-porcelain)',
             fontFamily: 'var(--font-sans)',
-            fontSize: '15px',
+            fontSize: '17px',
             fontWeight: 500,
             cursor: 'pointer',
           }}

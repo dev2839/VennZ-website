@@ -143,7 +143,7 @@ export const MemberBottomNav: React.FC<MemberBottomNavProps> = ({
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '3px',
-                  fontSize: '10.5px',
+                  fontSize: '12.5px',
                   fontWeight: isActive ? 600 : 500,
                   letterSpacing: '0.07em',
                   fontFamily: 'var(--font-sans)',
